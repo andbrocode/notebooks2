@@ -1,0 +1,1076 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP</Source>
+  <Sender>GOF</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T09:25:30.788998Z</Created>
+  <Network code="BW" startDate="1980-01-01T00:00:00.000000Z">
+    <Description>BayernNetz</Description>
+    <Station code="WETR" startDate="2010-04-14T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">49.14502</Latitude>
+      <Longitude unit="DEGREES">12.87571</Longitude>
+      <Elevation>607.0</Elevation>
+      <Site>
+        <Name>Wettzell, Bavaria, BW-Net</Name>
+      </Site>
+      <CreationDate>2010-04-14T00:00:00.000000Z</CreationDate>
+      <Channel code="BAE" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.794319.81">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.794261.80"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BAN" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.794638.85">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.794582.84"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BAZ" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.794979.89">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.794924.88"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HAE" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.7953.93">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.795245.92"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HAN" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.795616.97">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.795561.96"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HAZ" startDate="2012-07-31T12:05:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.795933.101">
+          <Description>Lippmann TLT seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.795877.100"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>64211000000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.881627.8" resourceId="ResponsePAZ/20201002121858.881627.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-8.79646</Real>
+                <Imaginary>-8.97418</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>38273.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHE" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.799071.133">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.799014.132"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.799396.137">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.79934.136"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.799725.141">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.799663.140"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.800058.145">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.800002.144"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.800376.149">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.800321.148"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2016-06-27T12:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">49.14502</Latitude>
+        <Longitude unit="DEGREES">12.87571</Longitude>
+        <Elevation>607.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200615093213.800735.153">
+          <Description>Lennartz LE-3D/20 seismometer</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200615093213.800678.152"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1677700000.0</Value>
+            <Frequency>0.1</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121858.882898.20" resourceId="ResponsePAZ/20201002121858.882898.20">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.2221</Real>
+                <Imaginary>0.2221</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.2221</Real>
+                <Imaginary>-0.2221</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1000.0</Value>
+              <Frequency>0.1</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1677720.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

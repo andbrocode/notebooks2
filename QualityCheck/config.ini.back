@@ -1,0 +1,11 @@
+[SETTINGS]
+client = RoutingClient('eida-routing')
+tsteps = 30
+overlap = 0.5
+limit = 0.95
+
+[VAR]
+year = "2019"
+opath = "/home/brotzer/Desktop/"
+code = "BW.ALFT..BHZ"
+

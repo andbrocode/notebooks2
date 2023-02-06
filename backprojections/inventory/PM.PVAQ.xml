@@ -1,0 +1,1761 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP</Source>
+  <Sender>GFZ</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T10:17:51.554849Z</Created>
+  <Network code="PM" startDate="1980-01-01T00:00:00.000000Z" restrictedStatus="open">
+    <Description>Portugese National Seismic Network (IM_Net)</Description>
+    <Station code="PVAQ" startDate="2006-12-23T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">37.403671</Latitude>
+      <Longitude unit="DEGREES">-7.717329</Longitude>
+      <Elevation>200.0</Elevation>
+      <Site>
+        <Name>Vaqueiros, Portugal</Name>
+        <Country> Portugal</Country>
+      </Site>
+      <CreationDate>2006-12-23T00:00:00.000000Z</CreationDate>
+      <Channel code="HHZ" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.201655.31">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.201621.30"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HHZ.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.201671.32">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">35.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.203001.55">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.202967.54"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HHN.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.203017.56">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">125.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.204319.79">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.204285.78"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HHE.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.204336.80">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HNZ" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.204754.87">
+          <Type>Titan</Type>
+          <Description>Titan</Description>
+          <Model>Titan</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.204719.86"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>2561950.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HNZ.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.204793.88">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.159155</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+            </PolesZeros>
+            <StageGain>
+              <Value>6.40488</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">200.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HNN" startDate="2006-12-23T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.204993.91">
+          <Type>CMG-5T</Type>
+          <Description>CMG-5T</Description>
+          <Model>CMG-5T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.204941.90"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>2006750.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HNN.2006.357.00.00.00" resourceId="ResponsePAZ/20190724123151.20501.92">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.159155</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+            </PolesZeros>
+            <StageGain>
+              <Value>6.44971</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>311138.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HNE" startDate="2006-12-23T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.205198.95">
+          <Type>CMG-5T</Type>
+          <Description>CMG-5T</Description>
+          <Model>CMG-5T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.205154.94"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>2008780.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HNE.2006.357.00.00.00" resourceId="ResponsePAZ/20190724123151.205216.96">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.159155</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+            </PolesZeros>
+            <StageGain>
+              <Value>6.42409</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>312695.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.206789.123">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.206754.122"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.BHZ.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.206817.124">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">35.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.208167.147">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.208111.146"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.BHN.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.208188.148">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHE" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">125.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.209427.171">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.209393.170"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.BHE.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.209444.172">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHZ" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.210814.199">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.21078.198"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.LHZ.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.210832.200">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHN" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">35.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.212005.223">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.21197.222"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.LHN.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.212022.224">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHE" startDate="2017-12-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">125.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.213213.247">
+          <Type>CMG-3T</Type>
+          <Description>CMG-3T</Description>
+          <Model>CMG-3T</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.213177.246"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>922647000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.LHE.2017.340.00.00.00" resourceId="ResponsePAZ/20190724123151.213235.248">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>2970.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>310655.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HN1" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">347.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.213415.251">
+          <Type>Titan</Type>
+          <Description>Titan</Description>
+          <Model>Titan</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.213379.250"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>2561950.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HN1.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.213433.252">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.159155</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+            </PolesZeros>
+            <StageGain>
+              <Value>6.40488</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">200.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BH1" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">47.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.21362.255">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.213583.254"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.BH1.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.21364.256">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BH2" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">137.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.213819.259">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.213784.258"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.BH2.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.213841.260">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HN2" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">77.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.214033.263">
+          <Type>Titan</Type>
+          <Description>Titan</Description>
+          <Model>Titan</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.213991.262"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>2561950.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HN2.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.21406.264">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.159155</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+            </PolesZeros>
+            <StageGain>
+              <Value>6.40488</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">200.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HH2" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">137.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.214234.267">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.214198.266"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HH2.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.214252.268">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HH1" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">47.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.214438.271">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.2144.270"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.HH1.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.214457.272">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LH1" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">47.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.214635.275">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.2146.274"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.LH1.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.214656.276">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LH2" startDate="2019-06-25T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">37.403671</Latitude>
+        <Longitude unit="DEGREES">-7.717329</Longitude>
+        <Elevation>200.0</Elevation>
+        <Depth>7.0</Depth>
+        <Azimuth unit="DEGREES">137.0</Azimuth>
+        <Dip unit="DEGREES">90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190724123151.214834.279">
+          <Type>TrilQA</Type>
+          <Description>TrilQA</Description>
+          <Model>TrilQA</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190724123151.214798.278"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>1923200000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY IN METERS PER SECOND</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="PM.PVAQ.LH2.2019.176.00.00.00" resourceId="ResponsePAZ/20190724123151.214852.280">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY IN METERS PER SECOND</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.999999</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366519</Real>
+                <Imaginary>0.0373924</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366519</Real>
+                <Imaginary>-0.0373924</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1600000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

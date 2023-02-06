@@ -1,0 +1,89 @@
+## Information for Offset Correction of Tiltmeter @ROMY: 
+##
+## ROMYT = Plattform Tiltmeter (NW corner)
+## TROMY = Plattform Tiltmeter (NE corner)
+## BROMY = Borehole Tiltmeter  (center)
+
+TROMY:
+    N:
+        1: 
+            'time_reset': "2021-07-20 11:00:00"
+            'time_after':  5000  ## in seconds
+            'time_before': 5000  ## in seconds            
+        2:
+            'time_reset': "2021-12-17 11:50:00"
+            'time_after':  7200  ## in seconds
+            'time_before': 7200  ## in seconds
+        3:
+            'time_reset': "2022-06-14 14:00:00"
+            'time_after':  108000 ## in seconds
+            'time_before': 72000  ## in seconds
+        4:
+            'time_reset': "2022-09-15 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+    E:
+        1: 
+            'time_reset': "2021-06-13 06:00:00"
+            'time_after':  64800  ## in seconds
+            'time_before': 97200  ## in seconds     
+        2: 
+            'time_reset': "2021-07-20 11:00:00"
+            'time_after':  5000  ## in seconds
+            'time_before': 5000  ## in seconds            
+        3:
+            'time_reset': "2021-12-17 11:50:00"
+            'time_after':  7200  ## in seconds
+            'time_before': 7200  ## in secnds
+        4:
+            'time_reset': "2022-06-16 00:00:00"
+            'time_after':  378000  ## in seconds
+            'time_before': 172800  ## in seconds
+        5:
+            'time_reset': "2022-09-15 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+ROMYT:
+    N:
+        1:
+            'time_reset': "2022-06-14 12:00:00"
+            'time_after':  108000  ## in seconds
+            'time_before': 108000  ## in seconds
+        2:
+            'time_reset': "2022-09-15 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+    E:
+        1:
+            'time_reset': "2022-09-15 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+BROMY:
+    N:
+        1:
+            'time_reset': "2021-06-24 08:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 18000  ## in seconds
+        2:
+            'time_reset': "2022-03-31 13:00:00"
+            'time_after':  18000  ## in seconds
+            'time_before': 18000  ## in seconds
+        3:
+            'time_reset': "2022-06-14 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+    E:
+        1:
+            'time_reset': "2021-06-24 08:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 18000  ## in seconds
+        2:
+            'time_reset': "2022-03-31 13:00:00"
+            'time_after':  18000  ## in seconds
+            'time_before': 18000  ## in seconds
+        3:
+            'time_reset': "2022-06-14 12:00:00"
+            'time_after':  36000  ## in seconds
+            'time_before': 36000  ## in seconds
+            
+## END OF FILE

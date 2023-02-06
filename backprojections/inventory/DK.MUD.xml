@@ -1,0 +1,885 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP</Source>
+  <Sender>GFZ</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T09:30:10.957068Z</Created>
+  <Network code="DK" startDate="1980-01-01T00:00:00.000000Z" restrictedStatus="open">
+    <Description>Danish National Seismic Network</Description>
+    <Station code="MUD" startDate="2004-12-04T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">56.455</Latitude>
+      <Longitude unit="DEGREES">9.1733</Longitude>
+      <Elevation>12.0</Elevation>
+      <Site>
+        <Name>Station Monsted Kalkmine, Denmark</Name>
+        <Country>Denmark</Country>
+      </Site>
+      <CreationDate>2004-12-04T00:00:00.000000Z</CreationDate>
+      <Channel code="BHN" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHE" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2019-03-28T00:00:00.000000Z" restrictedStatus="open" locationCode="00">
+        <Latitude unit="DEGREES">56.455</Latitude>
+        <Longitude unit="DEGREES">9.1733</Longitude>
+        <Elevation>12.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20190918142209.607427.6">
+          <Type>VBB</Type>
+          <Description>GFZ:DK1980:STS-2/G3/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+          <Model>STS-2/G3</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20190918142209.658305.101">
+          <Description>GFZ:DK1980:Centaur/g=419430</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145600.0</Value>
+            <Frequency>0.02</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GFZ:DK1980:STS-2/G3/g=1500" resourceId="ResponsePAZ/20190918142209.607722.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>3.46844e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-15.15</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-176.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-463.1</Real>
+                <Imaginary>430.5</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-463.1</Real>
+                <Imaginary>-430.5</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-15.64</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-97.34</Real>
+                <Imaginary>-400.7</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-97.34</Real>
+                <Imaginary>400.7</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-374.8</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-520.3</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-10530.0</Real>
+                <Imaginary>10050.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-10530.0</Real>
+                <Imaginary>-10050.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-13300.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.02</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.4</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

@@ -1,0 +1,2690 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP</Source>
+  <Sender>GOF</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T09:24:41.248676Z</Created>
+  <Network code="BW" startDate="1980-01-01T00:00:00.000000Z">
+    <Description>BayernNetz</Description>
+    <Station code="BGDS" startDate="2020-01-16T11:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">47.6353</Latitude>
+      <Longitude unit="DEGREES">13.0275</Longitude>
+      <Elevation>539.0</Elevation>
+      <Site>
+        <Name>Salzbergwerk, Berchtesgaden</Name>
+      </Site>
+      <CreationDate>2020-01-16T11:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.221848.7">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.221646.6"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0013672</Delay>
+              <Correction>0.0013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1280.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0046875</Delay>
+              <Correction>0.0046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">640.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.009375</Delay>
+              <Correction>0.009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">320.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.01875</Delay>
+              <Correction>0.01875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">160.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0375</Delay>
+              <Correction>0.0375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.075</Delay>
+              <Correction>0.075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>1.25</Delay>
+              <Correction>1.25</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.226253.18">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.226174.17"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0013672</Delay>
+              <Correction>0.0013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1280.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0046875</Delay>
+              <Correction>0.0046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">640.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.009375</Delay>
+              <Correction>0.009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">320.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.01875</Delay>
+              <Correction>0.01875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">160.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0375</Delay>
+              <Correction>0.0375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.075</Delay>
+              <Correction>0.075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>1.25</Delay>
+              <Correction>1.25</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.230904.29">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.230833.28"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">10240.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0013672</Delay>
+              <Correction>0.0013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1280.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0046875</Delay>
+              <Correction>0.0046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">640.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.009375</Delay>
+              <Correction>0.009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">320.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.01875</Delay>
+              <Correction>0.01875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">160.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0375</Delay>
+              <Correction>0.0375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.075</Delay>
+              <Correction>0.075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>1.25</Delay>
+              <Correction>1.25</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.23167.40">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.231575.39"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00013672</Delay>
+              <Correction>0.00013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">12800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00046875</Delay>
+              <Correction>0.00046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">6400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0009375</Delay>
+              <Correction>0.0009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">3200.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.001875</Delay>
+              <Correction>0.001875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1600.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00375</Delay>
+              <Correction>0.00375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0075</Delay>
+              <Correction>0.0075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.125</Delay>
+              <Correction>0.125</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.232355.51">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.23229.50"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00013672</Delay>
+              <Correction>0.00013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">12800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00046875</Delay>
+              <Correction>0.00046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">6400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0009375</Delay>
+              <Correction>0.0009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">3200.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.001875</Delay>
+              <Correction>0.001875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1600.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00375</Delay>
+              <Correction>0.00375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0075</Delay>
+              <Correction>0.0075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.125</Delay>
+              <Correction>0.125</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2020-01-16T11:00:00.000000Z" locationCode="">
+        <Latitude unit="DEGREES">47.6353</Latitude>
+        <Longitude unit="DEGREES">13.0275</Longitude>
+        <Elevation>539.0</Elevation>
+        <Depth>140.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">200.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>200</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor/20200618081300.233101.62">
+          <Description>Trillium Horizon 120, 120 s, 1200 V/m/s-RT130, gai</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger/20200618081300.233038.61"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>755727000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>Velocity in Meters Per Second</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ResponsePAZ/20201002121851.842142.8" resourceId="ResponsePAZ/20201002121851.842142.8">
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>Velocity in Meters Per Second</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318709812e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.62999916</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0366140008</Real>
+                <Imaginary>0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0366140008</Real>
+                <Imaginary>-0.03705900162</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.54999924</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>629129.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="3">
+            <FIR name="ResponseFIR/20201002121851.842849.9" resourceId="ResponseFIR/20201002121851.842849.9">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0009765619761</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002441409975</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004882810172</NumeratorCoefficient>
+              <NumeratorCoefficient>0.008544920012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01367190015</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02050779946</NumeratorCoefficient>
+              <NumeratorCoefficient>0.02929689921</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03930659965</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04980469868</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0600586012</NumeratorCoefficient>
+              <NumeratorCoefficient>0.06933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.07690429688</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08203119785</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08398439735</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">102400.0</InputSampleRate>
+              <Factor>8</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00013672</Delay>
+              <Correction>0.00013672</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="4">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">12800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00046875</Delay>
+              <Correction>0.00046875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="5">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">6400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0009375</Delay>
+              <Correction>0.0009375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="6">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">3200.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.001875</Delay>
+              <Correction>0.001875</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="7">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1600.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.00375</Delay>
+              <Correction>0.00375</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="8">
+            <FIR name="ResponseFIR/20201002121851.843459.10" resourceId="ResponseFIR/20201002121851.843459.10">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>ODD</Symmetry>
+              <NumeratorCoefficient>0.0002441410033</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002929690061</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01611329988</NumeratorCoefficient>
+              <NumeratorCoefficient>0.05371090025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1208499968</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1933590025</NumeratorCoefficient>
+              <NumeratorCoefficient>0.2255859971</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">800.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0075</Delay>
+              <Correction>0.0075</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="9">
+            <FIR name="ResponseFIR/20201002121851.844323.15" resourceId="ResponseFIR/20201002121851.844323.15">
+              <InputUnits>
+                <Name>COUNTS</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <Symmetry>NONE</Symmetry>
+              <NumeratorCoefficient>-7.150320016e-07</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.601089924e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.621789918e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.314029866e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-4.647709829e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>2.347689951e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>1.430060024e-06</NumeratorCoefficient>
+              <NumeratorCoefficient>-5.279319885e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.5899580121</NumeratorCoefficient>
+              <NumeratorCoefficient>0.3904320002</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.122309863e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.2042080015</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.1031100005</NumeratorCoefficient>
+              <NumeratorCoefficient>0.08166039735</NumeratorCoefficient>
+              <NumeratorCoefficient>0.1075519994</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.009341659956</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.08260779828</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02941639908</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0497909002</NumeratorCoefficient>
+              <NumeratorCoefficient>0.04430900142</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01932650059</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.04295279831</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003465879941</NumeratorCoefficient>
+              <NumeratorCoefficient>0.03224470094</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01666690037</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.01816290058</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.02094070055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.005205200054</NumeratorCoefficient>
+              <NumeratorCoefficient>0.01862609945</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003982250113</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0127400998</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00857823994</NumeratorCoefficient>
+              <NumeratorCoefficient>0.006084450055</NumeratorCoefficient>
+              <NumeratorCoefficient>0.009184000082</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0006440060097</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00720121013</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.002642879961</NumeratorCoefficient>
+              <NumeratorCoefficient>0.004194139969</NumeratorCoefficient>
+              <NumeratorCoefficient>0.003770719981</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.001409330056</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.003337650094</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004615540092</NumeratorCoefficient>
+              <NumeratorCoefficient>0.002151649911</NumeratorCoefficient>
+              <NumeratorCoefficient>0.001276690047</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0009109509992</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.00127620995</NumeratorCoefficient>
+              <NumeratorCoefficient>3.050809937e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0008542260039</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0003761069966</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0003666919947</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0004103099927</NumeratorCoefficient>
+              <NumeratorCoefficient>2.526450044e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0002618209983</NumeratorCoefficient>
+              <NumeratorCoefficient>0.0001206020024</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.99854019e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-0.0001623120042</NumeratorCoefficient>
+              <NumeratorCoefficient>-9.795949882e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-2.943549953e-05</NumeratorCoefficient>
+              <NumeratorCoefficient>-3.098469961e-06</NumeratorCoefficient>
+            </FIR>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">400.0</InputSampleRate>
+              <Factor>2</Factor>
+              <Offset>0</Offset>
+              <Delay>0.125</Delay>
+              <Correction>0.125</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

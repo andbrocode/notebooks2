@@ -1,0 +1,804 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>SeisComP</Source>
+  <Sender>BGR</Sender>
+  <Module/>
+  <ModuleURI/>
+  <Created>2020-12-02T09:33:27.539724Z</Created>
+  <Network code="GR" startDate="1976-02-17T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network, BGR Hannover</Description>
+    <Station code="SKMB" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">54.7177</Latitude>
+      <Longitude unit="DEGREES">9.4385</Longitude>
+      <Elevation>48.0</Elevation>
+      <Site>
+        <Name>GRSN Station Sankelmark Bunker</Name>
+        <Country>Germany</Country>
+      </Site>
+      <CreationDate>2013-09-06T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.05</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.05</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.05</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">80.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>80</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0125</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">80.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>80</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0125</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">80.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>80</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0125</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">80.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHE" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHN" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHZ" startDate="2013-09-06T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.7177</Latitude>
+        <Longitude unit="DEGREES">9.4385</Longitude>
+        <Elevation>48.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">1.0</ClockDrift>
+        <Sensor resourceId="Sensor#20130917141113.936124.4336">
+          <Description>STS2.5</Description>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20120723141113.883481.3977"/>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>944019640.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>m/s</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GR.SKMB.STS2.5" resourceId="ResponsePAZ#20130917141113.936153.4337">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0367429</Real>
+                <Imaginary>0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0367429</Real>
+                <Imaginary>-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>944019640.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>1.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

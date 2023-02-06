@@ -1,0 +1,1101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>SeisComP</Source>
+  <Sender>BGR</Sender>
+  <Module/>
+  <ModuleURI/>
+  <Created>2020-12-02T09:33:24.284983Z</Created>
+  <Network code="GR" startDate="1976-02-17T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network, BGR Hannover</Description>
+    <Station code="RETH" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">52.73791</Latitude>
+      <Longitude unit="DEGREES">9.3611</Longitude>
+      <Elevation>-150.0</Elevation>
+      <Site>
+        <Name>BGR Station GRSN Station Rethem Borehole, Germany</Name>
+        <Country>Germany</Country>
+      </Site>
+      <CreationDate>2015-12-30T12:00:00.000000Z</CreationDate>
+      <Channel code="BH1" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">192.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BH2" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">282.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HH1" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">192.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HH2" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">282.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LH1" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">192.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LH2" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">282.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHZ" startDate="2015-12-30T12:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.73791</Latitude>
+        <Longitude unit="DEGREES">9.3611</Longitude>
+        <Elevation>-150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20151119154612.237097.18">
+          <Type>VBB</Type>
+          <Description>Trillium-120/g=1202</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Trillium-120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20160207153459.915699.20">
+          <Description>DigiDummy/g=400000</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>481000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Trillium-120/g=1202" resourceId="ResponsePAZ#20151119154612.237248.19">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1703691900.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-106.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-158.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03859</Real>
+                <Imaginary>0.03649</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03859</Real>
+                <Imaginary>-0.03649</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-190.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-158.0</Real>
+                <Imaginary>193.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-158.0</Real>
+                <Imaginary>-193.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-639.0</Real>
+                <Imaginary>1418.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-639.0</Real>
+                <Imaginary>-1418.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1202.5</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

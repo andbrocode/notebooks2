@@ -1,0 +1,174 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+romyview allows a view at the ROMY recordings for a given time period. 
+
+Options: 
+    -f --filter   set a filter (lowpass, bandpass, highpass)
+    -s --save     save the output figure
+
+Author: AndreasBrotzer@2021
+
+"""
+
+## -----------------------
+## Load Libraries
+
+import argparse
+import sys
+
+from andbro__querrySeismoData import __querrySeismoData
+from andbro__savefig import __savefig
+
+## -----------------------
+## Define or gather options 
+
+parser = argparse.ArgumentParser(description="Plot single data trace.")
+parser.add_argument("-f", "--filter", help="define a filter",action="store_true")
+parser.add_argument("-s", "--save", help="save figure",action="store_true")
+
+args = parser.parse_args()
+
+name = 
+print(name)
+
+## -----------------------
+## specify user interaction
+
+def __user_interaction(args):
+
+    ## create a dictionary of the specified parameters
+    config = {}
+    
+    
+    if station in ["ROMY", "RLAS"]:
+        network = "BW"
+        if channel[-1] == "Z":
+            location = "10"
+        else:
+            location = ""
+        config["seed_id"] = f"{network}.{station}.{location}.{channel}"
+    
+    elif station in ["FUR", "WET"]: 
+        network  = "GR"
+        location = ""
+        config["seed_id"] = f"{network}.{station}.{location}.{channel}"
+    else: 
+        config["seed_id"] = input("\nSEED ID has to be specified explicitly: ")
+            
+        
+    config["repos"] = input("\nEnter station code ('local', 'george', 'archive', 'online') default -> george:  ") or "george"
+    
+    
+    if config["repos"] == "local":
+        config["datapath"] = input("\nEnter path to local data file:  ")
+    else:
+        config["datapath"] = None
+
+    ## user has to specifiy time window for data selection
+    config["tbeg"], config["tend"] = "", ""
+    while len(config["tbeg"]) < 16:
+        config["tbeg"] = input("\nEnter starttime (e.g. 2021-03-04 18:35):  ")
+    while len(config["tend"]) < 16:
+        config["tend"] = input("\nEnter endtime (e.g. 2021-03-04 19:35):  ")
+        
+    ## if filter option is set user is asked to enter filter type and corner frequencies
+    if args.filter:
+    	f_type = input("\nEnter filter type (lp, bp, hp): ")
+    	
+    	if f_type == 'lp':
+    		freqs = list[float(input("\nEnter upper corner frequency: "))]
+    	elif f_type == 'hp':	
+    		freqs = list[float(input("\nEnter lower corner frequency: "))]
+    	elif f_type == 'bp':	
+    		freqs = input("\nEnter corner frequencies (e.g. 0.1,1.0): ").split(",")
+    		freqs = [float(ff) for ff in freqs]
+    else:
+        f_type, freqs = None, None
+    
+    config["f_type"], config["freqs"] = f_type, freqs
+    
+
+    return config
+		
+    
+## -----------------------
+## request data
+
+
+def __requesting_data(user_params):
+    
+    print(f"\n -> requesting data for {user_params['seed_id']} from {user_params['repos']}...")
+    
+    try:
+        st, inv = __querrySeismoData(    
+                                    seed_id=user_params.get("seed_id"),
+                                    starttime=user_params.get("tbeg"),
+                                    endtime=user_params.get("tend"),
+                                    where=user_params.get("repos"),
+                                    path=user_params.get("datapath"),
+                                    restitute=True,
+                                    detail=None,
+                                    )
+        if len(st) != 0:
+            print("     -> loaded data")
+        else:
+            print("empty stream!")
+            sys.exit()
+    
+    except Exception as e:
+        print(e)
+        sys.exit()
+        
+    else: 
+        st.detrend("demean")
+    
+    return st
+
+## -----------------------
+## main code 
+
+def main():
+
+    
+    user_params  = __user_interaction(args)
+
+    st = __requesting_data(user_params)
+
+
+    ## -----------------------
+    ## filter data if option is set
+    
+    if args.filter:
+        if user_params.get("f_type") == "lp":
+            print("\napplying lowpass ... ")
+            st.filter('lowpass', freq=user_params.get("freqs"), corners=4, zerophase=True)
+        elif user_params.get("f_type") == "hp":
+            print("\napplying highpass ... ")
+            st.filter('highpass', freq=user_params.get("freqs"), corners=4, zerophase=True)
+        elif user_params.get("f_type") == "bp":
+            print("\napplying bandpass ... ")
+            st.filter('bandpass', freqmin=user_params.get("freqs")[0], freqmax=user_params.get("freqs")[1], corners=4, zerophase=True)
+
+    
+    ## -----------------------
+    ## plot data
+    
+    print(f"\n-> plotting data of {user_params['seed_id']}")
+    fig = st.plot();
+    
+    
+    if args.save:
+        opath = input("\nEnter output path of figure: ") or "./" 
+        __savefig(fig, outpath=opath, outname=f"ROMY_quickview_{user_params.tbeg[0:10]}", mode="png")    
+    
+
+## -----------------------
+## main execution
+
+if __name__ == "__main__":
+    main()
+
+
+## END OF FILE

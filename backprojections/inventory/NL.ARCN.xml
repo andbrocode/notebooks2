@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP3</Source>
+  <Sender>ODC</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T10:08:33.450481Z</Created>
+  <Network code="NL" startDate="1993-01-01T00:00:00.000000Z" restrictedStatus="open">
+    <Description>Netherlands Seismic and Acoustic Network</Description>
+    <Station code="ARCN" startDate="2018-05-23T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">51.5013</Latitude>
+      <Longitude unit="DEGREES">6.1942</Longitude>
+      <Elevation>0.0</Elevation>
+      <Site>
+        <Name>Arcen</Name>
+      </Site>
+      <CreationDate>2018-05-23T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2018-05-23T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">51.5013</Latitude>
+        <Longitude unit="DEGREES">6.1942</Longitude>
+        <Elevation>0.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180615133256.052929.12">
+          <Type>CMG3ES</Type>
+          <Description>CMG3ES</Description>
+          <Model>CMG3ES</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180615133256.052809.11">
+          <Description>ARCN.2018.143.BHE</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>685501000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ARCN.2018.143.HE" resourceId="ResponsePAZ#20180615133256.053067.13">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571572000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0740159</Real>
+                <Imaginary>-0.0740159</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0740159</Real>
+                <Imaginary>0.0740159</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1005.31</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-502.655</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-1130.97</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1966.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>348678.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2018-05-23T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">51.5013</Latitude>
+        <Longitude unit="DEGREES">6.1942</Longitude>
+        <Elevation>0.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180615133256.052438.9">
+          <Type>CMG3ES</Type>
+          <Description>CMG3ES</Description>
+          <Model>CMG3ES</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180615133256.052303.8">
+          <Description>ARCN.2018.143.BHN</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>680154000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ARCN.2018.143.HN" resourceId="ResponsePAZ#20180615133256.052567.10">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571572000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0740159</Real>
+                <Imaginary>-0.0740159</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0740159</Real>
+                <Imaginary>0.0740159</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1005.31</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-502.655</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-1130.97</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1950.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>348797.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2018-05-23T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">51.5013</Latitude>
+        <Longitude unit="DEGREES">6.1942</Longitude>
+        <Elevation>0.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180615133256.051648.6">
+          <Type>CMG3ES</Type>
+          <Description>CMG3ES</Description>
+          <Model>CMG3ES</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180615133256.051232.5">
+          <Description>ARCN.2018.143.BHZ</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>688525000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="ARCN.2018.143.HZ" resourceId="ResponsePAZ#20180615133256.051904.7">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571572000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.0740159</Real>
+                <Imaginary>-0.0740159</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.0740159</Real>
+                <Imaginary>0.0740159</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1005.31</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-502.655</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-1130.97</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1974.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>348797.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

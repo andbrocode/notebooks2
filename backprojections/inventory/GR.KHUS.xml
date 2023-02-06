@@ -1,0 +1,903 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>SeisComP</Source>
+  <Sender>BGR</Sender>
+  <Module/>
+  <ModuleURI/>
+  <Created>2020-12-02T09:33:14.246985Z</Created>
+  <Network code="GR" startDate="1976-02-17T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network, BGR Hannover</Description>
+    <Station code="KHUS" startDate="2018-08-22T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">54.19622</Latitude>
+      <Longitude unit="DEGREES">11.05461</Longitude>
+      <Elevation>-1.0</Elevation>
+      <Site>
+        <Name>BGR Station Kellenhusen, Germany</Name>
+        <Country>Germany</Country>
+      </Site>
+      <CreationDate>2018-08-22T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2018-09-07T11:55:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">54.19622</Latitude>
+        <Longitude unit="DEGREES">11.05461</Longitude>
+        <Elevation>-1.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170906144319.192005.130">
+          <Type>VBB</Type>
+          <Description>Meridian-PH/120/g=1200</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian-PH/120</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170906144319.192925.132">
+          <Type>Nanometrics Meridian</Type>
+          <Description>Meridian/g=400000</Description>
+          <Manufacturer>Nanometrics</Manufacturer>
+          <Model>Meridian</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>480000000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="Meridian-PH/120/g=1200" resourceId="ResponsePAZ#20170906144319.192145.131">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>8.318711e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="11">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-31.63</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-160.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-350.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-3177.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.036614</Real>
+                <Imaginary>0.037059</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.036614</Real>
+                <Imaginary>-0.037059</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-32.55</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-142.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-364.0</Real>
+                <Imaginary>404.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-364.0</Real>
+                <Imaginary>-404.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-1260.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-4900.0</Real>
+                <Imaginary>5200.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-4900.0</Real>
+                <Imaginary>-5200.0</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-7100.0</Real>
+                <Imaginary>1700.0</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-7100.0</Real>
+                <Imaginary>-1700.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1200.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>400000.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>IRIS-DMC</Source>
+  <Sender>IRIS-DMC</Sender>
+  <Module>IRIS WEB SERVICE: fdsnws-station | version: 1.1.47</Module>
+  <ModuleURI>http://service.iris.edu/fdsnws/station/1/query?starttime=2020-10-19T20%3A54%3A39.000000&amp;endtime=2020-10-19T21%3A09%3A39.000000&amp;network=GR&amp;station=GRA1&amp;level=response</ModuleURI>
+  <Created>2020-12-02T09:29:58.000000Z</Created>
+  <Network code="GR" startDate="1976-01-01T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network (GR)</Description>
+    <Identifier type="DOI">10.25928/mbx6-hr74
+   </Identifier>
+    <TotalNumberStations>1</TotalNumberStations>
+    <SelectedNumberStations>1</SelectedNumberStations>
+    <Station code="GRA1" startDate="1990-01-01T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">49.691887</Latitude>
+      <Longitude unit="DEGREES">11.22172</Longitude>
+      <Elevation>499.5</Elevation>
+      <Site>
+        <Name>GRAFENBERG ARRAY, BAYERN</Name>
+      </Site>
+      <CreationDate>1990-01-01T00:00:00.000000Z</CreationDate>
+      <TotalNumberChannels>3</TotalNumberChannels>
+      <SelectedNumberChannels>3</SelectedNumberChannels>
+      <Channel code="BHE" startDate="1990-01-01T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">49.691887</Latitude>
+        <Longitude unit="DEGREES">11.22172</Longitude>
+        <Elevation>499.5</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <ClockDrift unit="SECONDS/SAMPLE">5e-06</ClockDrift>
+        <CalibrationUnits>
+          <Name>COUNTS</Name>
+          <Description>COUNTS</Description>
+        </CalibrationUnits>
+        <Sensor>
+          <Description>STS-2 STRECKEISEN SEISMOMETER</Description>
+        </Sensor>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>786596000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>COUNTS</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros>
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+                <Description>COUNTS</Description>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Zero number="1">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>786596000.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="1990-01-01T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">49.691887</Latitude>
+        <Longitude unit="DEGREES">11.22172</Longitude>
+        <Elevation>499.5</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <ClockDrift unit="SECONDS/SAMPLE">5e-06</ClockDrift>
+        <CalibrationUnits>
+          <Name>COUNTS</Name>
+          <Description>COUNTS</Description>
+        </CalibrationUnits>
+        <Sensor>
+          <Description>STS-2 STRECKEISEN SEISMOMETER</Description>
+        </Sensor>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>786596000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>COUNTS</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros>
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+                <Description>COUNTS</Description>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Zero number="1">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>786596000.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="1990-01-01T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">49.691887</Latitude>
+        <Longitude unit="DEGREES">11.22172</Longitude>
+        <Elevation>499.5</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <ClockDrift unit="SECONDS/SAMPLE">5e-06</ClockDrift>
+        <CalibrationUnits>
+          <Name>COUNTS</Name>
+          <Description>COUNTS</Description>
+        </CalibrationUnits>
+        <Sensor>
+          <Description>STS-2 STRECKEISEN SEISMOMETER</Description>
+        </Sensor>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>786596000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>VELOCITY</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>COUNTS</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros>
+              <InputUnits>
+                <Name>M/S</Name>
+                <Description>VELOCITY</Description>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+                <Description>COUNTS</Description>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Zero number="1">
+                <Real minusError="0.0" plusError="0.0">0.0</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">0.036754</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real minusError="0.0" plusError="0.0">-0.0367429</Real>
+                <Imaginary minusError="0.0" plusError="0.0">-0.036754</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>786596000.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

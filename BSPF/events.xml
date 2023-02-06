@@ -1,0 +1,2405 @@
+<?xml version='1.0' encoding='utf-8'?>
+<q:quakeml xmlns="http://quakeml.org/xmlns/bed/1.2" xmlns:anss="http://anss.org/xmlns/event/0.1" xmlns:catalog="http://anss.org/xmlns/catalog/0.1" xmlns:q="http://quakeml.org/xmlns/quakeml/1.2">
+  <eventParameters publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?starttime=2022-10-01T00%3A00%3A00.000000&amp;endtime=2023-01-13T00%3A00%3A00.000000&amp;minlatitude=32.444&amp;maxlatitude=34.8286&amp;minlongitude=-118.652&amp;maxlongitude=-114.941&amp;minmagnitude=2.5">
+    <creationInfo>
+      <creationTime>2023-01-13T19:01:17.000000Z</creationTime>
+    </creationInfo>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40401704&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40401704">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40401704/ci/1673466127970/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40401704/ci/1673466127970/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>6km SW of Idyllwild, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-12T22:14:48.230000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40401704/ci/1673466127970/product.xml" catalog:datasource="ci" catalog:dataid="ci40401704" catalog:eventsource="ci" catalog:eventid="40401704">
+        <time>
+          <value>2023-01-11T18:59:20.030000Z</value>
+        </time>
+        <latitude>
+          <value>33.6998333</value>
+        </latitude>
+        <longitude>
+          <value>-116.7613333</value>
+        </longitude>
+        <depth>
+          <value>15820.0</value>
+          <uncertainty>230.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>235</usedPhaseCount>
+          <usedStationCount>123</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>14.0</azimuthalGap>
+          <minimumDistance>0.04091</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-11T19:42:07.970000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40401704/ci/1673466127970/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40401704" catalog:eventsource="ci" catalog:eventid="40401704">
+        <mag>
+          <value>3.23</value>
+          <uncertainty>0.126</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40401704/ci/1673466127970/product.xml</originID>
+        <stationCount>177</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-11T19:42:07.970000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40155015&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40155015">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40155015/ci/1673302715350/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40155015/ci/1673302715350/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>16km N of Borrego Springs, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-11T04:14:24.296000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40155015/ci/1673302715350/product.xml" catalog:datasource="ci" catalog:dataid="ci40155015" catalog:eventsource="ci" catalog:eventid="40155015">
+        <time>
+          <value>2023-01-09T19:42:56.460000Z</value>
+        </time>
+        <latitude>
+          <value>33.396</value>
+        </latitude>
+        <longitude>
+          <value>-116.3966667</value>
+        </longitude>
+        <depth>
+          <value>4890.0</value>
+          <uncertainty>390.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>220</usedPhaseCount>
+          <usedStationCount>118</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>16.0</azimuthalGap>
+          <minimumDistance>0.07337</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-09T22:18:35.350000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40155015/ci/1673302715350/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40155015" catalog:eventsource="ci" catalog:eventid="40155015">
+        <mag>
+          <value>3.18</value>
+          <uncertainty>0.146</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40155015/ci/1673302715350/product.xml</originID>
+        <stationCount>136</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-09T22:18:35.350000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40153855&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40153855">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40153855/ci/1672943324150/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40153855/ci/1672943324150/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>16km N of Borrego Springs, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-06T20:08:56.578000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40153855/ci/1672943324150/product.xml" catalog:datasource="ci" catalog:dataid="ci40153855" catalog:eventsource="ci" catalog:eventid="40153855">
+        <time>
+          <value>2023-01-05T10:00:33.030000Z</value>
+        </time>
+        <latitude>
+          <value>33.3955</value>
+        </latitude>
+        <longitude>
+          <value>-116.393</value>
+        </longitude>
+        <depth>
+          <value>3820.0</value>
+          <uncertainty>410.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>206</usedPhaseCount>
+          <usedStationCount>121</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>17.0</azimuthalGap>
+          <minimumDistance>0.07192</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-05T18:28:44.150000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40153855/ci/1672943324150/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40153855" catalog:eventsource="ci" catalog:eventid="40153855">
+        <mag>
+          <value>2.59</value>
+          <uncertainty>0.148</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40153855/ci/1672943324150/product.xml</originID>
+        <stationCount>86</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-05T18:28:44.150000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40152887&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40152887">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40152887/ci/1672768858880/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40152887/ci/1672768858880/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>16km N of Borrego Springs, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T18:01:58.320000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40152887/ci/1672768858880/product.xml" catalog:datasource="ci" catalog:dataid="ci40152887" catalog:eventsource="ci" catalog:eventid="40152887">
+        <time>
+          <value>2023-01-02T03:20:18.170000Z</value>
+        </time>
+        <latitude>
+          <value>33.3975</value>
+        </latitude>
+        <longitude>
+          <value>-116.3898333</value>
+        </longitude>
+        <depth>
+          <value>3360.0</value>
+          <uncertainty>380.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>198</usedPhaseCount>
+          <usedStationCount>114</usedStationCount>
+          <standardError>0.18</standardError>
+          <azimuthalGap>16.0</azimuthalGap>
+          <minimumDistance>0.07309</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T18:00:58.880000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>100.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40152887/ci/1672768858880/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40152887" catalog:eventsource="ci" catalog:eventid="40152887">
+        <mag>
+          <value>2.61</value>
+          <uncertainty>0.158</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40152887/ci/1672768858880/product.xml</originID>
+        <stationCount>84</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T18:00:58.880000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40151807&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40151807">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40151807/ci/1673377850190/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40151807/ci/1673377850190/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>16km N of Borrego Springs, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-12T17:19:20.511000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40151807/ci/1673377850190/product.xml" catalog:datasource="ci" catalog:dataid="ci40151807" catalog:eventsource="ci" catalog:eventid="40151807">
+        <time>
+          <value>2022-12-31T12:12:26.650000Z</value>
+        </time>
+        <latitude>
+          <value>33.3975</value>
+        </latitude>
+        <longitude>
+          <value>-116.3933333</value>
+        </longitude>
+        <depth>
+          <value>3880.0</value>
+          <uncertainty>380.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>247</usedPhaseCount>
+          <usedStationCount>132</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>16.0</azimuthalGap>
+          <minimumDistance>0.07391</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-10T19:10:50.190000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>100.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40151807/ci/1673377850190/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40151807" catalog:eventsource="ci" catalog:eventid="40151807">
+        <mag>
+          <value>4.14</value>
+        </mag>
+        <type>mw</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40151807/ci/1673377850190/product.xml</originID>
+        <stationCount>6</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-10T19:10:50.190000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40151719&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40151719">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40151719/ci/1672760700560/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40151719/ci/1672760700560/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>11km SSE of Lucerne Valley, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-12T17:19:52.947000Z</creationTime>
+        <version>5</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40151719/ci/1672760700560/product.xml" catalog:datasource="ci" catalog:dataid="ci40151719" catalog:eventsource="ci" catalog:eventid="40151719">
+        <time>
+          <value>2022-12-31T11:41:09.460000Z</value>
+        </time>
+        <latitude>
+          <value>34.3556667</value>
+        </latitude>
+        <longitude>
+          <value>-116.9218333</value>
+        </longitude>
+        <depth>
+          <value>4730.0</value>
+          <uncertainty>410.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>230</usedPhaseCount>
+          <usedStationCount>121</usedStationCount>
+          <standardError>0.15</standardError>
+          <azimuthalGap>25.0</azimuthalGap>
+          <minimumDistance>0.07845</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T15:45:00.560000Z</creationTime>
+          <version>5</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>90.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40151719/ci/1672760700560/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40151719" catalog:eventsource="ci" catalog:eventid="40151719">
+        <mag>
+          <value>3.47</value>
+        </mag>
+        <type>mw</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40151719/ci/1672760700560/product.xml</originID>
+        <stationCount>4</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T15:45:00.560000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40150719&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40150719">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40150719/ci/1673466996760/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40150719/ci/1673466996760/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>8km W of Calipatria, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-11T19:57:25.980000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40150719/ci/1673466996760/product.xml" catalog:datasource="ci" catalog:dataid="ci40150719" catalog:eventsource="ci" catalog:eventid="40150719">
+        <time>
+          <value>2022-12-28T00:55:24.090000Z</value>
+        </time>
+        <latitude>
+          <value>33.1173333</value>
+        </latitude>
+        <longitude>
+          <value>-115.604</value>
+        </longitude>
+        <depth>
+          <value>9620.0</value>
+          <uncertainty>410.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>114</usedPhaseCount>
+          <usedStationCount>75</usedStationCount>
+          <standardError>0.25</standardError>
+          <azimuthalGap>33.0</azimuthalGap>
+          <minimumDistance>0.02036</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-11T19:56:36.760000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>170.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40150719/ci/1673466996760/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40150719" catalog:eventsource="ci" catalog:eventid="40150719">
+        <mag>
+          <value>2.66</value>
+          <uncertainty>0.169</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40150719/ci/1673466996760/product.xml</originID>
+        <stationCount>67</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-11T19:56:36.760000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40150599&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40150599">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40150599/ci/1672766129830/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40150599/ci/1672766129830/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>17km NNE of Lucerne Valley, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T20:19:21.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40150599/ci/1672766129830/product.xml" catalog:datasource="ci" catalog:dataid="ci40150599" catalog:eventsource="ci" catalog:eventid="40150599">
+        <time>
+          <value>2022-12-27T14:50:47.040000Z</value>
+        </time>
+        <latitude>
+          <value>34.5795</value>
+        </latitude>
+        <longitude>
+          <value>-116.8873333</value>
+        </longitude>
+        <depth>
+          <value>5530.0</value>
+          <uncertainty>610.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>141</usedPhaseCount>
+          <usedStationCount>77</usedStationCount>
+          <standardError>0.14</standardError>
+          <azimuthalGap>29.0</azimuthalGap>
+          <minimumDistance>0.1383</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T17:15:29.830000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40150599/ci/1672766129830/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40150599" catalog:eventsource="ci" catalog:eventid="40150599">
+        <mag>
+          <value>2.99</value>
+          <uncertainty>0.121</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40150599/ci/1672766129830/product.xml</originID>
+        <stationCount>153</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2023-01-03T17:15:29.830000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40149879&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40149879">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40149879/ci/1671994606750/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40149879/ci/1671994606750/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>7km NNE of Cabazon, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-25T20:55:05.040000Z</creationTime>
+        <version>3</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40149879/ci/1671994606750/product.xml" catalog:datasource="ci" catalog:dataid="ci40149879" catalog:eventsource="ci" catalog:eventid="40149879">
+        <time>
+          <value>2022-12-25T18:53:13.340000Z</value>
+        </time>
+        <latitude>
+          <value>33.9793333</value>
+        </latitude>
+        <longitude>
+          <value>-116.7638333</value>
+        </longitude>
+        <depth>
+          <value>16880.0</value>
+          <uncertainty>400.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>128</usedPhaseCount>
+          <usedStationCount>89</usedStationCount>
+          <standardError>0.18</standardError>
+          <azimuthalGap>18.0</azimuthalGap>
+          <minimumDistance>0.06658</minimumDistance>
+        </quality>
+        <evaluationMode>automatic</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-25T18:56:46.750000Z</creationTime>
+          <version>3</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>160.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40149879/ci/1671994606750/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40149879" catalog:eventsource="ci" catalog:eventid="40149879">
+        <mag>
+          <value>2.67</value>
+          <uncertainty>0.217</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40149879/ci/1671994606750/product.xml</originID>
+        <stationCount>25</stationCount>
+        <evaluationMode>automatic</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-25T18:56:46.750000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40149623&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40149623">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40149623/ci/1671957863500/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40149623/ci/1671957863500/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>14km NNE of Thousand Palms, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-26T05:06:48.247000Z</creationTime>
+        <version>3</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40149623/ci/1671957863500/product.xml" catalog:datasource="ci" catalog:dataid="ci40149623" catalog:eventsource="ci" catalog:eventid="40149623">
+        <time>
+          <value>2022-12-25T08:40:38.710000Z</value>
+        </time>
+        <latitude>
+          <value>33.9335</value>
+        </latitude>
+        <longitude>
+          <value>-116.32</value>
+        </longitude>
+        <depth>
+          <value>4960.0</value>
+          <uncertainty>550.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>98</usedPhaseCount>
+          <usedStationCount>71</usedStationCount>
+          <standardError>0.16</standardError>
+          <azimuthalGap>25.0</azimuthalGap>
+          <minimumDistance>0.07414</minimumDistance>
+        </quality>
+        <evaluationMode>automatic</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-25T08:44:23.500000Z</creationTime>
+          <version>3</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>150.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40149623/ci/1671957863500/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40149623" catalog:eventsource="ci" catalog:eventid="40149623">
+        <mag>
+          <value>2.56</value>
+          <uncertainty>0.222</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40149623/ci/1671957863500/product.xml</originID>
+        <stationCount>25</stationCount>
+        <evaluationMode>automatic</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-25T08:44:23.500000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40392824&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40392824">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40392824/ci/1671639550540/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40392824/ci/1671639550540/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>9km NE of Indio, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-30T04:34:54.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40392824/ci/1671639550540/product.xml" catalog:datasource="ci" catalog:dataid="ci40392824" catalog:eventsource="ci" catalog:eventid="40392824">
+        <time>
+          <value>2022-12-21T00:46:14.410000Z</value>
+        </time>
+        <latitude>
+          <value>33.7866667</value>
+        </latitude>
+        <longitude>
+          <value>-116.1555</value>
+        </longitude>
+        <depth>
+          <value>5770.0</value>
+          <uncertainty>440.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>148</usedPhaseCount>
+          <usedStationCount>84</usedStationCount>
+          <standardError>0.15</standardError>
+          <azimuthalGap>35.0</azimuthalGap>
+          <minimumDistance>0.0559</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-21T16:19:10.540000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40392824/ci/1671639550540/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40392824" catalog:eventsource="ci" catalog:eventid="40392824">
+        <mag>
+          <value>2.55</value>
+          <uncertainty>0.183</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40392824/ci/1671639550540/product.xml</originID>
+        <stationCount>107</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-21T16:19:10.540000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40391032&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40391032">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40391032/ci/1671218754000/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40391032/ci/1671218754000/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>2km S of Placentia, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-07T00:49:36.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40391032/ci/1671218754000/product.xml" catalog:datasource="ci" catalog:dataid="ci40391032" catalog:eventsource="ci" catalog:eventid="40391032">
+        <time>
+          <value>2022-12-16T03:26:49.190000Z</value>
+        </time>
+        <latitude>
+          <value>33.8498333</value>
+        </latitude>
+        <longitude>
+          <value>-117.8655</value>
+        </longitude>
+        <depth>
+          <value>7380.0</value>
+          <uncertainty>420.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>129</usedPhaseCount>
+          <usedStationCount>89</usedStationCount>
+          <standardError>0.24</standardError>
+          <azimuthalGap>39.0</azimuthalGap>
+          <minimumDistance>0.007329</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-16T19:25:54.000000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>210.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40391032/ci/1671218754000/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40391032" catalog:eventsource="ci" catalog:eventid="40391032">
+        <mag>
+          <value>2.63</value>
+          <uncertainty>0.158</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40391032/ci/1671218754000/product.xml</originID>
+        <stationCount>27</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-16T19:25:54.000000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40390912&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40390912">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40390912/ci/1671150134070/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40390912/ci/1671150134070/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>7km WSW of Big Bear Lake, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-17T22:37:35.040000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40390912/ci/1671150134070/product.xml" catalog:datasource="ci" catalog:dataid="ci40390912" catalog:eventsource="ci" catalog:eventid="40390912">
+        <time>
+          <value>2022-12-15T22:08:53.140000Z</value>
+        </time>
+        <latitude>
+          <value>34.2301667</value>
+        </latitude>
+        <longitude>
+          <value>-116.9858333</value>
+        </longitude>
+        <depth>
+          <value>8000.0</value>
+          <uncertainty>260.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>188</usedPhaseCount>
+          <usedStationCount>105</usedStationCount>
+          <standardError>0.13</standardError>
+          <azimuthalGap>19.0</azimuthalGap>
+          <minimumDistance>0.06272</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-16T00:22:14.070000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>90.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40390912/ci/1671150134070/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40390912" catalog:eventsource="ci" catalog:eventid="40390912">
+        <mag>
+          <value>2.7</value>
+          <uncertainty>0.197</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40390912/ci/1671150134070/product.xml</originID>
+        <stationCount>24</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-16T00:22:14.070000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40143903&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40143903">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40143903/ci/1670633969280/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40143903/ci/1670633969280/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>12km NNW of Ocotillo, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-22T06:15:40.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40143903/ci/1670633969280/product.xml" catalog:datasource="ci" catalog:dataid="ci40143903" catalog:eventsource="ci" catalog:eventid="40143903">
+        <time>
+          <value>2022-12-09T06:03:03.220000Z</value>
+        </time>
+        <latitude>
+          <value>32.8348333</value>
+        </latitude>
+        <longitude>
+          <value>-116.0415</value>
+        </longitude>
+        <depth>
+          <value>10300.0</value>
+          <uncertainty>540.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>93</usedPhaseCount>
+          <usedStationCount>64</usedStationCount>
+          <standardError>0.25</standardError>
+          <azimuthalGap>43.0</azimuthalGap>
+          <minimumDistance>0.06353</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-10T00:59:29.280000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>230.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40143903/ci/1670633969280/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40143903" catalog:eventsource="ci" catalog:eventid="40143903">
+        <mag>
+          <value>2.57</value>
+          <uncertainty>0.156</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40143903/ci/1670633969280/product.xml</originID>
+        <stationCount>26</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-10T00:59:29.280000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40143255&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40143255">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40143255/ci/1670452457480/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40143255/ci/1670452457480/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>8km ESE of Running Springs, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-18T03:15:18.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40143255/ci/1670452457480/product.xml" catalog:datasource="ci" catalog:dataid="ci40143255" catalog:eventsource="ci" catalog:eventid="40143255">
+        <time>
+          <value>2022-12-07T21:47:06.790000Z</value>
+        </time>
+        <latitude>
+          <value>34.1771667</value>
+        </latitude>
+        <longitude>
+          <value>-117.032</value>
+        </longitude>
+        <depth>
+          <value>7420.0</value>
+          <uncertainty>360.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>185</usedPhaseCount>
+          <usedStationCount>96</usedStationCount>
+          <standardError>0.14</standardError>
+          <azimuthalGap>21.0</azimuthalGap>
+          <minimumDistance>0.08938</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-07T22:34:17.480000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>90.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40143255/ci/1670452457480/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40143255" catalog:eventsource="ci" catalog:eventid="40143255">
+        <mag>
+          <value>2.71</value>
+          <uncertainty>0.129</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40143255/ci/1670452457480/product.xml</originID>
+        <stationCount>154</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-07T22:34:17.480000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40383568&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40383568">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40383568/ci/1670019125320/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40383568/ci/1670019125320/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>38km SSE of San Clemente Is. (SE tip), CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-22T17:55:20.040000Z</creationTime>
+        <version>4</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40383568/ci/1670019125320/product.xml" catalog:datasource="ci" catalog:dataid="ci40383568" catalog:eventsource="ci" catalog:eventid="40383568">
+        <time>
+          <value>2022-12-02T10:04:58.000000Z</value>
+        </time>
+        <latitude>
+          <value>32.5355</value>
+        </latitude>
+        <longitude>
+          <value>-118.1305</value>
+        </longitude>
+        <depth>
+          <value>5960.0</value>
+          <uncertainty>31610.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>45</usedPhaseCount>
+          <usedStationCount>34</usedStationCount>
+          <standardError>0.28</standardError>
+          <azimuthalGap>223.0</azimuthalGap>
+          <minimumDistance>0.5653</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-02T22:12:05.320000Z</creationTime>
+          <version>4</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>820.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40383568/ci/1670019125320/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40383568" catalog:eventsource="ci" catalog:eventid="40383568">
+        <mag>
+          <value>2.88</value>
+          <uncertainty>0.101</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40383568/ci/1670019125320/product.xml</originID>
+        <stationCount>25</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-02T22:12:05.320000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40383192&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40383192">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40383192/ci/1669911301720/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40383192/ci/1669911301720/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>12km NNW of Ocotillo, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-10T17:21:42.755000Z</creationTime>
+        <version>5</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40383192/ci/1669911301720/product.xml" catalog:datasource="ci" catalog:dataid="ci40383192" catalog:eventsource="ci" catalog:eventid="40383192">
+        <time>
+          <value>2022-12-01T15:28:29.660000Z</value>
+        </time>
+        <latitude>
+          <value>32.8361667</value>
+        </latitude>
+        <longitude>
+          <value>-116.0403333</value>
+        </longitude>
+        <depth>
+          <value>10460.0</value>
+          <uncertainty>470.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>145</usedPhaseCount>
+          <usedStationCount>79</usedStationCount>
+          <standardError>0.25</standardError>
+          <azimuthalGap>43.0</azimuthalGap>
+          <minimumDistance>0.06516</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-01T16:15:01.720000Z</creationTime>
+          <version>5</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>180.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40383192/ci/1669911301720/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40383192" catalog:eventsource="ci" catalog:eventid="40383192">
+        <mag>
+          <value>3.82</value>
+        </mag>
+        <type>mw</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40383192/ci/1669911301720/product.xml</originID>
+        <stationCount>4</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-12-01T16:15:01.720000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40381488&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40381488">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40381488/ci/1669676403850/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40381488/ci/1669676403850/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>11km E of Ocotillo Wells, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-05T06:37:07.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40381488/ci/1669676403850/product.xml" catalog:datasource="ci" catalog:dataid="ci40381488" catalog:eventsource="ci" catalog:eventid="40381488">
+        <time>
+          <value>2022-11-27T11:49:45.090000Z</value>
+        </time>
+        <latitude>
+          <value>33.1608333</value>
+        </latitude>
+        <longitude>
+          <value>-116.0193333</value>
+        </longitude>
+        <depth>
+          <value>3290.0</value>
+          <uncertainty>350.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>125</usedPhaseCount>
+          <usedStationCount>77</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>27.0</azimuthalGap>
+          <minimumDistance>0.0371</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T23:00:03.850000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>140.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40381488/ci/1669676403850/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40381488" catalog:eventsource="ci" catalog:eventid="40381488">
+        <mag>
+          <value>2.63</value>
+          <uncertainty>0.08</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40381488/ci/1669676403850/product.xml</originID>
+        <stationCount>24</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T23:00:03.850000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40380672&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40380672">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40380672/ci/1669749779120/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40380672/ci/1669749779120/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>0km SSW of View Park-Windsor Hills, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-02T09:09:21.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380672/ci/1669749779120/product.xml" catalog:datasource="ci" catalog:dataid="ci40380672" catalog:eventsource="ci" catalog:eventid="40380672">
+        <time>
+          <value>2022-11-25T09:06:01.510000Z</value>
+        </time>
+        <latitude>
+          <value>33.9923333</value>
+        </latitude>
+        <longitude>
+          <value>-118.3508333</value>
+        </longitude>
+        <depth>
+          <value>9840.0</value>
+          <uncertainty>310.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>157</usedPhaseCount>
+          <usedStationCount>98</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>38.0</azimuthalGap>
+          <minimumDistance>0.009214</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-29T19:22:59.120000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>140.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380672/ci/1669749779120/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40380672" catalog:eventsource="ci" catalog:eventid="40380672">
+        <mag>
+          <value>2.52</value>
+          <uncertainty>0.172</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40380672/ci/1669749779120/product.xml</originID>
+        <stationCount>132</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-29T19:22:59.120000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40380264&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40380264">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40380264/ci/1669647904080/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40380264/ci/1669647904080/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>5km NE of Westmorland, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-22T09:37:33.040000Z</creationTime>
+        <version>8</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380264/ci/1669647904080/product.xml" catalog:datasource="ci" catalog:dataid="ci40380264" catalog:eventsource="ci" catalog:eventid="40380264">
+        <time>
+          <value>2022-11-24T07:20:54.950000Z</value>
+        </time>
+        <latitude>
+          <value>33.0695</value>
+        </latitude>
+        <longitude>
+          <value>-115.5835</value>
+        </longitude>
+        <depth>
+          <value>11770.0</value>
+          <uncertainty>320.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>98</usedPhaseCount>
+          <usedStationCount>54</usedStationCount>
+          <standardError>0.25</standardError>
+          <azimuthalGap>47.0</azimuthalGap>
+          <minimumDistance>0.03118</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T15:05:04.080000Z</creationTime>
+          <version>8</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>210.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380264/ci/1669647904080/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40380264" catalog:eventsource="ci" catalog:eventid="40380264">
+        <mag>
+          <value>3.01</value>
+          <uncertainty>0.17</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40380264/ci/1669647904080/product.xml</originID>
+        <stationCount>89</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T15:05:04.080000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40380048&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40380048">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40380048/ci/1669663570070/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40380048/ci/1669663570070/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>5km ESE of Yorba Linda, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-29T23:00:57.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380048/ci/1669663570070/product.xml" catalog:datasource="ci" catalog:dataid="ci40380048" catalog:eventsource="ci" catalog:eventid="40380048">
+        <time>
+          <value>2022-11-23T22:16:57.350000Z</value>
+        </time>
+        <latitude>
+          <value>33.8758333</value>
+        </latitude>
+        <longitude>
+          <value>-117.7658333</value>
+        </longitude>
+        <depth>
+          <value>4790.0</value>
+          <uncertainty>330.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>157</usedPhaseCount>
+          <usedStationCount>90</usedStationCount>
+          <standardError>0.2</standardError>
+          <azimuthalGap>24.0</azimuthalGap>
+          <minimumDistance>0.04747</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T19:26:10.070000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>140.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40380048/ci/1669663570070/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40380048" catalog:eventsource="ci" catalog:eventid="40380048">
+        <mag>
+          <value>2.78</value>
+          <uncertainty>0.19</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40380048/ci/1669663570070/product.xml</originID>
+        <stationCount>120</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-28T19:26:10.070000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40379696&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40379696">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40379696/ci/1669217879800/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40379696/ci/1669217879800/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>20km N of Ocotillo, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-11-24T01:59:04.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40379696/ci/1669217879800/product.xml" catalog:datasource="ci" catalog:dataid="ci40379696" catalog:eventsource="ci" catalog:eventid="40379696">
+        <time>
+          <value>2022-11-23T03:42:45.020000Z</value>
+        </time>
+        <latitude>
+          <value>32.91</value>
+        </latitude>
+        <longitude>
+          <value>-115.9686667</value>
+        </longitude>
+        <depth>
+          <value>9870.0</value>
+          <uncertainty>420.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>125</usedPhaseCount>
+          <usedStationCount>71</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>30.0</azimuthalGap>
+          <minimumDistance>0.02312</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-23T15:37:59.800000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>150.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40379696/ci/1669217879800/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40379696" catalog:eventsource="ci" catalog:eventid="40379696">
+        <mag>
+          <value>2.57</value>
+          <uncertainty>0.169</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40379696/ci/1669217879800/product.xml</originID>
+        <stationCount>104</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-23T15:37:59.800000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40377816&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40377816">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40377816/ci/1668966698070/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40377816/ci/1668966698070/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>6km SW of Big Bear Lake, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-29T01:41:09.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40377816/ci/1668966698070/product.xml" catalog:datasource="ci" catalog:dataid="ci40377816" catalog:eventsource="ci" catalog:eventid="40377816">
+        <time>
+          <value>2022-11-19T04:15:41.720000Z</value>
+        </time>
+        <latitude>
+          <value>34.1968333</value>
+        </latitude>
+        <longitude>
+          <value>-116.9511667</value>
+        </longitude>
+        <depth>
+          <value>9080.0</value>
+          <uncertainty>230.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>197</usedPhaseCount>
+          <usedStationCount>104</usedStationCount>
+          <standardError>0.15</standardError>
+          <azimuthalGap>23.0</azimuthalGap>
+          <minimumDistance>0.07</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-20T17:51:38.070000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>90.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40377816/ci/1668966698070/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40377816" catalog:eventsource="ci" catalog:eventid="40377816">
+        <mag>
+          <value>2.62</value>
+          <uncertainty>0.143</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40377816/ci/1668966698070/product.xml</originID>
+        <stationCount>148</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-20T17:51:38.070000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40129991&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40129991">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40129991/ci/1667844143020/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40129991/ci/1667844143020/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>12km SSE of San Clemente Is. (SE tip), CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-11-07T18:30:08.040000Z</creationTime>
+        <version>4</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40129991/ci/1667844143020/product.xml" catalog:datasource="ci" catalog:dataid="ci40129991" catalog:eventsource="ci" catalog:eventid="40129991">
+        <time>
+          <value>2022-11-07T13:13:52.350000Z</value>
+        </time>
+        <latitude>
+          <value>32.727</value>
+        </latitude>
+        <longitude>
+          <value>-118.2761667</value>
+        </longitude>
+        <depth>
+          <value>5850.0</value>
+          <uncertainty>31610.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>55</usedPhaseCount>
+          <usedStationCount>32</usedStationCount>
+          <standardError>0.26</standardError>
+          <azimuthalGap>223.0</azimuthalGap>
+          <minimumDistance>0.3399</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-07T18:02:23.020000Z</creationTime>
+          <version>4</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>550.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40129991/ci/1667844143020/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40129991" catalog:eventsource="ci" catalog:eventid="40129991">
+        <mag>
+          <value>2.63</value>
+          <uncertainty>0.137</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40129991/ci/1667844143020/product.xml</originID>
+        <stationCount>128</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-07T18:02:23.020000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40129359&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40129359">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40129359/ci/1667758512790/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40129359/ci/1667758512790/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>0km E of Carson, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-11-23T03:54:01.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40129359/ci/1667758512790/product.xml" catalog:datasource="ci" catalog:dataid="ci40129359" catalog:eventsource="ci" catalog:eventid="40129359">
+        <time>
+          <value>2022-11-05T20:39:33.120000Z</value>
+        </time>
+        <latitude>
+          <value>33.8315</value>
+        </latitude>
+        <longitude>
+          <value>-118.2781667</value>
+        </longitude>
+        <depth>
+          <value>11220.0</value>
+          <uncertainty>360.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>114</usedPhaseCount>
+          <usedStationCount>75</usedStationCount>
+          <standardError>0.27</standardError>
+          <azimuthalGap>63.0</azimuthalGap>
+          <minimumDistance>0.0384</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-06T18:15:12.790000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>210.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40129359/ci/1667758512790/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40129359" catalog:eventsource="ci" catalog:eventid="40129359">
+        <mag>
+          <value>2.69</value>
+          <uncertainty>0.192</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40129359/ci/1667758512790/product.xml</originID>
+        <stationCount>121</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-11-06T18:15:12.790000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40127463&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40127463">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40127463/ci/1667225675500/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40127463/ci/1667225675500/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>6km ESE of Wrightwood, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-12T23:10:44.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40127463/ci/1667225675500/product.xml" catalog:datasource="ci" catalog:dataid="ci40127463" catalog:eventsource="ci" catalog:eventid="40127463">
+        <time>
+          <value>2022-10-31T04:52:58.560000Z</value>
+        </time>
+        <latitude>
+          <value>34.3418333</value>
+        </latitude>
+        <longitude>
+          <value>-117.569</value>
+        </longitude>
+        <depth>
+          <value>4350.0</value>
+          <uncertainty>450.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>233</usedPhaseCount>
+          <usedStationCount>130</usedStationCount>
+          <standardError>0.22</standardError>
+          <azimuthalGap>26.0</azimuthalGap>
+          <minimumDistance>0.09885</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-31T14:14:35.500000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40127463/ci/1667225675500/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40127463" catalog:eventsource="ci" catalog:eventid="40127463">
+        <mag>
+          <value>3.01</value>
+          <uncertainty>0.184</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40127463/ci/1667225675500/product.xml</originID>
+        <stationCount>198</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-31T14:14:35.500000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40127223&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40127223">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40127223/ci/1667141568590/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40127223/ci/1667141568590/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>2km E of Loma Linda, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-12T23:10:36.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40127223/ci/1667141568590/product.xml" catalog:datasource="ci" catalog:dataid="ci40127223" catalog:eventsource="ci" catalog:eventid="40127223">
+        <time>
+          <value>2022-10-30T08:16:03.080000Z</value>
+        </time>
+        <latitude>
+          <value>34.0463333</value>
+        </latitude>
+        <longitude>
+          <value>-117.2351667</value>
+        </longitude>
+        <depth>
+          <value>15170.0</value>
+          <uncertainty>190.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>275</usedPhaseCount>
+          <usedStationCount>149</usedStationCount>
+          <standardError>0.2</standardError>
+          <azimuthalGap>15.0</azimuthalGap>
+          <minimumDistance>0.07098</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-30T14:52:48.590000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40127223/ci/1667141568590/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40127223" catalog:eventsource="ci" catalog:eventid="40127223">
+        <mag>
+          <value>2.85</value>
+          <uncertainty>0.128</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40127223/ci/1667141568590/product.xml</originID>
+        <stationCount>202</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-30T14:52:48.590000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40365968&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40365968">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40365968/ci/1666810826080/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40365968/ci/1666810826080/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>11km NW of Anza, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T15:23:26.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365968/ci/1666810826080/product.xml" catalog:datasource="ci" catalog:dataid="ci40365968" catalog:eventsource="ci" catalog:eventid="40365968">
+        <time>
+          <value>2022-10-26T08:15:08.220000Z</value>
+        </time>
+        <latitude>
+          <value>33.6378333</value>
+        </latitude>
+        <longitude>
+          <value>-116.7423333</value>
+        </longitude>
+        <depth>
+          <value>13730.0</value>
+          <uncertainty>230.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>211</usedPhaseCount>
+          <usedStationCount>113</usedStationCount>
+          <standardError>0.2</standardError>
+          <azimuthalGap>13.0</azimuthalGap>
+          <minimumDistance>0.04763</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-26T19:00:26.080000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365968/ci/1666810826080/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40365968" catalog:eventsource="ci" catalog:eventid="40365968">
+        <mag>
+          <value>2.75</value>
+          <uncertainty>0.179</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40365968/ci/1666810826080/product.xml</originID>
+        <stationCount>28</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-26T19:00:26.080000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40365960&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40365960">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40365960/ci/1666794078510/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40365960/ci/1666794078510/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>11km NW of Anza, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T15:23:26.040000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365960/ci/1666794078510/product.xml" catalog:datasource="ci" catalog:dataid="ci40365960" catalog:eventsource="ci" catalog:eventid="40365960">
+        <time>
+          <value>2022-10-26T08:14:35.080000Z</value>
+        </time>
+        <latitude>
+          <value>33.6383333</value>
+        </latitude>
+        <longitude>
+          <value>-116.7436667</value>
+        </longitude>
+        <depth>
+          <value>13640.0</value>
+          <uncertainty>270.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>162</usedPhaseCount>
+          <usedStationCount>94</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>39.0</azimuthalGap>
+          <minimumDistance>0.04768</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-26T14:21:18.510000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>140.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365960/ci/1666794078510/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40365960" catalog:eventsource="ci" catalog:eventid="40365960">
+        <mag>
+          <value>2.85</value>
+          <uncertainty>0.176</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40365960/ci/1666794078510/product.xml</originID>
+        <stationCount>148</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-26T14:21:18.510000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40365304&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40365304">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40365304/ci/1666719670390/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40365304/ci/1666719670390/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>5km E of Calimesa, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T15:23:28.040000Z</creationTime>
+        <version>8</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365304/ci/1666719670390/product.xml" catalog:datasource="ci" catalog:dataid="ci40365304" catalog:eventsource="ci" catalog:eventid="40365304">
+        <time>
+          <value>2022-10-24T23:19:02.470000Z</value>
+        </time>
+        <latitude>
+          <value>33.9898333</value>
+        </latitude>
+        <longitude>
+          <value>-116.9996667</value>
+        </longitude>
+        <depth>
+          <value>15020.0</value>
+          <uncertainty>340.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>180</usedPhaseCount>
+          <usedStationCount>101</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>25.0</azimuthalGap>
+          <minimumDistance>0.07009</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-25T17:41:10.390000Z</creationTime>
+          <version>8</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>130.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40365304/ci/1666719670390/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40365304" catalog:eventsource="ci" catalog:eventid="40365304">
+        <mag>
+          <value>2.66</value>
+          <uncertainty>0.113</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40365304/ci/1666719670390/product.xml</originID>
+        <stationCount>24</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-25T17:41:10.390000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40364760&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40364760">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40364760/ci/1666537571990/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40364760/ci/1666537571990/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>23km SSW of La Quinta, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2023-01-03T15:23:30.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40364760/ci/1666537571990/product.xml" catalog:datasource="ci" catalog:dataid="ci40364760" catalog:eventsource="ci" catalog:eventid="40364760">
+        <time>
+          <value>2022-10-23T09:24:58.150000Z</value>
+        </time>
+        <latitude>
+          <value>33.4806667</value>
+        </latitude>
+        <longitude>
+          <value>-116.4261667</value>
+        </longitude>
+        <depth>
+          <value>5790.0</value>
+          <uncertainty>320.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>222</usedPhaseCount>
+          <usedStationCount>120</usedStationCount>
+          <standardError>0.19</standardError>
+          <azimuthalGap>25.0</azimuthalGap>
+          <minimumDistance>0.04262</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-23T15:06:11.990000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>100.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40364760/ci/1666537571990/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40364760" catalog:eventsource="ci" catalog:eventid="40364760">
+        <mag>
+          <value>3.27</value>
+          <uncertainty>0.148</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40364760/ci/1666537571990/product.xml</originID>
+        <stationCount>171</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-23T15:06:11.990000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40362256&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40362256">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40362256/ci/1666037075480/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40362256/ci/1666037075480/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>2km WNW of Aguanga, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-31T23:03:25.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40362256/ci/1666037075480/product.xml" catalog:datasource="ci" catalog:dataid="ci40362256" catalog:eventsource="ci" catalog:eventid="40362256">
+        <time>
+          <value>2022-10-17T05:25:28.830000Z</value>
+        </time>
+        <latitude>
+          <value>33.4506667</value>
+        </latitude>
+        <longitude>
+          <value>-116.888</value>
+        </longitude>
+        <depth>
+          <value>12710.0</value>
+          <uncertainty>370.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>218</usedPhaseCount>
+          <usedStationCount>122</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>21.0</azimuthalGap>
+          <minimumDistance>0.0367</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-17T20:04:35.480000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40362256/ci/1666037075480/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40362256" catalog:eventsource="ci" catalog:eventid="40362256">
+        <mag>
+          <value>2.56</value>
+          <uncertainty>0.184</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40362256/ci/1666037075480/product.xml</originID>
+        <stationCount>170</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-17T20:04:35.480000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40359472&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40359472">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40359472/ci/1665621520490/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40359472/ci/1665621520490/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>2km ENE of Carson, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-17T22:53:32.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40359472/ci/1665621520490/product.xml" catalog:datasource="ci" catalog:dataid="ci40359472" catalog:eventsource="ci" catalog:eventid="40359472">
+        <time>
+          <value>2022-10-12T01:21:33.040000Z</value>
+        </time>
+        <latitude>
+          <value>33.8378333</value>
+        </latitude>
+        <longitude>
+          <value>-118.2661667</value>
+        </longitude>
+        <depth>
+          <value>10750.0</value>
+          <uncertainty>390.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>92</usedPhaseCount>
+          <usedStationCount>69</usedStationCount>
+          <standardError>0.26</standardError>
+          <azimuthalGap>61.0</azimuthalGap>
+          <minimumDistance>0.02981</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-13T00:38:40.490000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>240.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40359472/ci/1665621520490/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40359472" catalog:eventsource="ci" catalog:eventid="40359472">
+        <mag>
+          <value>2.52</value>
+          <uncertainty>0.197</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40359472/ci/1665621520490/product.xml</originID>
+        <stationCount>26</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-13T00:38:40.490000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40357392&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40357392">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40357392/ci/1665185070490/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40357392/ci/1665185070490/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>23km E of Julian, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:53:57.040000Z</creationTime>
+        <version>5</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40357392/ci/1665185070490/product.xml" catalog:datasource="ci" catalog:dataid="ci40357392" catalog:eventsource="ci" catalog:eventid="40357392">
+        <time>
+          <value>2022-10-07T22:45:05.470000Z</value>
+        </time>
+        <latitude>
+          <value>33.0413333</value>
+        </latitude>
+        <longitude>
+          <value>-116.3546667</value>
+        </longitude>
+        <depth>
+          <value>11790.0</value>
+          <uncertainty>540.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>221</usedPhaseCount>
+          <usedStationCount>117</usedStationCount>
+          <standardError>0.21</standardError>
+          <azimuthalGap>21.0</azimuthalGap>
+          <minimumDistance>0.07879</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-07T23:24:30.490000Z</creationTime>
+          <version>5</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>120.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40357392/ci/1665185070490/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40357392" catalog:eventsource="ci" catalog:eventid="40357392">
+        <mag>
+          <value>3.47</value>
+          <uncertainty>0.128</uncertainty>
+        </mag>
+        <type>mlr</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40357392/ci/1665185070490/product.xml</originID>
+        <stationCount>241</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-07T23:24:30.490000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40356608&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40356608">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40356608/ci/1665093826730/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40356608/ci/1665093826730/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>4km SSW of Niland, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:53:25.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356608/ci/1665093826730/product.xml" catalog:datasource="ci" catalog:dataid="ci40356608" catalog:eventsource="ci" catalog:eventid="40356608">
+        <time>
+          <value>2022-10-06T12:11:08.400000Z</value>
+        </time>
+        <latitude>
+          <value>33.2083333</value>
+        </latitude>
+        <longitude>
+          <value>-115.5425</value>
+        </longitude>
+        <depth>
+          <value>6990.0</value>
+          <uncertainty>550.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>74</usedPhaseCount>
+          <usedStationCount>52</usedStationCount>
+          <standardError>0.22</standardError>
+          <azimuthalGap>95.0</azimuthalGap>
+          <minimumDistance>0.06862</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T22:03:46.730000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>270.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356608/ci/1665093826730/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40356608" catalog:eventsource="ci" catalog:eventid="40356608">
+        <mag>
+          <value>2.79</value>
+          <uncertainty>0.186</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40356608/ci/1665093826730/product.xml</originID>
+        <stationCount>27</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T22:03:46.730000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40356576&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40356576">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40356576/ci/1665092124240/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40356576/ci/1665092124240/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>5km SSW of Niland, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:53:24.040000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356576/ci/1665092124240/product.xml" catalog:datasource="ci" catalog:dataid="ci40356576" catalog:eventsource="ci" catalog:eventid="40356576">
+        <time>
+          <value>2022-10-06T12:03:35.730000Z</value>
+        </time>
+        <latitude>
+          <value>33.2041667</value>
+        </latitude>
+        <longitude>
+          <value>-115.5441667</value>
+        </longitude>
+        <depth>
+          <value>5800.0</value>
+          <uncertainty>550.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>64</usedPhaseCount>
+          <usedStationCount>49</usedStationCount>
+          <standardError>0.23</standardError>
+          <azimuthalGap>95.0</azimuthalGap>
+          <minimumDistance>0.06558</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T21:35:24.240000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>310.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356576/ci/1665092124240/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40356576" catalog:eventsource="ci" catalog:eventid="40356576">
+        <mag>
+          <value>2.84</value>
+          <uncertainty>0.163</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40356576/ci/1665092124240/product.xml</originID>
+        <stationCount>27</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T21:35:24.240000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40356424&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40356424">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40356424/ci/1665088632350/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40356424/ci/1665088632350/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>4km SE of Loma Linda, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:53:22.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356424/ci/1665088632350/product.xml" catalog:datasource="ci" catalog:dataid="ci40356424" catalog:eventsource="ci" catalog:eventid="40356424">
+        <time>
+          <value>2022-10-06T05:29:53.930000Z</value>
+        </time>
+        <latitude>
+          <value>34.0243333</value>
+        </latitude>
+        <longitude>
+          <value>-117.2246667</value>
+        </longitude>
+        <depth>
+          <value>11330.0</value>
+          <uncertainty>200.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>141</usedPhaseCount>
+          <usedStationCount>98</usedStationCount>
+          <standardError>0.15</standardError>
+          <azimuthalGap>17.0</azimuthalGap>
+          <minimumDistance>0.09389</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T20:37:12.350000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>110.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40356424/ci/1665088632350/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40356424" catalog:eventsource="ci" catalog:eventid="40356424">
+        <mag>
+          <value>2.54</value>
+          <uncertainty>0.212</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40356424/ci/1665088632350/product.xml</originID>
+        <stationCount>24</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-06T20:37:12.350000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40355088&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40355088">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40355088/ci/1664815191030/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40355088/ci/1664815191030/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>4km W of Banning, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:52:59.040000Z</creationTime>
+        <version>7</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40355088/ci/1664815191030/product.xml" catalog:datasource="ci" catalog:dataid="ci40355088" catalog:eventsource="ci" catalog:eventid="40355088">
+        <time>
+          <value>2022-10-03T16:08:09.970000Z</value>
+        </time>
+        <latitude>
+          <value>33.9246667</value>
+        </latitude>
+        <longitude>
+          <value>-116.9215</value>
+        </longitude>
+        <depth>
+          <value>7620.0</value>
+          <uncertainty>380.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>216</usedPhaseCount>
+          <usedStationCount>114</usedStationCount>
+          <standardError>0.17</standardError>
+          <azimuthalGap>20.0</azimuthalGap>
+          <minimumDistance>0.04923</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T16:39:51.030000Z</creationTime>
+          <version>7</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>100.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40355088/ci/1664815191030/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40355088" catalog:eventsource="ci" catalog:eventid="40355088">
+        <mag>
+          <value>3.01</value>
+          <uncertainty>0.148</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40355088/ci/1664815191030/product.xml</originID>
+        <stationCount>154</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T16:39:51.030000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40354936&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40354936">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40354936/ci/1664807653020/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40354936/ci/1664807653020/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>5km ESE of Yorba Linda, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:52:56.040000Z</creationTime>
+        <version>8</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40354936/ci/1664807653020/product.xml" catalog:datasource="ci" catalog:dataid="ci40354936" catalog:eventsource="ci" catalog:eventid="40354936">
+        <time>
+          <value>2022-10-03T08:24:33.660000Z</value>
+        </time>
+        <latitude>
+          <value>33.8696667</value>
+        </latitude>
+        <longitude>
+          <value>-117.7646667</value>
+        </longitude>
+        <depth>
+          <value>4270.0</value>
+          <uncertainty>380.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>250</usedPhaseCount>
+          <usedStationCount>142</usedStationCount>
+          <standardError>0.25</standardError>
+          <azimuthalGap>19.0</azimuthalGap>
+          <minimumDistance>0.04589</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T14:34:13.020000Z</creationTime>
+          <version>8</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>120.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40354936/ci/1664807653020/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40354936" catalog:eventsource="ci" catalog:eventid="40354936">
+        <mag>
+          <value>3.08</value>
+          <uncertainty>0.178</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40354936/ci/1664807653020/product.xml</originID>
+        <stationCount>196</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T14:34:13.020000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+    <event publicID="quakeml:earthquake.usgs.gov/fdsnws/event/1/query?eventid=ci40354880&amp;format=quakeml" catalog:datasource="ci" catalog:eventsource="ci" catalog:eventid="40354880">
+      <preferredOriginID>quakeml:earthquake.usgs.gov/product/origin/ci40354880/ci/1664826243020/product.xml</preferredOriginID>
+      <preferredMagnitudeID>quakeml:earthquake.usgs.gov/product/origin/ci40354880/ci/1664826243020/product.xml#magnitude</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>26km WSW of Westmorland, CA</text>
+        <type>earthquake name</type>
+      </description>
+      <creationInfo>
+        <agencyID>ci</agencyID>
+        <creationTime>2022-12-10T22:52:53.040000Z</creationTime>
+        <version>6</version>
+      </creationInfo>
+      <origin publicID="quakeml:earthquake.usgs.gov/product/origin/ci40354880/ci/1664826243020/product.xml" catalog:datasource="ci" catalog:dataid="ci40354880" catalog:eventsource="ci" catalog:eventid="40354880">
+        <time>
+          <value>2022-10-03T06:16:26.150000Z</value>
+        </time>
+        <latitude>
+          <value>32.9686667</value>
+        </latitude>
+        <longitude>
+          <value>-115.8898333</value>
+        </longitude>
+        <depth>
+          <value>11760.0</value>
+          <uncertainty>490.0</uncertainty>
+        </depth>
+        <quality>
+          <usedPhaseCount>97</usedPhaseCount>
+          <usedStationCount>65</usedStationCount>
+          <standardError>0.24</standardError>
+          <azimuthalGap>27.0</azimuthalGap>
+          <minimumDistance>0.05681</minimumDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T19:44:03.020000Z</creationTime>
+          <version>6</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>210.0</horizontalUncertainty>
+        </originUncertainty>
+      </origin>
+      <magnitude publicID="quakeml:earthquake.usgs.gov/product/origin/ci40354880/ci/1664826243020/product.xml#magnitude" catalog:datasource="ci" catalog:dataid="ci40354880" catalog:eventsource="ci" catalog:eventid="40354880">
+        <mag>
+          <value>2.71</value>
+          <uncertainty>0.168</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:earthquake.usgs.gov/product/origin/ci40354880/ci/1664826243020/product.xml</originID>
+        <stationCount>26</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>CI</agencyID>
+          <creationTime>2022-10-03T19:44:03.020000Z</creationTime>
+        </creationInfo>
+      </magnitude>
+    </event>
+  </eventParameters>
+</q:quakeml>

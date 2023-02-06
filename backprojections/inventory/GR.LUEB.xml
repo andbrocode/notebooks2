@@ -1,0 +1,1263 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>SeisComP</Source>
+  <Sender>BGR</Sender>
+  <Module/>
+  <ModuleURI/>
+  <Created>2020-12-02T09:33:18.850995Z</Created>
+  <Network code="GR" startDate="1976-02-17T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network, BGR Hannover</Description>
+    <Station code="LUEB" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">52.2966</Latitude>
+      <Longitude unit="DEGREES">8.6993</Longitude>
+      <Elevation>155.0</Elevation>
+      <Site>
+        <Name>BGR Station Luebbecke Wasserhochbehaelter, Germany</Name>
+        <Country>Germany</Country>
+      </Site>
+      <CreationDate>2019-02-26T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHE" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHN" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHZ" startDate="2019-02-26T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">52.2966</Latitude>
+        <Longitude unit="DEGREES">8.6993</Longitude>
+        <Elevation>155.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20190307125520.611096.100">
+          <Type>VBB</Type>
+          <Description>STS-2.5/g=1500</Description>
+          <Manufacturer>Streckeisen</Manufacturer>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20141210155021.52082.7">
+          <Type>Quanterra Q330</Type>
+          <Description>Q330/N/g=419430</Description>
+          <Manufacturer>Quanterra</Manufacturer>
+          <Model>Q330</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>0.05</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="STS-2.5/g=1500" resourceId="ResponsePAZ#20190307125520.611221.101">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>0.000185347</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">0.05</NormalizationFrequency>
+              <Zero number="7">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="8">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="9">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="10">
+                <Real>-15.708</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="11">
+                <Real>-605.071</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="12">
+                <Real>-521.504</Real>
+                <Imaginary>-961.327</Imaginary>
+              </Zero>
+              <Zero number="13">
+                <Real>-521.504</Real>
+                <Imaginary>961.327</Imaginary>
+              </Zero>
+              <Zero number="14">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03702</Real>
+                <Imaginary>0.03702</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03702</Real>
+                <Imaginary>-0.03702</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-16.0473</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-339.292</Real>
+                <Imaginary>-115.611</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-339.292</Real>
+                <Imaginary>115.611</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-961.327</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>0.05</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

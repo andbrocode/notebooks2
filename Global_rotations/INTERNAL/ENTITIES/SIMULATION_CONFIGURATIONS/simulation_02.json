@@ -1,0 +1,51 @@
+{
+    "class_name": "salvus.project.configuration.simulation_configuration.SimulationConfiguration",
+    "salvus_version": "0.11.21",
+    "arguments": {
+        "tensor_order": 2,
+        "min_period_in_seconds": 400.0,
+        "max_frequency_in_hertz": null,
+        "max_depth_in_meters": null,
+        "topography_configuration": null,
+        "bathymetry_configuration": null,
+        "absorbing_boundaries": null,
+        "name": "simulation_02",
+        "elements_per_wavelength": 1.0,
+        "model_configuration": {
+            "class_name": "salvus.project.configuration.model.ModelConfiguration",
+            "salvus_version": "0.11.21",
+            "arguments": {
+                "volume_models": null,
+                "linear_solids": null,
+                "background_model": "prem_ani_no_crust"
+            }
+        },
+        "event_configuration": {
+            "class_name": "salvus.project.configuration.event_configuration.EventConfiguration",
+            "salvus_version": "0.11.21",
+            "arguments": {
+                "wavelet": {
+                    "class_name": "salvus.flow.simple_config.stf.Ricker",
+                    "salvus_version": "0.11.21",
+                    "arguments": {
+                        "time_shift_in_seconds": null,
+                        "center_frequency": 10.0
+                    }
+                },
+                "waveform_simulation_configuration": {
+                    "class_name": "salvus.project.configuration.waveform_simulation_configuration.WaveformSimulationConfiguration",
+                    "salvus_version": "0.11.21",
+                    "arguments": {
+                        "physics": {
+                            "wave_equation": {
+                                "attenuation": false,
+                                "end_time_in_seconds": 3000.0,
+                                "time_stepping_scheme": "newmark"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

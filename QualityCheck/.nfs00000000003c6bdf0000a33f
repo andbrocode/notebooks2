@@ -1,0 +1,28 @@
+#!/bin/bash
+
+path='/home/brotzer/Documents/ROMY/ROMY_QualityCheck/stations/'
+
+#year="2019"
+
+for year in 2018 2019 2020 ; do 
+
+	for cha in BJZ BJU BJV BJW ;do
+		
+		if [ $cha == "BJZ" ]; then
+			code="BW.ROMY.10.${cha}"
+		else
+			code="BW.ROMY..${cha}"
+		fi
+
+		echo "\n$year $code ..."
+
+		python3 updateConfig.py "config.ini" "$path" "$code" "$year" 
+		sleep 2
+		python3 runTracesQuality.py
+
+		cp config.ini ${path}${year}_${code}_${cha}.config
+
+	done 
+done
+
+## END OF FILE

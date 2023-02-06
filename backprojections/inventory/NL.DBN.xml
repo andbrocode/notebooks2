@@ -1,0 +1,1524 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>ObsPy FDSN Routing 1.2.2,SeisComP3</Source>
+  <Sender>ODC</Sender>
+  <Module>ObsPy 1.2.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2020-12-03T10:08:38.990797Z</Created>
+  <Network code="NL" startDate="1993-01-01T00:00:00.000000Z" restrictedStatus="open">
+    <Description>Netherlands Seismic and Acoustic Network</Description>
+    <Station code="DBN" startDate="1997-11-25T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">52.1017</Latitude>
+      <Longitude unit="DEGREES">5.1767</Longitude>
+      <Elevation>3.0</Elevation>
+      <Site>
+        <Name>De Bilt, Netherlands</Name>
+        <Country> Netherlands</Country>
+      </Site>
+      <CreationDate>1997-11-25T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027986.22">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.028613.26">
+          <Description>DBN.2018.182.BHE01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HE01" resourceId="ResponsePAZ#20180821091101.02802.23">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027751.19">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.028422.25">
+          <Description>DBN.2018.182.BHN01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HN01" resourceId="ResponsePAZ#20180821091101.02778.20">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.02751.16">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.02818.24">
+          <Description>DBN.2018.182.BHZ01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HZ01" resourceId="ResponsePAZ#20180821091101.027548.17">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027986.22">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.02794.21">
+          <Description>DBN.2018.182.HHE01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HE01" resourceId="ResponsePAZ#20180821091101.02802.23">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027751.19">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.027713.18">
+          <Description>DBN.2018.182.HHN01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HN01" resourceId="ResponsePAZ#20180821091101.02778.20">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.02751.16">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.027419.15">
+          <Description>DBN.2018.182.HHZ01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HZ01" resourceId="ResponsePAZ#20180821091101.027548.17">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHE" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027986.22">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.0292.29">
+          <Description>DBN.2018.182.LHE01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HE01" resourceId="ResponsePAZ#20180821091101.02802.23">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHN" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.027751.19">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.029008.28">
+          <Description>DBN.2018.182.LHN01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HN01" resourceId="ResponsePAZ#20180821091101.02778.20">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="LHZ" startDate="2018-07-01T00:00:00.000000Z" restrictedStatus="open" locationCode="01">
+        <Latitude unit="DEGREES">52.1017</Latitude>
+        <Longitude unit="DEGREES">5.1767</Longitude>
+        <Elevation>3.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">1.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>1</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20180821091101.02751.16">
+          <Type>STS-2</Type>
+          <Description>STS-2</Description>
+          <Model>STS-2</Model>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20180821091101.028805.27">
+          <Description>DBN.2018.182.LHZ01</Description>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>629145000.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="DBN.2018.182.HZ01" resourceId="ResponsePAZ#20180821091101.027548.17">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>2.3524e+17</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="14">
+                <Real>-5907.0</Real>
+                <Imaginary>3411.0</Imaginary>
+              </Zero>
+              <Zero number="15">
+                <Real>-5907.0</Real>
+                <Imaginary>-3411.0</Imaginary>
+              </Zero>
+              <Zero number="16">
+                <Real>-683.9</Real>
+                <Imaginary>175.5</Imaginary>
+              </Zero>
+              <Zero number="17">
+                <Real>-683.9</Real>
+                <Imaginary>-175.5</Imaginary>
+              </Zero>
+              <Zero number="18">
+                <Real>-555.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="19">
+                <Real>-294.6</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="20">
+                <Real>-10.75</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="21">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="22">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.037</Real>
+                <Imaginary>0.037</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.037</Real>
+                <Imaginary>-0.037</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-6909.0</Real>
+                <Imaginary>9208.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-6909.0</Real>
+                <Imaginary>-9208.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-6227.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="5">
+                <Real>-4936.0</Real>
+                <Imaginary>4713.0</Imaginary>
+              </Pole>
+              <Pole number="6">
+                <Real>-4936.0</Real>
+                <Imaginary>-4713.0</Imaginary>
+              </Pole>
+              <Pole number="7">
+                <Real>-1391.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="8">
+                <Real>-556.8</Real>
+                <Imaginary>60.05</Imaginary>
+              </Pole>
+              <Pole number="9">
+                <Real>-556.8</Real>
+                <Imaginary>-60.05</Imaginary>
+              </Pole>
+              <Pole number="10">
+                <Real>-98.44</Real>
+                <Imaginary>442.8</Imaginary>
+              </Pole>
+              <Pole number="11">
+                <Real>-98.44</Real>
+                <Imaginary>-442.8</Imaginary>
+              </Pole>
+              <Pole number="12">
+                <Real>-10.95</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="13">
+                <Real>-255.1</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>419430.0</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

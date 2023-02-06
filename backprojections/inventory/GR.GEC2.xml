@@ -1,0 +1,765 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.1">
+  <Source>SeisComP</Source>
+  <Sender>BGR</Sender>
+  <Module/>
+  <ModuleURI/>
+  <Created>2020-12-02T09:32:41.374420Z</Created>
+  <Network code="GR" startDate="1976-02-17T00:00:00.000000Z" restrictedStatus="open">
+    <Description>German Regional Seismic Network, BGR Hannover</Description>
+    <Station code="GEC2" startDate="1997-01-01T00:00:00.000000Z" restrictedStatus="open">
+      <Latitude unit="DEGREES">48.844303</Latitude>
+      <Longitude unit="DEGREES">13.700627</Longitude>
+      <Elevation>1150.0</Elevation>
+      <Site>
+        <Name>BGR Station Geress-Array, Germany</Name>
+        <Country>Germany</Country>
+      </Site>
+      <CreationDate>1997-01-01T00:00:00.000000Z</CreationDate>
+      <Channel code="BHE" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4182387792.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHN" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4187956883.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="BHZ" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">20.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>20</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4165680517.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">20.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHE" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">90.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4182387792.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHN" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">0.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4187956883.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="HHZ" startDate="2020-08-31T14:40:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">100.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>100</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20170918111653.732764.57">
+          <Type>VBB</Type>
+          <Description>CMG-3T/120/g=1500</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>CMG-3T/120</Model>
+          <SerialNumber>T38187</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.017549.32">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X8/g=2784545</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>4165680517.0</Value>
+            <Frequency>1.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="CMG-3T/120/g=1500" resourceId="ResponsePAZ#20170918111653.73289.58">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>571508000.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">1.0</NormalizationFrequency>
+              <Zero number="5">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="6">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-0.03700796</Real>
+                <Imaginary>0.03700796</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-0.03700796</Real>
+                <Imaginary>-0.03700796</Imaginary>
+              </Pole>
+              <Pole number="2">
+                <Real>-1130.973355</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="3">
+                <Real>-1005.309649</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+              <Pole number="4">
+                <Real>-502.6548246</Real>
+                <Imaginary>0.0</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>1500.0</Value>
+              <Frequency>1.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">100.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>2784545.8</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+      <Channel code="SHZ" startDate="2017-05-05T00:00:00.000000Z" restrictedStatus="open" locationCode="">
+        <Latitude unit="DEGREES">48.844303</Latitude>
+        <Longitude unit="DEGREES">13.700627</Longitude>
+        <Elevation>1150.0</Elevation>
+        <Depth>0.0</Depth>
+        <Azimuth unit="DEGREES">0.0</Azimuth>
+        <Dip unit="DEGREES">-90.0</Dip>
+        <SampleRate unit="SAMPLES/S">40.0</SampleRate>
+        <SampleRateRatio>
+          <NumberSamples>40</NumberSamples>
+          <NumberSeconds>1</NumberSeconds>
+        </SampleRateRatio>
+        <ClockDrift unit="SECONDS/SAMPLE">0.0</ClockDrift>
+        <Sensor resourceId="Sensor#20201118143437.328572.5">
+          <Type>SP</Type>
+          <Description>GS13/g=80000</Description>
+          <Manufacturer>Geotech</Manufacturer>
+          <Model>GS13</Model>
+          <SerialNumber>198</SerialNumber>
+        </Sensor>
+        <DataLogger resourceId="Datalogger#20170530144812.015445.31">
+          <Type>Guralp DM24</Type>
+          <Description>DM24/X1/g=348068</Description>
+          <Manufacturer>Guralp</Manufacturer>
+          <Model>DM24</Model>
+        </DataLogger>
+        <Response>
+          <InstrumentSensitivity>
+            <Value>28935605600.0</Value>
+            <Frequency>5.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>COUNTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros name="GS13/g=80000" resourceId="ResponsePAZ#20201118143437.328726.6">
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>V</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">5.0</NormalizationFrequency>
+              <Zero number="2">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="3">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-4.443</Real>
+                <Imaginary>4.443</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-4.443</Real>
+                <Imaginary>-4.443</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>80000.0</Value>
+              <Frequency>5.0</Frequency>
+            </StageGain>
+          </Stage>
+          <Stage number="2">
+            <Coefficients>
+              <InputUnits>
+                <Name>V</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>COUNTS</Name>
+              </OutputUnits>
+              <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+            </Coefficients>
+            <Decimation>
+              <InputSampleRate unit="HERTZ">40.0</InputSampleRate>
+              <Factor>1</Factor>
+              <Offset>0</Offset>
+              <Delay>0.0</Delay>
+              <Correction>0.0</Correction>
+            </Decimation>
+            <StageGain>
+              <Value>348068.2</Value>
+              <Frequency>0.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>
