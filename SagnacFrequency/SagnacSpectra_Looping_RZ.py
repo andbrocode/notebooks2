@@ -325,7 +325,7 @@ def __makeplot_colorlines_and_helicorder(config, ff, data, traces, peaks=None, s
 
     def __get_median_psd(psds):
 
-        from numpy import median, zeros, isnan
+        from numpy import median, zeros, isnan, nanmean
 
         med_psd = zeros(psds.shape[1])
 
@@ -394,7 +394,7 @@ def __makeplot_colorlines_and_helicorder(config, ff, data, traces, peaks=None, s
 
         norm_tr_max = max(tr)
 
-        ax[1].plot(timeaxis, tr/norm_tr_max + m, color=cols[m], alpha=0.3)
+        ax[1].plot(timeaxis, tr/norm_tr_max - nanmean(tr_norm_tr_max) + m, color=cols[m], alpha=0.3)
 
     ax[1].set_yticks(linspace(0,23,24))
     ax[1].set_yticklabels([str(int(tt)).rjust(2,"0")+":00" for tt in linspace(0,23,24)])
