@@ -1,0 +1,8 @@
+# ignore these files or structures
+00_data/
+OLD/
+*.mseed
+LowNoiseModel/AnalyseRotationSpectra-HourlyPSDS-autoplots.ipynb
+backprojections/.ipynb_checkpoints/Backprojection-checkpoint.ipynb
+backprojections/Backprojection.ipynb
+SagnacProcessing/data
