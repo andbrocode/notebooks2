@@ -33,7 +33,8 @@ config['tend'] = "2023-04-07"
 
 #config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/hilbert_60_R{config['ring']}_multi/"
 config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/tests/"
-config['outifle_appendix'] = "_test12"
+
+config['outfile_appendix'] = f"_test10"
 
 config['repository'] = "archive"
 
@@ -58,7 +59,7 @@ config['NN'] = int(config['loaded_period']/config['t_steps'])
 #config['nblock'] = 300*5000
 #config['noverlap'] = None
 
-config['n_windows'] = 5
+#config['n_windows'] = 3
 
 
 
@@ -120,7 +121,7 @@ def __multitaper_hilbert(config, st, fs, n_windows):
         st0 = st.copy()
 
         ## bandpass with butterworth
-        st0.detrend("linear")
+        st0.detrend("simple")
         st0.taper(0.01)
         st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
 
@@ -215,8 +216,8 @@ def __hilbert_frequency_estimator(config, st, fs):
 
 
     ## bandpass with butterworth
-    st0.detrend("linear")
-#    st0.taper(0.1)
+#    st0.detrend("linear")
+#    st0.taper(0.01)
 #    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
 
 
@@ -374,8 +375,9 @@ def main(iii, date):
         df['psd_max'] = p
 
         date_str = str(date)[:10].replace("-","")
-        print(f" -> writing: {config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
-        df.to_pickle(f"{config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
+
+        print(f" -> writing: {config['outpath_data']}R{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
+        df.to_pickle(f"{config['outpath_data']}R{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
 
 
 
@@ -388,13 +390,18 @@ if __name__ == "__main__":
 
     print(json.dumps(config, indent=4, sort_keys=True))
 
-    pool = mp.Pool(mp.cpu_count())
+    for jj, date in enumerate(date_range(tbeg, tend)):
+        main(jj, date)
+
+#    pool = mp.Pool(mp.cpu_count())
+
+#    results = pool.apply_async(main, [(date) for date in date_range(tbeg, tend)]).get()
+#   [pool.apply_async(main, args=(iii, date)) for iii, date in enumerate(date_range(tbeg, tend))]
+
+#    pool.close()
+#    pool.join()
 
 
-    [pool.apply_async(main, args=(iii, date)) for iii, date in enumerate(date_range(tbeg, tend))]
-
-    pool.close()
-    pool.join()
 
 
 ## END OF FILE
