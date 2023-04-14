@@ -29,11 +29,11 @@ config['ring'] = "Z"
 config['seed'] = f"BW.DROMY..FJ{config['ring']}"
 
 config['tbeg'] = "2023-04-07"
-config['tend'] = "2023-04-08"
+config['tend'] = "2023-04-07"
 
 #config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/hilbert_60_R{config['ring']}_multi/"
-config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/"
-
+config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/tests/"
+config['outifle_appendix'] = "test12"
 
 config['repository'] = "archive"
 
@@ -49,7 +49,7 @@ config['f_band'] = 3 ## +- frequency band
 ## Variables
 
 config['t_steps'] = 60  ## seconds
-config['t_overlap'] = 30 ## seconds
+config['t_overlap'] = 240 ## seconds
 
 
 config['loaded_period'] = 3600  ## seconds
@@ -58,7 +58,7 @@ config['NN'] = int(config['loaded_period']/config['t_steps'])
 #config['nblock'] = 300*5000
 #config['noverlap'] = None
 
-#config['n_windows'] = 3
+config['n_windows'] = 5
 
 
 
@@ -120,7 +120,7 @@ def __multitaper_hilbert(config, st, fs, n_windows):
         st0 = st.copy()
 
         ## bandpass with butterworth
-        st0.detrend("simple")
+        st0.detrend("linear")
         st0.taper(0.01)
         st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
 
@@ -215,16 +215,15 @@ def __hilbert_frequency_estimator(config, st, fs):
 
 
     ## bandpass with butterworth
-    st0.detrend("demean")
+    st0.detrend("linear")
     st0.taper(0.1)
-    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
+#    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
 
 
     ## estimate instantaneous frequency with hilbert
     signal = st0[0].data
 
     analytic_signal = hilbert(signal)
-
     amplitude_envelope = np.abs(analytic_signal)
     instantaneous_phase = np.unwrap(np.angle(analytic_signal))
     instantaneous_frequency = (np.diff(instantaneous_phase) / (2.0*np.pi) * fs)
@@ -293,7 +292,7 @@ def __compute(config, st0, starttime, method="hilbert"):
 
         elif method == "multitaper":
 
-            f_tmp, f_max, p_max, h_tmp = __multitaper_estimate(st_tmp[0].data, df, n_windows=config['n_windows'], one_sided=True)                
+            f_tmp, f_max, p_max, h_tmp = __multitaper_estimate(st_tmp[0].data, df, n_windows=config['n_windows'], one_sided=True)
 
         times_utc = st_tmp[0].times("utcdatetime")
 #        times_mjd = __utc_to_mjd(list(times_utc))
@@ -365,7 +364,7 @@ def main(iii, date):
                 gc.collect()
             except:
                 pass
-                
+
         ## create and write a dataframe
         df = DataFrame()
         df['times_utc'] = t_utc
@@ -375,7 +374,8 @@ def main(iii, date):
         df['psd_max'] = p
 
         date_str = str(date)[:10].replace("-","")
-        df.to_pickle(f"{config['outpath_data']}{date_str}.pkl")
+        print(f" -> writing: {config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
+        df.to_pickle(f"{config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
 
 
 
@@ -390,13 +390,11 @@ if __name__ == "__main__":
 
     pool = mp.Pool(mp.cpu_count())
 
-#    results = pool.apply_async(main, [(date) for date in date_range(tbeg, tend)]).get()
-   [pool.apply_async(main, args=(iii, date)) for iii, date in enumerate(date_range(tbeg, tend))]
-    
+
+    [pool.apply_async(main, args=(iii, date)) for iii, date in enumerate(date_range(tbeg, tend))]
+
     pool.close()
     pool.join()
-
-    
 
 
 ## END OF FILE
