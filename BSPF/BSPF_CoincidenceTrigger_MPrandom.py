@@ -17,7 +17,7 @@ from numpy import sort
 
 ## Configs _______________________________________
 
-global config 
+global config
 
 config = {}
 
@@ -27,18 +27,18 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
 # config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
 
 config['date1'] = "2022-10-01"
-config['date2'] = "2022-10-31"
+config['date2'] = "2023-03-31"
 
 # config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
-config['output_path'] = "/import/kilauea-data/BSPF/trigger/"
+config['output_path'] = "/import/kilauea-data/BSPF/trigger2/"
 
 config['client'] = Client("IRIS")
 
 config['sampling_rate'] = 40 ## Hz
 
 config['trigger_type'] = 'recstalta'
-config['thr_on'] = 4.0  ## thr_on (float) – threshold for switching single station trigger on
-config['thr_off'] = 3.0 ## thr_off (float) – threshold for switching single station trigger off
+config['thr_on'] = 3.0 ##4.0  ## thr_on (float) – threshold for switching single station trigger on
+config['thr_off'] = 2.0 ##3.0 ## thr_off (float) – threshold for switching single station trigger off
 config['lta'] = int(10*config['sampling_rate'])
 config['sta'] = int(0.5*config['sampling_rate'])
 config['thr_coincidence_sum'] = 4

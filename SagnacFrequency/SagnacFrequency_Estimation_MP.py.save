@@ -34,11 +34,12 @@ config['tend'] = "2023-04-07"
 #config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/hilbert_60_R{config['ring']}_multi/"
 config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/tests/"
 
-config['outfile_appendix'] = "test26"
+config['outfile_appendix'] = "test20"
+
 
 config['repository'] = "archive"
 
-config['method'] = "multitaper_periodogram" ## "hilbert" | "multitaper_hilbert" | "welch" | "periodogram" | multitaper | multitaper_periodogram
+config['method'] = "periodogram" ## "hilbert" | "multitaper_hilbert" | "welch" | "periodogram" | multitaper
 
 rings = {"Z":553, "U":302, "V":448,"W":448}
 
@@ -47,8 +48,10 @@ config['f_band'] = 3 ## +- frequency band
 
 config['n_windows'] = 10
 
+## Variables
+
 config['t_steps'] = 60  ## seconds
-config['t_overlap'] = 600 ## seconds
+config['t_overlap'] = 240 ## seconds
 
 
 config['loaded_period'] = 3600  ## seconds
@@ -169,26 +172,26 @@ def __multitaper_hilbert(config, st, fs, n_windows):
 def __periodogram_estimate(data, fs):
 
     from spectrum import dpss, pmtm
-    from numpy import zeros, arange, linspace, std, argmax, max
+    from numpy import zeros, arange, linspace, argmax
     from scipy.signal import find_peaks, peak_widths
 
 
     f_tmp, psd_tmp = periodogram(data,
                                  fs=fs,
-                                 window='boxcar',
+                                 window=None,
                                  nfft=None,
                                  detrend='constant',
                                  return_onesided=True,
                                  scaling='density',
                                  )
 
-
     p_maxima = max(psd_tmp)
     f_maxima = f_tmp[argmax(psd_tmp)]
 
-    f_std = std(f_tmp)
+    
+    print("tes")
 
-    return f_tmp, f_maxima, p_maxima, f_std
+    return f_tmp, f_maxima, p_maxima, hh
 
 
 
@@ -212,7 +215,6 @@ def __multitaper_periodogram(data, fs, n_windows=4):
                                      return_onesided=True,
                                      scaling='density',
                                      )
-
 
         p_maxima[ii] = max(psd_tmp)
         f_maxima[ii] = f_tmp[argmax(psd_tmp)]
@@ -313,15 +315,17 @@ def __compute(config, st0, starttime, method="hilbert"):
 
         elif method == "multitaper_periodogram":
 
-            f_tmp, f_max, p_max, h_tmp = __multitaper_periodogram(st_tmp[0].data, df, n_windows=config['n_windows'])
+            f_tmp, f_max, p_max, h_tmp = __multitaper_perio(st_tmp[0].data, df, n_windows=config['n_windows'])
 
         elif method == "periodogram":
 
-            f_tmp, f_max, p_max, h_tmp = __periodogram_estimate(st_tmp[0].data, df)
+            f_tmp, f_max, p_max, h_tmp = __periodogram_estimate(st_tmp, df)
 
         elif method == "multitaper":
 
             f_tmp, f_max, p_max, h_tmp = __multitaper_estimate(st_tmp[0].data, df, n_windows=config['n_windows'], one_sided=True)
+
+        print(f_tmp, f_max, p_max, h_tmp)
 
         times_utc = st_tmp[0].times("utcdatetime")
 #        times_mjd = __utc_to_mjd(list(times_utc))
