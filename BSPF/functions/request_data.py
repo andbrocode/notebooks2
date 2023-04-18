@@ -36,9 +36,8 @@ def __request_data(seed, tbeg, tend):
         print("Failed to load waveforms!")
         waveform = None
         
-        
     ## adjust channel names
-    if net == "PY" and sta == "BSPF":
+    if cha[1] == "J" and waveform is not None:
         waveform.remove_sensitivity(inventory=inventory)
         print(" -> sensitivity removed!")
         
@@ -49,8 +48,9 @@ def __request_data(seed, tbeg, tend):
                 tr.stats.channel = str(tr.stats.channel).replace("2","N")        
             if tr.stats.channel[-1] == "3":
                 tr.stats.channel = str(tr.stats.channel).replace("3","Z")
+
     ## adjust channel names
-    if net == "II" and sta == "PFO":
+    if cha[1] == "H" and waveform is not None:
         waveform.remove_response(inventory=inventory, output="ACC", plot=False)
         print(" -> response removed!")
 
