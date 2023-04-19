@@ -26,26 +26,42 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
 ## after 2023-04-01
 # config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
 
+
+## set date range limits
 config['date1'] = "2022-10-01"
 config['date2'] = "2023-03-31"
+
 
 # config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
 config['output_path'] = "/import/kilauea-data/BSPF/trigger2/"
 
+## specify client to use for data
 config['client'] = Client("IRIS")
 
+## specify expected sampling rate
 config['sampling_rate'] = 40 ## Hz
 
+## select trigger method
 config['trigger_type'] = 'recstalta'
-config['thr_on'] = 3.0 ##4.0  ## thr_on (float) – threshold for switching single station trigger on
-config['thr_off'] = 2.0 ##3.0 ## thr_off (float) – threshold for switching single station trigger off
+
+## thr_on (float) – threshold for switching single station trigger on
+config['thr_on'] = 3.0  ## 4
+
+## thr_off (float) – threshold for switching single station trigger off
+config['thr_off'] = 2.0 ## 3.5
+
+## set time parameters for STA-LTA
 config['lta'] = int(10*config['sampling_rate'])
 config['sta'] = int(0.5*config['sampling_rate'])
+
+## specify coincidence sum
 config['thr_coincidence_sum'] = 4
-config['similarity_thresholds'] = {"BSPF": 0.7, "PFO": 0.7}
+
+#config['similarity_thresholds'] = {"BSPF": 0.8, "PFO": 0.7}
 
 config['time_interval'] = 3600 ## in seconds
 config['time_overlap'] = 600 ## seconds
+
 
 ## Methods _______________________________________
 
@@ -125,15 +141,6 @@ def __trigger(config, st):
 
     df = st_tmp[0].stats.sampling_rate
 
-#     for ii in range(len(st)):
-#         tr = st_tmp[ii]
-
-#         cft = recursive_sta_lta(tr.data, config['sta'], config['lta'])
-
-#         on_off = trigger_onset(cft, config['thr_on'], config['thr_off'])
-
-#         plot_trigger(tr, cft, config['thr_on'], config['thr_off'])
-
 
     trig = coincidence_trigger(trigger_type = config['trigger_type'],
                                thr_on = config['thr_on'],
@@ -178,7 +185,8 @@ def main(times):
         st_xpfo, inv_xpfo = __request_data(config['seeds']['translation'], config['client'], tbeg, tend)
         st_bspf, inv_bspf = __request_data(config['seeds']['rotation'], config['client'], tbeg, tend)
     except:
-        print(f" -> failed to load data: {tbeg}-{tend}")
+        # print(f" -> failed to load data: {tbeg}-{tend}")
+        errors.append(f" -> failed to load data: {tbeg}-{tend}")
         return
 
     ## Processing Data
@@ -223,6 +231,8 @@ if __name__ == '__main__':
 
     pprint(config)
 
+    global errors
+    errors = []
     
     ## generate arguments for final parallel loop
     list_of_times = []
@@ -252,11 +262,15 @@ if __name__ == '__main__':
     pool.close()
     pool.join()
 
+
+#    pprint(errors)
+    __store_as_pickle(errors, config['output_path']+f"trigger_all_errors.pkl")
+
     ## join files
-    print(" -> joining pickle files to one trigger file ...")
+    print("\n -> joining pickle files to one trigger file ...")
     triggers = __join_pickle_files(config)
     
-    print(f" -> writing triggered events to file: \n  -> {config['output_path']}trigger_all.pkl")
+    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}trigger_all.pkl")
     __store_as_pickle(triggers, config['output_path']+f"trigger_all.pkl")
     
     print("\n -> Done")

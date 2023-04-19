@@ -34,11 +34,11 @@ config['tend'] = "2023-04-07"
 #config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/hilbert_60_R{config['ring']}_multi/"
 config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/tests/"
 
-config['outfile_appendix'] = "test26"
+config['outfile_appendix'] = "test28"
 
 config['repository'] = "archive"
 
-config['method'] = "multitaper_periodogram" ## "hilbert" | "multitaper_hilbert" | "welch" | "periodogram" | multitaper | multitaper_periodogram
+config['method'] = "periodogram" ## "hilbert" | "multitaper_hilbert" | "welch" | "periodogram" | multitaper | multitaper_periodogram
 
 rings = {"Z":553, "U":302, "V":448,"W":448}
 
@@ -48,7 +48,7 @@ config['f_band'] = 3 ## +- frequency band
 config['n_windows'] = 10
 
 config['t_steps'] = 60  ## seconds
-config['t_overlap'] = 600 ## seconds
+config['t_overlap'] = 1200 ## seconds
 
 
 config['loaded_period'] = 3600  ## seconds

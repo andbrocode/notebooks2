@@ -16,7 +16,7 @@ from obspy import UTCDateTime, Stream
 
 ## Configs _______________________________________
 
-global config 
+global config
 
 config = {}
 
@@ -28,22 +28,31 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
 config['date1'] = "2022-10-03"
 config['date2'] = "2022-10-05"
 
-config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
+config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger3/"
 
 config['client'] = Client("IRIS")
 
 config['sampling_rate'] = 40 ## Hz
 
 config['trigger_type'] = 'recstalta'
-config['thr_on'] = 4  ## thr_on (float) – threshold for switching single station trigger on
-config['thr_off'] = 3.5 ## thr_off (float) – threshold for switching single station trigger off
+
+## thr_on (float) – threshold for switching single station trigger on
+config['thr_on'] = 3.0  ## 4
+
+## thr_off (float) – threshold for switching single station trigger off
+config['thr_off'] = 2.0 ## 3.5
+
 config['lta'] = int(10*config['sampling_rate'])
 config['sta'] = int(0.5*config['sampling_rate'])
+
 config['thr_coincidence_sum'] = 4
-config['similarity_thresholds'] = {"BSPF": 0.8, "PFO": 0.7}
+
+#config['similarity_thresholds'] = {"BSPF": 0.8, "PFO": 0.7}
 
 config['time_interval'] = 3600 ## in seconds
 config['time_overlap'] = 600 ## seconds
+
+
 
 ## Methods _______________________________________
 
