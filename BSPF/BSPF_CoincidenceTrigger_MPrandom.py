@@ -28,12 +28,12 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
 
 
 ## set date range limits
-config['date1'] = "2022-10-01"
+config['date1'] = "2023-01-01"
 config['date2'] = "2023-03-31"
 
 
 # config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
-config['output_path'] = "/import/kilauea-data/BSPF/trigger2/"
+config['output_path'] = "/import/kilauea-data/BSPF/trigger3/"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
@@ -82,7 +82,7 @@ def __request_data(seed, client, tbeg, tend):
     net, sta, loc, cha = seed.split(".")
 
     try:
-        inventory = client.get_stations(network=net, 
+        inventory = client.get_stations(network=net,
                                          station=sta,
                                          starttime=tbeg,
                                          endtime=tend,
@@ -96,7 +96,7 @@ def __request_data(seed, client, tbeg, tend):
         waveform = client.get_waveforms(network=net,
                                        station=sta,
                                        location=loc,
-                                       channel=cha, 
+                                       channel=cha,
                                        starttime=tbeg-60,
                                        endtime=tend+60,
                                        )
@@ -104,7 +104,7 @@ def __request_data(seed, client, tbeg, tend):
     except:
         print(f" -> Failed to load waveforms for {seed}!")
         return
-    
+
 #    try:
     inventory = client.get_stations(network=net,
                                      station=sta,
@@ -133,7 +133,7 @@ def __request_data(seed, client, tbeg, tend):
 
 
 def __trigger(config, st):
-    
+
     from obspy.signal.trigger import recursive_sta_lta, trigger_onset, plot_trigger
     from obspy.signal.trigger import coincidence_trigger
 
@@ -145,7 +145,7 @@ def __trigger(config, st):
     trig = coincidence_trigger(trigger_type = config['trigger_type'],
                                thr_on = config['thr_on'],
                                thr_off = config['thr_off'],
-                               stream = st_tmp, 
+                               stream = st_tmp,
                                thr_coincidence_sum = config['thr_coincidence_sum'],
                                sta = config['sta'],
                                lta = config['lta'],
@@ -168,7 +168,7 @@ def __join_pickle_files(config):
             if len(triggerfile) != 0:
                 for event in triggerfile:
                     trigger_events.append(event)
-                    
+
 
     return trigger_events
 
@@ -215,12 +215,12 @@ def main(times):
     #print(trig)
 
     del st
-    
+
     ## store trigger list
     #print(f"-> {config['output_path']}trigger_{date}_{jj}.pkl")
     if not os.path.isdir(config['output_path']+f"tmp"):
         os.mkdir(config['output_path']+f"tmp")
-    
+
     __store_as_pickle(trig, config['output_path']+f"tmp/trigger_{tbeg}_{tend}_{jj}.pkl")
 
 
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 
     global errors
     errors = []
-    
+
     ## generate arguments for final parallel loop
     list_of_times = []
 
@@ -251,11 +251,11 @@ if __name__ == '__main__':
 
             hh += config['time_interval']
             counter += 1
-        
+
 
 
     ## launch parallel processes
-    with mp.Pool(processes=10) as pool:
+    with mp.Pool(processes=5) as pool:
 
         list(tqdm(pool.imap_unordered(main, list_of_times), total=len(list_of_times)))
 
@@ -269,10 +269,10 @@ if __name__ == '__main__':
     ## join files
     print("\n -> joining pickle files to one trigger file ...")
     triggers = __join_pickle_files(config)
-    
+
     print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}trigger_all.pkl")
     __store_as_pickle(triggers, config['output_path']+f"trigger_all.pkl")
-    
+
     print("\n -> Done")
 
 
