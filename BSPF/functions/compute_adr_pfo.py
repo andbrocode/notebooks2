@@ -15,7 +15,7 @@ rotation_Z = 0.5*(u_ne-u_en)
 ######################
 
 
-def __compute_adr_pfo(tbeg, tend):
+def __compute_adr_pfo(tbeg, tend, submask=None):
     
     import os
     import numpy as np
@@ -53,7 +53,15 @@ def __compute_adr_pfo(tbeg, tend):
 
     ## select stations to consider: 
     ## all: [0,1,2,3,4,5,6,7,8,9,10,11,12] | optimal: [0,5,8,9,10,11,12] | inner: [0,1,2,3]
-    config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+    if submask is not None:
+        if submask == "inner":
+            config['subarray_mask'] = [0,1,2,3]
+        elif submask == "optimal":
+            config['subarray_mask'] = [0,5,8,9,10,11,12]
+        elif submask == "all":
+            config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+    else:
+        config['subarray_mask'] = [0,1,2,3]
 
     ## select referenc station (usually central station)
     config['reference_station'] = 'BPH01'

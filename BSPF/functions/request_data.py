@@ -20,8 +20,8 @@ def __request_data(seed, tbeg, tend):
     except:
         print("Failed to load inventory!")
         inventory = None
-        
-        
+               
+    
     ## querry waveform data
     try:
         waveform = client.get_waveforms(network=net,
@@ -30,6 +30,7 @@ def __request_data(seed, tbeg, tend):
                                        channel=cha, 
                                        starttime=tbeg-60,
                                        endtime=tend+60,
+                                       attach_response=True
                                        )
 
     except:
