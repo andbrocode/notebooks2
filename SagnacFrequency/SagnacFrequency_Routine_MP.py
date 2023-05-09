@@ -25,16 +25,16 @@ from andbro__utc_to_mjd import __utc_to_mjd
 config = {}
 
 config['ring'] = "Z"
-config['seed'] = f"BW.DROMY..FJ{config['ring']}"
-#config['seed'] = f"BW.DROMY..F1V"
+#config['seed'] = f"BW.DROMY..FJ{config['ring']}"
+config['seed'] = f"BW.DROMY..F1V"
 
-config['tbeg'] = "2023-05-04"
-config['tend'] = "2023-05-04"
+config['tbeg'] = "2023-05-09"
+config['tend'] = "2023-05-09"
 
 #config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/hilbert_60_R{config['ring']}_multi/"
 config['outpath_data'] = f"/import/kilauea-data/sagnac_frequency/prism/"
 
-config['outfile_appendix'] = "after_FJZ"
+config['outfile_appendix'] = ""
 
 config['repository'] = "archive"
 
@@ -48,7 +48,7 @@ config['f_band'] = 3 ## +- frequency band
 config['n_windows'] = 10
 
 config['t_steps'] = 60  ## seconds
-config['t_overlap'] = 180 ## seconds
+config['t_overlap'] = 300 ## seconds
 
 
 config['loaded_period'] = 3600  ## seconds
@@ -352,9 +352,9 @@ def main(iii, date):
 
         t_utc, t_mjd, f, p, h =zeros(NNN), zeros(NNN), zeros(NNN), zeros(NNN), zeros(NNN)
 
-#        for hh in tqdm(range(24)):
-        for hh in tqdm(range(3)):
-        
+        for hh in tqdm(range(24)):
+#        for hh in tqdm(range(3)):
+
             ## define current time window
             dh = hh*3600
             t1, t2 = UTCDateTime(date)+dh, UTCDateTime(date)+config['loaded_period']+dh
@@ -404,8 +404,8 @@ def main(iii, date):
         df['psd_max'] = p
 
         date_str = str(date)[:10].replace("-","")
-        print(f" -> writing: {config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
-        df.to_pickle(f"{config['outpath_data']}FJ{config['ring']}_{date_str}_{config['outfile_appendix']}.pkl")
+        print(f" -> writing: {config['outpath_data']}FJ{config['ring']}_{date_str}{config['outfile_appendix']}.pkl")
+        df.to_pickle(f"{config['outpath_data']}FJ{config['ring']}_{date_str}{config['outfile_appendix']}.pkl")
 
 
 
