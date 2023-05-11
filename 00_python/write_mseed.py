@@ -51,12 +51,9 @@ def __user_interaction():
     if conf['outpath'][-1] != "/":
         conf['outpath'] += "/"
         
-    conf['outformat'] = input("\nEnter output file format ([mseed] | ascii):  ") or "mseed"
+    conf['outformat'] = input("\nEnter output file format ([mseed] | TSPAIR | SLIST):  ") or "mseed"
 
-    if conf['outformat'] == "ascii":
-        conf['outformat_type'] = "SLIST"
-    else:
-        conf['outformat_type'] = conf['outformat']
+    conf['outformat_type'] = conf['outformat']
         
         
         
