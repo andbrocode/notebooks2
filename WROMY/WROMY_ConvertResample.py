@@ -23,8 +23,8 @@ config['channels'] = ["WS1","WS4","WS5","WS6","WS7","WS8","WS9"]
 
 config['resample'] = 600 ## seconds
 
-config['tbeg'] = UTCDateTime("2021-09-01")
-config['tend'] = UTCDateTime("2022-08-31")
+config['tbeg'] = UTCDateTime("2022-09-01")
+config['tend'] = UTCDateTime("2023-05-31")
 
 config['date_range']  = pd.date_range(config['tbeg'].date, config['tend'].date)
 
