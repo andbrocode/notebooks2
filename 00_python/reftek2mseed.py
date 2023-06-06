@@ -8,7 +8,7 @@
 import os
 import obspy
 
-from numpy import nan
+from numpy import nan, sort
 from numpy.ma import filled, isMaskedArray
 
 import warnings
@@ -50,7 +50,7 @@ if not os.path.isdir(ipath+"/mseed"):
 #days = [x for x in os.listdir(ipath) if x not in ['mseed']]
 days = [x for x in os.listdir(ipath) if len(x) == 7]
 
-
+days = sort(days)
 
 ## loop over days as stored by REFTEK
 for day in days:

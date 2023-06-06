@@ -18,16 +18,20 @@ config['seeds'] = ["BW.DROMY..F1V",
                    "BW.DROMY..F4V",
                    "BW.DROMY..FJZ"]
 
+#config['seeds'] = ["BW.DROMY..FJV"]
+
 config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 # config['path_to_sds'] = "/home/andbro/freenas/romy_archive/"
 
 config['path_to_output'] = "/import/kilauea-data/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
+config['output_appendix'] = "_RZ_after_prism"
+
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-05-09 01:00")
-config['tend'] = UTCDateTime("2023-05-09 02:00")
+config['tbeg'] = UTCDateTime("2023-06-05 13:00")
+config['tend'] = UTCDateTime("2023-06-05 15:30")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 1000 ## seconds
@@ -68,28 +72,33 @@ nblock = int(df*config['win_time'])
 overlap = int(0.5*nblock)
 win = hann(nblock)
 
-print(nblock, overlap, NN)
 
-tr = st0.select(channel="FJZ")[0]
+tr = st0.select(channel="FJ*")[0]
 
 ff, fjz_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
                     window=win, noverlap=overlap, nperseg=nblock,
                     scaling="density",
                     return_onesided=True)
 
-tr = st0.select(channel="F1V")[0]
+try:
+    tr = st0.select(channel="F1V")[0]
 
-ff, f1v_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
-                    window=win, noverlap=overlap, nperseg=nblock,
-                    scaling="density",
-                    return_onesided=True)
+    ff, f1v_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
+                        window=win, noverlap=overlap, nperseg=nblock,
+                        scaling="density",
+                        return_onesided=True)
+except:
+    print(" -> channel: F1V not found!")
+    
+try:
+    tr = st0.select(channel="F4V")[0]
 
-tr = st0.select(channel="F4V")[0]
-
-ff, f2v_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
-                    window=win, noverlap=overlap, nperseg=nblock,
-                    scaling="density",
-                    return_onesided=True)
+    ff, f2v_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
+                        window=win, noverlap=overlap, nperseg=nblock,
+                        scaling="density",
+                        return_onesided=True)
+except:
+    print(" -> channel: F4V not found!")
 
 
 ## _____________________________________
@@ -99,10 +108,16 @@ out = DataFrame()
 
 out['frequencies'] = ff
 out['fjz_psd'] = fjz_psd
-out['f1v_psd'] = f1v_psd
-out['f2v_psd'] = f2v_psd
+try:
+    out['f1v_psd'] = f1v_psd
+except:
+    pass
+try:
+    out['f2v_psd'] = f2v_psd
+except:
+    pass
 
-out.to_pickle(config['path_to_output']+f"psd_{config['tbeg'].date}.pkl")
+out.to_pickle(config['path_to_output']+f"psd_{config['tbeg'].date}{config['output_appendix']}.pkl")
 
 
 ## End of File
