@@ -30,8 +30,8 @@ config['output_appendix'] = "_RZ_after_prism"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-06-05 13:00")
-config['tend'] = UTCDateTime("2023-06-05 15:30")
+config['tbeg'] = UTCDateTime("2023-06-05 17:00")
+#config['tend'] = UTCDateTime("2023-06-05 20:00")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 1000 ## seconds
