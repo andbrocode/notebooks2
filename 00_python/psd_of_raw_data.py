@@ -14,11 +14,11 @@ from andbro__read_sds import __read_sds
 
 config = {}
 
-config['seeds'] = ["BW.DROMY..F1V",
-                   "BW.DROMY..F4V",
-                   "BW.DROMY..FJZ"]
+#config['seeds'] = ["BW.DROMY..F1V",
+#                   "BW.DROMY..F4V",
+#                   "BW.DROMY..FJZ"]
 
-#config['seeds'] = ["BW.DROMY..FJV"]
+config['seeds'] = ["BW.DROMY..FJU"]
 
 config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 # config['path_to_sds'] = "/home/andbro/freenas/romy_archive/"
@@ -26,12 +26,12 @@ config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 config['path_to_output'] = "/import/kilauea-data/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
-config['output_appendix'] = "_RZ_test"
+config['output_appendix'] = "_RU_noise"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-06-06 06:00")
-config['tend'] = UTCDateTime("2023-06-06 09:00")
+config['tbeg'] = UTCDateTime("2023-06-24 19:00")
+config['tend'] = UTCDateTime("2023-06-24 22:00")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 1000 ## seconds
