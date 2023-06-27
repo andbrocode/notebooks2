@@ -32,12 +32,26 @@ def __request_CMT_events(starttime="2000-01-01", endtime="2023-01-01", outtype="
     if exists(outfile):
         print(f" -> file: {outfile} already exists!")
         return
+    
     else:
         
-        ## read the ndk file using obspy
-        CMT_cat = read_events( path_to_NEW_quick_CMT_cat )
-
-        ## filter for specified start and end time
+        ## read the new ndk file (since 2021) using obspy
+        try:
+            CMT_cat = read_events( path_to_NEW_quick_CMT_cat )
+        except:
+            print(f" -> failed to read new CMT data: {path_to_NEW_quick_CMT_cat}!")
+            return            
+        
+        ## read the old data base for events prior 2020 and join with CMT catalog
+        if UTCDateTime(starttime).year <= 2020:
+            try:
+                CMT_cat_old = read_events( path_to_CMT_cat )
+                CMT_cat += CMT_cat_old
+            except:
+                print(f" -> failed to read new CMT data: {path_to_NEW_quick_CMT_cat}!")
+                return  
+        
+        ## filter for specified time period
         CMT_cat = CMT_cat.filter(f"time > {starttime}", f"time < {endtime}")
         
         if not outtype == "csv":
