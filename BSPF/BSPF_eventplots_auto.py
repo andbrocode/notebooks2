@@ -6,6 +6,7 @@
 # Creates automatic event plots based on catalog 
 
 
+## _______________________________________
 
 import os 
 import obspy as obs
@@ -16,8 +17,10 @@ import pandas as pd
 from andbro__savefig import __savefig
 from tqdm.notebook import tqdm
 
+from functions.request_data import __request_data
+from functions.add_distances_and_backazimuth import __add_distances_and_backazimuth
 
-
+## _______________________________________
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -29,30 +32,33 @@ elif os.uname().nodename == 'kilauea':
     archive_path = '/import/freenas-ffb-01-data/'
 
 
+## _______________________________________
+## Configurations
+
+config = {}
 
 
-def __add_distances_and_backazimuth(config, df):
+## location of BSPF
+config['BSPF_lon'] = -116.455439
+config['BSPF_lat'] = 33.610643
 
-    from obspy.geodetics.base import gps2dist_azimuth
+## path for figures to store
+config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
-    dist = np.zeros(len(df))
-    baz = np.zeros(len(df))
+## blueSeis sensor (@200Hz)
+config['seed_blueseis'] = "PY.BSPF..HJ*"
 
-    
-    for ii, ev in enumerate(df.index):
-        try:
-            dist[ii], az, baz[ii] = gps2dist_azimuth(config['BSPF_lat'], config['BSPF_lon'],
-                                                     df.latitude[ii], df.longitude[ii],
-                                                     a=6378137.0, f=0.0033528106647474805
-                                                     )
-        except:
-            print(" -> failed to compute!")
-            
-    df['backazimuth'] = baz
-    df['distances_km'] = dist/1000
+## Trillium 240 next to BlueSeis on Pier (@40Hz)
+config['seed_seismometer1'] = "II.PFO.10.BH*" 
 
-    return df
+## STS2 next to BlueSeis (@200Hz)
+config['seed_seismometer2'] = "PY.PFOIX..HH*" 
 
+config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
+config['catalog'] = "BSPF_catalog_20221001_20230615_triggered.pkl"
+
+
+## _______________________________________
 
 
 def __process_xpfo(config, st, inv):
@@ -76,8 +82,6 @@ def __process_xpfo(config, st, inv):
             tr.stats.channel = str(tr.stats.channel).replace("2","E")
     
     return ii_pfo
-
-
 
 
 
@@ -109,7 +113,7 @@ def __makeplot(config, st):
     ax[5].set_xlabel(f"Time ({time_unit}) from {st[0].stats.starttime.date} {str(st[0].stats.starttime.time).split('.')[0]} UTC", fontsize=font)
     ax[0].set_title(config['title']+f" | {config['fmin']} - {config['fmax']} Hz", fontsize=font, pad=10)
     
-    plt.show();
+#     plt.show();
     del st_in
     return fig
 
@@ -205,47 +209,25 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
     return fig
 
 
-# ## Configurations
 
-config = {}
+## _______________________________________
+## Event Info
 
-
-
-## location of BSPF
-config['BSPF_lon'] = -116.455439
-config['BSPF_lat'] = 33.610643
-
-## path for figures to store
-config['outpath_figs'] = data_path+"BSPF/figures/extended/"
-
-## blueSeis sensor
-config['seed_blueseis'] = "PY.BSPF..*"
-
-## Trillium 240 next to BlueSeis on Pier
-config['seed_seismometer'] = "II.PFO.10.BH*" 
-# config['seed_seismometer'] = "PY.BSPF..HH*" 
-
-
-# ## Event Info
-
-
-events = pd.read_pickle(data_path+"BSPF/data/BSPF_event_catalog_extended.pkl")
-# events = pd.read_pickle("./new_events.pkl")
+events = pd.read_pickle(config['path_to_catalog']+config['catalog'])
 
 events.reset_index(inplace=True)
+
 events.rename(columns = {'index':'origin'}, inplace = True)
 
 
 
-
-__add_distances_and_backazimuth(config, events)
-
+# __add_distances_and_backazimuth(config['tbeg'], config['tend'], events)
 
 
-from functions.request_data import __request_data
 
 
-# ## RUN LOOP
+## _______________________________________
+## RUN LOOP
 
 
 
@@ -259,6 +241,13 @@ for jj, ev in enumerate(tqdm(events.index)):
     config['tbeg'] = obs.UTCDateTime(str(events.origin[jj]))
     config['fmin'], config['fmax'] = 0.02, 18.0
     
+    
+    if config['tbeg'].date < obs.UTCDateTime("2023-04-01"):
+        config['seed_seismometer'] = config['seed_seismometer1']
+    else:
+        config['seed_seismometer'] = config['seed_seismometer2']
+        
+        
     if events.distances_km[jj] < 30:
         config['tend'] = obs.UTCDateTime(events.origin[jj])+30
     elif events.distances_km[jj] > 30 and events.distances_km[jj] < 100:
@@ -277,8 +266,9 @@ for jj, ev in enumerate(tqdm(events.index)):
 #         py_bspf0.detrend('demean')
 #         py_bspf0.resample(40)
         
-    except:
+    except Exception as e:
         print(f" -> failed to request BSPF for event: {ev}")
+        print(e)
         continue
         
         
@@ -291,18 +281,21 @@ for jj, ev in enumerate(tqdm(events.index)):
 #         ii_pfo0.remove_response(inventory=ii_pfo_inv, output="ACC", plot=False)
 #         ii_pfo0.detrend('demean')
         
-    except:
-        print(f" -> failed to request BSPF for event: {ev}")   
+    except Exception as e:
+        print(f" -> failed to request PFOX for event: {ev}")   
+        print(e)
         continue
 
     ## processing data
 #     py_bspf = __process_bspf(config, py_bspf0, py_bspf_inv)
 #     ii_pfo = __process_xpfo(config, ii_pfo0, ii_pfo_inv)
-
-    py_bspf0.resample(40)
+    
+    
+    if ii_pfo0[0].stats.sampling_rate != py_bspf0[0].stats.sampling_rate:
+        py_bspf0.resample(ii_pfo0[0].stats.sampling_rate)
+    
     
     ## joining data
-    
     st0 = py_bspf0
     st0 += ii_pfo0    
     
@@ -315,17 +308,17 @@ for jj, ev in enumerate(tqdm(events.index)):
     
     ## plotting
     
-    fig = st0.plot(equal_scale=False);
+    fig1 = st0.plot(equal_scale=False, show=False);
 
-    fig1 = __makeplot(config, st)
+    fig2 = __makeplot(config, st)
     
-    fig2 = __makeplotStreamSpectra2(st, config, fscale="linlin");
+    fig3 = __makeplotStreamSpectra2(st, config, fscale="linlin");
     
     ## saving figures
-    __savefig(fig, outpath=config['outpath_figs']+"raw/", outname=f"{event_name}_raw", mode="png")        
-    
-    __savefig(fig1, outpath=config['outpath_figs']+"filtered/", outname=f"{event_name}_traces", mode="png")
-    
-    __savefig(fig2, outpath=config['outpath_figs']+"spectra/", outname=f"{event_name}_spectra", mode="png")
+    fig1.savefig(config['outpath_figs']+"raw/"+f"{event_name}_raw.png", format='png', dpi=200, bbox_inches='tight', pad_inches=0.05)
+
+    fig2.savefig(config['outpath_figs']+"filtered/"+f"{event_name}_filtered.png", format='png', dpi=200, bbox_inches='tight', pad_inches=0.05)
+
+    fig3.savefig(config['outpath_figs']+"spectra/"+f"{event_name}_spectra.png", format='png', dpi=200, bbox_inches='tight', pad_inches=0.05)
 
 ## End of File

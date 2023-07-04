@@ -55,35 +55,39 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## all: [0,1,2,3,4,5,6,7,8,9,10,11,12] | optimal: [0,5,8,9,10,11,12] | inner: [0,1,2,3]
     if submask is not None:
         if submask == "inner":
-            config['subarray_mask'] = [0,1,2,3]
+            config['subarray_mask'] = [0,1,2,3,4]
         elif submask == "optimal":
-            config['subarray_mask'] = [0,5,8,9,10,11,12]
+            config['subarray_mask'] = [0,1,6,9,10,11,12,13]
         elif submask == "all":
-            config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+            config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
     else:
         config['subarray_mask'] = [0,1,2,3]
 
-    ## select referenc station (usually central station)
-    config['reference_station'] = 'BPH01'
-    
+
     ## decide if information is printed while running the code
     config['print_details'] = False
     
     ## _____________________
     ## PFO array information
-    config['network'] = 'PY'
+    
+    if config['tbeg'] > UTCDateTime("2023-04-01"):
+        config['reference_station'] = 'PY.PFOIX' ## 'BPH01'  ## reference station
+    
+        config['array_stations'] = ['PY.PFOIX','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
+                                    'PY.BPH08','PY.BPH09','PY.BPH10','PY.BPH11','PY.BPH12','PY.BPH13']
+    else:
+        config['reference_station'] = 'II.PFO' ## 'BPH01'  ## reference station
+        
+        config['array_stations'] = ['II.PFO','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
+                                    'PY.BPH08','PY.BPH09','PY.BPH10','PY.BPH11','PY.BPH12','PY.BPH13']
+        
 
-    config['array_stations'] = ['BPH01','BPH02','BPH03','BPH04','BPH05','BPH06','BPH07',
-                                'BPH08','BPH09','BPH10','BPH11','BPH12','BPH13']
-
-    config['misorientations'] =  [0. ,-1.375 ,0.25 ,0.125 ,-0.6875 ,-0.625 ,-1.9375 ,0.375 
+    config['misorientations'] =  [0, 0. ,-1.375 ,0.25 ,0.125 ,-0.6875 ,-0.625 ,-1.9375 ,0.375 
                                   ,-6.5625 ,0.3125 ,-1.125 ,-2.5625 ,0.1875]
 
 
     config['subarray_misorientation'] = [config['misorientations'][i] for i in config['subarray_mask']]
     config['subarray_stations'] = [config['array_stations'][i] for i in config['subarray_mask']]
-
-#     config['subarray'] = np.arange(len(config['array_stations']))
 
     ## ______________________________
     ## parameter for array-derivation
@@ -104,21 +108,29 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
 
     def __get_inventory_and_distances(config):
-
+        
         coo = []
         for i, station in enumerate(config['subarray_stations']):
-
-            inven = config['fdsn_client'].get_stations(network=config['network'],
-                                                       station=station,
-                                                       channel='BHZ',
+            
+            net, sta = station.split(".")
+            
+            if net == "II" and sta == "PFO":
+                loc, cha = "10", "BH*"
+            elif net == "PY" and sta == "PFOIX":
+                loc, cha = "", "HH*"
+            else:
+                loc, cha = "", "BH*"
+                        
+            inven = config['fdsn_client'].get_stations(network=net,
+                                                       station=sta,
+                                                       channel=cha,
                                                        starttime=config['tbeg'],
                                                        endtime=config['tend'],
                                                        level='response'
                                                       )
-
-            l_lon =  float(inven.get_coordinates('%s.%s..BHZ'%(config['network'],station))['longitude'])
-            l_lat =  float(inven.get_coordinates('%s.%s..BHZ'%(config['network'],station))['latitude'])
-            height = float(inven.get_coordinates('%s.%s..BHZ'%(config['network'],station))['elevation'])
+            l_lon =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['longitude'])
+            l_lat =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
+            height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
 
             if i == 0:
                 o_lon, o_lat, o_height = l_lon, l_lat, height
@@ -148,41 +160,33 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
         for k, station in enumerate(config['subarray_stations']):
 
-            print(f" -> requesting {config['network']}.{station}..BH*") if config['print_details'] else None
+            net, sta = station.split(".")
+
+            if net == "II" and sta == "PFO":
+                loc, cha = "10", "BH*"
+            elif net == "PY" and sta == "PFOIX":
+                loc, cha = "", "HH*"
+            else:
+                loc, cha = "", "BH*"
+            
+            print(f" -> requesting {net}.{sta}.{loc}.{cha}") if config['print_details'] else None
 
             ## try to get waveform data
             try:
                 stats = config['fdsn_client'].get_waveforms(
-                                                            network=config['network'],
-                                                            station=station,
-                                                            location='',
-                                                            channel='BH*',
-                                                            starttime=config['tbeg']-10,
-                                                            endtime=config['tend']+10,
+                                                            network=net,
+                                                            station=sta,
+                                                            location=loc,
+                                                            channel=cha,
+                                                            starttime=config['tbeg']-20,
+                                                            endtime=config['tend']+20,
                                                             attach_response=True,
                                                             )
             except Exception as E:
                 print(E)
-                print(f" -> geting waveforms failed ofr {station}...")
+                print(f" -> geting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
                 continue
 
-
-            ## try to get inventory
-    #         try:
-    #             inv = config['fdsn_client'].get_stations(  
-    #                                                     network=config['network'],
-    #                                                     station=station,
-    #                                                     location='',
-    #                                                     channel='BHZ',
-    #                                                     starttime=config['tbeg'],
-    #                                                     endtime=config['tend'],
-    #                                                     level='response'
-    #                                                     )
-
-    #         except Exception as E:
-    #             print(E)
-    #             print(f" -> geting inventory failed ofr {station}...")
-    #             continue
 
 
             ## merge if masked 
@@ -207,7 +211,14 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
             ## trim to interval
 #             stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
-
+            
+            ## rename channels
+            if net == "II" and sta == "PFO":
+                for tr in stats:
+                    if tr.stats.channel[-1] == "1":
+                        tr.stats.channel = str(tr.stats.channel).replace("1","E")
+                    if tr.stats.channel[-1] == "2":
+                        tr.stats.channel = str(tr.stats.channel).replace("2","N")
 
             if station == config['reference_station']:
                 ref_station = stats.copy()
@@ -222,7 +233,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
         ## update subarray stations if data could not be requested for all stations
         if len(st) < 3*len(config['subarray_stations']):
-            config['subarray_stations'] = [tr.stats.station for tr in st]
+            config['subarray_stations'] = [f"{tr.stats.network}.{tr.stats.station}" for tr in st]
             config['subarray_stations'] = list(set(config['subarray_stations']))
                            
                            
@@ -322,14 +333,15 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## get inventory and coordinates/distances
     inv, config['coo'] = __get_inventory_and_distances(config)
 
-    ## basic processing
-#     st.resample(sampling_rate=20)
-
+    ## processing
     if config['apply_bandpass']:
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
 
-    print(ref_station)
+    if config['reference_station'] == "PY.PFOIX":
+        st = st.resample(40)
 
+    print(st.__str__(extended=True))    
+    
     ## prepare data arrays
     tsz, tsn, tse = [],[],[]
     for tr in st:
@@ -342,13 +354,14 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                 tse.append(tr.data)
         except:
             print(" -> stream data could not be appended!")
-
+            
 
     ## compute array derived rotation (ADR)
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
 
     ## trim to requested interval
-    rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
+#     rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
+    rot.trim(config['tbeg'], config['tend'])
 
     
     ## stop times      
