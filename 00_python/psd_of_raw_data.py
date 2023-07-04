@@ -10,7 +10,7 @@ from andbro__read_sds import __read_sds
 
 
 ## _____________________________________
-## configurations 
+## configurations
 
 config = {}
 
@@ -18,7 +18,7 @@ config = {}
 #                   "BW.DROMY..F4V",
 #                   "BW.DROMY..FJZ"]
 
-config['seeds'] = ["BW.DROMY..FJU"]
+config['seeds'] = ["BW.DROMY..FJZ"]
 
 config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 # config['path_to_sds'] = "/home/andbro/freenas/romy_archive/"
@@ -26,12 +26,12 @@ config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 config['path_to_output'] = "/import/kilauea-data/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
-config['output_appendix'] = "_RU_noise"
+config['output_appendix'] = "_RZ_prism_differential2"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-06-24 19:00")
-config['tend'] = UTCDateTime("2023-06-24 22:00")
+config['tbeg'] = UTCDateTime("2023-06-26 20:00")
+config['tend'] = UTCDateTime("2023-06-26 23:00")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 1000 ## seconds
@@ -45,14 +45,14 @@ st0 = Stream()
 for seed in config['seeds']:
 
     print(f" -> loading {seed}...")
-    
+
     try:
         ## alternative
         st00 = __read_sds(config['path_to_sds'], seed, config['tbeg'], config['tend'], data_format='MSEED')
-        
+
     except:
         print(f" -> failed to load data for {seed}")
-        
+
     st0 += st00
 
 st0 = st0.sort()
@@ -60,11 +60,11 @@ st0 = st0.sort()
 
 for tr in st0:
     tr.data = tr.data*0.59604645e-6 # V / count  [0.59604645ug  from obsidian]
-    
+
 
 ## _____________________________________
 ## compute PSD
-    
+
 NN = st0[0].stats.npts
 df = st0[0].stats.sampling_rate
 
@@ -75,7 +75,7 @@ win = hann(nblock)
 
 tr = st0.select(channel="FJ*")[0]
 
-ff, fjz_psd = welch(tr.data, fs=tr.stats.sampling_rate, 
+ff, fjz_psd = welch(tr.data, fs=tr.stats.sampling_rate,
                     window=win, noverlap=overlap, nperseg=nblock,
                     scaling="density",
                     return_onesided=True)

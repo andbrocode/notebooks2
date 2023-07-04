@@ -5,6 +5,7 @@
 
 # Creates automatic event plots based on catalog 
 
+# In[19]:
 
 
 import os 
@@ -13,10 +14,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from andbro__savefig import __savefig
 from tqdm.notebook import tqdm
+from pprint import pprint
+
+from functions.request_data import __request_data
+from functions.add_distances_and_backazimuth import __add_distances_and_backazimuth
+from functions.compute_adr_pfo import __compute_adr_pfo
 
 
+# In[2]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -29,38 +35,27 @@ elif os.uname().nodename == 'kilauea':
     archive_path = '/import/freenas-ffb-01-data/'
 
 
-
-
-def __add_distances_and_backazimuth(config, df):
-
-    from obspy.geodetics.base import gps2dist_azimuth
-
-    dist = np.zeros(len(df))
-    baz = np.zeros(len(df))
-
-    
-    for ii, ev in enumerate(df.index):
-        try:
-            dist[ii], az, baz[ii] = gps2dist_azimuth(config['BSPF_lat'], config['BSPF_lon'],
-                                                     df.latitude[ii], df.longitude[ii],
-                                                     a=6378137.0, f=0.0033528106647474805
-                                                     )
-        except:
-            print(" -> failed to compute!")
-            
-    df['backazimuth'] = baz
-    df['distances_km'] = dist/1000
-
-    return df
-
+# In[3]:
 
 
 def __process_xpfo(config, st, inv):
 
     ii_pfo = st.copy()
 
+#     pre_filt = [0.005, 0.01, 19, 20]
+
+    ## cut properly
+#     ii_pfo.trim(config['tbeg'], config['tend'])
+
     ## demean
     ii_pfo.detrend("demean")
+
+    ## remove response
+#     ii_pfo.remove_response(inventory=inv, 
+#     #                        pre_filt=pre_filt, 
+#                            output="VEL",
+#     #                        water_level=60, 
+#                            plot=False)
 
     ## taper 
     ii_pfo.taper(0.1)
@@ -78,7 +73,7 @@ def __process_xpfo(config, st, inv):
     return ii_pfo
 
 
-
+# In[4]:
 
 
 def __makeplot(config, st):
@@ -113,6 +108,8 @@ def __makeplot(config, st):
     del st_in
     return fig
 
+
+# In[5]:
 
 
 def __makeplotStreamSpectra2(st, config, fscale=None):
@@ -205,80 +202,136 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
     return fig
 
 
+# In[6]:
+
+
+def __compute_values_for_analysis(st_in, event_in, magnitude, coincidencesum):
+    
+    print(event_in)
+    
+    st_in.sort()
+
+    st_in.detrend("linear")
+    
+    out = []
+    out.append(event_in)
+    out.append(round(float(magnitude), 2))
+    out.append(coincidencesum)
+    
+    for tr in st_in:
+        out.append(max(tr.data))
+
+    return out
+
+
 # ## Configurations
 
+# In[20]:
+
+
 config = {}
-
-
 
 ## location of BSPF
 config['BSPF_lon'] = -116.455439
 config['BSPF_lat'] = 33.610643
 
 ## path for figures to store
-config['outpath_figs'] = data_path+"BSPF/figures/extended/"
+config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
-## blueSeis sensor
-config['seed_blueseis'] = "PY.BSPF..*"
+## path for output data
+config['outpath_data'] = data_path+"BSPF/data/" 
 
-## Trillium 240 next to BlueSeis on Pier
-config['seed_seismometer'] = "II.PFO.10.BH*" 
-# config['seed_seismometer'] = "PY.BSPF..HH*" 
+## blueSeis sensor (@200Hz)
+config['seed_blueseis'] = "PY.BSPF..HJ*"
+
+## Trillium 240 next to BlueSeis on Pier (@40Hz)
+config['seed_seismometer1'] = "II.PFO.10.BH*" 
+
+## STS2 next to BlueSeis (@200Hz)
+config['seed_seismometer2'] = "PY.PFOIX..HH*" 
+
+config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
+config['catalog'] = "BSPF_catalog_20221001_20230615_triggered.pkl"
 
 
 # ## Event Info
 
+# In[8]:
 
-events = pd.read_pickle(data_path+"BSPF/data/BSPF_event_catalog_extended.pkl")
-# events = pd.read_pickle("./new_events.pkl")
+
+events = pd.read_pickle(config['path_to_catalog']+config['catalog'])
 
 events.reset_index(inplace=True)
 events.rename(columns = {'index':'origin'}, inplace = True)
 
 
+# In[9]:
 
 
-__add_distances_and_backazimuth(config, events)
+events
 
 
+# In[10]:
 
-from functions.request_data import __request_data
+
+# __add_distances_and_backazimuth(config['tbeg'], config['tend'], events)
 
 
 # ## RUN LOOP
 
+# In[36]:
 
 
-for jj, ev in enumerate(tqdm(events.index)):
-# for jj, ev in enumerate([0,1]):
-    
+global errors
+errors = []
+
+# for jj, ev in enumerate(tqdm(events.index)):
+for jj, ev in enumerate([0,1]):
+
     print(f" -> {jj} {events.origin[jj]} ")
     
-    ## configurations
-    config['title'] = f"{events.origin[jj]} UTC | M{events.magnitude[jj]}"
-    config['tbeg'] = obs.UTCDateTime(str(events.origin[jj]))
-    config['fmin'], config['fmax'] = 0.02, 18.0
+    event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
+    filename=config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
+  
+    ## check if file already exists
+#     if os.path.isfile(filename):
+#         print(f" -> file alread exits for {event_name}")
+#         continue
     
+    ## configuration adjustments
+    config['title'] = f"{events.origin[jj]} UTC | M{events.magnitude[jj]}"
+    config['tbeg'] = obs.UTCDateTime(str(events.origin[jj]))-60
+
+    
+    ## select appropriate seismometer
+    if config['tbeg'].date < obs.UTCDateTime("2023-04-01"):
+        config['seed_seismometer'] = config['seed_seismometer1']
+        config['fmin'], config['fmax'] = 0.02, 18.0
+    else:
+        config['seed_seismometer'] = config['seed_seismometer2']
+        config['fmin'], config['fmax'] = 0.02, 80.0
+        
+        
+    ## select appropriate endtime
     if events.distances_km[jj] < 30:
         config['tend'] = obs.UTCDateTime(events.origin[jj])+30
     elif events.distances_km[jj] > 30 and events.distances_km[jj] < 100:
         config['tend'] = obs.UTCDateTime(events.origin[jj])+60
     else:
         config['tend'] = obs.UTCDateTime(events.origin[jj])+180
-
+    
+    ## same endtime for all
+    config['tend'] = obs.UTCDateTime(events.origin[jj])+180
+    
     
     ## load and process blueSeis data
     try:
         py_bspf0, py_bspf_inv = __request_data(config['seed_blueseis'], config['tbeg'], config['tend'])
         
-#         py_bspf0.merge(fill_value="interpolate")
-#         py_bspf0.trim(config['tbeg'], config['tend'])
-#         py_bspf0.remove_sensitivity(py_bspf_inv)
-#         py_bspf0.detrend('demean')
-#         py_bspf0.resample(40)
-        
-    except:
+    except Exception as e:
+        print(e)
         print(f" -> failed to request BSPF for event: {ev}")
+        errors.append(f" -> failed to request BSPF for event: {ev}")
         continue
         
         
@@ -286,46 +339,124 @@ for jj, ev in enumerate(tqdm(events.index)):
     try:        
         ii_pfo0, ii_pfo_inv = __request_data(config['seed_seismometer'], config['tbeg'], config['tend'])
         
-#         ii_pfo0.merge(fill_value="interpolate")
-#         ii_pfo0.trim(config['tbeg'], config['tend'])
-#         ii_pfo0.remove_response(inventory=ii_pfo_inv, output="ACC", plot=False)
-#         ii_pfo0.detrend('demean')
-        
-    except:
+    except Exception as e:
+        print(e)
         print(f" -> failed to request BSPF for event: {ev}")   
         continue
 
+    if py_bspf0 is None or ii_pfo0 is None:
+        continue
+        
     ## processing data
-#     py_bspf = __process_bspf(config, py_bspf0, py_bspf_inv)
-#     ii_pfo = __process_xpfo(config, ii_pfo0, ii_pfo_inv)
-
-    py_bspf0.resample(40)
-    
+    if ii_pfo0[0].stats.sampling_rate != py_bspf0[0].stats.sampling_rate:
+        py_bspf0.resample(ii_pfo0[0].stats.sampling_rate)
+        
+        
     ## joining data
-    
     st0 = py_bspf0
-    st0 += ii_pfo0    
+    st0 += ii_pfo0 
     
+    
+    ## compute ADR
+    try:
+        pfo_adr = __compute_adr_pfo(config['tbeg'], config['tend'], submask="optimal")
+        st0 += pfo_adr
+    except:
+        print(" -> failed to compute ADR ...")
+        
+    st0 = st0.sort()
+        
+    ## processing data stream
     st = st0.copy() 
     st.detrend("linear")
     st.taper(0.01)
     st.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
     
+    
+    st.trim(config['tbeg'], config['tend'])
+    st0.trim(config['tbeg'], config['tend'])
+    
+    ## store waveform data
+    waveform_filename = f"{jj}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    st0.write(config['outpath_data']+waveform_filename, format="MSEED")
+    
+    ## compute analysis parameters
+    if jj == 0:
+        header = ["Torigin", "Magnitude", "CoincidenceSum"]; [header.append(f"{tr.stats.station}_{tr.stats.channel}") for tr in st0]
+        out_df = pd.DataFrame(columns=header)
+        
+    out = __compute_values_for_analysis(st0, events.origin[jj], events.magnitude[jj], events.cosum[jj])
+    out_df.loc[len(out_df)] = out   
+
+    
+    
+    ## create eventname
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
     
-    ## plotting
     
-    fig = st0.plot(equal_scale=False);
+    ## plotting figures    
+    fig1 = st0.plot(equal_scale=False);
+#     fig1 = st0.plot(equal_scale=False, show=False);
 
-    fig1 = __makeplot(config, st)
-    
-    fig2 = __makeplotStreamSpectra2(st, config, fscale="linlin");
+#     fig2 = __makeplot(config, st)
+
+#     fig3 = __makeplotStreamSpectra2(st, config, fscale="linlin");
     
     ## saving figures
-    __savefig(fig, outpath=config['outpath_figs']+"raw/", outname=f"{event_name}_raw", mode="png")        
-    
-    __savefig(fig1, outpath=config['outpath_figs']+"filtered/", outname=f"{event_name}_traces", mode="png")
-    
-    __savefig(fig2, outpath=config['outpath_figs']+"spectra/", outname=f"{event_name}_spectra", mode="png")
+    fig1.savefig(config['outpath_figs']+"raw/"+f"{event_name}_raw.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
 
-## End of File
+#     fig2.savefig(config['outpath_figs']+"filtered/"+f"{event_name}_filtered.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
+
+#     fig3.savefig(config['outpath_figs']+"spectra/"+f"{event_name}_spectra.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
+
+
+## store amplitude values
+out_df.to_pickle(config['outpath_data']+"amplitudes.pkl")
+
+    
+pprint(out_df)
+pprint(errors)
+
+
+# In[85]:
+
+
+from numpy import nanmean
+
+win_length_sec = 10 ## seconds
+
+t_trigger = events.trigger_time[jj]
+t_rel_sec = t_trigger-config['tbeg']
+
+fig, ax = plt.subplots(len(st0),1, figsize=(15,15))
+
+for i, tr in enumerate(st0):
+    df = tr.stats.sampling_rate
+    NN = int(df * win_length_sec)
+    t_rel_spl = t_rel_sec*df
+    
+    
+    noise = nanmean(tr.data[int(t_rel_spl-NN):int(t_rel_spl)]**2)
+    signal = nanmean(tr.data[int(t_rel_spl):int(t_rel_spl+NN)]**2)
+    
+    
+    print(signal/noise)
+    ax[i].plot(tr.data)
+    
+
+    ax[i].axvline(t_rel_spl, color="red")
+    ax[i].axvline(t_rel_spl+NN, color="red")
+
+    ax[i].axvline(t_rel_spl, color="g")
+    ax[i].axvline(t_rel_spl-NN, color="g")
+
+#     ax[i].axhline(y=noise, color="red", zorder=4)
+#     ax[i].axhline(y=signal, color="red", zorder=4)
+    
+
+
+# In[ ]:
+
+
+
+

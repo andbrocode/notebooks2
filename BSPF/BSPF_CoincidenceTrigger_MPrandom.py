@@ -22,18 +22,18 @@ global config
 config = {}
 
 ## before 2023-04-01
-config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
+#config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
 ## after 2023-04-01
-# config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
+config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
 
 
 ## set date range limits
-config['date1'] = "2023-01-01"
-config['date2'] = "2023-03-31"
+config['date1'] = "2023-04-01"
+config['date2'] = "2023-06-15"
 
 
 # config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
-config['output_path'] = "/import/kilauea-data/BSPF/trigger3/"
+config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
