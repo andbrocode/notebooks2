@@ -22,8 +22,6 @@ from functions.add_distances_and_backazimuth import __add_distances_and_backazim
 from functions.compute_adr_pfo import __compute_adr_pfo
 
 
-# In[2]:
-
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -33,9 +31,6 @@ elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-
-
-# In[3]:
 
 
 def __process_xpfo(config, st, inv):
@@ -73,9 +68,6 @@ def __process_xpfo(config, st, inv):
     return ii_pfo
 
 
-# In[4]:
-
-
 def __makeplot(config, st):
 
     
@@ -107,9 +99,6 @@ def __makeplot(config, st):
     plt.show();
     del st_in
     return fig
-
-
-# In[5]:
 
 
 def __makeplotStreamSpectra2(st, config, fscale=None):
@@ -202,9 +191,6 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
     return fig
 
 
-# In[6]:
-
-
 def __compute_values_for_analysis(st_in, event_in, magnitude, coincidencesum):
     
     print(event_in)
@@ -224,9 +210,59 @@ def __compute_values_for_analysis(st_in, event_in, magnitude, coincidencesum):
     return out
 
 
-# ## Configurations
+def __empty_stream(reference_stream):
 
-# In[20]:
+    from numpy import ones
+    from obspy import Stream, Trace
+    
+    t_ref = reference_stream[0]
+    
+    empty = Stream()
+
+    for cha in ["BHZ", "BHN", "BHE"]:
+        t = Trace()
+        t.data = ones(len(t_ref))
+        t.stats.sampling_rate = t_ref.stats.sampling_rate
+        t.stats.starttime = t_ref.stats.starttime
+        t.stats.network, t.stats.station, t.stats.channel = "PY", "RPFO", cha
+        empty += t
+        
+    return empty
+
+
+def __compute_SNR(st_in, events, win_length_sec=10):
+
+    from numpy import nanmean, sqrt
+
+    st_in = st_in.sort()
+    
+    win_length_sec = 10 ## seconds
+
+    t_trigger = events.trigger_time[jj]
+    t_rel_sec = t_trigger-config['tbeg']
+
+    SNR = []
+    
+    for i, tr in enumerate(st_in):
+
+        df = tr.stats.sampling_rate 
+
+        NN = int(df * win_length_sec) ## samples
+
+        t_rel_spl = t_rel_sec*df ## samples
+
+        t_offset = df * 2 ## samples
+
+        noise = nanmean(tr.data[int(t_rel_spl-NN):int(t_rel_spl)]**2)
+        signal = nanmean(tr.data[int(t_rel_spl):int(t_rel_spl+NN)]**2)
+
+        SNR.append(sqrt(signal/noise))
+
+    return SNR
+
+
+
+# ## Configurations
 
 
 config = {}
@@ -239,16 +275,16 @@ config['BSPF_lat'] = 33.610643
 config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
 ## path for output data
-config['outpath_data'] = data_path+"BSPF/data/" 
+config['outpath_data'] = data_path+"BSPF/data/waveforms/"
 
 ## blueSeis sensor (@200Hz)
 config['seed_blueseis'] = "PY.BSPF..HJ*"
 
 ## Trillium 240 next to BlueSeis on Pier (@40Hz)
-config['seed_seismometer1'] = "II.PFO.10.BH*" 
+config['seed_seismometer1'] = "II.PFO.10.BH*"
 
 ## STS2 next to BlueSeis (@200Hz)
-config['seed_seismometer2'] = "PY.PFOIX..HH*" 
+config['seed_seismometer2'] = "PY.PFOIX..HH*"
 
 config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
 config['catalog'] = "BSPF_catalog_20221001_20230615_triggered.pkl"
@@ -281,22 +317,23 @@ events
 
 # In[36]:
 
+toggle = 0
 
 global errors
 errors = []
 
-# for jj, ev in enumerate(tqdm(events.index)):
-for jj, ev in enumerate([0,1]):
+for jj, ev in enumerate(tqdm(events.index)):
+#for jj, ev in enumerate([0,1]):
 
-    print(f" -> {jj} {events.origin[jj]} ")
+    print(f"\n -> {jj} {events.origin[jj]} ")
     
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
     filename=config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
   
     ## check if file already exists
-#     if os.path.isfile(filename):
-#         print(f" -> file alread exits for {event_name}")
-#         continue
+    if os.path.isfile(filename):
+        print(f" -> file alread exits for {event_name}")
+        continue
     
     ## configuration adjustments
     config['title'] = f"{events.origin[jj]} UTC | M{events.magnitude[jj]}"
@@ -313,12 +350,12 @@ for jj, ev in enumerate([0,1]):
         
         
     ## select appropriate endtime
-    if events.distances_km[jj] < 30:
-        config['tend'] = obs.UTCDateTime(events.origin[jj])+30
-    elif events.distances_km[jj] > 30 and events.distances_km[jj] < 100:
-        config['tend'] = obs.UTCDateTime(events.origin[jj])+60
-    else:
-        config['tend'] = obs.UTCDateTime(events.origin[jj])+180
+#     if events.distances_km[jj] < 30:
+#         config['tend'] = obs.UTCDateTime(events.origin[jj])+30
+#     elif events.distances_km[jj] > 30 and events.distances_km[jj] < 100:
+#         config['tend'] = obs.UTCDateTime(events.origin[jj])+60
+#     else:
+#         config['tend'] = obs.UTCDateTime(events.origin[jj])+180
     
     ## same endtime for all
     config['tend'] = obs.UTCDateTime(events.origin[jj])+180
@@ -361,11 +398,15 @@ for jj, ev in enumerate([0,1]):
     try:
         pfo_adr = __compute_adr_pfo(config['tbeg'], config['tend'], submask="optimal")
         st0 += pfo_adr
-    except:
+    except Exception as e:
+        print(e)
         print(" -> failed to compute ADR ...")
+        pfo_adr = __empty_stream(st0)
         
+    print(pfo_adr)
+
     st0 = st0.sort()
-        
+    
     ## processing data stream
     st = st0.copy() 
     st.detrend("linear")
@@ -376,86 +417,62 @@ for jj, ev in enumerate([0,1]):
     st.trim(config['tbeg'], config['tend'])
     st0.trim(config['tbeg'], config['tend'])
     
+    print(st0)
+    
     ## store waveform data
     waveform_filename = f"{jj}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
     st0.write(config['outpath_data']+waveform_filename, format="MSEED")
     
     ## compute analysis parameters
-    if jj == 0:
-        header = ["Torigin", "Magnitude", "CoincidenceSum"]; [header.append(f"{tr.stats.station}_{tr.stats.channel}") for tr in st0]
-        out_df = pd.DataFrame(columns=header)
+    if toggle == 0:
+        header = ["Torigin", "Magnitude", "CoincidenceSum"]
+        [header.append(f"{tr.stats.station}_{tr.stats.channel}_Amax") for tr in st0]
+        [header.append(f"{tr.stats.station}_{tr.stats.channel}_SNR") for tr in st0]
         
-    out = __compute_values_for_analysis(st0, events.origin[jj], events.magnitude[jj], events.cosum[jj])
-    out_df.loc[len(out_df)] = out   
+        out_df = pd.DataFrame(columns=header)
+        toggle = 1
+
+    ## get maximal amplitude values for all traces in stream
+    out1 = __compute_values_for_analysis(st0, events.origin[jj], events.magnitude[jj], events.cosum[jj])
+
+    ## get SNR values for all traces in stream
+    out2 = __compute_SNR(st0, events, win_length_sec=10)
+    
+    out = out1 + out2
+    
 
     
+    try:
+        out_df.loc[len(out_df)] = out   
+    except:
+        print(f" -> failed to add data to dataframe for event: {jj}!")
+        print(len(out1), len(out2), len(out), out_df.shape)
+        print(out)  
     
     ## create eventname
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
     
     
     ## plotting figures    
-    fig1 = st0.plot(equal_scale=False);
-#     fig1 = st0.plot(equal_scale=False, show=False);
+#    fig1 = st0.plot(equal_scale=False);
+    fig1 = st0.plot(equal_scale=False, show=False);
 
-#     fig2 = __makeplot(config, st)
+#    fig2 = __makeplot(config, st)
 
-#     fig3 = __makeplotStreamSpectra2(st, config, fscale="linlin");
-    
+#    fig3 = __makeplotStreamSpectra2(st, config, fscale="linlin");
+
     ## saving figures
     fig1.savefig(config['outpath_figs']+"raw/"+f"{event_name}_raw.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
 
-#     fig2.savefig(config['outpath_figs']+"filtered/"+f"{event_name}_filtered.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
+#    fig2.savefig(config['outpath_figs']+"filtered/"+f"{event_name}_filtered.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
 
-#     fig3.savefig(config['outpath_figs']+"spectra/"+f"{event_name}_spectra.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
+#    fig3.savefig(config['outpath_figs']+"spectra/"+f"{event_name}_spectra.png", dpi=200, bbox_inches='tight', pad_inches=0.05)
 
 
 ## store amplitude values
 out_df.to_pickle(config['outpath_data']+"amplitudes.pkl")
 
-    
-pprint(out_df)
-pprint(errors)
-
-
-# In[85]:
-
-
-from numpy import nanmean
-
-win_length_sec = 10 ## seconds
-
-t_trigger = events.trigger_time[jj]
-t_rel_sec = t_trigger-config['tbeg']
-
-fig, ax = plt.subplots(len(st0),1, figsize=(15,15))
-
-for i, tr in enumerate(st0):
-    df = tr.stats.sampling_rate
-    NN = int(df * win_length_sec)
-    t_rel_spl = t_rel_sec*df
-    
-    
-    noise = nanmean(tr.data[int(t_rel_spl-NN):int(t_rel_spl)]**2)
-    signal = nanmean(tr.data[int(t_rel_spl):int(t_rel_spl+NN)]**2)
-    
-    
-    print(signal/noise)
-    ax[i].plot(tr.data)
-    
-
-    ax[i].axvline(t_rel_spl, color="red")
-    ax[i].axvline(t_rel_spl+NN, color="red")
-
-    ax[i].axvline(t_rel_spl, color="g")
-    ax[i].axvline(t_rel_spl-NN, color="g")
-
-#     ax[i].axhline(y=noise, color="red", zorder=4)
-#     ax[i].axhline(y=signal, color="red", zorder=4)
-    
-
-
-# In[ ]:
+## End of File
 
 
 

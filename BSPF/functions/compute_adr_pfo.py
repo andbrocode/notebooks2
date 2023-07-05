@@ -94,7 +94,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
     #config['prefilt'] = (0.001, 0.01, 5, 10)
     config['freq1'] = 0.014   #0.014 for Spudich    and  0.073 for Langston
-    config['freq2'] = 20.0 # 1.5
+    config['freq2'] = 15.0 # 1.5
     config['apply_bandpass'] = True
 
 
@@ -219,7 +219,11 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                         tr.stats.channel = str(tr.stats.channel).replace("1","E")
                     if tr.stats.channel[-1] == "2":
                         tr.stats.channel = str(tr.stats.channel).replace("2","N")
+            
+            if config['reference_station'] == "PY.PFOIX":
+                stats = stats.resample(40)
 
+            
             if station == config['reference_station']:
                 ref_station = stats.copy()
                 acc = stats.copy()
@@ -315,7 +319,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
 
     ## MAIN ##
-
+    
     ## launch a times
     start_timer1 = timeit.default_timer()
 
@@ -337,11 +341,10 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     if config['apply_bandpass']:
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
 
-    if config['reference_station'] == "PY.PFOIX":
-        st = st.resample(40)
 
-    print(st.__str__(extended=True))    
-    
+
+#     print(st.__str__(extended=True))    
+
     ## prepare data arrays
     tsz, tsn, tse = [],[],[]
     for tr in st:
@@ -354,7 +357,8 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                 tse.append(tr.data)
         except:
             print(" -> stream data could not be appended!")
-            
+
+#     print(len(tsz),len(tsn),len(tse))
 
     ## compute array derived rotation (ADR)
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
@@ -363,12 +367,13 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 #     rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
     rot.trim(config['tbeg'], config['tend'])
 
-    
+
     ## stop times      
     stop_timer1 = timeit.default_timer()
     print(f"\n Runtime: {round((stop_timer1 - start_timer1)/60,2)} minutes")
 
 
     return rot
+
         
 ## End of File

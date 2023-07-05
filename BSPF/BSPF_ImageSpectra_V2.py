@@ -62,7 +62,7 @@ vmin, vmax = 1e-16, 1e-14
 name = "PFOIX"
 inname = "2023_PFOIX_Z_3600"
 subdir = "PFOIX_2023_Z/"
-threshold = 1e-13
+threshold = 1e-12
 period_limits = 1/80, 100  ## 1/50, 30
 vmin, vmax = 1e-16, 1e-12
 
@@ -558,8 +558,15 @@ def __makeplot_image_overview2(ff, psds, times, dates=None):
     cbar = fig.colorbar(im1, orientation='vertical', ax=[ax1_2, ax2_2, ax3_2], aspect=35, pad=0.05)
     cbar.set_label(r"PSD (rad$^2$/s$^2$/$Hz$)", fontsize=font-2, labelpad=-50)
 
+    fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.png", dpi=200, bbox_inches='tight', pad_inches=0.05, format='png')
+    print(f" -> saving: {config['outpath_figures']}{name}_20230401_20230615__psdimage2.png")
+
+    fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.eps", dpi=200, bbox_inches='tight', pad_inches=0.05, format='eps')
+    print(f" -> saving: {config['outpath_figures']}{name}_20230401_20230615__psdimage2.eps")
+    
+    plt.close(fig)
 #     plt.show();    
-    return fig
+#     return fig
 
 
 if __name__ == "__main__":
@@ -609,13 +616,13 @@ if __name__ == "__main__":
     ## ____________________________[ ]:
 
 
-    fig = __makeplot_image_overview2(
+    __makeplot_image_overview2(
                                 [ff_Z, ff_N, ff_E], 
                                 [ADR_Z, ADR_N, ADR_E], 
                                 [times_Z, times_N, times_E], 
                                 )
 
-    fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.png", dpi=200, bbox_inches='tight', pad_inches=0.05, format='png')
-    fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.eps", dpi=200, bbox_inches='tight', pad_inches=0.05, format='eps')
+#     fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.png", dpi=200, bbox_inches='tight', pad_inches=0.05, format='png')
+#     fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.eps", dpi=200, bbox_inches='tight', pad_inches=0.05, format='eps')
 
 ## End of File

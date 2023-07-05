@@ -45,9 +45,9 @@ def __request_data(seed, tbeg, tend):
         for tr in waveform:
             if tr.stats.channel[-1] == "1":
                 tr.stats.channel = str(tr.stats.channel).replace("1","E")
-            if tr.stats.channel[-1] == "2":
+            elif tr.stats.channel[-1] == "2":
                 tr.stats.channel = str(tr.stats.channel).replace("2","N")        
-            if tr.stats.channel[-1] == "3":
+            elif tr.stats.channel[-1] == "3":
                 tr.stats.channel = str(tr.stats.channel).replace("3","Z")
 
     ## adjust channel names
