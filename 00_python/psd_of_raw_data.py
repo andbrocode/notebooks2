@@ -26,12 +26,12 @@ config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 config['path_to_output'] = "/import/kilauea-data/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
-config['output_appendix'] = "_RZ_prism_differential2"
+config['output_appendix'] = "_RZ_prism_electronics"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-06-26 20:00")
-config['tend'] = UTCDateTime("2023-06-26 23:00")
+config['tbeg'] = UTCDateTime("2023-07-06 01:00")
+config['tend'] = UTCDateTime("2023-07-06 04:00")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 1000 ## seconds
