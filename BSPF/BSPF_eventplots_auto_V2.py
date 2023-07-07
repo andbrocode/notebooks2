@@ -3,12 +3,12 @@
 
 # # Automatic BSPF Eventplots
 
-# Creates automatic event plots based on catalog 
-
-# In[19]:
+# Creates automatic event plots based on catalog
 
 
-import os 
+
+
+import os
 import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -46,8 +46,8 @@ def __process_xpfo(config, st, inv):
     ii_pfo.detrend("demean")
 
     ## remove response
-#     ii_pfo.remove_response(inventory=inv, 
-#     #                        pre_filt=pre_filt, 
+#     ii_pfo.remove_response(inventory=inv,
+#     #                        pre_filt=pre_filt,
 #                            output="VEL",
 #     #                        water_level=60, 
 #                            plot=False)
@@ -275,7 +275,7 @@ config['BSPF_lat'] = 33.610643
 config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
 ## path for output data
-config['outpath_data'] = data_path+"BSPF/data/waveforms/"
+config['outpath_data'] = data_path+"BSPF/data/"
 
 ## blueSeis sensor (@200Hz)
 config['seed_blueseis'] = "PY.BSPF..HJ*"
@@ -331,9 +331,9 @@ for jj, ev in enumerate(tqdm(events.index)):
     filename=config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
   
     ## check if file already exists
-    if os.path.isfile(filename):
-        print(f" -> file alread exits for {event_name}")
-        continue
+#    if os.path.isfile(filename):
+#        print(f" -> file alread exits for {event_name}")
+#        continue
     
     ## configuration adjustments
     config['title'] = f"{events.origin[jj]} UTC | M{events.magnitude[jj]}"
@@ -387,13 +387,12 @@ for jj, ev in enumerate(tqdm(events.index)):
     ## processing data
     if ii_pfo0[0].stats.sampling_rate != py_bspf0[0].stats.sampling_rate:
         py_bspf0.resample(ii_pfo0[0].stats.sampling_rate)
-        
-        
+
+
     ## joining data
     st0 = py_bspf0
-    st0 += ii_pfo0 
-    
-    
+    st0 += ii_pfo0
+
     ## compute ADR
     try:
         pfo_adr = __compute_adr_pfo(config['tbeg'], config['tend'], submask="optimal")
@@ -402,33 +401,33 @@ for jj, ev in enumerate(tqdm(events.index)):
         print(e)
         print(" -> failed to compute ADR ...")
         pfo_adr = __empty_stream(st0)
-        
+
     print(pfo_adr)
 
     st0 = st0.sort()
-    
+
     ## processing data stream
-    st = st0.copy() 
+    st = st0.copy()
     st.detrend("linear")
     st.taper(0.01)
     st.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
-    
-    
+
+
     st.trim(config['tbeg'], config['tend'])
     st0.trim(config['tbeg'], config['tend'])
-    
+
     print(st0)
-    
+
     ## store waveform data
-    waveform_filename = f"{jj}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-    st0.write(config['outpath_data']+waveform_filename, format="MSEED")
-    
+    waveform_filename = f"{str(jj).rjust(3,'0')}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    st0.write(config['outpath_data']+"waveforms/"+waveform_filename, format="MSEED")
+
     ## compute analysis parameters
     if toggle == 0:
         header = ["Torigin", "Magnitude", "CoincidenceSum"]
         [header.append(f"{tr.stats.station}_{tr.stats.channel}_Amax") for tr in st0]
         [header.append(f"{tr.stats.station}_{tr.stats.channel}_SNR") for tr in st0]
-        
+
         out_df = pd.DataFrame(columns=header)
         toggle = 1
 
@@ -437,23 +436,22 @@ for jj, ev in enumerate(tqdm(events.index)):
 
     ## get SNR values for all traces in stream
     out2 = __compute_SNR(st0, events, win_length_sec=10)
-    
-    out = out1 + out2
-    
 
-    
+    out = out1 + out2
+
+
     try:
-        out_df.loc[len(out_df)] = out   
+        out_df.loc[len(out_df)] = out
     except:
         print(f" -> failed to add data to dataframe for event: {jj}!")
         print(len(out1), len(out2), len(out), out_df.shape)
-        print(out)  
-    
+        print(out)
+
     ## create eventname
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
-    
-    
-    ## plotting figures    
+
+
+    ## plotting figures
 #    fig1 = st0.plot(equal_scale=False);
     fig1 = st0.plot(equal_scale=False, show=False);
 
@@ -470,8 +468,8 @@ for jj, ev in enumerate(tqdm(events.index)):
 
 
 ## store amplitude values
-out_df.to_pickle(config['outpath_data']+"amplitudes.pkl")
-
+out_df.to_pickle(config['outpath_data']+"BSPF_events_analysis.pkl")
+print(f" -> storing data: {config['outpath_data']}BSPF_events_analysis.pkl")
 ## End of File
 
 

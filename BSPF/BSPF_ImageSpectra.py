@@ -14,7 +14,7 @@ from obspy import UTCDateTime
 from numpy import log10, zeros, pi, append, linspace, mean, median, array, where, transpose, shape, histogram, arange
 from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan
 from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
-from tqdm import tqdm_notebook
+from tqdm import tqdm
 from pathlib import Path
 from scipy.stats import median_absolute_deviation as mad
 from scipy.signal import welch
@@ -28,6 +28,49 @@ if os.uname().nodename == "lighthouse":
     root_path = "/home/andbro/kilauea-data/"
 elif os.uname().nodename == "kilauea":
     root_path = "/import/kilauea-data/"
+
+
+
+
+# In[]:
+
+
+name = "BSPF"
+inname = "2022_BSPF_Z_3600"
+subdir = "BSPF_2022_Z/"
+threshold = 8e-14
+period_limits = 1/10, 100
+
+#name = "PFO"
+#inname = "2022_PFO_Z_3600"
+#subdir = "PFO_2022_Z/"
+#threshold = 8e-14
+#period_limits = 1/10, 100
+
+
+# In[]:
+
+
+path = f"{root_path}BSPF/data/"
+
+config = pickle.load(open(path+subdir+inname+"_config.pkl", 'rb'))
+
+config['inname'] = inname
+config['inpath'] = path+subdir
+config['period_limits'] = period_limits
+config['thres'] = threshold
+
+config['outpath_figures'] = f"{root_path}BSPF/figures/"
+
+config['outname_figures'] = f"{name}_psdimage2"
+
+config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
+
+config['frequency_limits'] = [1/config['period_limits'][1], 1/config['period_limits'][0]]
+
+
+
+# In[]:
 
 
 ## Methods
@@ -165,24 +208,6 @@ def __get_array_from_dataframe(df):
     return array(psds)
 
 
-# In[10]:
-
-
-# def __remove_noisy_psds(df, threshold_mean=1e-13):
-
-#     from numpy import delete
-
-#     l1 = len(df.columns)
-#     for col in df.columns:
-# #         print(col, type(col))
-#         if df[col].astype(float).mean() > threshold_mean:
-#             df = df.drop(columns=col)
-#     l2 = len(df.columns)
-#     print(f" -> removed {l1-l2} columns due to mean thresholds!")
-#     print(f" -> {l2} psds remain")
-
-#     return df
-
 
 # In[11]:
 
@@ -202,52 +227,13 @@ def __get_percentiles(arr):
     return percentiles_lower, percentiles_upper
 
 
-## _________________________________________________________
-## Configurations
 
-name = "BSPF"
-inname = "2022_BSPF_Z_3600"
-subdir = "BSPF_2022_Z/"
-threshold = 8e-14
-period_limits = 1/10, 100
-
-#name = "PFO"
-#inname = "2022_PFO_Z_3600"
-#subdir = "PFO_2022_Z/"
-#threshold = 8e-14
-#period_limits = 1/10, 100
-
-
-## _________________________________________________________
-
-
-path = f"{root_path}BSPF/data/"
-
-config = pickle.load(open(path+subdir+inname+"_config.pkl", 'rb'))
-
-config['inname'] = inname
-config['inpath'] = path+subdir
-config['period_limits'] = period_limits
-config['thres'] = threshold
-
-config['outpath_figures'] = f"{root_path}BSPF/figures/"
-
-config['outname_figures'] = f"{name}_psdimage2"
-
-config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
-
-config['frequency_limits'] = [1/config['period_limits'][1], 1/config['period_limits'][0]]
-
-## load frequencies
-# ff_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_frequency_axis.pkl", 'rb'))
-# ff_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_frequency_axis.pkl", 'rb'))
-# ff_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_frequency_axis.pkl", 'rb'))
+# In[]
 
 
 # ## Load as Arrays
 def __load_data_files(config, path):
 
-    from tqdm.notebook import tqdm
     from numpy import array
 
     print(path)
@@ -258,8 +244,7 @@ def __load_data_files(config, path):
     psds_all, times_nom, times = [], arange(0, 24*365, 1), []
     count, missing  = 0, 0
 
-    for file in tqdm(config['files']):
-        date = file.split("_")[-2]
+    for file in config['files']:
         psds_hourly = read_pickle(path+file)
 
         for h in range(24):
@@ -274,6 +259,7 @@ def __load_data_files(config, path):
     return array(psds_all), times
 
 
+# In[]
 
 # ### Cut Frequency Range
 def __cut_frequencies_array(arr, freqs, fmin, fmax):
@@ -289,6 +275,7 @@ def __cut_frequencies_array(arr, freqs, fmin, fmax):
     return pp, ff
 
 
+# In[]
 
 # ## Remove Noisy PSDs
 def __remove_noisy_psds(arr, times, threshold_mean=1e-16):
@@ -325,6 +312,7 @@ def __remove_noisy_psds(arr, times, threshold_mean=1e-16):
     return arr, times
 
 
+# In[]
 
 def __check():
     if len(times_N) != shape(ADR_N)[0]:
@@ -343,6 +331,7 @@ def __check():
         print("-> freqs Z:", len(ff_Z), shape(ADR_Z)[0])
 
 
+# In[]
 
 # ## Plotting
 def __makeplot_image_overview2(ff, psds, times, dates=None):
@@ -410,8 +399,8 @@ def __makeplot_image_overview2(ff, psds, times, dates=None):
                             )
     im3 = ax3_1.pcolormesh( times[2], 1/ff[2], psds[2].T,
                             cmap=cmap,
-                            vmax=max_psds,
-                            vmin=min_psds,
+                            # vmax=max_psds,
+                            # vmin=min_psds,
                             norm=colors.LogNorm(),
                             )
 
@@ -478,50 +467,49 @@ def __makeplot_image_overview2(ff, psds, times, dates=None):
 
     __savefig(fig, outpath=config['outpath_figures'], outname=config['outname_figures'], mode="png", dpi=300)
 
-#    plt.show();
-#    return fig
 
 
 
+# In[]
 
 def main(config):
 
 
-	ADR_Z, times_Z = __load_data_files(config, config['inpath'].replace("Z","Z"))
+    ADR_Z, times_Z = __load_data_files(config, config['inpath'].replace("Z","Z"))
 
-	ff_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_frequency_axis.pkl", 'rb'))
-	times_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_times_axis.pkl", 'rb'))
+    ff_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_frequency_axis.pkl", 'rb'))
+    times_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_times_axis.pkl", 'rb'))
 
-	ADR_N, times_N = __load_data_files(config, config['inpath'].replace("Z","N"))
+    ADR_N, times_N = __load_data_files(config, config['inpath'].replace("Z","N"))
 
-	ff_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_frequency_axis.pkl", 'rb'))
-	times_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_times_axis.pkl", 'rb'))
-
-
-	ADR_E, times_E = __load_data_files(config, config['inpath'].replace("Z","E"))
-
-	ff_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_frequency_axis.pkl", 'rb'))
-	times_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_times_axis.pkl", 'rb'))
+    ff_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_frequency_axis.pkl", 'rb'))
+    times_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_times_axis.pkl", 'rb'))
 
 
+    ADR_E, times_E = __load_data_files(config, config['inpath'].replace("Z","E"))
 
-	ADR_N, ff_N = __cut_frequencies_array(ADR_N, ff_N, config['frequency_limits'][0], config['frequency_limits'][1])
-	ADR_E, ff_E = __cut_frequencies_array(ADR_E, ff_E, config['frequency_limits'][0], config['frequency_limits'][1])
-	ADR_Z, ff_Z = __cut_frequencies_array(ADR_Z, ff_Z, config['frequency_limits'][0], config['frequency_limits'][1])
+    ff_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_frequency_axis.pkl", 'rb'))
+    times_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_times_axis.pkl", 'rb'))
 
 
-	ADR_N, times_N = __remove_noisy_psds(ADR_N, times_N, threshold_mean=config['thres'])
-	ADR_E, times_E = __remove_noisy_psds(ADR_E, times_E, threshold_mean=config['thres'])
-	ADR_Z, times_Z = __remove_noisy_psds(ADR_Z, times_Z, threshold_mean=config['thres'])
+    ADR_N, ff_N = __cut_frequencies_array(ADR_N, ff_N, config['frequency_limits'][0], config['frequency_limits'][1])
+    ADR_E, ff_E = __cut_frequencies_array(ADR_E, ff_E, config['frequency_limits'][0], config['frequency_limits'][1])
+    ADR_Z, ff_Z = __cut_frequencies_array(ADR_Z, ff_Z, config['frequency_limits'][0], config['frequency_limits'][1])
 
-#	__check()
 
-	__makeplot_image_overview2(
-		                  [ff_Z, ff_N, ff_E],
-		                  [ADR_Z, ADR_N, ADR_E],
-		                  [times_Z, times_N, times_E],
-		                  )
+    ADR_N, times_N = __remove_noisy_psds(ADR_N, times_N, threshold_mean=config['thres'])
+    ADR_E, times_E = __remove_noisy_psds(ADR_E, times_E, threshold_mean=config['thres'])
+    ADR_Z, times_Z = __remove_noisy_psds(ADR_Z, times_Z, threshold_mean=config['thres'])
 
+    #	__check()
+
+    __makeplot_image_overview2(
+                      [ff_Z, ff_N, ff_E],
+                      [ADR_Z, ADR_N, ADR_E],
+                      [times_Z, times_N, times_E],
+                      )
+
+# In[]
 
 if __name__ == "__main__":
 
