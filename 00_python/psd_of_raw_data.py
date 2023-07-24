@@ -18,7 +18,7 @@ config = {}
 #                   "BW.DROMY..F4V",
 #                   "BW.DROMY..FJZ"]
 
-config['seeds'] = ["BW.DROMY..FJZ"]
+config['seeds'] = ["BW.DROMY..F1V"]
 
 config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 # config['path_to_sds'] = "/home/andbro/freenas/romy_archive/"
@@ -26,15 +26,15 @@ config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 config['path_to_output'] = "/import/kilauea-data/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
-config['output_appendix'] = "_RZ_prism_electronics"
+config['output_appendix'] = "_RZ_prism_differential"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-07-06 01:00")
-config['tend'] = UTCDateTime("2023-07-06 04:00")
+config['tbeg'] = UTCDateTime("2023-07-20 19:00")
+config['tend'] = UTCDateTime("2023-07-20 19:30")
 
 ## define window length in seconds for welch psd
-config['win_time'] = 1000 ## seconds
+config['win_time'] = 180 ## seconds
 
 
 ## _____________________________________
@@ -73,7 +73,7 @@ overlap = int(0.5*nblock)
 win = hann(nblock)
 
 
-tr = st0.select(channel="FJ*")[0]
+tr = st0.select(channel="F*")[0]
 
 ff, fjz_psd = welch(tr.data, fs=tr.stats.sampling_rate,
                     window=win, noverlap=overlap, nperseg=nblock,

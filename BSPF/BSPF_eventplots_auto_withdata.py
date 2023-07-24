@@ -317,7 +317,7 @@ events
 
 # In[36]:
 
-toggle = 0
+switch = 0
 
 global errors
 errors = []
@@ -423,13 +423,13 @@ for jj, ev in enumerate(tqdm(events.index)):
     st0.write(config['outpath_data']+"waveforms/"+waveform_filename, format="MSEED")
 
     ## compute analysis parameters
-    if toggle == 0:
+    if switch == 0:
         header = ["Torigin", "Magnitude", "CoincidenceSum"]
         [header.append(f"{tr.stats.station}_{tr.stats.channel}_Amax") for tr in st0]
         [header.append(f"{tr.stats.station}_{tr.stats.channel}_SNR") for tr in st0]
 
         out_df = pd.DataFrame(columns=header)
-        toggle = 1
+        switch = 1
 
     ## get maximal amplitude values for all traces in stream
     out1 = __compute_values_for_analysis(st0, events.origin[jj], events.magnitude[jj], events.cosum[jj])
