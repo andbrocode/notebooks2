@@ -1,6 +1,6 @@
 #!/bin/python3
 
-def __request_data(seed, tbeg, tend):
+def __request_data(seed, tbeg, tend, bulk_download=True):
 
     from obspy.clients.fdsn import Client
 
@@ -24,15 +24,19 @@ def __request_data(seed, tbeg, tend):
     
     ## querry waveform data
     try:
-        waveform = client.get_waveforms(network=net,
-                                       station=sta,
-                                       location=loc,
-                                       channel=cha, 
-                                       starttime=tbeg-60,
-                                       endtime=tend+60,
-                                       attach_response=True
-                                       )
 
+        if bulk_download:
+            bulk = [(net, sta, loc, cha, tbeg-60, tend+60)]
+            waveform = client.get_waveforms_bulk(bulk, attach_response=True)
+        else:
+            waveform = client.get_waveforms(network=net,
+                                           station=sta,
+                                           location=loc,
+                                           channel=cha, 
+                                           starttime=tbeg-60,
+                                           endtime=tend+60,
+                                           attach_response=True
+                                           )
     except:
         print("Failed to load waveforms!")
         waveform = None

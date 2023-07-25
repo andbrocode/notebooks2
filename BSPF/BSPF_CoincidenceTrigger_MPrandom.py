@@ -21,38 +21,36 @@ global config
 
 config = {}
 
-## before 2023-04-01
-#config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
-## after 2023-04-01
-config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
-
+config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation1":"II.PFO.10.BH*", "translation2":"PY.PFOIX..HH*"}
 
 ## set date range limits
-config['date1'] = "2023-04-01"
-config['date2'] = "2023-06-15"
+config['date1'] = "2022-10-01"
+config['date2'] = "2022-10-15"
 
-
-# config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
+## path to write output
 config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
+
+## name of output file for data
+config['outout_filename'] = f"triggered_{config['date1']}_{config['date2']}.pkl"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
 
 ## specify expected sampling rate
-config['sampling_rate'] = 40 ## Hz
+# config['sampling_rate'] = 40 ## Hz
 
 ## select trigger method
 config['trigger_type'] = 'recstalta'
 
 ## thr_on (float) – threshold for switching single station trigger on
-config['thr_on'] = 3.0  ## 4
+config['thr_on'] = 2.5  ## 4
 
 ## thr_off (float) – threshold for switching single station trigger off
-config['thr_off'] = 2.0 ## 3.5
+config['thr_off'] = 1.5 ## 3.5
 
 ## set time parameters for STA-LTA
-config['lta'] = int(10*config['sampling_rate'])
-config['sta'] = int(0.5*config['sampling_rate'])
+config['lta'] = 10  ## seconds
+config['sta'] = 0.5  ## seconds
 
 ## specify coincidence sum
 config['thr_coincidence_sum'] = 4
@@ -105,29 +103,29 @@ def __request_data(seed, client, tbeg, tend):
         print(f" -> Failed to load waveforms for {seed}!")
         return
 
-#    try:
-    inventory = client.get_stations(network=net,
-                                     station=sta,
-                                     starttime=tbeg,
-                                     endtime=tend,
-                                     level="response",
-                                     )
-#    except:
-#        print(f" -> Failed to load inventory for {seed}!")
-#        return None, None
+    try:
+        inventory = client.get_stations(network=net,
+                                         station=sta,
+                                         starttime=tbeg,
+                                         endtime=tend,
+                                         level="response",
+                                         )
+    except:
+        print(f" -> Failed to load inventory for {seed}!")
+        return None, None
 
-#    try:
-    waveform = client.get_waveforms(network=net,
-                                   station=sta,
-                                   location=loc,
-                                   channel=cha,
-                                   starttime=tbeg-60,
-                                   endtime=tend+60,
-                                   )
+    try:
+        waveform = client.get_waveforms(network=net,
+                                       station=sta,
+                                       location=loc,
+                                       channel=cha,
+                                       starttime=tbeg-60,
+                                       endtime=tend+60,
+                                       )
 
-#    except:
-#        print(f" -> Failed to load waveforms for {seed}!")
-#        return None, None
+    except:
+        print(f" -> Failed to load waveforms for {seed}!")
+        return None, None
 
     return waveform, inventory
 
@@ -140,7 +138,6 @@ def __trigger(config, st):
     st_tmp = st.copy()
 
     df = st_tmp[0].stats.sampling_rate
-
 
     trig = coincidence_trigger(trigger_type = config['trigger_type'],
                                thr_on = config['thr_on'],
@@ -173,7 +170,6 @@ def __join_pickle_files(config):
     return trigger_events
 
 
-
 def main(times):
 
     jj, tbeg, tend = times
@@ -181,11 +177,18 @@ def main(times):
     jj = str(jj).rjust(3,"0")
 
 
-    try:
-        st_xpfo, inv_xpfo = __request_data(config['seeds']['translation'], config['client'], tbeg, tend)
+    try:       
+        ## load translation data
+        if tbeg < UTCDateTime("2023-04-01"):
+            st_xpfo, inv_xpfo = __request_data(config['seeds']['translation1'], config['client'], tbeg, tend)
+        else:
+            st_xpfo, inv_xpfo = __request_data(config['seeds']['translation2'], config['client'], tbeg, tend)
+        
+        ## load roation data
         st_bspf, inv_bspf = __request_data(config['seeds']['rotation'], config['client'], tbeg, tend)
+   
     except:
-        # print(f" -> failed to load data: {tbeg}-{tend}")
+        print(f" -> failed to load data: {tbeg}-{tend}")
         errors.append(f" -> failed to load data: {tbeg}-{tend}")
         return
 
@@ -195,7 +198,9 @@ def main(times):
 
     st_bspf_proc = st_bspf.copy()
     st_bspf_proc = st_bspf_proc.remove_sensitivity(inventory=inv_bspf)
-    st_bspf_proc = st_bspf_proc.resample(40.0)
+    
+    if tbeg < UTCDateTime("2023-04-01"):
+        st_bspf_proc = st_bspf_proc.resample(40.0)
 
     ## normalize to better compare rotation and velocity
     st_xpfo_proc = st_xpfo_proc.normalize(global_max=False)
@@ -209,11 +214,12 @@ def main(times):
 
     st.detrend("linear")
     st.taper(0.01)
-    st.filter('bandpass', freqmin=1.0, freqmax=18, corners=4, zerophase=True)  # optional prefiltering
-
+#     st.filter('bandpass', freqmin=1.0, freqmax=18, corners=4, zerophase=True)  # optional prefiltering
+    st.filter('highpass', freq=0.01, corners=4, zerophase=True)
+              
     trig = __trigger(config, st)
-    #print(trig)
 
+    
     del st
 
     ## store trigger list
@@ -270,8 +276,8 @@ if __name__ == '__main__':
     print("\n -> joining pickle files to one trigger file ...")
     triggers = __join_pickle_files(config)
 
-    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}trigger_all.pkl")
-    __store_as_pickle(triggers, config['output_path']+f"trigger_all.pkl")
+    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}{config['outout_filename']}")
+    __store_as_pickle(triggers, config['output_path']+config['outout_filename'])
 
     print("\n -> Done")
 
