@@ -26,7 +26,6 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation1":"II.PFO.10.BH*", "t
 
 ## set date range limits
 config['date1'] = "2022-10-01"
-<<<<<<< HEAD
 config['date2'] = "2023-06-15"
 
 ## path to write output
@@ -37,15 +36,6 @@ config['output_path'] = "/export/dump/abrotzer/"
 config['output_filename'] = f"triggered_{config['date1']}_{config['date2']}.pkl"
 
 config['output_logfile']= f"triggered_{config['date1']}_{config['date2']}.log"
-=======
-config['date2'] = "2022-10-15"
-
-## path to write output
-config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
-
-## name of output file for data
-config['outout_filename'] = f"triggered_{config['date1']}_{config['date2']}.pkl"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
@@ -57,7 +47,6 @@ config['client'] = Client("IRIS")
 config['trigger_type'] = 'recstalta'
 
 ## thr_on (float) – threshold for switching single station trigger on
-<<<<<<< HEAD
 config['thr_on'] = 2.0  ## 4
 
 ## thr_off (float) – threshold for switching single station trigger off
@@ -66,16 +55,6 @@ config['thr_off'] = 1.2 ## 3.5
 ## set time parameters for STA-LTA
 config['lta'] = 10.0  ## seconds
 config['sta'] = 1.5  ## seconds
-=======
-config['thr_on'] = 2.5  ## 4
-
-## thr_off (float) – threshold for switching single station trigger off
-config['thr_off'] = 1.5 ## 3.5
-
-## set time parameters for STA-LTA
-config['lta'] = 10  ## seconds
-config['sta'] = 0.5  ## seconds
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
 
 ## specify coincidence sum
 config['thr_coincidence_sum'] = 4
@@ -138,12 +117,8 @@ def __request_data(seed, client, tbeg, tend):
                                          level="response",
                                          )
     except:
-<<<<<<< HEAD
 #        print(f" -> Failed to load inventory for {seed}!")
         logging.error(f" -> Failed to load inventory for {seed}!")
-=======
-        print(f" -> Failed to load inventory for {seed}!")
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
         return None, None
 
     try:
@@ -156,12 +131,8 @@ def __request_data(seed, client, tbeg, tend):
                                        )
 
     except:
-<<<<<<< HEAD
 #        print(f" -> Failed to load waveforms for {seed}!")
         logging.error(f" -> Failed to load waveforms for {seed}!")
-=======
-        print(f" -> Failed to load waveforms for {seed}!")
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
         return None, None
 
     return waveform, inventory
@@ -214,11 +185,7 @@ def main(times):
     jj = str(jj).rjust(4,"0")
 
 
-<<<<<<< HEAD
     try:
-=======
-    try:       
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
         ## load translation data
         if tbeg < UTCDateTime("2023-04-01"):
             st_xpfo, inv_xpfo = __request_data(config['seeds']['translation1'], config['client'], tbeg, tend)
@@ -228,32 +195,18 @@ def main(times):
         ## load roation data
         st_bspf, inv_bspf = __request_data(config['seeds']['rotation'], config['client'], tbeg, tend)
    
-<<<<<<< HEAD
     except Exception as e:
 #        print(e)
 #        print(f" -> failed to load data: {tbeg}-{tend}")
         logging.error(f" -> failed to load data: {(tbeg+3600).date)}")
-=======
-    except:
-        print(f" -> failed to load data: {tbeg}-{tend}")
-        errors.append(f" -> failed to load data: {tbeg}-{tend}")
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
         return
 
     if st_bspf is None or inv_bspf is None:
         return
 
-<<<<<<< HEAD
     try:
         ## Processing Data
         st_xpfo = st_xpfo.remove_response(inventory=inv_xpfo, output="ACC")
-=======
-    st_bspf_proc = st_bspf.copy()
-    st_bspf_proc = st_bspf_proc.remove_sensitivity(inventory=inv_bspf)
-    
-    if tbeg < UTCDateTime("2023-04-01"):
-        st_bspf_proc = st_bspf_proc.resample(40.0)
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
 
         st_bspf = st_bspf.remove_sensitivity(inventory=inv_bspf)
         
@@ -267,7 +220,6 @@ def main(times):
         ## Join Data
         st = Stream()
 
-<<<<<<< HEAD
         st += st_bspf
         st += st_xpfo
 
@@ -280,17 +232,6 @@ def main(times):
 
         
         del st
-=======
-    st.detrend("linear")
-    st.taper(0.01)
-#     st.filter('bandpass', freqmin=1.0, freqmax=18, corners=4, zerophase=True)  # optional prefiltering
-    st.filter('highpass', freq=0.01, corners=4, zerophase=True)
-              
-    trig = __trigger(config, st)
-
-    
-    del st
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
 
         ## store trigger list
         #print(f"-> {config['output_path']}trigger_{date}_{jj}.pkl")
@@ -355,11 +296,7 @@ if __name__ == '__main__':
     triggers = __join_pickle_files(config)
 
     print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}{config['outout_filename']}")
-<<<<<<< HEAD
     __store_as_pickle(triggers, config['output_path']+config['output_filename'])
-=======
-    __store_as_pickle(triggers, config['output_path']+config['outout_filename'])
->>>>>>> 9f1b4b34638ce4b8d136b16fd3cb7e9b857987c9
 
     print("\n -> Done")
 
