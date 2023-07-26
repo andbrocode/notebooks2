@@ -6,6 +6,7 @@
 import os, sys
 import matplotlib.pyplot as plt
 import multiprocessing as mp
+import logging
 
 from tqdm import tqdm
 from pandas import date_range
@@ -21,45 +22,46 @@ global config
 
 config = {}
 
-## before 2023-04-01
-#config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"II.PFO.10.BH*"}
-## after 2023-04-01
-config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation":"PY.PFOIX..HH*"}
-
+config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation1":"II.PFO.10.BH*", "translation2":"PY.PFOIX..HH*"}
 
 ## set date range limits
-config['date1'] = "2023-04-01"
+config['date1'] = "2022-10-01"
 config['date2'] = "2023-06-15"
 
+## path to write output
+#config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
+config['output_path'] = "/export/dump/abrotzer/"
 
-# config['output_path'] = "/home/andbro/kilauea-data/BSPF/trigger/"
-config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
+## name of output file for data
+config['output_filename'] = f"triggered_{config['date1']}_{config['date2']}.pkl"
+
+config['output_logfile']= f"triggered_{config['date1']}_{config['date2']}.log"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
 
 ## specify expected sampling rate
-config['sampling_rate'] = 40 ## Hz
+# config['sampling_rate'] = 40 ## Hz
 
 ## select trigger method
 config['trigger_type'] = 'recstalta'
 
 ## thr_on (float) – threshold for switching single station trigger on
-config['thr_on'] = 3.0  ## 4
+config['thr_on'] = 2.0  ## 4
 
 ## thr_off (float) – threshold for switching single station trigger off
-config['thr_off'] = 2.0 ## 3.5
+config['thr_off'] = 1.2 ## 3.5
 
 ## set time parameters for STA-LTA
-config['lta'] = int(10*config['sampling_rate'])
-config['sta'] = int(0.5*config['sampling_rate'])
+config['lta'] = 10.0  ## seconds
+config['sta'] = 1.5  ## seconds
 
 ## specify coincidence sum
 config['thr_coincidence_sum'] = 4
 
 #config['similarity_thresholds'] = {"BSPF": 0.8, "PFO": 0.7}
 
-config['time_interval'] = 3600 ## in seconds
+config['time_interval'] = 86400 ## 3600 ## in seconds
 config['time_overlap'] = 600 ## seconds
 
 
@@ -74,8 +76,8 @@ def __store_as_pickle(obj, filename):
     pickle.dump(obj, ofile)
 
     if isdir(filename):
-        print(f"created: {filename}")
-
+#        print(f"created: {filename}")
+        logging.info(f"created: {filename}")
 
 def __request_data(seed, client, tbeg, tend):
 
@@ -89,7 +91,8 @@ def __request_data(seed, client, tbeg, tend):
                                          level="response",
                                          )
     except:
-        print(f" -> Failed to load inventory for {seed}!")
+#        print(f" -> Failed to load inventory for {seed}!")
+        logging.error(f" -> Failed to load inventory for {seed}!")
         return
 
     try:
@@ -102,32 +105,35 @@ def __request_data(seed, client, tbeg, tend):
                                        )
 
     except:
-        print(f" -> Failed to load waveforms for {seed}!")
+#        print(f" -> Failed to load waveforms for {seed}!")
+        logging.error(f" -> Failed to load waveforms for {seed}!")
         return
 
-#    try:
-    inventory = client.get_stations(network=net,
-                                     station=sta,
-                                     starttime=tbeg,
-                                     endtime=tend,
-                                     level="response",
-                                     )
-#    except:
+    try:
+        inventory = client.get_stations(network=net,
+                                         station=sta,
+                                         starttime=tbeg,
+                                         endtime=tend,
+                                         level="response",
+                                         )
+    except:
 #        print(f" -> Failed to load inventory for {seed}!")
-#        return None, None
+        logging.error(f" -> Failed to load inventory for {seed}!")
+        return None, None
 
-#    try:
-    waveform = client.get_waveforms(network=net,
-                                   station=sta,
-                                   location=loc,
-                                   channel=cha,
-                                   starttime=tbeg-60,
-                                   endtime=tend+60,
-                                   )
+    try:
+        waveform = client.get_waveforms(network=net,
+                                       station=sta,
+                                       location=loc,
+                                       channel=cha,
+                                       starttime=tbeg-60,
+                                       endtime=tend+60,
+                                       )
 
-#    except:
+    except:
 #        print(f" -> Failed to load waveforms for {seed}!")
-#        return None, None
+        logging.error(f" -> Failed to load waveforms for {seed}!")
+        return None, None
 
     return waveform, inventory
 
@@ -140,7 +146,6 @@ def __trigger(config, st):
     st_tmp = st.copy()
 
     df = st_tmp[0].stats.sampling_rate
-
 
     trig = coincidence_trigger(trigger_type = config['trigger_type'],
                                thr_on = config['thr_on'],
@@ -173,56 +178,70 @@ def __join_pickle_files(config):
     return trigger_events
 
 
-
 def main(times):
 
     jj, tbeg, tend = times
 
-    jj = str(jj).rjust(3,"0")
+    jj = str(jj).rjust(4,"0")
 
 
     try:
-        st_xpfo, inv_xpfo = __request_data(config['seeds']['translation'], config['client'], tbeg, tend)
+        ## load translation data
+        if tbeg < UTCDateTime("2023-04-01"):
+            st_xpfo, inv_xpfo = __request_data(config['seeds']['translation1'], config['client'], tbeg, tend)
+        else:
+            st_xpfo, inv_xpfo = __request_data(config['seeds']['translation2'], config['client'], tbeg, tend)
+        
+        ## load roation data
         st_bspf, inv_bspf = __request_data(config['seeds']['rotation'], config['client'], tbeg, tend)
-    except:
-        # print(f" -> failed to load data: {tbeg}-{tend}")
-        errors.append(f" -> failed to load data: {tbeg}-{tend}")
+   
+    except Exception as e:
+#        print(e)
+#        print(f" -> failed to load data: {tbeg}-{tend}")
+        logging.error(f" -> failed to load data: {(tbeg+3600).date)}")
         return
 
-    ## Processing Data
-    st_xpfo_proc = st_xpfo.copy()
-    st_xpfo_proc = st_xpfo_proc.remove_response(inventory=inv_xpfo, output="ACC")
+    if st_bspf is None or inv_bspf is None:
+        return
 
-    st_bspf_proc = st_bspf.copy()
-    st_bspf_proc = st_bspf_proc.remove_sensitivity(inventory=inv_bspf)
-    st_bspf_proc = st_bspf_proc.resample(40.0)
+    try:
+        ## Processing Data
+        st_xpfo = st_xpfo.remove_response(inventory=inv_xpfo, output="ACC")
 
-    ## normalize to better compare rotation and velocity
-    st_xpfo_proc = st_xpfo_proc.normalize(global_max=False)
-    st_bspf_proc = st_bspf_proc.normalize(global_max=False)
+        st_bspf = st_bspf.remove_sensitivity(inventory=inv_bspf)
+        
+        if tbeg < UTCDateTime("2023-04-01"):
+            st_bspf = st_bspf.resample(40.0)
 
-    ## Join Data
-    st = Stream()
+        ## normalize to better compare rotation and velocity
+        st_xpfo = st_xpfo.normalize(global_max=False)
+        st_bspf = st_bspf.normalize(global_max=False)
 
-    st += st_bspf_proc.copy()
-    st += st_xpfo_proc.copy()
+        ## Join Data
+        st = Stream()
 
-    st.detrend("linear")
-    st.taper(0.01)
-    st.filter('bandpass', freqmin=1.0, freqmax=18, corners=4, zerophase=True)  # optional prefiltering
+        st += st_bspf
+        st += st_xpfo
 
-    trig = __trigger(config, st)
-    #print(trig)
+        st.detrend("linear")
+        st.taper(0.01)
+    #     st.filter('bandpass', freqmin=1.0, freqmax=18, corners=4, zerophase=True)  # optional prefiltering
+        st.filter('highpass', freq=0.01, corners=4, zerophase=True)
+                  
+        trig = __trigger(config, st)
 
-    del st
+        
+        del st
 
-    ## store trigger list
-    #print(f"-> {config['output_path']}trigger_{date}_{jj}.pkl")
-    if not os.path.isdir(config['output_path']+f"tmp"):
-        os.mkdir(config['output_path']+f"tmp")
+        ## store trigger list
+        #print(f"-> {config['output_path']}trigger_{date}_{jj}.pkl")
+        if not os.path.isdir(config['output_path']+f"tmp"):
+            os.mkdir(config['output_path']+f"tmp")
 
-    __store_as_pickle(trig, config['output_path']+f"tmp/trigger_{tbeg}_{tend}_{jj}.pkl")
+        __store_as_pickle(trig, config['output_path']+f"tmp/trigger_{tbeg}_{tend}_{jj}.pkl")
 
+    except:
+        logging.error(f" -> {tbeg} {tend}  fatal exception occurred!")
 
 
 ## MAIN ___________________________________________
@@ -231,8 +250,11 @@ if __name__ == '__main__':
 
     pprint(config)
 
-    global errors
-    errors = []
+    logging.basicConfig(filename=config['output_path']+config['output_logfile'], 
+                        encoding='utf-8',
+                        filemode='w',
+                        level=logging.DEBUG
+                        )
 
     ## generate arguments for final parallel loop
     list_of_times = []
@@ -255,23 +277,26 @@ if __name__ == '__main__':
 
 
     ## launch parallel processes
-    with mp.Pool(processes=5) as pool:
+#    with mp.Pool(processes=5) as pool:
 
+    n_cpu = mp.cpu_count()
+    logging.info(f" -> using {n_cpu-1} of {n_cpu} CPU cores!")
+    
+    with mp.Pool(int(n_cpu-1)) as pool:
+    
         list(tqdm(pool.imap_unordered(main, list_of_times), total=len(list_of_times)))
 
     pool.close()
     pool.join()
 
 
-#    pprint(errors)
-    __store_as_pickle(errors, config['output_path']+f"trigger_all_errors.pkl")
 
     ## join files
     print("\n -> joining pickle files to one trigger file ...")
     triggers = __join_pickle_files(config)
 
-    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}trigger_all.pkl")
-    __store_as_pickle(triggers, config['output_path']+f"trigger_all.pkl")
+    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}{config['outout_filename']}")
+    __store_as_pickle(triggers, config['output_path']+config['output_filename'])
 
     print("\n -> Done")
 

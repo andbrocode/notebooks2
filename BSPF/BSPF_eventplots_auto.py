@@ -242,16 +242,16 @@ config['BSPF_lat'] = 33.610643
 config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
 ## path for output data
-config['outpath_data'] = data_path+"BSPF/data/" 
+config['outpath_data'] = data_path+"BSPF/data/waveforms/"
 
 ## blueSeis sensor (@200Hz)
 config['seed_blueseis'] = "PY.BSPF..HJ*"
 
 ## Trillium 240 next to BlueSeis on Pier (@40Hz)
-config['seed_seismometer1'] = "II.PFO.10.BH*" 
+config['seed_seismometer1'] = "II.PFO.10.BH*"
 
 ## STS2 next to BlueSeis (@200Hz)
-config['seed_seismometer2'] = "PY.PFOIX..HH*" 
+config['seed_seismometer2'] = "PY.PFOIX..HH*"
 
 config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
 config['catalog'] = "BSPF_catalog_20221001_20230615_triggered.pkl"
@@ -276,25 +276,25 @@ events.rename(columns = {'index':'origin'}, inplace = True)
 global errors
 errors = []
 
-for jj, ev in enumerate(tqdm(events.index)):
+for jj, ev in enumerate(events.index):
 
 
     print(f"\n -> {jj} {events.origin[jj]} ")
-    
+
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
-    
+
     filename=config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
-  
+
     ## check if file already exists
 #     if os.path.isfile(filename):
 #         print(f" -> file alread exits for {event_name}")
 #         continue
-    
+
     ## configuration adjustments
     config['title'] = f"{events.origin[jj]} UTC | M{events.magnitude[jj]}"
     config['tbeg'] = obs.UTCDateTime(str(events.origin[jj]))-60
 
-    
+
     ## select appropriate seismometer
     if config['tbeg'].date < obs.UTCDateTime("2023-04-01"):
         config['seed_seismometer'] = config['seed_seismometer1']
@@ -366,7 +366,7 @@ for jj, ev in enumerate(tqdm(events.index)):
     st0 = st0.sort()
         
     ## processing data stream
-    st = st0.copy() 
+    st = st0.copy()
     st.detrend("linear")
     st.taper(0.01)
     st.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
@@ -376,16 +376,17 @@ for jj, ev in enumerate(tqdm(events.index)):
     st0.trim(config['tbeg'], config['tend'])
     
     ## store waveform data
-    waveform_filename = f"{jj}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    num = str(jj).rjust(3,"0")
+    waveform_filename = f"{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
     st0.write(config['outpath_data']+waveform_filename, format="MSEED")
-    
-   
+    print(f" -> writing {waveform_filename}")
+
     ## create eventname
     event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
     
     
     ## plotting figures    
-    fig1 = st0.plot(equal_scale=False);
+    fig1 = st0.plot(equal_scale=False, show=False);
 #     fig1 = st0.plot(equal_scale=False, show=False);
 
 #     fig2 = __makeplot(config, st)
@@ -406,7 +407,7 @@ for jj, ev in enumerate(tqdm(events.index)):
 # In[16]:
 
 
-st0.plot()
+# st0.plot()
 
 
 # ## Testing Signal-to-Noise ratios
