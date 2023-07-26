@@ -10,10 +10,10 @@ import logging
 
 from tqdm import tqdm
 from pandas import date_range
-from obspy.clients.fdsn import Client
+from obspy.clients.fdsn import Client, RoutingClient
 from obspy.signal.trigger import coincidence_trigger
 from pprint import pprint
-from obspy import UTCDateTime, Stream
+from obspy import UTCDateTime, Stream, read_inventory
 from numpy import sort
 
 ## Configs _______________________________________
@@ -39,6 +39,7 @@ config['output_logfile']= f"triggered_{config['date1']}_{config['date2']}.log"
 
 ## specify client to use for data
 config['client'] = Client("IRIS")
+#config['client'] = RoutingClient("iris-federator")
 
 ## specify expected sampling rate
 # config['sampling_rate'] = 40 ## Hz
@@ -62,7 +63,7 @@ config['thr_coincidence_sum'] = 4
 #config['similarity_thresholds'] = {"BSPF": 0.8, "PFO": 0.7}
 
 config['time_interval'] = 86400 ## 3600 ## in seconds
-config['time_overlap'] = 600 ## seconds
+config['time_overlap'] = 60 ## seconds
 
 
 ## Methods _______________________________________
@@ -79,61 +80,48 @@ def __store_as_pickle(obj, filename):
 #        print(f"created: {filename}")
         logging.info(f"created: {filename}")
 
-def __request_data(seed, client, tbeg, tend):
+def __request_data(seed, client, tbeg, tend, bulk_download=True):
 
     net, sta, loc, cha = seed.split(".")
 
     try:
-        inventory = client.get_stations(network=net,
-                                         station=sta,
-                                         starttime=tbeg,
-                                         endtime=tend,
-                                         level="response",
-                                         )
+        try:
+            if sta == "BSPF":
+                inventory = read_inventory("./bspf_inventory.xml")
+            else:
+                if tbeg < UTCDateTime("2023-04-01"):
+                    inventory = read_inventory("./pfo_inventory.xml")
+                else:
+                    inventory = read_inventory("./ipfo_inventory.xml")
+        except:
+            inventory = client.get_stations(network=net,
+                                             station=sta,
+                                             starttime=tbeg,
+                                             endtime=tend,
+                                             level="response",
+                                             )
     except:
 #        print(f" -> Failed to load inventory for {seed}!")
         logging.error(f" -> Failed to load inventory for {seed}!")
-        return
+        inventory = None
 
     try:
-        waveform = client.get_waveforms(network=net,
-                                       station=sta,
-                                       location=loc,
-                                       channel=cha,
-                                       starttime=tbeg-60,
-                                       endtime=tend+60,
-                                       )
+        if bulk_download:
+            bulk = [(net, sta, loc, cha, tbeg-60, tend+60)]
+            waveform = client.get_waveforms_bulk(bulk)
+        else:
+            waveform = client.get_waveforms(network=net,
+                                           station=sta,
+                                           location=loc,
+                                           channel=cha, 
+                                           starttime=tbeg-60,
+                                           endtime=tend+60,
+                                           )
 
     except:
 #        print(f" -> Failed to load waveforms for {seed}!")
         logging.error(f" -> Failed to load waveforms for {seed}!")
-        return
-
-    try:
-        inventory = client.get_stations(network=net,
-                                         station=sta,
-                                         starttime=tbeg,
-                                         endtime=tend,
-                                         level="response",
-                                         )
-    except:
-#        print(f" -> Failed to load inventory for {seed}!")
-        logging.error(f" -> Failed to load inventory for {seed}!")
-        return None, None
-
-    try:
-        waveform = client.get_waveforms(network=net,
-                                       station=sta,
-                                       location=loc,
-                                       channel=cha,
-                                       starttime=tbeg-60,
-                                       endtime=tend+60,
-                                       )
-
-    except:
-#        print(f" -> Failed to load waveforms for {seed}!")
-        logging.error(f" -> Failed to load waveforms for {seed}!")
-        return None, None
+        waveform = None
 
     return waveform, inventory
 
@@ -184,6 +172,7 @@ def main(times):
 
     jj = str(jj).rjust(4,"0")
 
+    date = (tbeg+3600).date
 
     try:
         ## load translation data
@@ -198,7 +187,7 @@ def main(times):
     except Exception as e:
 #        print(e)
 #        print(f" -> failed to load data: {tbeg}-{tend}")
-        logging.error(f" -> failed to load data: {(tbeg+3600).date)}")
+        logging.error(f" -> failed to load data: {date}")
         return
 
     if st_bspf is None or inv_bspf is None:
@@ -239,9 +228,11 @@ def main(times):
             os.mkdir(config['output_path']+f"tmp")
 
         __store_as_pickle(trig, config['output_path']+f"tmp/trigger_{tbeg}_{tend}_{jj}.pkl")
-
+        
+        logging.info(f" -> done for {date}")
+        
     except:
-        logging.error(f" -> {tbeg} {tend}  fatal exception occurred!")
+        logging.error(f" -> {date}  fatal exception occurred!")
 
 
 ## MAIN ___________________________________________
@@ -277,11 +268,12 @@ if __name__ == '__main__':
 
 
     ## launch parallel processes
-#    with mp.Pool(processes=5) as pool:
+#    with mp.Pool(processes=20) as pool:
 
     n_cpu = mp.cpu_count()
+    n_cpu_use = 20 ## int(n_cpu-1)
     logging.info(f" -> using {n_cpu-1} of {n_cpu} CPU cores!")
-    
+
     with mp.Pool(int(n_cpu-1)) as pool:
     
         list(tqdm(pool.imap_unordered(main, list_of_times), total=len(list_of_times)))

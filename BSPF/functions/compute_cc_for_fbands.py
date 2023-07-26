@@ -1,65 +1,59 @@
 #!/bin/python3
 
-def __compute_cc_for_fbands(tr1, tr2, fmin=1, fmax=20, fband_type='octave'):
+def __compute_cc_for_fbands(tr1, tr2, fbands, plot=False):
     
-    
-    def __get_frequency_bands(f_min=fmin, f_max=fmax, fband_type=fband_type):
-
-        from numpy import sqrt, array
-
-        f_lower, f_upper, f_centers = [], [], []
-        fcenter = f_max
-
-        while fcenter > f_min:
-            f_lower.append(fcenter/(sqrt(sqrt(2.))))
-            f_upper.append(fcenter*(sqrt(sqrt(2.))))
-            f_centers.append(fcenter)
-
-            fcenter = fcenter/(sqrt(2.))
-
-        return array(f_lower), array(f_upper), array(f_centers)
-    
-    
+    import matplotlib.pyplot as plt   
     from numpy import array, corrcoef, correlate
     from obspy.signal.cross_correlation import correlate
     
-  
+    def max_number(l):
+        abs_maxval = max(l,key=abs)
+        maxval = max(l)
+        minval = min(l)
+        if maxval == abs_maxval:
+            return maxval
+        else:
+            return minval
     
-    f_lower, f_upper, f_centers = __get_frequency_bands(f_min=fmin, f_max=fmax, fband_type=fband_type)
-
-
+    f_centers = [(fu - fl) / 2 + fl for (fl, fu) in fbands]
+    
     ccorrs, ccorrs_max = [], []
-    for fl, fu in zip(f_lower, f_upper):
+    for (fll, fuu) in fbands:
 
         tr01 = tr1.copy();
         tr02 = tr2.copy();
 
-        tr01.detrend("linear")
-        tr02.detrend("linear")
+        tr01 = tr01.detrend("linear")
+        tr02 = tr02.detrend("linear")
 
-        tr01.normalize();
-        tr02.normalize();
+#         tr01 = tr01.normalize();
+#         tr02 = tr02.normalize();
         
-        tr01.taper(0.1);
-        tr02.taper(0.1);
-        
-        tr01 = tr01.filter("bandpass", freqmin=fl, freqmax=fu, corners=8, zerophase=True);
-        tr02 = tr02.filter("bandpass", freqmin=fl, freqmax=fu, corners=8, zerophase=True);
+        tr01 = tr01.taper(0.1);
+        tr02 = tr02.taper(0.1);
 
-        tr01.normalize();
-        tr02.normalize();        
+        tr01 = tr01.filter("bandpass", freqmin=fll, freqmax=fuu, corners=8, zerophase=True);
+        tr02 = tr02.filter("bandpass", freqmin=fll, freqmax=fuu, corners=8, zerophase=True);
         
-        ccorrs.append(corrcoef(tr01.data, tr02.data)[0][1])
-        
-        cc = correlate(tr01.data, tr02.data, int(len(tr1[0].data)/2))
 
-        ccorrs_max.append(max(cc))
+        cc1 = correlate(tr01.data, tr02.data, 0, demean=True, normalize='naive', method='fft')
+        ccorrs_max.append(max_number(cc1))
         
+     
+        cc2 = corrcoef(tr01.data, tr02.data)[0][1]
+        ccorrs.append(cc2)  
         
-#         plt.figure()
-#         plt.plot(tr01.data)
-#         plt.plot(tr02.data) 
-    
+  
+        if plot:
+            tr01 = tr01.normalize();
+            tr02 = tr02.normalize();            
+            
+            plt.figure()
+            plt.plot(tr01.data)
+            plt.plot(tr02.data)
+            plt.title(f"{round(fll,3)}-{round(fuu,3)} Hz  | CCmax = {round(cc2,2)}")
+            plt.show()
+            
     return array(f_centers), array(ccorrs), array(ccorrs_max)
 
 

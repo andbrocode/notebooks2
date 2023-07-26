@@ -41,7 +41,7 @@ config = {}
 
 config['seed'] = "PY.BSPF..HJ*"
 
-config['tbeg'] = obs.UTCDateTime("2022-10-01 00:00:00")
+config['tbeg'] = obs.UTCDateTime("2022-10-07 00:00:00")
 config['tend'] = obs.UTCDateTime("2023-01-01 00:00:00")
 
 
@@ -69,6 +69,10 @@ for date in date_range(config['tbeg'].date, config['tend'].date):
     
     st_bspf, inv_bspf = __request_data(config['seed'], d1, d2)
     
+    if st_bspf is None:
+        print(f" -> no data for {d1.date}")
+        continue
+    
     st_bspf.trim(d1,d2)
     
 #    st_bspf = st_bspf.detrend("demean")
@@ -78,7 +82,15 @@ for date in date_range(config['tbeg'].date, config['tend'].date):
 
     filename = f'{str(d1.date).replace("-","")}.png'
     
+    if not os.path.exists(config['outpath_figs']):
+        print(f" -> no such directory: {config['outpath_figs']}")
+
+
     for tr in st_bspf:
+    
+        if not os.path.exists(config['outpath_figs']+tr.stats.channel+"/"):
+            os.mkdir(config['outpath_figs']+tr.stats.channel+"/")
+
         tr.plot(
                 type="dayplot", 
                 interval=60, 
@@ -87,13 +99,14 @@ for date in date_range(config['tbeg'].date, config['tend'].date):
                 one_tick_per_line=True,
                 color=['k', 'r', 'b', 'g'],
                 show_y_UTC_label=False,
-                handle=True,
+                handle=False,
                 automerge=True,
                 show=False,
-                outfile=config['outpath_figs']+tr.stats.channel+"_"+filename,
+                outfile=config['outpath_figs']+tr.stats.channel+"/"+tr.stats.channel+"_"+filename,
                 );
 
-
+    del st_bspf
+    
 #    fig.savefig(config['outpath_figs']+filename, dpi=200, bbox_inches='tight', pad_inches=0.05)
 
 

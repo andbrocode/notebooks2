@@ -350,7 +350,7 @@ for jj, ev in enumerate(events.index):
             tr.stats.location = "all"
         st0 += pfo_adr
     except:
-        print(" -> failed to compute ADR ...")
+        print(" -> failed to compute all ADR ...")
         pfo_adr = __empty_stream(st0)
         
     ## for inner array
@@ -359,7 +359,7 @@ for jj, ev in enumerate(events.index):
         tr.stats.location = "inn"
         st0 += pfo_adr
     except:
-        print(" -> failed to compute ADR ...")
+        print(" -> failed to compute inner ADR ...")
         pfo_adr = __empty_stream(st0)        
     
     
@@ -402,59 +402,3 @@ for jj, ev in enumerate(events.index):
 
 
 ## End of File
-
-
-# In[16]:
-
-
-# st0.plot()
-
-
-# ## Testing Signal-to-Noise ratios
-
-# In[14]:
-
-
-# from numpy import nanmean, sqrt
-
-# win_length_sec = 10 ## seconds
-
-# t_trigger = events.trigger_time[jj]
-# t_rel_sec = t_trigger-config['tbeg']
-# fig, ax = plt.subplots(len(st0),1, figsize=(15,15))
-
-# for i, tr in enumerate(st0):
-    
-#     df = tr.stats.sampling_rate 
-    
-#     NN = int(df * win_length_sec) ## samples
-    
-#     t_rel_spl = t_rel_sec*df ## samples
-    
-#     t_offset = df * 2 ## samples
-    
-#     noise = nanmean(tr.data[int(t_rel_spl-NN):int(t_rel_spl)]**2)
-#     signal = nanmean(tr.data[int(t_rel_spl):int(t_rel_spl+NN)]**2)
-    
-#     SNR = sqrt(signal/noise)
-    
-    
-       
-#     ax[i].plot(tr.data)
-    
-#     ax[i].axvline(t_rel_spl, color="red")
-#     ax[i].axvline(t_rel_spl+NN, color="red")
-
-#     ax[i].axvline(t_rel_spl, color="g")
-#     ax[i].axvline(t_rel_spl-NN, color="g")
-
-#     print(SNR)
-    
-# plt.show();    
-
-
-# In[ ]:
-
-
-
-
