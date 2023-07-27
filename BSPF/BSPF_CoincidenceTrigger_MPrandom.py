@@ -287,7 +287,7 @@ if __name__ == '__main__':
     print("\n -> joining pickle files to one trigger file ...")
     triggers = __join_pickle_files(config)
 
-    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}{config['outout_filename']}")
+    print(f"\n -> writing triggered events to file: \n  -> {config['output_path']}{config['output_filename']}")
     __store_as_pickle(triggers, config['output_path']+config['output_filename'])
 
     print("\n -> Done")
