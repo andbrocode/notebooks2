@@ -183,15 +183,15 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                                                             attach_response=True,
                                                             )
             except Exception as E:
-                print(E)
-                print(f" -> geting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
+                print(E) if config['print_details'] else None
+                print(f" -> geting waveforms failed for {net}.{sta}.{loc}.{cha} ...") if config['print_details'] else None
                 continue
 
 
 
             ## merge if masked 
             if len(stats) > 3:
-                print(f" -> merging stream. Length: {len(stats)} -> 3")
+                print(f" -> merging stream. Length: {len(stats)} -> 3") if config['print_details'] else None
                 stats.merge(method=1, fill_value="interpolate")
 
 

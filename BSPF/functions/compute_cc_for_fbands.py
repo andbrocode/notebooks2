@@ -35,6 +35,8 @@ def __compute_cc_for_fbands(tr1, tr2, fbands, plot=False):
         tr01 = tr01.filter("bandpass", freqmin=fll, freqmax=fuu, corners=8, zerophase=True);
         tr02 = tr02.filter("bandpass", freqmin=fll, freqmax=fuu, corners=8, zerophase=True);
         
+        tr01 = tr01.normalize();
+        tr02 = tr02.normalize();
 
         cc1 = correlate(tr01.data, tr02.data, 0, demean=True, normalize='naive', method='fft')
         ccorrs_max.append(max_number(cc1))
