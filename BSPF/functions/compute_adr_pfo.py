@@ -370,7 +370,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
     ## stop times      
     stop_timer1 = timeit.default_timer()
-    print(f"\n Runtime: {round((stop_timer1 - start_timer1)/60,2)} minutes")
+    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60,2)} minutes")
 
 
     return rot
