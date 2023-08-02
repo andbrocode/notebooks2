@@ -304,7 +304,7 @@ for jj, ev in enumerate(events.index):
         config['fmin'], config['fmax'] = 0.01, 18.0
     else:
         config['seed_seismometer'] = config['seed_seismometer2']
-        config['fmin'], config['fmax'] = 0.01, 80.0
+        config['fmin'], config['fmax'] = 0.01, 90.0
 
 
     ## same endtime for all
@@ -342,6 +342,11 @@ for jj, ev in enumerate(events.index):
     ## joining data
     st0 = py_bspf0
     st0 += ii_pfo0
+    
+    ## apply bandpass filter for BSPF and PFO
+    st0.detrend("linear")
+    st0.taper(0.01)
+    st0.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
 
 
     ## compute ADR
@@ -371,9 +376,6 @@ for jj, ev in enumerate(events.index):
 
     ## processing data stream
     st = st0.copy()
-    st.detrend("linear")
-    st.taper(0.01)
-    st.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
 
 
     st.trim(config['tbeg'], config['tend'])

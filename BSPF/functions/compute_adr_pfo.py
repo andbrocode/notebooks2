@@ -56,12 +56,18 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     if submask is not None:
         if submask == "inner":
             config['subarray_mask'] = [0,1,2,3,4]
+            config['freq1'] = 0.16  ## 0.00238*3700/100
+            config['freq2'] = 16.5 ## 0.25*3700/100 
         elif submask == "optimal":
             config['subarray_mask'] = [0,1,6,9,10,11,12,13]
+            config['freq1'] = 0.02   ## 0.00238*3700/700
+            config['freq2'] = 1.3 # 0.25*3700/700
         elif submask == "all":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+            config['freq1'] = 0.02   ## 0.00238*3700/700
+            config['freq2'] = 1.3 # 0.25*3700/700
     else:
-        config['subarray_mask'] = [0,1,2,3]
+        config['subarray_mask'] = [0,1,2,3,4]
 
 
     ## decide if information is printed while running the code
@@ -93,15 +99,13 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## parameter for array-derivation
 
     #config['prefilt'] = (0.001, 0.01, 5, 10)
-    config['freq1'] = 0.014   #0.014 for Spudich    and  0.073 for Langston
-    config['freq2'] = 15.0 # 1.5
-    config['apply_bandpass'] = True
+    config['apply_bandpass'] = False
 
 
     # adr parameters
-    config['vp'] = 6264. #1700
-    config['vs'] = 3751. #1000
-    config['sigmau'] = 1e-8 # 0.0001
+    config['vp'] = 6200 #6264. #1700
+    config['vs'] = 3700 #3751. #1000
+    config['sigmau'] = 1e-5 # 0.0001
 
 
     ## _____________________________________________________
@@ -128,6 +132,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                                                        endtime=config['tend'],
                                                        level='response'
                                                       )
+            
             l_lon =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['longitude'])
             l_lat =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
             height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
@@ -199,6 +204,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             stats.sort()
             stats.reverse()
 
+            
             #correct mis-alignment
             stats[0].data, stats[1].data, stats[2].data = rotate2zne(stats[0],0,-90,
                                                                      stats[1],
@@ -222,13 +228,11 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             
             if config['reference_station'] == "PY.PFOIX":
                 stats = stats.resample(40)
+                stats = stats.trim(config['tbeg']-20,config['tend']+20)
 
             
             if station == config['reference_station']:
                 ref_station = stats.copy()
-                acc = stats.copy()
-                acc.differentiate()
-
 
             st += stats
 
@@ -242,7 +246,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                            
                            
         print(f" -> obtained: {len(st)/3} of {len(config['subarray_stations'])} stations!") if config['print_details'] else None
-
+        
         if len(st) == 0:
             return st, Stream(), config
         else:
@@ -268,7 +272,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         except Exception as E:
             print(E)
             print("\n -> failed to compute ADR...")
-
+            return None
 
         ## create rotation stream and add data    
         rotsa = ref_station.copy()
@@ -325,8 +329,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
     ## request data for pfo array
     st, ref_station, config = __get_data(config)
-
-
+    
     ## check if enough stations for ADR are available otherwise continue
     if len(st) < 9:
         print(" -> not enough stations (< 3) for ADR computation!")
@@ -339,8 +342,10 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
     ## processing
     if config['apply_bandpass']:
+        st.trim(config['tbeg'], config['tend'])
+        st.detrend("demean")
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
-
+        print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
 
 
 #     print(st.__str__(extended=True))    
@@ -358,7 +363,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         except:
             print(" -> stream data could not be appended!")
 
-#     print(len(tsz),len(tsn),len(tse))
+    print(len(tsz),len(tsn),len(tse))
 
     ## compute array derived rotation (ADR)
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)

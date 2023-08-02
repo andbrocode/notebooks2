@@ -49,6 +49,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
             print(f" -> {key} is missing in config!\n")
             pprint(keywords)
             return
+        
             
     ## _______________________________    
     ## Defaults
@@ -62,7 +63,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     
     ## time period
     config['tbeg'], config['tend'] = UTCDateTime(config['tbeg']), UTCDateTime(config['tend'])
-
+    config['eventime'] = UTCDateTime(config['eventtime'])
+                                         
     ## _______________________________    
     ## prepare streams
     ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
@@ -71,12 +73,15 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     ## _______________________________    
     ## get event if not provided
     if not event:
-        events = Client("USGS").get_events(starttime=config['eventtime']-20, endtime=config['eventtime']+20)
-        if len(events) > 1:
-            print(f" -> {len(events)} events found!!!")
-            print(events)
+        try:
+            events = Client("USGS").get_events(starttime=config['eventtime']-20, endtime=config['eventtime']+20)
+            if len(events) > 1:
+                print(f" -> {len(events)} events found!!!")
+                print(events)
+                event = events[0]
+        except:
+            print(" -> no event found in USGS catalog")
             
-    event = events[0]
     
     ## event location from event info
     config['source_latitude'] = event.origins[0].latitude
@@ -105,7 +110,6 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     config['sampling_rate'] = int(ROT.select(channel="*Z")[0].stats.sampling_rate)
     
     config['num_windows'] = len(ROT.select(channel="*Z")[0]) // (int(config['sampling_rate'] * config['win_length_sec']))
-
     
     backas = linspace(0, 360 - config['step'], int(360 / config['step']))
    
@@ -130,7 +134,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
             if wave_type == "love":
                 
                 if show_details and i_deg == 0 and i_win == 0:
-                    print("\n -> using Love waves for estimation ...")
+                    print(f"\n -> using {wave_type} waves for estimation ...")
                     
                 ## rotate NE to RT   
                 R, T = rotate_ne_rt(ACC.select(channel='*N')[0].data, 
@@ -141,13 +145,16 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
                 ## compute correlation for backazimuth
 #                 corrbaz0 = xcorr(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)
                 ccorr = correlate(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
-                                  demean=True, normalize='naive', method='auto')
+                                  demean=True, normalize='naive', method='fft')
                 xshift, cc_max = xcorr_max(ccorr)
                 
+                if xshift != 0:
+                    print(f" -> maximal cc not a shift=0: shift={xshift} | cc={cc_max}")
+            
             elif wave_type == "rayleigh":
                 
                 if show_details and i_deg == 0 and i_win == 0:
-                    print("\n -> using Rayleigh waves for estimation ...")
+                    print(f"\n -> using {wave_type} waves for estimation ...")
                     
                 ## rotate NE to RT   
                 R, T = rotate_ne_rt(ROT.select(channel='*N')[0].data, 
@@ -157,11 +164,19 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
 
                 ## compute correlation for backazimuth
                 ## vertical acceleration has to be reversed for definition of polarization reasons
-#                 corrbaz0 = xcorr(-1*ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)    ## old function xcorr         
                 ccorr = correlate(-1*ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
-                                  demean=True, normalize='naive', method='auto')
-                xshift, cc_max = xcorr_max(ccorr)
+                                  demean=True, normalize='naive', method='fft')
+#                 ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
+#                                   demean=True, normalize='naive', method='fft')
         
+                xshift, cc_max = xcorr_max(ccorr)
+                
+                if xshift != 0:
+                    print(f" -> maximal cc not a shift=0: shift={xshift} | cc={cc_max}")
+            
+            else:
+                print(f" -> unknown mode {wave_type}!")
+                
             corrbaz.append(cc_max)
 
             
@@ -231,7 +246,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     
     
         ## add label for theoretical backazimuth
-        baz_label = u'Theor. BAz = '+str(round(config['baz'][2],2))+'°'
+        baz_label = u'Theor. BAZ = '+str(round(config['baz'][2],0))+'°'
         if config['baz'][2] < 330:
             x_text, y_text = time[int(0.78*len(time))], config['baz'][2]+5
         else:
@@ -244,10 +259,11 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
         
         
         ## adjust title
-        if 'fmin' in config.keys() and 'fmax' in config.keys():
-            ax[0].set_title(config['title'] +f" | {edist} km" + f" | {config['fmin']}-{config['fmax']} Hz", pad=15, fontsize=font)
-        else:
-            ax[0].set_title(config['title'] +f" | {edist} km", pad=15, fontsize=font)
+#         if config['title']:
+#             if 'fmin' in config.keys() and 'fmax' in config.keys():
+#                 ax[0].set_title(config['title'] +f" | {edist} km" + f" | {config['fmin']}-{config['fmax']} Hz", pad=15, fontsize=font)
+#             else:
+#                 ax[0].set_title(config['title'] +f" | {edist} km", pad=15, fontsize=font)
  
 
         ## tune tick size
@@ -282,10 +298,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     
     output['baz_mesh'] = mesh
     output['baz_corr'] = corrbaz
-    output['baz_theo'] = config['baz']
-    output['acc_transverse'] = T
-    output['acc_radial'] = R
-    output['rot_vertical'] = ROT.select(channel="*Z")
+    output['baz_theo'] = config['baz'][2]
+    output['acc'] = ACC
+    output['rot'] = ROT
     output['event'] = event
     if plot:
         output['fig'] = fig

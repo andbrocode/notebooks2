@@ -37,6 +37,24 @@ elif os.uname().nodename == "kilauea":
 # In[]
 # Configurations
 
+# startdate="2022-10-01"
+
+# name = "BSPF"
+# inname = "2022_BSPF_Z_3600"
+# subdir = "BSPF_2022_Z/"
+# threshold = 1e-13
+# period_limits = 1/20, 100  ## 1/50, 30
+# vmin, vmax = 1e-16, 1e-14
+
+
+# name = "PFO"
+# name = "2022_PFO_Z_3600"
+# subdir = "PFO_2022_Z/"
+# threshold = 8e-14
+# period_limits = 1/20, 100
+
+
+startdate="2023-04-01"
 
 name = "BSPF"
 inname = "2023_BSPF_Z_3600"  ## "2022_BSPF_Z_3600"
@@ -44,13 +62,6 @@ subdir = "BSPF_2023_Z/"  ## "BSPF_2022_Z/"
 threshold = 1e-13
 period_limits = 1/80, 100  ## 1/50, 30
 vmin, vmax = 1e-16, 1e-14
-
-
-# name = "PFO"
-# name = "2022_PFO_Z_3600"
-# subdir = "PFO_2022_Z/"
-# threshold = 8e-14
-# period_limits = 1/50, 20
 
 # name = "PFOIX"
 # inname = "2023_PFOIX_Z_3600"
@@ -105,7 +116,6 @@ def __get_median_psd(psds):
         med_psd[f] = median(a[~isnan(a)])
 
     return med_psd
-
 
 
 
@@ -164,8 +174,6 @@ def __load_data_files(config, path):
 
     from numpy import array
 
-    print(path)
-
     config['files'] = [file for file in os.listdir(path) if "hourly" in file]
     config['files'].sort()
 
@@ -189,8 +197,6 @@ def __load_data_files(config, path):
 
 
 
-
-
 def __check():
     if len(times_N) != shape(ADR_N)[0]:
         print("-> times N:", len(times_N), shape(ADR_N)[0])
@@ -209,8 +215,7 @@ def __check():
 
 
 
-
-def __makeplot_image_overview2(ff, psds, times, dates=None):
+def __makeplot_image_overview2(ff, psds, times, startdate=None):
 
     from tqdm import tqdm
     from numpy import isnan, median, mean, std, array, zeros, nanmax, nanmin
@@ -325,7 +330,7 @@ def __makeplot_image_overview2(ff, psds, times, dates=None):
     for ax in [ax1_2, ax2_2, ax3_2]:
         ax.set_xscale("logit")
 
-    ax3_1.set_xlabel("Days of 2019", fontsize=font, labelpad=1)
+    ax3_1.set_xlabel(f"Days of {startdate}", fontsize=font, labelpad=1)
     ax3_2.set_xlabel(r"PSD (rad$^2$/s$^2$/$Hz$)", fontsize=font, labelpad=-1)
 
     new_ticks = [int(round(t/24,0)) for t in ax3_1.get_xticks()]
@@ -419,54 +424,46 @@ def __remove_noisy_psds(arr, times, threshold_mean=1e-16):
 
 if __name__ == "__main__":
 
+    
+    print(f" -> load Z data ...")
     ADR_Z, times_Z = __load_data_files(config, config['inpath'].replace("Z","Z"))
-
     ff_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_frequency_axis.pkl", 'rb'))
     times_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_times_axis.pkl", 'rb'))
 
-    len(ADR_Z), len(ff_Z), len(times_Z)
 
-
-
+    print(f" -> load N data ...")
     ADR_N, times_N = __load_data_files(config, config['inpath'].replace("Z","N"))
-
     ff_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_frequency_axis.pkl", 'rb'))
     times_N = pickle.load(open(f"{config['inpath'].replace('Z','N')}{config['inname'].replace('Z','N')}_times_axis.pkl", 'rb'))
 
-    len(ADR_N), len(ff_N), len(times_N)
 
-
-
+    print(f" -> load E data ...")
     ADR_E, times_E = __load_data_files(config, config['inpath'].replace("Z","E"))
-
     ff_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_frequency_axis.pkl", 'rb'))
     times_E = pickle.load(open(f"{config['inpath'].replace('Z','E')}{config['inname'].replace('Z','E')}_times_axis.pkl", 'rb'))
 
 
-    len(ADR_E), len(ff_E), len(times_E)
-
-
     __check()
 
-
+    print(f" -> cut frequencies...")
     ADR_N, ff_N = __cut_frequencies_array(ADR_N, ff_N, config['frequency_limits'][0], config['frequency_limits'][1])
     ADR_E, ff_E = __cut_frequencies_array(ADR_E, ff_E, config['frequency_limits'][0], config['frequency_limits'][1])
     ADR_Z, ff_Z = __cut_frequencies_array(ADR_Z, ff_Z, config['frequency_limits'][0], config['frequency_limits'][1])
 
-
+    print(f" -> remove noisy psds ...")
     ADR_N, times_N = __remove_noisy_psds(ADR_N, times_N, threshold_mean=config['thres'])
     ADR_E, times_E = __remove_noisy_psds(ADR_E, times_E, threshold_mean=config['thres'])
     ADR_Z, times_Z = __remove_noisy_psds(ADR_Z, times_Z, threshold_mean=config['thres'])
 
 
 
-    ## ____________________________[ ]:
 
-
+    print(f" -> plotting ...")
     __makeplot_image_overview2(
                                 [ff_Z, ff_N, ff_E],
                                 [ADR_Z, ADR_N, ADR_E],
                                 [times_Z, times_N, times_E],
+                                startdate
                                 )
 
 #     fig.savefig(config['outpath_figures']+f"{name}_20230401_20230615__psdimage2.png", dpi=200, bbox_inches='tight', pad_inches=0.05, format='png')
