@@ -188,7 +188,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
     maxcorr = array([backas[corrbaz[:, l1].argmax()] for l1 in range(0, config['num_windows'])])
 
     ## create mesh grid
-    mesh = meshgrid(arange(config['win_length_sec']/2, config['win_length_sec'] * config['num_windows'], config['win_length_sec']), backas)
+    t_win = arange(0, config['win_length_sec']*config['num_windows']+config['win_length_sec'], config['win_length_sec'])
+    t_win_center = t_win[:-1]+config['win_length_sec']/2
+    mesh = meshgrid(t_win, backas)
 
     
 
@@ -229,14 +231,15 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
         
         ## backazimuth estimation plot
         im = ax[2].pcolormesh(mesh[0], mesh[1], corrbaz, cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading="auto")
-        ax[2].set_xlim(time[0], time[-1])
+#         ax[2].set_xlim(time[0], time[-1])
+        ax[2].set_xlim(t_win[0], t_win[-1])
         ax[2].set_ylim(0, 360)
         ax[2].set_ylabel(u'estimated \n backazimuth (°)', fontsize=font)
         ax[2].set_xlabel('time (s)', fontsize=font)
 
         
         ## plot maximal correclation values
-        ax[2].plot(arange(config['win_length_sec']/2., config['win_length_sec'] * len(maxcorr), config['win_length_sec']), maxcorr, '.k')
+        ax[2].plot(t_win_center, maxcorr, '.k')
 
         
         ## plot theoretical Backazimuth for comparison

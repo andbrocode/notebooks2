@@ -56,19 +56,19 @@ elif os.uname().nodename == "kilauea":
 
 startdate="2023-04-01"
 
-# name = "BSPF"
-# inname = "2023_BSPF_Z_3600"  ## "2022_BSPF_Z_3600"
-# subdir = "BSPF_2023_Z/"  ## "BSPF_2022_Z/"
-# threshold = 1e-13
-# period_limits = 1/80, 100  ## 1/50, 30
-# vmin, vmax = 1e-16, 1e-14
-
-name = "PFOIX"
-inname = "2023_PFOIX_Z_3600"
-subdir = "PFOIX_2023_Z/"
-threshold = 1e-10
+name = "BSPF"
+inname = "2023_BSPF_Z_3600"  ## "2022_BSPF_Z_3600"
+subdir = "BSPF_2023_Z/"  ## "BSPF_2022_Z/"
+threshold = 1e-13
 period_limits = 1/80, 100  ## 1/50, 30
-vmin, vmax = 1e-16, 1e-12
+vmin, vmax = 9e-17, 1e-14
+
+# name = "PFOIX"
+# inname = "2023_PFOIX_Z_3600"
+# subdir = "PFOIX_2023_Z/"
+# threshold = 3e-11
+# period_limits = 1/80, 100  ## 1/50, 30
+# vmin, vmax = 1e-17, 1e-11
 
 # In[]
 
@@ -323,7 +323,7 @@ def __makeplot_image_overview2(ff, psds, times, startdate=None):
 
 
     for ax in [ax1_1, ax1_2, ax2_1, ax2_2, ax3_1, ax3_2]:
-        ax.tick_params(labelsize=font-2)
+        ax.tick_params(labelsize=font-3)
         ax.set_ylim(1/config['period_limits'][0], 1/config['period_limits'][1])
         ax.set_yscale("log")
 

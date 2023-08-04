@@ -341,9 +341,10 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     inv, config['coo'] = __get_inventory_and_distances(config)
 
     ## processing
+    st.trim(config['tbeg'], config['tend'])
+    st.detrend("demean")
+        
     if config['apply_bandpass']:
-        st.trim(config['tbeg'], config['tend'])
-        st.detrend("demean")
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
         print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
 

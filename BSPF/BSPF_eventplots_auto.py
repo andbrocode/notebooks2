@@ -251,7 +251,7 @@ config['seed_blueseis'] = "PY.BSPF..HJ*"
 config['seed_seismometer1'] = "II.PFO.10.BH*"
 
 ## STS2 next to BlueSeis (@200Hz)
-config['seed_seismometer2'] = "PY.PFOIX..HH*"
+config['seed_seismometer2'] = "PY.PFOIX..H*"
 
 config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
 
@@ -318,7 +318,6 @@ for jj, ev in enumerate(events.index):
     except Exception as e:
         print(e)
         print(f" -> failed to request BSPF for event: {ev}")
-        errors.append(f" -> failed to request BSPF for event: {ev}")
         continue
 
 
@@ -328,9 +327,10 @@ for jj, ev in enumerate(events.index):
 
     except Exception as e:
         print(e)
-        print(f" -> failed to request BSPF for event: {ev}")
+        print(f" -> failed to request PFO for event: {ev}")
         continue
 
+    ## continue if either one stream ist empty
     if py_bspf0 is None or ii_pfo0 is None:
         continue
 

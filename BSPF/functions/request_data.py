@@ -18,7 +18,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
                                          level="response",
                                          )
     except:
-        print("Failed to load inventory!")
+        print(" -> Failed to load inventory!")
         inventory = None
                
     
@@ -35,14 +35,15 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
                                            channel=cha, 
                                            starttime=tbeg-60,
                                            endtime=tend+60,
-                                           attach_response=True
+                                           attach_response=False
                                            )
     except:
-        print("Failed to load waveforms!")
+        print(" -> Failed to load waveforms!")
         waveform = None
-        
+
     ## adjust channel names
     if cha[1] == "J" and waveform is not None:
+#     if sta == "BSPF" and waveform is not None:
         waveform.remove_sensitivity(inventory=inventory)
         print(" -> sensitivity removed!")
         
@@ -55,7 +56,8 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
                 tr.stats.channel = str(tr.stats.channel).replace("3","Z")
 
     ## adjust channel names
-    if cha[1] == "H" and waveform is not None:
+    elif cha[1] == "H" and waveform is not None:
+#     elif sta == "PFO*" and waveform is not None:
         waveform.remove_response(inventory=inventory, output="ACC", plot=False)
         print(" -> response removed!")
 
@@ -65,7 +67,15 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
             if tr.stats.channel[-1] == "2":
                 tr.stats.channel = str(tr.stats.channel).replace("2","E")
 
+    
+    try:
+#         waveform.rotate_to_zne(inventory)
+        waveform.rotate(method="->ZNE", inventory=inventory)  
+    except:
+        print(" -> failed to rotate to ZNE")
 
+  
+        
     return waveform, inventory
 
 
