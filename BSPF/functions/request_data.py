@@ -12,11 +12,11 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
     ## querry inventory data
     try:
         inventory = client.get_stations(network=net, 
-                                         station=sta,
-                                         starttime=tbeg-60,
-                                         endtime=tend+60,
-                                         level="response",
-                                         )
+                                        station=sta,
+                                        starttime=tbeg-60,
+                                        endtime=tend+60,
+                                        level="response",
+                                        )
     except:
         print(" -> Failed to load inventory!")
         inventory = None
@@ -68,11 +68,10 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
                 tr.stats.channel = str(tr.stats.channel).replace("2","E")
 
     
-    try:
-#         waveform.rotate_to_zne(inventory)
-        waveform.rotate(method="->ZNE", inventory=inventory)  
-    except:
-        print(" -> failed to rotate to ZNE")
+#     try:
+#         waveform.rotate(method="->ZNE", inventory=inventory)
+#     except:
+#         print(" -> failed to rotate to ZNE")
 
   
         

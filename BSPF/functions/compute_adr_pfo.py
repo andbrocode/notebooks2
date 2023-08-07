@@ -51,6 +51,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## select the fdsn client for the stations
     config['fdsn_client'] = Client('IRIS')
 
+
     ## select stations to consider: 
     ## all: [0,1,2,3,4,5,6,7,8,9,10,11,12] | optimal: [0,5,8,9,10,11,12] | inner: [0,1,2,3]
     if submask is not None:
@@ -105,7 +106,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     # adr parameters
     config['vp'] = 6200 #6264. #1700
     config['vs'] = 3700 #3751. #1000
-    config['sigmau'] = 1e-5 # 0.0001
+    config['sigmau'] = 1e-4 # 0.0001
 
 
     ## _____________________________________________________
@@ -176,6 +177,19 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             
             print(f" -> requesting {net}.{sta}.{loc}.{cha}") if config['print_details'] else None
 
+
+            ## querry inventory data
+            try:
+                inventory = config['fdsn_client'].get_stations(  network=net,
+                                                                 station=sta,
+                                                                 channel=cha,
+                                                                 starttime=config['tbeg']-20,
+                                                                 endtime=config['tend']+20,
+                                                                )
+            except:
+                print(" -> Failed to load inventory!")
+                inventory = None
+
             ## try to get waveform data
             try:
                 stats = config['fdsn_client'].get_waveforms(
@@ -201,22 +215,29 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
 
             ## sorting
-            stats.sort()
-            stats.reverse()
+            stats.sort().reverse()
 
+
+            ## remove response [VEL -> rad/s | DISP -> rad]
+            stats.remove_response(output="VEL")
+            
             
             #correct mis-alignment
             stats[0].data, stats[1].data, stats[2].data = rotate2zne(stats[0],0,-90,
-                                                                     stats[1],
-                                                                     config['subarray_misorientation'][config['subarray_stations'].index(station)],0, 
+                                                                     stats[1],config['subarray_misorientation'][config['subarray_stations'].index(station)],0, 
                                                                      stats[2],90+config['subarray_misorientation'][config['subarray_stations'].index(station)],0)
 
-            ## remove response [VEL -> rad/s | DISP -> rad]
-#             stats.remove_response(inventory=inv, output="VEL")
-            stats.remove_response(output="VEL")
 
             ## trim to interval
 #             stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
+            
+            ## rotate to ZNE
+            try:
+                if "BPH" in sta:
+                    stats.rotate(method="->ZNE", inventory=inventory)
+            except:
+                print(" -> failed to rotate to ZNE")
+                continue
             
             ## rename channels
             if net == "II" and sta == "PFO":
@@ -228,7 +249,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             
             if config['reference_station'] == "PY.PFOIX":
                 stats = stats.resample(40)
-                stats = stats.trim(config['tbeg']-20,config['tend']+20)
+                stats = stats.trim(config['tbeg']-20, config['tend']+20)
 
             
             if station == config['reference_station']:
@@ -335,13 +356,13 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         print(" -> not enough stations (< 3) for ADR computation!")
         return
     else:
-        print(f" -> continue computing ADR for {int(len(st)/3)} stations ...")
+        print(f" -> continue computing ADR for {int(len(st)/3)} of {len(config['subarray_mask'])} stations ...")
 
     ## get inventory and coordinates/distances
     inv, config['coo'] = __get_inventory_and_distances(config)
 
     ## processing
-    st.trim(config['tbeg'], config['tend'])
+#    st.trim(config['tbeg'], config['tend'])
     st.detrend("demean")
         
     if config['apply_bandpass']:
@@ -364,14 +385,15 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         except:
             print(" -> stream data could not be appended!")
 
-    print(len(tsz),len(tsn),len(tse))
+
 
     ## compute array derived rotation (ADR)
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
-
+    
+    
     ## trim to requested interval
 #     rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
-    rot.trim(config['tbeg'], config['tend'])
+    rot = rot.trim(config['tbeg'], config['tend'])
 
 
     ## stop times      

@@ -348,12 +348,12 @@ for jj, ev in enumerate(events.index):
     st0.taper(0.01)
     st0.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
 
-
+    
     ## compute ADR
 
     ## for complete array
     try:
-        pfo_adr = __compute_adr_pfo(config['tbeg'], config['tend'], submask="all")
+        pfo_adr = __compute_adr_pfo(config['tbeg']-100, config['tend']+100, submask="all")
         for tr in pfo_adr:
             tr.stats.location = "all"
         st0 += pfo_adr
@@ -363,7 +363,7 @@ for jj, ev in enumerate(events.index):
 
     ## for inner array
     try:
-        pfo_adr = __compute_adr_pfo(config['tbeg'], config['tend'], submask="inner")
+        pfo_adr = __compute_adr_pfo(config['tbeg']-100, config['tend']+100, submask="inner")
         for tr in pfo_adr:
             tr.stats.location = "inn"
         st0 += pfo_adr
@@ -373,13 +373,13 @@ for jj, ev in enumerate(events.index):
 
 
     st0 = st0.sort()
+    st0 = st0.trim(config['tbeg'], config['tend'])
+
 
     ## processing data stream
-    st = st0.copy()
+#    st = st0.copy()
+#    st.trim(config['tbeg'], config['tend'])
 
-
-    st.trim(config['tbeg'], config['tend'])
-    st0.trim(config['tbeg'], config['tend'])
 
     ## store waveform data
     num = str(jj).rjust(3,"0")
