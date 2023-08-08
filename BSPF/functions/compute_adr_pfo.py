@@ -100,7 +100,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## parameter for array-derivation
 
     #config['prefilt'] = (0.001, 0.01, 5, 10)
-    config['apply_bandpass'] = False
+    config['apply_bandpass'] = True
 
 
     # adr parameters
@@ -142,7 +142,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                 o_lon, o_lat, o_height = l_lon, l_lat, height
 
             lon, lat = util_geo_km(o_lon,o_lat,l_lon,l_lat)
-            coo.append([lon*1000,lat*1000,height-o_height])  #convert unit from km to m
+            coo.append([lon*1000,lat*1000,height-o_height])  ## convert unit from km to m
 
         return inven, np.array(coo)
 
@@ -384,8 +384,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
                 tse.append(tr.data)
         except:
             print(" -> stream data could not be appended!")
-
-
 
     ## compute array derived rotation (ADR)
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
