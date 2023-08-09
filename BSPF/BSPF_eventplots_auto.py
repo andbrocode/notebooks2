@@ -279,7 +279,7 @@ events = pd.read_pickle(config['path_to_catalog']+config['catalog'])
 global errors
 errors = []
 
-#for jj, ev in enumerate(events.index):
+for jj, ev in enumerate(events.index):
 
     print(f"\n _____________________________________")
     print(f"\n -> {jj} {events.origin[jj]} ")
