@@ -33,7 +33,7 @@ warnings.filterwarnings('ignore')
 config= {}
 
 
-config['array'] = "WROMY"
+config['array'] = "WROMY_WS7"
 
 config['year'] = 2023
 
@@ -42,7 +42,7 @@ config['year'] = 2023
 config['date1'] = UTCDateTime(f"{config['year']}-01-01")
 config['date2'] = UTCDateTime(f"{config['year']}-08-06")
 
-config['seed'] = f"BW.WROMY..WS1"
+config['seed'] = f"BW.WROMY..WS7"
 
 
 config['ring'] = config['seed'].split(".")[1]
