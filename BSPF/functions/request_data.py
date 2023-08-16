@@ -1,6 +1,6 @@
 #!/bin/python3
 
-def __request_data(seed, tbeg, tend, bulk_download=True):
+def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC"):
 
     from obspy.clients.fdsn import Client
 
@@ -58,7 +58,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True):
     ## adjust channel names
     elif cha[1] == "H" and waveform is not None:
 #     elif sta == "PFO*" and waveform is not None:
-        waveform.remove_response(inventory=inventory, output="ACC", plot=False)
+        waveform.remove_response(inventory=inventory, output=translation_type, plot=False)
         print(" -> response removed!")
 
         for tr in waveform:

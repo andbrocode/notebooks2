@@ -241,8 +241,11 @@ config['BSPF_lat'] = 33.610643
 ## path for figures to store
 config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
+## 
+config['translation_type'] = "DISP" ## ACC | DISP | VEL
+
 ## path for output data
-config['outpath_data'] = data_path+"BSPF/data/waveforms/"
+config['outpath_data'] = data_path+f"BSPF/data/waveforms/{config['translation_type']}/"
 
 ## blueSeis sensor (@200Hz)
 config['seed_blueseis'] = "PY.BSPF..HJ*"
@@ -313,7 +316,7 @@ for jj, ev in enumerate(events.index):
 
     ## load and process blueSeis data
     try:
-        py_bspf0, py_bspf_inv = __request_data(config['seed_blueseis'], config['tbeg'], config['tend'])
+        py_bspf0, py_bspf_inv = __request_data(config['seed_blueseis'], config['tbeg'], config['tend'], config['translation_type'])
 
     except Exception as e:
         print(e)
@@ -323,7 +326,7 @@ for jj, ev in enumerate(events.index):
 
     ## load and process seismometer data
     try:
-        ii_pfo0, ii_pfo_inv = __request_data(config['seed_seismometer'], config['tbeg'], config['tend'])
+        ii_pfo0, ii_pfo_inv = __request_data(config['seed_seismometer'], config['tbeg'], config['tend'], config['translation_type'])
 
     except Exception as e:
         print(e)

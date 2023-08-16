@@ -4,7 +4,7 @@ def __makeplotStream_cwt(st, config, fscale=None):
 
     from scipy import fftpack
     from andbro__fft import __fft
-    from numpy import array, log10, logspace, linspace
+    from numpy import array, log10, logspace, linspace, meshgrid, abs
     from obspy.signal.tf_misfit import cwt
     from obspy.imaging.cm import obspy_sequential
     
@@ -41,14 +41,13 @@ def __makeplotStream_cwt(st, config, fscale=None):
             scaling = trans_scaling
             
 #         t = tr.times()
-        t = np.linspace(0, tr.stats.delta * tr.stats.npts, tr.stats.npts)
+        t = linspace(0, tr.stats.delta * tr.stats.npts, tr.stats.npts)
         
 #         tr = tr.normalize()
         
         scalogram = cwt(tr.data, tr.stats.delta, 8, config['fmin'], config['fmax'])
 
-        x, y = np.meshgrid(t, logspace(log10(config['fmin']), log10(config['fmax']), scalogram.shape[0]))
-#         x, y = np.meshgrid(t, linspace(config['fmin'], config['fmax'], scalogram.shape[0]))
+        x, y = meshgrid(t, logspace(log10(config['fmin']), log10(config['fmax']), scalogram.shape[0]))
          
     
         ## _________________________________________________________________
@@ -60,7 +59,7 @@ def __makeplotStream_cwt(st, config, fscale=None):
                         label='{} {}'.format(tr.stats.station, tr.stats.channel),
                         lw=1.0,
                         )
-            axes[i,1].pcolormesh(x, y, np.abs(scalogram), cmap=obspy_sequential)    
+            axes[i,1].pcolormesh(x, y, abs(scalogram), cmap=obspy_sequential)    
 
 
         elif tr.stats.channel[-2] == "H":
@@ -71,7 +70,7 @@ def __makeplotStream_cwt(st, config, fscale=None):
                         label='{} {}'.format(tr.stats.station, tr.stats.channel),
                         lw=1.0,
                         )
-            axes[i,1].pcolormesh(x, y, np.abs(scalogram), cmap=obspy_sequential)    
+            axes[i,1].pcolormesh(x, y, abs(scalogram), cmap=obspy_sequential)    
         
         axes[i,1].set_yscale("log")
         

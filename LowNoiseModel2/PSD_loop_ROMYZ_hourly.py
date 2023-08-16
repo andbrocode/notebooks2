@@ -13,14 +13,14 @@ __year__   = '2022'
 import matplotlib.pyplot as plt
 import pickle, sys
 
-
-from andbro__querrySeismoData import __querrySeismoData
 from obspy import UTCDateTime, read
 from scipy.signal import welch
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram, arange
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from obspy.clients.fdsn import Client
+
+from andbro__querrySeismoData import __querrySeismoData
 
 import warnings
 warnings.filterwarnings('ignore')

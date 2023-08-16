@@ -14,13 +14,13 @@ import matplotlib.pyplot as plt
 import pickle
 
 
-from andbro__querrySeismoData import __querrySeismoData
 from obspy import UTCDateTime, read
 from scipy.signal import welch
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 
+from andbro__querrySeismoData import __querrySeismoData
 from andbro__load_WROMY_stream import __load_wromy_stream
 
 import warnings
