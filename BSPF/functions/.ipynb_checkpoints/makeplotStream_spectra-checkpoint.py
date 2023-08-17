@@ -18,7 +18,7 @@ def __makeplotStreamSpectra(st, fmin=None, fmax=None, fscale=None):
 
     ## _______________________________________________
 
-    st.sort(keys=['channel'], reverse=True)
+    st = st.sort(keys=['location','channel'], reverse=True)
 
     c = -1
     for i, tr in enumerate(st):
@@ -45,10 +45,10 @@ def __makeplotStreamSpectra(st, fmin=None, fmax=None, fscale=None):
                         tr.times(),
                         tr.data*rot_scaling,
                         color=colors[c],
-                        label='{} {}'.format(tr.stats.station, tr.stats.channel),
+                        label='{}.{}.{}'.format(tr.stats.station, tr.stats.location, tr.stats.channel),
                         lw=1.0,
                         )
-            axes[i,1].fill_between(ff, 0, spec, alpha=0.9, color=colors[c], lw=0)
+            axes[i,1].fill_between(ff, 0, spec, alpha=0.7, color=colors[c], lw=0)
 
 
         elif tr.stats.channel[-2] == "H":
@@ -56,10 +56,10 @@ def __makeplotStreamSpectra(st, fmin=None, fmax=None, fscale=None):
                         tr.times(),
                         tr.data*trans_scaling,
                         color=colors[c],
-                        label='{} {}'.format(tr.stats.station, tr.stats.channel),
+                        label='{}.{}.{}'.format(tr.stats.station, tr.stats.location, tr.stats.channel),
                         lw=1.0,
                         )
-            axes[i,1].fill_between(ff, 0, spec, alpha=0.9, color=colors[c], lw=0)
+            axes[i,1].fill_between(ff, 0, spec, alpha=0.7, color=colors[c], lw=0)
 
 
         ## _________________________________________________________________
@@ -91,13 +91,17 @@ def __makeplotStreamSpectra(st, fmin=None, fmax=None, fscale=None):
         axes[i,1].set_ylabel(f'ASD \n({unit}/Hz)',fontsize=font)
         axes[i,0].legend(loc='upper left',bbox_to_anchor=(0.8, 1.10), framealpha=1.0)
 
-#         axes[i,0].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
-#         axes[i,1].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+        # axes[i,0].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+        # axes[i,1].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+        axes[i,0].ticklabel_format(useOffset=False, style='plain')
+        axes[i,1].ticklabel_format(useOffset=False, style='plain')
 
-    if "fmin" is not None and "fmax" is not None:
+    if fmin is not None and fmax is not None:
         axes[i,1].set_xlim(fmin, fmax)
 
     axes[NN-1,0].set_xlabel(f"Time from {tr.stats.starttime.date} {str(tr.stats.starttime.time)[:8]} (s)",fontsize=font)
     axes[NN-1,1].set_xlabel(f"Frequency (Hz)",fontsize=font)
+
+    plt.tight_layout()
 
     return fig
