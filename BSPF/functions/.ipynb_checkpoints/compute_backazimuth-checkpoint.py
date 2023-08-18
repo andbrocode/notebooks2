@@ -1,7 +1,3 @@
-# %load functions/compute_backazimuth.py
-#!/bin/python3
-
-
 def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, plot=True, show_details=False):
 
     """
@@ -73,7 +69,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
 
     ## _______________________________
     ## get event if not provided
-    if not event:
+    if event == "auto":
         try:
             events = Client("USGS").get_events(starttime=config['eventtime']-20, endtime=config['eventtime']+20)
             if len(events) > 1:
@@ -85,25 +81,26 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
 
 
     ## event location from event info
-    config['source_latitude'] = event.origins[0].latitude
-    config['source_longitude'] = event.origins[0].longitude
+    if event is not None:
+        config['source_latitude'] = event.origins[0].latitude
+        config['source_longitude'] = event.origins[0].longitude
 
-    if show_details:
-        print(" -> event used for theoretical backazimuth:")
-        print(" -> ", event.event_descriptions[0]['type'], ': ',event.event_descriptions[0]['text'] + "\n")
+        if show_details:
+            print(" -> event used for theoretical backazimuth:")
+            print(" -> ", event.event_descriptions[0]['type'], ': ',event.event_descriptions[0]['text'] + "\n")
 
 
-    ## _______________________________
-    ## theoretical backazimuth and distance
+        ## _______________________________
+        ## theoretical backazimuth and distance
 
-    config['baz'] = gps2dist_azimuth(
-                                    config['source_latitude'], config['source_longitude'],
-                                    config['station_latitude'], config['station_longitude'],
-                                    )
-    if show_details:
-        print(f" -> Epicentral distance [m]:       {round(config['baz'][0],1)}")
-        print(f" -> Theoretical azimuth [deg]:     {round(config['baz'][1],1)}")
-        print(f" -> Theoretical backazimuth [deg]: {round(config['baz'][2],1)}")
+        config['baz'] = gps2dist_azimuth(
+                                        config['source_latitude'], config['source_longitude'],
+                                        config['station_latitude'], config['station_longitude'],
+                                        )
+        if show_details:
+            print(f" -> Epicentral distance [m]:       {round(config['baz'][0],1)}")
+            print(f" -> Theoretical azimuth [deg]:     {round(config['baz'][1],1)}")
+            print(f" -> Theoretical backazimuth [deg]: {round(config['baz'][2],1)}")
 
     ## _______________________________
     ## backazimuth estimation with Love or Rayleigh waves
@@ -246,29 +243,33 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
         ax[2].plot(t_win_center, maxcorr, '.k')
 
 
-        ## plot theoretical Backazimuth for comparison
-        xx = arange(0, config['win_length_sec'] * len(maxcorr) + 1, config['win_length_sec'])
-        tba = ones(len(xx)) * config['baz'][2]
-        ax[2].plot(xx, tba, lw=1.5, alpha=0.7, color="k", ls="--")
+        if event is not None:
+            ## plot theoretical Backazimuth for comparison
+            xx = arange(0, config['win_length_sec'] * len(maxcorr) + 1, config['win_length_sec'])
+            tba = ones(len(xx)) * config['baz'][2]
+            ax[2].plot(xx, tba, lw=1.5, alpha=0.7, color="k", ls="--")
 
 
-        ## add label for theoretical backazimuth
-        baz_label = u'Theor. BAZ = '+str(round(config['baz'][2],0))+'°'
-        if config['baz'][2] < 330:
-            x_text, y_text = time[int(0.78*len(time))], config['baz'][2]+5
-        else:
-            x_text, y_text = time[int(0.78*len(time))], config['baz'][2]-15
-        ax[2].text(x_text, y_text, baz_label, color='k', fontsize=font-2)
+            ## add label for theoretical backazimuth
+            baz_label = u'Theor. BAZ = '+str(round(config['baz'][2],0))+'°'
+            if config['baz'][2] < 330:
+                x_text, y_text = time[int(0.78*len(time))], config['baz'][2]+5
+            else:
+                x_text, y_text = time[int(0.78*len(time))], config['baz'][2]-15
+                ax[2].text(x_text, y_text, baz_label, color='k', fontsize=font-2)
 
 
-        ## epicentral distance
-        edist = round(config['baz'][0]/1000, 1)
+            ## epicentral distance
+            edist = round(config['baz'][0]/1000, 1)
 
 
         ## adjust title
         date = config['tbeg'].date
         t1, t2 = str(config['tbeg'].time).split(".")[0], str(config['tend'].time).split(".")[0]
-        ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km")
+        try:
+            ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km")
+        except:
+            ax[0].set_title(f" {date} | {t1} - {t2} UTC")
 
         ## tune tick size
         for i in range(3):
@@ -302,10 +303,13 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
 
     output['baz_mesh'] = mesh
     output['baz_corr'] = corrbaz
-    output['baz_theo'] = config['baz'][2]
     output['acc'] = ACC
     output['rot'] = ROT
     output['event'] = event
+
+    if event is not None:
+        output['baz_theo'] = config['baz'][2]
+
     if plot:
         output['fig'] = fig
 

@@ -36,7 +36,7 @@ def __makeplotStreamSpectra(st, fmin=None, fmax=None, fscale=None):
         elif tr.stats.channel[-2] == "H":
             scaling = trans_scaling
 
-        spec, ff, ph = __fft(tr.data*scaling, tr.stats.delta, window=None, normalize=None)
+        spec, ff, ph = __fft(tr.data*scaling, tr.stats.delta, window="hanning", normalize=None)
 
 
         ## _________________________________________________________________
