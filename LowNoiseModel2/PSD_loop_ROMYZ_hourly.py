@@ -35,15 +35,18 @@ config['array'] = "ROMY"
 
 config['year'] = 2023
 
-config['component'] = "V" # U,V,W,Z
+config['component'] = "Z" # U,V,W,Z
 
 config['cha'] = config['component']
 
-config['date1'] = UTCDateTime(f"{config['year']}-07-27")
-config['date2'] = UTCDateTime(f"{config['year']}-08-06")
+config['date1'] = UTCDateTime(f"{config['year']}-08-13")
+config['date2'] = UTCDateTime(f"{config['year']}-08-20")
 
-# config['seed'] = f"BW.ROMY.10.BJ{config['component']}"
-config['seed'] = f"BW.ROMY..BJ{config['component']}"
+if config['component'] == "Z":
+    config['seed'] = f"BW.ROMY.10.BJ{config['component']}"
+else:
+    config['seed'] = f"BW.ROMY..BJ{config['component']}"
+
 
 config['station'] = config['seed'].split(".")[1]
 

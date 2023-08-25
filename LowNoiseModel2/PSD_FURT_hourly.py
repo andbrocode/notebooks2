@@ -37,8 +37,8 @@ config['year'] = 2023
 
 # config['component'] = "E"
 
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-08-06")
+config['date1'] = UTCDateTime(f"{config['year']}-01-13")
+config['date2'] = UTCDateTime(f"{config['year']}-08-20")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
 config['seed'] = f"BW.FURT..*"
