@@ -28,8 +28,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         n+=n_win
 
     ## invert rotation rate for ADR data
-    if rot0[0].stats.station == "RPFO":
-        rot0.select(channel="*JZ")[0].data *= -1
+    # if rot0[0].stats.station == "RPFO":
+    #     rot0.select(channel="*JZ")[0].data *= -1
 
     ## rotate channels
     if mode == "love":
@@ -38,7 +38,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         acc = t_acc
-        rot = rot0.select(channel="*JZ")[0].data
+        rot = -1*rot0.select(channel="*JZ")[0].data
 
 
     elif mode == "rayleigh":
@@ -47,7 +47,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         rot = t_rot
-        acc = acc0.select(channel="*HZ")[0].data
+        acc = -1*acc0.select(channel="*HZ")[0].data
 
     ## add overlap
     windows_overlap = []

@@ -28,8 +28,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         n+=n_win
 
     ## invert rotation rate for ADR data
-    if rot0[0].stats.station == "RPFO":
-        rot0.select(channel="*JZ")[0].data *= -1
+    # if rot0[0].stats.station == "RPFO":
+    #     rot0.select(channel="*JZ")[0].data *= -1
 
     ## rotate channels
     if mode == "love":
