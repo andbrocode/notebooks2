@@ -38,7 +38,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         acc = t_acc
-        rot = -1*rot0.select(channel="*JZ")[0].data
+        
+        rot = rot0.select(channel="*JZ")[0].data
 
 
     elif mode == "rayleigh":
@@ -47,6 +48,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         rot = t_rot
+        
+        ## invert vertical acceleration for rayleigh waves 
         acc = -1*acc0.select(channel="*HZ")[0].data
 
     ## add overlap

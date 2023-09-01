@@ -1,4 +1,4 @@
-def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, plot=True, show_details=False):
+def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, None), event=None, plot=True, show_details=False):
 
     """
     This method estimates a backazimuth for either
@@ -267,7 +267,10 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", event=None, 
         date = config['tbeg'].date
         t1, t2 = str(config['tbeg'].time).split(".")[0], str(config['tend'].time).split(".")[0]
         try:
-            ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km")
+            if flim[0] is not None and flim[1] is not None:
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km | {flim[0]}-{flim[1]} Hz")
+            else:
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km")
         except:
             ax[0].set_title(f" {date} | {t1} - {t2} UTC")
 

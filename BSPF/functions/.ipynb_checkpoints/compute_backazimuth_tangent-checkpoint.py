@@ -5,6 +5,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     from obspy.signal.rotate import rotate_ne_rt
     from numpy.linalg import eigh
     from obspy.signal.cross_correlation import correlate
+    import matplotlib.pyplot as plt
 
     npts = rot0[0].stats.npts
 
@@ -16,9 +17,9 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     nover = int(overlap*n_win)
 
     ## extract components
-    rot_n = rot.select(channel="*N")[0].data
-    rot_e = rot.select(channel="*E")[0].data
-    acc_z = rot.select(channel="*Z")[0].data
+    rot_n = rot0.select(channel="*N")[0].data
+    rot_e = rot0.select(channel="*E")[0].data
+    acc_z = rot0.select(channel="*Z")[0].data
 
     ## define windows
     n, windows = 0, []
@@ -112,7 +113,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
         ax2.errorbar(time, baz, xerr=terr, yerr=None, zorder=1, color="lightgrey", marker='o', markersize=2, ls="None")
         ax2.set_ylabel("Backazimuth (°)", fontsize=14)
         ax2.set_ylim(0, 360)
-        ax2.set_yticks(np.linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax.get_yticks())))
+        ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax.get_yticks())))
 
         cbar = plt.colorbar(cax, pad=0.08)
         cbar.set_label("Cross-Correlation Coefficient", fontsize=14)
