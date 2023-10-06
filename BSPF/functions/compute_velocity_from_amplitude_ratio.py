@@ -9,7 +9,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
     from obspy.signal.cross_correlation import correlate
     from functions.compute_linear_regression import __compute_linear_regression
     import matplotlib.pyplot as plt
-    
+
     npts = rot0[0].stats.npts
 
     df = rot0[0].stats.sampling_rate
@@ -24,8 +24,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
     ## define windows
     n, windows = 0, []
     while n < npts-n_win:
-        windows.append((n,n+n_win))
-        n+=n_win
+        windows.append((n, n+n_win))
+        n += n_win
 
     ## invert rotation rate for ADR data
     # if rot0[0].stats.station == "RPFO":
@@ -38,8 +38,9 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         acc = t_acc
-        
-        rot = rot0.select(channel="*JZ")[0].data
+
+        ## change polarity !!!
+        rot = rot0.select(channel="*JZ")[0].data * -1
 
 
     elif mode == "rayleigh":
@@ -48,8 +49,8 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
                                     baz
                                     )
         rot = t_rot
-        
-        ## invert vertical acceleration for rayleigh waves 
+
+        ## invert vertical acceleration for rayleigh waves
         acc = -1*acc0.select(channel="*HZ")[0].data
 
     ## add overlap
@@ -70,6 +71,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         ## trying to remove very small rotation values
 #         rot_win = array([r if r>5e-8 else 0 for r in rot[w1:w2]])
 #         acc_win = array([a if r>5e-8 else 0 for a, r in zip(acc[w1:w2], rot[w1:w2])])
+
         if mode == "love":
             rot_win, acc_win = rot[w1:w2], 0.5*acc[w1:w2]
         elif mode == "rayleigh":
@@ -108,7 +110,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         ax.plot(array(range(len(acc)))/df, acc/max(abs(acc)), alpha=0.5, color="tab:red", label=r"acceleration (m/s$^2$)")
 
 
-        ax.set_ylim(-1,1)
+        ax.set_ylim(-1, 1)
         ax.set_xlim(0, len(rot)/df)
         ax.set_xlabel("Time (s)",fontsize=14)
         ax.set_ylabel("Norm. Amplitude",fontsize=14)

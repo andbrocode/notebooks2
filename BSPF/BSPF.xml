@@ -3,8 +3,8 @@
   <Source>IRIS-DMC</Source>
   <Sender>IRIS-DMC</Sender>
   <Module>IRIS WEB SERVICE: fdsnws-station | version: 1.1.52</Module>
-  <ModuleURI>http://service.iris.edu/fdsnws/station/1/query?starttime=2022-11-22T16%3A37%3A00.000000&amp;endtime=2022-11-22T16%3A53%3A00.000000&amp;network=PY&amp;station=BSPF&amp;level=response</ModuleURI>
-  <Created>2023-08-30T14:38:35.011400Z</Created>
+  <ModuleURI>http://service.iris.edu/fdsnws/station/1/query?starttime=2022-12-31T12%3A11%3A07.000000&amp;endtime=2022-12-31T12%3A14%3A20.000000&amp;network=PY&amp;station=BSPF&amp;level=response</ModuleURI>
+  <Created>2023-10-06T12:18:31.090800Z</Created>
   <Network code="PY" startDate="2014-01-01T00:00:00.000000Z" restrictedStatus="open">
     <Description>PiÃ±on Flats Observatory Array (PFO Array)</Description>
     <Identifier type="DOI">10.7914/SN/PY

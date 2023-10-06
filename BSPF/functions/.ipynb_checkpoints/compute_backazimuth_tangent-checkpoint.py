@@ -33,7 +33,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
         windows_overlap = []
         for i, w in enumerate(windows):
             if i == 0:
-                windows_overlap.append((w[0],w[1]+nover))
+                windows_overlap.append((w[0], w[1]+nover))
             elif i >= int(len(windows)-nover):
                 windows_overlap.append((w[0]-nover, w[1]))
             else:
@@ -65,6 +65,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         if baz0 <= 0:
             baz0 += 180
+
         ## __________________________
         ## remove 180° ambiguity
 
@@ -73,8 +74,8 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 #         corr_baz = corrcoef(acc_z[w1:w2], rot_t)[0][1]
         corr_baz = correlate(acc_z[w1:w2], rot_t, 0, 'auto')[0]
 
-
-        if (corr_baz > 0):
+        # if (corr_baz > 0): ## original
+        if (corr_baz < 0):
             baz0 += 180
 
         ## add new values to array
@@ -89,6 +90,10 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     time = array([((w2-w1)/2+w1)/df for (w1, w2) in windows_overlap])
     terr = (t2-t1)/2
 
+    win_center = array([(((w2-w1)/2)+w1) for (w1, w2) in windows_overlap])
+    t_win_center = win_center/df
+    print(t_win_center)
+
     if plot:
 
         rot0, acc0 = rot_n, acc_z
@@ -97,14 +102,14 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         fig, ax = plt.subplots(1,1,figsize=(15,5))
 
-        ax.plot(array(range(len(rot0)))/df, rot0/max(abs(rot0)), alpha=1, color="grey", label="rotation rate (rad/s)")
-        ax.plot(array(range(len(acc0)))/df, acc0/max(abs(acc0)), alpha=0.5, color="tab:red", label="acceleration (m/s)")
+        ax.plot(array(range(len(rot0)))/df, rot0/max(abs(rot0)), alpha=1, color="grey", label="rotation rate N (rad/s)")
+        ax.plot(array(range(len(acc0)))/df, acc0/max(abs(acc0)), alpha=0.5, color="tab:red", label=r"acceleration Z (m/s$^2$)")
 
 
-        ax.set_ylim(-1,1)
+        ax.set_ylim(-1, 1)
         ax.set_xlim(0, len(rot0)/df)
-        ax.set_xlabel("Time (s)",fontsize=14)
-        ax.set_ylabel("Norm. Amplitude",fontsize=14)
+        ax.set_xlabel("Time (s)", fontsize=14)
+        ax.set_ylabel("Norm. Amplitude", fontsize=14)
         ax.grid(zorder=0)
         ax.legend(loc=4, fontsize=13)
 
@@ -121,12 +126,12 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
         cax.set_clip_on(False)
 
         if baz_theo:
-            ax2.axhline(baz_theo, ls=":",c="k")
+            ax2.axhline(baz_theo, ls=":", c="k")
 
         plt.show();
 
-        out = {"time":time, "baz_est":baz, "ccoef":ccor, "baz_theo":baz_theo, "fig":fig}
+        out = {"time":time, "baz_est":baz, "ccoef":ccor, "baz_theo":baz_theo, "t_win_center":t_win_center, "fig":fig}
     else:
-        out = {"time":time, "baz_est":baz, "ccoef":ccor, "baz_theo":baz_theo}
+        out = {"time":time, "baz_est":baz, "ccoef":ccor, "baz_theo":baz_theo, "t_win_center":t_win_center}
 
     return out

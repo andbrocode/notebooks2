@@ -11,8 +11,9 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
     
     ## querry inventory data
     try:
-        inventory = client.get_stations(network=net, 
+        inventory = client.get_stations(network=net,
                                         station=sta,
+                                        location=loc,
                                         starttime=tbeg-60,
                                         endtime=tend+60,
                                         level="response",
@@ -46,35 +47,39 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
 #     if sta == "BSPF" and waveform is not None:
         waveform.remove_sensitivity(inventory=inventory)
         print(" -> sensitivity removed!")
-        
-        for tr in waveform:
-            if tr.stats.channel[-1] == "1":
-                tr.stats.channel = str(tr.stats.channel).replace("1","E")
-            elif tr.stats.channel[-1] == "2":
-                tr.stats.channel = str(tr.stats.channel).replace("2","N")        
-            elif tr.stats.channel[-1] == "3":
-                tr.stats.channel = str(tr.stats.channel).replace("3","Z")
+
+        # for tr in waveform:
+        #     if tr.stats.channel[-1] == "1":
+        #         tr.stats.channel = str(tr.stats.channel).replace("1","E")
+        #     elif tr.stats.channel[-1] == "2":
+        #         tr.stats.channel = str(tr.stats.channel).replace("2","N")
+        #     elif tr.stats.channel[-1] == "3":
+        #         tr.stats.channel = str(tr.stats.channel).replace("3","Z")
 
     ## adjust channel names
     elif cha[1] == "H" and waveform is not None:
-#     elif sta == "PFO*" and waveform is not None:
         waveform.remove_response(inventory=inventory, output=translation_type, plot=False)
         print(" -> response removed!")
 
-        for tr in waveform:
-            if tr.stats.channel[-1] == "1":
-                tr.stats.channel = str(tr.stats.channel).replace("1","N")
-            if tr.stats.channel[-1] == "2":
-                tr.stats.channel = str(tr.stats.channel).replace("2","E")
+        # waveform.remove_sensitivity(inventory=inventory)
+        # print(" -> sensitivity removed!")
 
-    
-#     try:
-#         waveform.rotate(method="->ZNE", inventory=inventory)
-#     except:
-#         print(" -> failed to rotate to ZNE")
+        # if translation_type == "ACC":
+        #     print(" -> differentiate")
+        #     waveform.differentiate()
 
-  
-        
+        # for tr in waveform:
+        #     if tr.stats.channel[-1] == "1":
+        #         tr.stats.channel = str(tr.stats.channel).replace("1","N")
+        #     if tr.stats.channel[-1] == "2":
+        #         tr.stats.channel = str(tr.stats.channel).replace("2","E")
+
+    try:
+        waveform.rotate(method="->ZNE", inventory=inventory)
+    except:
+        print(" -> failed to rotate to ZNE")
+
+
     return waveform, inventory
 
 

@@ -26,11 +26,11 @@ config['seeds'] = {"rotation":"PY.BSPF..HJ*", "translation1":"II.PFO.10.BH*", "t
 
 ## set date range limits
 config['date1'] = "2022-10-01"
-config['date2'] = "2023-06-15"
+config['date2'] = "2023-09-30"
 
 ## path to write output
-#config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
-config['output_path'] = "/export/dump/abrotzer/"
+config['output_path'] = "/import/kilauea-data/BSPF/data/catalogs/"
+#config['output_path'] = "/export/dump/abrotzer/"
 
 ## name of output file for data
 config['output_filename'] = f"triggered_{config['date1']}_{config['date2']}.pkl"

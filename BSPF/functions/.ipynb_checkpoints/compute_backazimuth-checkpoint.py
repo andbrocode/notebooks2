@@ -64,8 +64,18 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
     ## _______________________________
     ## prepare streams
-    ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
-    ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
+    if wave_type == "love":
+        ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
+        ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
+        
+        ## revert polarity for Z
+        for tr in ROT:
+            if "Z" in tr.stats.channel:
+                tr.data *= -1
+
+    elif wave_type == "rayleigh":
+        ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
+        ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
 
     ## _______________________________
     ## get event if not provided
@@ -186,6 +196,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
     ## extract maxima
     maxcorr = array([backas[corrbaz[:, l1].argmax()] for l1 in range(0, config['num_windows'])])
+    maxcorr_value = array([max(corrbaz[:, l1]) for l1 in range(0, config['num_windows'])])
 
     ## create mesh grid
     t_win = arange(0, config['win_length_sec']*config['num_windows']+config['win_length_sec'], config['win_length_sec'])
@@ -206,7 +217,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ## parameters
         font = 18
         acc_scaling, acc_unit = 1e3, "mm/s$^2$"
-        rot_scaling, rot_unit = 1e6, "$\mu$rad/s"
+        rot_scaling, rot_unit = 1e6, r"$\mu$rad/s"
 
         ## create time axis
         time = linspace(0, len(ACC[0].data)/ACC[0].stats.sampling_rate, len(ACC[0].data))
@@ -291,6 +302,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ## add colorbar
         cax = ax[2].inset_axes([1.01, 0., 0.02, 1])
         cb1 = plt.colorbar(im, ax=ax[2], cax=cax)
+        cb1.set_label("CC Coefficient", fontsize=14)
 
         plt.show();
         return fig
@@ -309,6 +321,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     output['acc'] = ACC
     output['rot'] = ROT
     output['event'] = event
+    output['cc_max_t'] = t_win_center
+    output['cc_max_y'] = maxcorr
+    output['cc_max'] = maxcorr_value
 
     if event is not None:
         output['baz_theo'] = config['baz'][2]
