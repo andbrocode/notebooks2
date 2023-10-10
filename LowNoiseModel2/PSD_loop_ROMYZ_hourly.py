@@ -35,12 +35,12 @@ config['array'] = "ROMY"
 
 config['year'] = 2023
 
-config['component'] = "Z" # U,V,W,Z
+config['component'] = "U" # U,V,W,Z
 
 config['cha'] = config['component']
 
-config['date1'] = UTCDateTime(f"{config['year']}-08-13")
-config['date2'] = UTCDateTime(f"{config['year']}-08-20")
+config['date1'] = UTCDateTime(f"{config['year']}-09-22")
+config['date2'] = UTCDateTime(f"{config['year']}-09-30")
 
 if config['component'] == "Z":
     config['seed'] = f"BW.ROMY.10.BJ{config['component']}"
@@ -54,7 +54,7 @@ config['repository'] = "archive"
 
 config['type'] = "rot"
 config['sampling_rate'] = 20.0
-config['tseconds'] = 1600  ## seconds
+config['tseconds'] = 1800  ## seconds
 
 config['interval'] = 3600
 config['interval_overlap'] = None # in percent

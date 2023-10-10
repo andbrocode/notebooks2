@@ -32,23 +32,24 @@ warnings.filterwarnings('ignore')
 config= {}
 
 
-config['array'] = "IROMY"
+config['array'] = "FFBI"
 
 config['year'] = 2023
 
-config['component'] = "F" ##  O=outside | I=infrasound | F=filtered
+config['component'] = "O" ##  O=outside | I=infrasound | F=filtered
 
-config['date1'] = UTCDateTime(f"{config['year']}-08-13")
-config['date2'] = UTCDateTime(f"{config['year']}-08-20")
+config['date1'] = UTCDateTime(f"{config['year']}-09-22")
+config['date2'] = UTCDateTime(f"{config['year']}-09-30")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
-config['seed'] = f"BW.IROMY..*"
+config['seed'] = f"BW.FFBI..*"
 
 config['ring'] = config['seed'].split(".")[1]
 
 
 # config['path_to_data'] = f"/export/data/LNM/data/GRF/{config['array']}/"
-config['path_to_data'] = f"/import/kilauea-data/LNM2/mb2000/sds/"
+#config['path_to_data'] = f"/import/kilauea-data/LNM2/mb2000/sds/"
+config['path_to_data'] = f"/bay200/mseed_online/archive/"
 
 config['type'] = "baro"
 
@@ -342,7 +343,6 @@ if __name__ == "__main__":
     main(config)
 
 # In[] ___________________________________________________________
-
 
 
 ## End of File

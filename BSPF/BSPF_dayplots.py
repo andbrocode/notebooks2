@@ -73,7 +73,7 @@ for date in date_range(config['tbeg'].date, config['tend'].date):
         print(f" -> no data for {d1.date}")
         continue
     
-    st_bspf.trim(d1,d2)
+    st_bspf.trim(d1, d2)
     
 #    st_bspf = st_bspf.detrend("demean")
 
