@@ -69,9 +69,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
         
         ## revert polarity for Z
-        for tr in ROT:
-            if "Z" in tr.stats.channel:
-                tr.data *= -1
+        # for tr in ROT:
+        #     if "Z" in tr.stats.channel:
+        #         tr.data *= -1
 
     elif wave_type == "rayleigh":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])

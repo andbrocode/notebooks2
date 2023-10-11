@@ -14,7 +14,7 @@ rotation_Z = 0.5*(u_ne-u_en)
 ######################
 
 
-def __compute_adr_pfo(tbeg, tend, submask=None):
+def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
     import os
     import numpy as np
@@ -52,7 +52,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
 
 
     ## select stations to consider: 
-    ## all: [0,1,2,3,4,5,6,7,8,9,10,11,12] | optimal: [0,5,8,9,10,11,12] | inner: [0,1,2,3]
     if submask is not None:
         if submask == "inner":
             config['subarray_mask'] = [0,1,2,3,4]
@@ -86,9 +85,9 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         config['array_stations'] = ['PY.PFOIX','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
                                     'PY.BPH08','PY.BPH09','PY.BPH10','PY.BPH11','PY.BPH12','PY.BPH13']
     else:
-        config['reference_station'] = 'II.XPFO' ## 'BPH01'  ## reference station
+        config['reference_station'] = 'II.PFO' ## 'BPH01'  ## reference station
 
-        config['array_stations'] = ['II.XPFO','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
+        config['array_stations'] = ['II.PFO','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
                                     'PY.BPH08','PY.BPH09','PY.BPH10','PY.BPH11','PY.BPH12','PY.BPH13']
 
 
@@ -143,6 +142,11 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             l_lon =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['longitude'])
             l_lat =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
             height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
+
+            ## set coordinates of seismometer manually, since STATIONXML is wrong...
+            if sta == "XPFO" or sta == "PFO" or sta == "PFOIX":
+                l_lon, l_lat =  -116.455439, 33.610643
+
 
             if sta == "XPFO" or sta == "PFO" or sta == "PFOIX":
                 o_lon, o_lat, o_height = l_lon, l_lat, height
@@ -217,6 +221,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
             except Exception as E:
                 print(E) if config['print_details'] else None
                 print(f" -> geting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
+                config['stations_loaded'][k] = 0
                 continue
 
             ## merge if masked
@@ -360,8 +365,12 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     ## launch a times
     start_timer1 = timeit.default_timer()
 
+    ## status of stations loaded
+    config['stations_loaded'] = np.ones(len(config['subarray_stations']))
+
     ## request data for pfo array
     st, ref_station, config = __get_data(config)
+
 
     ## check if enough stations for ADR are available otherwise continue
     if len(st) < 9:
@@ -383,6 +392,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
         print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
 
     ## plot station coordinates for check up
+    # import matplotlib.pyplot as plt
     # plt.figure()
     # for c in config['coo']:
     #     print(c)
@@ -415,8 +425,9 @@ def __compute_adr_pfo(tbeg, tend, submask=None):
     stop_timer1 = timeit.default_timer()
     print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60,2)} minutes")
 
-
-    return rot
-
+    if status:
+        return rot, config['stations_loaded']
+    else:
+        return rot
 
 ## End of File
