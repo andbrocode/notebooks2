@@ -79,6 +79,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
     except:
         print(" -> failed to rotate to ZNE")
 
+    waveform = waveform.trim(tbeg, tend)
 
     return waveform, inventory
 

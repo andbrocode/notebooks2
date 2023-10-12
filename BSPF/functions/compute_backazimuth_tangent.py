@@ -92,7 +92,6 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
     win_center = array([(((w2-w1)/2)+w1) for (w1, w2) in windows_overlap])
     t_win_center = win_center/df
-    print(t_win_center)
 
     if plot:
 

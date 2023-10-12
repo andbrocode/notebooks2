@@ -19,6 +19,8 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     import os
     import numpy as np
     import timeit
+    import matplotlib.pyplot as plt
+    import matplotlib.colors
 
     from obspy import UTCDateTime, Stream
     from obspy.clients import fdsn
@@ -63,8 +65,8 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             config['freq2'] = 1.3 # 0.25*3700/700
         elif submask == "mid":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
-            config['freq1'] = 0.03   ## 0.00238*3700/300
-            config['freq2'] = 3.0 # 0.25*3700/300
+            config['freq1'] = 0.03   ## 0.00238*3700/280
+            config['freq2'] = 3.3 # 0.25*3700/280
         elif submask == "all":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
             config['freq1'] = 0.02   ## 0.00238*3700/700
@@ -97,6 +99,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 #     config['subarray_misorientation'] = [config['misorientations'][i] for i in config['subarray_mask']]
 
     config['subarray_stations'] = [config['array_stations'][i] for i in config['subarray_mask']]
+    config['subarray_sta'] = config['subarray_stations']
 
     ## ______________________________
     ## parameter for array-derivation
@@ -419,6 +422,24 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## trim to requested interval
 #     rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
     rot = rot.trim(config['tbeg'], config['tend'])
+
+
+    ## plot status of data retrieval for waveforms of array stations
+    if status:
+
+        fig, ax = plt.subplots(1,1,figsize=(15,5))
+
+        cmap = matplotlib.colors.ListedColormap(['darkred', 'green'])
+
+        ax.pcolormesh(np.array([config['stations_loaded'], np.ones(len(config['stations_loaded']))*0.5]).T, cmap=cmap, edgecolors="k", lw=0.5)
+
+        ax.set_yticks(np.arange(0,len(config['subarray_sta']))+0.5, labels=config['subarray_sta'])
+
+        # ax.set_xlabel("Event No.",fontsize=12)
+        ax.set_xticks([])
+        ax.set_xlim(0, 1)
+
+        plt.show();
 
 
     ## stop times      
