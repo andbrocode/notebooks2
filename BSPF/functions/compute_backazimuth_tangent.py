@@ -19,7 +19,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     ## extract components
     rot_n = rot0.select(channel="*N")[0].data
     rot_e = rot0.select(channel="*E")[0].data
-    acc_z = rot0.select(channel="*Z")[0].data
+    acc_z = acc0.select(channel="*Z")[0].data
 
     ## define windows
     n, windows = 0, []
@@ -50,8 +50,8 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
             print(f" -> not enough samples in window (<10)")
 
         dat = (zeros((len(rot_n[w1:w2]), 2)))
-        dat[:,0] = rot_e[w1:w2]
-        dat[:,1] = rot_n[w1:w2]
+        dat[:, 0] = rot_e[w1: w2]
+        dat[:, 1] = rot_n[w1: w2]
 
         covar = cov(dat, rowvar=False)
 
@@ -59,9 +59,9 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         loc = argsort(abs(Cprime))[::-1]
 
-        Q = Q[:,loc]
+        Q = Q[:, loc]
 
-        baz0 = -arctan((Q[1,0]/Q[0,0]))*180/pi
+        baz0 = -arctan((Q[1, 0]/Q[0, 0]))*180/pi
 
         if baz0 <= 0:
             baz0 += 180
@@ -71,17 +71,17 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         rot_r, rot_t = rotate_ne_rt(rot_n[w1:w2], rot_e[w1:w2], baz0)
 
-#         corr_baz = corrcoef(acc_z[w1:w2], rot_t)[0][1]
+        # corr_baz = corrcoef(acc_z[w1:w2], rot_t)[0][1]
         corr_baz = correlate(acc_z[w1:w2], rot_t, 0, 'auto')[0]
 
-        # if (corr_baz > 0): ## original
-        if (corr_baz < 0):
+        if (corr_baz > 0): ## original
             baz0 += 180
 
         ## add new values to array
-        if corr_baz > cc_thres:
+        if abs(corr_baz) > cc_thres:
             baz[j] = baz0
-            ccor[j] = corr_baz
+            ccor[j] = abs(corr_baz)
+
 
     ## define time axis
     t1 = array([w1/df for (w1, w2) in windows_overlap])
@@ -93,20 +93,22 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     win_center = array([(((w2-w1)/2)+w1) for (w1, w2) in windows_overlap])
     t_win_center = win_center/df
 
+
+    ## Plotting
     if plot:
 
-        rot0, acc0 = rot_n, acc_z
+        rot0_r, rot0_t = rotate_ne_rt(rot_n, rot_e, baz_theo)
 
         cmap = plt.get_cmap("viridis", 10)
 
-        fig, ax = plt.subplots(1,1,figsize=(15,5))
+        fig, ax = plt.subplots(1, 1, figsize=(15,5))
 
-        ax.plot(array(range(len(rot0)))/df, rot0/max(abs(rot0)), alpha=1, color="grey", label="rotation rate N (rad/s)")
-        ax.plot(array(range(len(acc0)))/df, acc0/max(abs(acc0)), alpha=0.5, color="tab:red", label=r"acceleration Z (m/s$^2$)")
+        ax.plot(array(range(len(rot0_t)))/df, rot0_t/max(abs(rot0_t)), alpha=1, color="grey", label="rotation rate T (rad/s)")
+        ax.plot(array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=0.5, color="tab:red", label=r"acceleration Z (m/s$^2$)")
 
 
         ax.set_ylim(-1, 1)
-        ax.set_xlim(0, len(rot0)/df)
+        # ax.set_xlim(0, len(rot0_t)/df)
         ax.set_xlabel("Time (s)", fontsize=14)
         ax.set_ylabel("Norm. Amplitude", fontsize=14)
         ax.grid(zorder=0)

@@ -1,10 +1,16 @@
-def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, plot=False):
+def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, plot=False):
 
+    import scipy.stats as sts
     import matplotlib.pyplot as plt
-    from numpy import ones, linspace, histogram, concatenate, average, argmax, isnan, sqrt, cov
 
-    rot.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax, zerophase=True, corners=8)
-    acc.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax, zerophase=True, corners=8)
+    from numpy import ones, linspace, histogram, concatenate, average, argmax, isnan, sqrt, cov, nan, array, arange
+    from obspy import UTCDateTime
+    from functions.compute_backazimuth import __compute_backazimuth
+    from functions.compute_backazimuth_tangent import __compute_backazimuth_tangent
+    
+    
+    rot.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
+    acc.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
 
     config = {}
 
@@ -12,7 +18,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, plot=False):
     config['tend'] = rot[0].stats.endtime
 
     ## Eventtime
-    config['eventtime'] = obs.UTCDateTime(cat_event.origins[0].time)
+    config['eventtime'] = UTCDateTime(cat_event.origins[0].time)
 
     ## specify coordinates of station
     config['station_longitude'] =  -116.455439
@@ -60,6 +66,19 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, plot=False):
                                         plot=False,
     )
 
+    ## filter according to cc-threshold
+    if cc_thres:
+        for ii, _cc in enumerate(out1['cc_max']):
+            if _cc <= cc_thres:
+                out1['cc_max'][ii], out1['cc_max_y'][ii] = nan, nan
+        for ii, _cc in enumerate(out2['cc_max']):
+            if _cc <= cc_thres:
+                out2['cc_max'][ii], out2['cc_max_y'][ii] = nan, nan
+        for ii, _cc in enumerate(out3['ccoef']):
+            if _cc <= cc_thres:
+                out3['ccoef'][ii], out3['baz_est'][ii] = nan, nan
+
+
 
     if plot:
 
@@ -69,7 +88,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, plot=False):
 
         font = 12
 
-        fig, ax = plt.subplots(NN, 1, figsize=(15,10), sharex=True)
+        fig1, ax = plt.subplots(NN, 1, figsize=(15, 10), sharex=True)
 
         plt.subplots_adjust(hspace=0.2)
 
@@ -164,50 +183,96 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, plot=False):
 
 
     ## compute statistics
-    deltaa = 5
-    angles = np.arange(0, 365, deltaa)
+    deltaa = 10
+    angles = arange(0, 365, deltaa)
 
-
+    ## ______________________________________
     ## Rayleigh
+    baz_rayleigh_no_nan = out1['cc_max_y'][~isnan(out1['cc_max_y'])]
+    cc_rayleigh_no_nan = out1['cc_max'][~isnan(out1['cc_max'])]
+
     hist = histogram(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out1['cc_max'], density=True)
 
-    baz_rayleigh_mean = round(average(out1['cc_max_y'][~isnan(out1['cc_max_y'])], weights=out1['cc_max'][~isnan(out1['cc_max'])]), 0)
-    baz_rayleigh_cov = sqrt(cov(out1['cc_max_y'][~isnan(out1['cc_max_y'])], aweights=out1['cc_max'][~isnan(out1['cc_max'])]))
+    baz_rayleigh_mean = round(average(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan), 0)
+    baz_rayleigh_std = sqrt(cov(baz_rayleigh_no_nan, aweights=cc_rayleigh_no_nan))
 
-    baz_rayleigh_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    # baz_rayleigh_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=baz_rayleigh_no_nan)
+    baz_rayleigh_max = angles[argmax(kde1.pdf(angles))] + deltaa
 
+    ## ______________________________________
     ## Love
+    baz_love_no_nan = out2['cc_max_y'][~isnan(out2['cc_max_y'])]
+    cc_love_no_nan = out2['cc_max'][~isnan(out2['cc_max'])]
+
     hist = histogram(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out2['cc_max'], density=True)
 
-    baz_love_mean = round(average(out2['cc_max_y'][~isnan(out2['cc_max_y'])], weights=out2['cc_max'][~isnan(out2['cc_max'])]), 0)
-    baz_love_cov = sqrt(cov(out2['cc_max_y'][~isnan(out2['cc_max_y'])], aweights=out2['cc_max'][~isnan(out2['cc_max'])]))
+    baz_love_mean = round(average(baz_love_no_nan, weights=cc_love_no_nan), 0)
+    baz_love_std = sqrt(cov(baz_love_no_nan, aweights=cc_love_no_nan))
 
-    baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
+    baz_love_max = angles[argmax(kde2.pdf(angles))] + deltaa
 
+    ## ______________________________________
     ## Tangent
+    baz_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
+    cc_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
+
     hist = histogram(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out3['ccoef'], density=True)
 
-    baz_tangent_mean = round(average(out3['baz_est'][~isnan(out3['baz_est'])], weights=out3['ccoef'][~isnan(out3['ccoef'])]), 0)
-    baz_tangent_cov = sqrt(cov(out3['baz_est'][~isnan(out3['baz_est'])], aweights=out3['ccoef'][~isnan(out3['ccoef'])]))
+    baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
+    baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
 
-    baz_tangent_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    # baz_tangent_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+    kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
+    baz_tangent_max = angles[argmax(kde3.pdf(angles))] + deltaa
+
+    if plot:
+
+        fig2, ax = plt.subplots(1, 3, figsize=(15, 5))
+
+        ax[0].hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out1['cc_max'], density=True)
+        ax[0].plot(angles, kde1.pdf(angles), c='C1', lw=2, label='KDE')
+        ax[0].axvline(baz_rayleigh_max, color="r")
+        ax[0].axvline(baz_rayleigh_mean, color="g")
+        ax[0].set_title("Rayleigh")
+        ax[0].set_xlabel("Backazimuth")
+        ax[0].set_ylabel("Density")
+
+        ax[1].hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out2['cc_max'], density=True)
+        ax[1].plot(angles, kde2.pdf(angles), c='C1', lw=2, label='KDE')
+        ax[1].axvline(baz_love_max, color="r")
+        ax[1].axvline(baz_love_mean, color="g")
+        ax[1].set_title("Love")
+        ax[1].set_xlabel("Backazimuth")
+
+        ax[2].hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out3['ccoef'], density=True)
+        ax[2].plot(angles, kde3.pdf(angles), c='C1', lw=2, label='KDE')
+        ax[2].axvline(baz_tangent_max, color="r")
+        ax[2].axvline(baz_tangent_mean, color="g")
+        ax[2].set_title("Co.Var.")
+        ax[2].set_xlabel("Backazimuth")
+        plt.show();
 
 
+    ## prepare output directory
     out = {}
     out['baz_theo'] = round(out2['baz_theo'], 0)
     out['baz_angles'] = angles
     out['baz_tangent_max'] = baz_tangent_max
     out['baz_tangent_mean'] = baz_tangent_mean
-    out['baz_tangent_cov'] = baz_tangent_cov
+    out['baz_tangent_std'] = baz_tangent_std
     out['baz_rayleigh_max'] = baz_rayleigh_max
     out['baz_rayleigh_mean'] = baz_rayleigh_mean
-    out['baz_rayleigh_cov'] = baz_rayleigh_cov
+    out['baz_rayleigh_std'] = baz_rayleigh_std
     out['baz_love_max'] = baz_love_max
     out['baz_love_mean'] = baz_love_mean
-    out['baz_love_cov'] = baz_love_cov
+    out['baz_love_std'] = baz_love_std
 
 
     if plot:
-        out['fig'] = fig
+        out['fig1'] = fig1
+        out['fig2'] = fig2
 
     return out
