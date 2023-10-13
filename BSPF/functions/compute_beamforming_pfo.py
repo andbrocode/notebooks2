@@ -431,9 +431,9 @@ def __compute_beamforming_pfo(tbeg, tend, submask, fmin=None, fmax=None, compone
 
     baz_bf_mean = round(np.average(baz_bf_no_nan, weights=cc_bf_no_nan), 0)
     baz_bf_std = np.sqrt(np.cov(baz_bf_no_nan, aweights=cc_bf_no_nan))
-    # baz_bf_max = angles[np.argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+
     kde = sts.gaussian_kde(baz_bf_no_nan, weights=cc_bf_no_nan)
-    baz_bf_max = angles[np.argmax(kde.pdf(angles))] + deltaa
+    baz_bf_max = angles[np.argmax(kde.pdf(angles))] + deltaa/2
 
 
     ## prepare output dictionary

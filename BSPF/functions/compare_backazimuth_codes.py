@@ -198,7 +198,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_rayleigh_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=baz_rayleigh_no_nan)
-    baz_rayleigh_max = angles[argmax(kde1.pdf(angles))] + deltaa
+    baz_rayleigh_max = angles[argmax(kde1.pdf(angles))] + deltaa/2
 
     ## ______________________________________
     ## Love
@@ -212,7 +212,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
-    baz_love_max = angles[argmax(kde2.pdf(angles))] + deltaa
+    baz_love_max = angles[argmax(kde2.pdf(angles))] + deltaa/2
 
     ## ______________________________________
     ## Tangent
@@ -226,7 +226,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_tangent_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
-    baz_tangent_max = angles[argmax(kde3.pdf(angles))] + deltaa
+    baz_tangent_max = angles[argmax(kde3.pdf(angles))] + deltaa/2
 
     if plot:
 
