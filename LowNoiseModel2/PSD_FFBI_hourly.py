@@ -36,13 +36,13 @@ config['array'] = "FFBI"
 
 config['year'] = 2023
 
-config['component'] = "O" ##  O=outside | I=infrasound | F=filtered
+config['component'] = "F" ##  O=outside | I=infrasound | F=filtered
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-22")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+config['date2'] = UTCDateTime(f"{config['year']}-10-15")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
-config['seed'] = f"BW.FFBI..*"
+config['seed'] = f"BW.FFBI..BDF"
 
 config['ring'] = config['seed'].split(".")[1]
 
@@ -288,7 +288,10 @@ def main(config):
 
         inv = read_inventory("/home/brotzer/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
 
-        st.remove_sensitivity(inv)
+        st = st.remove_sensitivity(inv)
+
+        st = st.select(channel=f"*{config['component']}")
+
 
         st0 = st.select(channel=f"*{config['component']}")
 

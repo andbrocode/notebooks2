@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -8,6 +8,8 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
     from functions.compute_backazimuth import __compute_backazimuth
     from functions.compute_backazimuth_tangent import __compute_backazimuth_tangent
     
+    rot = rot0.copy()
+    acc = acc0.copy()
     
     rot.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
     acc.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
@@ -69,13 +71,13 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
     ## filter according to cc-threshold
     if cc_thres:
         for ii, _cc in enumerate(out1['cc_max']):
-            if _cc <= cc_thres:
+            if abs(_cc) <= cc_thres:
                 out1['cc_max'][ii], out1['cc_max_y'][ii] = nan, nan
         for ii, _cc in enumerate(out2['cc_max']):
-            if _cc <= cc_thres:
+            if abs(_cc) <= cc_thres:
                 out2['cc_max'][ii], out2['cc_max_y'][ii] = nan, nan
         for ii, _cc in enumerate(out3['ccoef']):
-            if _cc <= cc_thres:
+            if abs(_cc) <= cc_thres:
                 out3['ccoef'][ii], out3['baz_est'][ii] = nan, nan
 
 
@@ -102,9 +104,9 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
         t1, t2 = hz.times().min(), hz.times().max()
 
-        ax[0].plot(hz.times(), hz.data*trans_scaling, 'black', label=f"XPFO.Z")
-        ax[1].plot(hn.times(), hn.data*trans_scaling, 'black', label=f"XPFO.N")
-        ax[2].plot(he.times(), he.data*trans_scaling, 'black', label=f"XPFO.E")
+        ax[0].plot(hz.times(), hz.data*trans_scaling, 'black', label=f"PFO.Z")
+        ax[1].plot(hn.times(), hn.data*trans_scaling, 'black', label=f"PFO.N")
+        ax[2].plot(he.times(), he.data*trans_scaling, 'black', label=f"PFO.E")
 
         ax[0].set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
         ax[1].set_ylim(-max(abs(hn.data*trans_scaling)), max(abs(hn.data*trans_scaling)))
@@ -185,6 +187,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
     ## compute statistics
     deltaa = 10
     angles = arange(0, 365, deltaa)
+    angles2 = arange(0, 365, 1)
 
     ## ______________________________________
     ## Rayleigh
@@ -198,7 +201,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_rayleigh_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=baz_rayleigh_no_nan)
-    baz_rayleigh_max = angles[argmax(kde1.pdf(angles))] + deltaa/2
+    baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
 
     ## ______________________________________
     ## Love
@@ -212,7 +215,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
-    baz_love_max = angles[argmax(kde2.pdf(angles))] + deltaa/2
+    baz_love_max = angles2[argmax(kde2.pdf(angles2))]
 
     ## ______________________________________
     ## Tangent
@@ -226,7 +229,7 @@ def __compare_backazimuth_codes(rot, acc, cat_event, fmin, fmax, cc_thres=None, 
 
     # baz_tangent_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
     kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
-    baz_tangent_max = angles[argmax(kde3.pdf(angles))] + deltaa/2
+    baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
 
     if plot:
 

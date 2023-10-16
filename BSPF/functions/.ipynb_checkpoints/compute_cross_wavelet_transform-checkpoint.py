@@ -1,9 +1,9 @@
-def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold = 0.1, normalize=True, plot=True):
+def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0.1, fmax_limit=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance
     from numpy import std, nanmean, nan, nanmax, nanmin, nanvar, ones, nan_to_num
     import matplotlib.pyplot as plt
-    
+
     if len(arr1) != len(arr1):
         print(" -> different lenght of arrays!")
         return
@@ -144,7 +144,12 @@ def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold =
             ax[0].set_ylim(-1,1)
             ax[1].set_ylim(-1,1)
 
-        plt.show()
+        if fmax_limit:
+            if fmax_limit*2 <= 20:
+                ax[3].set_xlim(0, fmax_limit*2)
+                ax[2].set_ylim(0, fmax_limit*2)
+
+        plt.show();
 
     ## prepare dict for return
     out = {}

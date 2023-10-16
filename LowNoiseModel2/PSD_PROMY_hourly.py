@@ -39,7 +39,7 @@ config['year'] = 2023
 config['component'] = "DI" ##  O=outside | I=infrasound | F=filtered
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-22")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+config['date2'] = UTCDateTime(f"{config['year']}-10-15")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
 config['seed'] = f"BW.PROMY..LDI"
@@ -54,7 +54,7 @@ config['interval'] = 3600
 config['interval_overlap'] = None # in percent
 config['taper'] = 'hanning'
 
-config['tseconds'] = 1600 ## seconds
+config['tseconds'] = 3600 ## seconds
 
 # config['segments'] = 1
 # config['nperseg'] = 256*config.get('segments')
@@ -287,6 +287,10 @@ def main(config):
             continue
 
         st0 = st.select(channel=f"*{config['component']}")
+
+        ## from Pa to hPa
+        for tr in st0:
+            tr.data /= 100
 
         config['nperseg'] = int(st0[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))

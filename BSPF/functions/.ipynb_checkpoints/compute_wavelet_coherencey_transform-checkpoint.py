@@ -1,4 +1,4 @@
-def __compute_wavelet_coherency_transform(times, arr1, arr2, tdelta, normalize=True, plot=True):
+def __compute_wavelet_coherency_transform(times, arr1, arr2, tdelta, fmax_limit=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance
     from numpy import std, nanmean, nan, nanmax, nanmin, nanvar, ones, nan_to_num, zeros, pi
@@ -112,7 +112,8 @@ def __compute_wavelet_coherency_transform(times, arr1, arr2, tdelta, normalize=T
 
 
     ## filter power
-    wct_power_masked = wct_power * mask_phases * mask_cone
+    # wct_power_masked = wct_power * mask_phases * mask_cone
+    wct_power_masked = wct_power * mask_signif * mask_cone
 
     ## compute global power along both axes
     global_power_f = nan_to_num(nanmean(wct_power_masked,axis=1), nan=0)
@@ -184,6 +185,14 @@ def __compute_wavelet_coherency_transform(times, arr1, arr2, tdelta, normalize=T
 
         cbar3.set_ticks([-pi, 0, pi])
         cbar3.set_ticklabels([r"-$\pi$", "0", "$\pi$"])
+        
+        if fmax_limit:
+            if fmax_limit*2 <= 20:
+                ax[2].set_ylim(0, fmax_limit*2)
+                ax[3].set_ylim(0, fmax_limit*2)
+                ax[4].set_ylim(0, fmax_limit*2)
+                ax[5].set_ylim(0, fmax_limit*2)
+                ax[6].set_xlim(0, fmax_limit*2)
 
         plt.show()
 
