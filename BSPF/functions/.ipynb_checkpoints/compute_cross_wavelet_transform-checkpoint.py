@@ -1,8 +1,9 @@
-def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0.1, fmax_limit=None, normalize=True, plot=True):
+def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, datalabels=["dat1", "dat2"], xwt_threshold=0.1, fmax_limit=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance
     from numpy import std, nanmean, nan, nanmax, nanmin, nanvar, ones, nan_to_num
     import matplotlib.pyplot as plt
+    from numpy import sum as npsum
 
     if len(arr1) != len(arr1):
         print(" -> different lenght of arrays!")
@@ -93,7 +94,10 @@ def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0
     xwt_power_masked = xwt_power * mask_xwt * mask_cone
 
     ## compute global cross wavelet transform power
-    global_xwt_f = nanmean(xwt_power_masked, axis=1)
+    global_mean_xwt_f = nanmean(xwt_power_masked, axis=1)
+
+    global_sum_xwt_f = npsum(nan_to_num(xwt_power_masked, 0), axis=1)
+    global_sum_xwt_f /= max(global_sum_xwt_f)
 
 
 
@@ -111,13 +115,15 @@ def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0
 
         plt.subplots_adjust(hspace=0.3)
 
-        ax[0].plot(times, arr1, alpha=1, color="black", lw=1)
+        ax[0].plot(times, arr1, alpha=1, color="black", lw=1, label=datalabels[0])
         ax[0].set_xlim(min(times), max(times))
         ax[0].set_ylabel("norm. \n Amp. (rad/s)")
+        ax[0].legend(loc=1)
 
-        ax[1].plot(times, arr2, alpha=1, color="tab:red", lw=1)
+        ax[1].plot(times, arr2, alpha=1, color="tab:red", lw=1, label=datalabels[1])
         ax[1].set_xlim(min(times), max(times))
         ax[1].set_ylabel("norm. \n Amp. (rad/s)")
+        ax[1].legend(loc=1)
 
         if normalize:
             ca2 = ax[2].pcolormesh(times, ff_xwt, xwt_power_masked)
@@ -126,7 +132,7 @@ def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0
         # ax[2].plot(times, cone_f, color="white")
         ax[2].set_ylabel("f (Hz)")
 
-        ax[3].plot(ff_xwt, global_xwt_f, color="black", label="mean global power (masked)")
+        ax[3].plot(ff_xwt, global_sum_xwt_f, color="black", label="global power (masked)")
         ax[3].legend()
         ax[3].set_ylabel("norm. XWT")
         ax[3].set_xlabel("Frequency (Hz)")
@@ -158,7 +164,10 @@ def __compute_cross_wavelet_transform(times, arr1, arr2, tdelta, xwt_threshold=0
     out['xwt_power'] = xwt_power
     out['cone_mask'] = mask_cone
     out['xwt_mask'] = mask_xwt
-    out['mean_global_xwt'] = global_xwt_f
+    out['global_mean_xwt'] = global_mean_xwt_f
+    out['global_sum_xwt'] = global_sum_xwt_f
+
+
     if plot:
         out['fig'] = fig
 

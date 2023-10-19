@@ -18,20 +18,20 @@ config = {}
 #                   "BW.DROMY..F4V",
 #                   "BW.DROMY..FJZ"]
 
-config['seeds'] = ["BW.DROMY..F2V"]
+config['seeds'] = ["BW.DROMY..FJW"]
 
 config['path_to_sds'] = "/import/freenas-ffb-01-data/romy_archive/"
 # config['path_to_sds'] = "/home/andbro/freenas/romy_archive/"
 
-config['path_to_output'] = "/import/kilauea-data/sagnac_frequency/"
+config['path_to_output'] = "/import/kilauea-data/sagnac_frequency/prismspectra/"
 # config['path_to_output'] = "/home/andbro/kilauea-data/"
 
-config['output_appendix'] = "_F2V"
+config['output_appendix'] = "_RV_westring_koester"
 
 
 ## all 6 recording [after prism installation]
-config['tbeg'] = UTCDateTime("2023-09-01 17:00")
-config['tend'] = UTCDateTime("2023-09-01 19:00")
+config['tbeg'] = UTCDateTime("2023-10-18 22:00")
+config['tend'] = UTCDateTime("2023-10-18 23:00")
 
 ## define window length in seconds for welch psd
 config['win_time'] = 180 ## seconds
