@@ -38,8 +38,8 @@ config['year'] = 2023
 
 config['component'] = "F" ##  O=outside | I=infrasound | F=filtered
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-22")
-config['date2'] = UTCDateTime(f"{config['year']}-10-15")
+config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
 config['seed'] = f"BW.FFBI..BDF"

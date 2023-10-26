@@ -35,12 +35,12 @@ config['array'] = "ROMY"
 
 config['year'] = 2023
 
-config['component'] = "U" # U,V,W,Z
+config['component'] = "Z" # U,V,W,Z
 
 config['cha'] = config['component']
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-22")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+config['date2'] = UTCDateTime(f"{config['year']}-10-22")
 
 if config['component'] == "Z":
     config['seed'] = f"BW.ROMY.10.BJ{config['component']}"

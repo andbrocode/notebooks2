@@ -38,8 +38,8 @@ config['year'] = 2023
 
 config['component'] = "DI" ##  O=outside | I=infrasound | F=filtered
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-22")
-config['date2'] = UTCDateTime(f"{config['year']}-10-15")
+config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 #config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
 config['seed'] = f"BW.PROMY..LDI"
@@ -54,7 +54,7 @@ config['interval'] = 3600
 config['interval_overlap'] = None # in percent
 config['taper'] = 'hanning'
 
-config['tseconds'] = 3600 ## seconds
+config['tseconds'] = 1800 ## seconds
 
 # config['segments'] = 1
 # config['nperseg'] = 256*config.get('segments')
