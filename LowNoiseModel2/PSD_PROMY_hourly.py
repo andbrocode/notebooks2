@@ -36,13 +36,14 @@ config['array'] = "PROMY"
 
 config['year'] = 2023
 
-config['component'] = "DI" ##  O=outside | I=infrasound | F=filtered
+##  I = absolute pressure
+config['component'] = "I"
+config['name_appendix'] = ""
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
-#config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
-config['seed'] = f"BW.PROMY..LDI"
+config['seed'] = f"BW.PROMY..LD{config['component']}"
 
 config['ring'] = config['seed'].split(".")[1]
 
@@ -56,10 +57,6 @@ config['taper'] = 'hanning'
 
 config['tseconds'] = 1800 ## seconds
 
-# config['segments'] = 1
-# config['nperseg'] = 256*config.get('segments')
-# config['noverlap'] = 64*config.get('segments')
-
 config['nfft'] = None
 config['detrend'] = 'constant'
 config['scaling'] = 'density'
@@ -70,7 +67,7 @@ config['dB']= False
 
 config['outname'] = f"{config['year']}_{config['array']}_{config['interval']}"
 
-config['outpath'] = f"/import/kilauea-data/LNM2/PSDS/{config['array']}/"
+config['outpath'] = f"/import/kilauea-data/LNM2/PSDS/{config['array']}{config['name_appendix']}/"
 
 
 # In[] ___________________________________________________________
@@ -298,30 +295,10 @@ def main(config):
 
         ff, psds = __calculate_spectra(st0, config, mode=None)
 
-        # minimal_psd = __get_minimal_psd(psds)
-        # minimal_collection.append(minimal_psd)
-
-        # minimum_psd = __get_minimum_psd(psds)
-        # minimum_collection.append(minimum_psd)
-
-        ## write out column names
-        # columns.append(str(date)[:10])
 
         __save_to_pickle(psds, f"_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         dd.append(str(date).split(" ")[0].replace("-",""))
-#        medians.append(__get_median_psd(psds))
-#        minimals.append(__get_minimal_psd(psds))
-
-#    daily_medians = DataFrame()
-#    for d, med in zip(dd, medians):
-#        daily_medians[d] = med
-
-    # if not Path(config['outpath']+config['outname']).exists():
-    # (config['outpath']+config['outname']).mkdir()    Path
-
-#    daily_medians.to_pickle(config['outpath']+config['outname']+"_daily_medians.pkl")
-#    print(f"\n -> created: {config['outpath']}{config['outname']}_daily_medians.pkl")
 
     __save_to_pickle(config, "_config")
     __save_to_pickle(ff, "_frequency_axis")

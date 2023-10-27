@@ -36,16 +36,16 @@ config['array'] = "FFBI"
 
 config['year'] = 2023
 
-config['component'] = "F" ##  O=outside | I=infrasound | F=filtered
+##  O = absolute | F = infrasound
+config['component'] = "O"
+config['name_appendix'] = "_absolute" ## _infrasound  |  _absolute
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
-#config['seed'] = f"BW.RGRF.20.BJ{config['component']}"
-config['seed'] = f"BW.FFBI..BDF"
+config['seed'] = f"BW.FFBI..BD{config['component']}"
 
 config['ring'] = config['seed'].split(".")[1]
-
 
 config['path_to_data'] = f"/bay200/mseed_online/archive/"
 
@@ -57,25 +57,37 @@ config['taper'] = 'hanning'
 
 config['tseconds'] = 1800 ## seconds
 
-# config['segments'] = 1
-# config['nperseg'] = 256*config.get('segments')
-# config['noverlap'] = 64*config.get('segments')
-
 config['nfft'] = None
 config['detrend'] = 'constant'
 config['scaling'] = 'density'
 config['onesided'] = True
 config['frequency_limits'] = None # (0, 0.05) # in Hz
 
-config['dB']= False
+# config['dB']= False
+
+## number of taper for multitaper to use
+config['n_taper'] = 5
 
 config['outname'] = f"{config['year']}_{config['array']}_{config['interval']}"
 
-config['outpath'] = f"/import/kilauea-data/LNM2/PSDS/{config['array']}/"
+config['outpath'] = f"/import/kilauea-data/LNM2/PSDS/{config['array']}{config['name_appendix']}/"
 
 
 # In[] ___________________________________________________________
 '''---- define methods ----'''
+
+def __multitaper_psd(arr, dt, n_win=5):
+
+    import multitaper as mt
+
+    out_psd = mt.MTSpec(arr, nw=n_win, kspec=0, dt=dt)
+
+    _f, _psd = out_psd.rspec()
+
+    f = _f.reshape(_f.size)
+    psd = _psd.reshape(_psd.size)
+
+    return f, psd
 
 
 def __get_data(config):
@@ -108,7 +120,7 @@ def __get_minimum_psd(psds):
     return psds[idx]
 
 
-def __calculate_spectra(st, config, mode='dB'):
+def __calculate_spectra(st, config, mode='welch'):
 
     from datetime import datetime
     from pandas import date_range
@@ -117,6 +129,7 @@ def __calculate_spectra(st, config, mode='dB'):
     from numpy import where, array, zeros
 
     def __check_stream(st):
+
         t1 = str(st[0].stats.starttime)
         t2 = str(st[0].stats.endtime)
         for tr in st:
@@ -124,8 +137,6 @@ def __calculate_spectra(st, config, mode='dB'):
                 print(f"ERROR: mismatch in start or endtime of trace: {tr.stats.id}")
                 return
 
-    # def __make_decibel(array, relative_value):
-    #     return 10*log10(array/relative_value)
 
     ## check time consistency for all traces
     __check_stream(st)
@@ -139,14 +150,17 @@ def __calculate_spectra(st, config, mode='dB'):
         intervals = int((st[0].stats.endtime - st[0].stats.starttime)/shift)
 
 
-
     ## pre-define psd array
-    size_psd = int(config.get('nperseg')/2)+1
-    psd = zeros([intervals, size_psd])
+    if mode == "welch":
+        size_psd = int(config.get('nperseg')/2)+1
+        psd = zeros([intervals, size_psd])
 
-    if size_psd >= len(st[0].data):
-        print(f"ERROR: reduce nperseg or noverlap or segments! {size_psd} > {len(st[0].data)}")
-        return
+        if size_psd >= len(st[0].data):
+            print(f"ERROR: reduce nperseg or noverlap or segments! {size_psd} > {len(st[0].data)}")
+            return
+    elif mode == "multitaper":
+        psd = zeros([intervals, 144002])
+
 
     for i, tr in enumerate(st):
 
@@ -160,21 +174,25 @@ def __calculate_spectra(st, config, mode='dB'):
             tr_tmp = tr.copy()
             tr_tmp.trim(starttime = UTCDateTime(dt1), endtime=UTCDateTime(dt2))
 
-#             print(n, dt1, dt2, "\n")
 
-#             print(config.get('nperseg'), config.get('noverlap'), len(tr_tmp.data))
+            if mode == "welch":
 
-            f, psd0 = welch(
-                        tr_tmp.data,
-                        fs=tr_tmp.stats.sampling_rate,
-                        window=config.get('taper'),
-                        nperseg=config.get('nperseg'),
-                        noverlap=config.get('noverlap'),
-                        nfft=config.get('nfft'),
-                        detrend=config.get('detrend'),
-                        return_onesided=config.get('onesided'),
-                        scaling=config.get('scaling'),
-                       )
+                f, psd0 = welch(
+                            tr_tmp.data,
+                            fs=tr_tmp.stats.sampling_rate,
+                            window=config.get('taper'),
+                            nperseg=config.get('nperseg'),
+                            noverlap=config.get('noverlap'),
+                            nfft=config.get('nfft'),
+                            detrend=config.get('detrend'),
+                            return_onesided=config.get('onesided'),
+                            scaling=config.get('scaling'),
+                           )
+
+            elif mode == "multitaper":
+
+                f, psd0 = __multitaper_psd(tr_tmp.data, tr_tmp.stats.delta, n_win=config.get("n_taper"))
+            print(psd0.shape)
             psd[n] = psd0
 
             ## adjust variables
@@ -184,6 +202,7 @@ def __calculate_spectra(st, config, mode='dB'):
 
 
         if config.get('frequency_limits') is not None:
+
             f1, f2 = config.get('frequency_limits')[0], config.get('frequency_limits')[1]
             idx1, idx2 = int(where(f <= f1)[0][0]), int(where(f >= f2)[0][0])
             ff = f[idx1:idx2]
@@ -191,6 +210,7 @@ def __calculate_spectra(st, config, mode='dB'):
             for j in range(intervals):
                 tmp[j] = psd[j,idx1:idx2]
             psd = tmp
+
         else:
             ff=f
 
@@ -292,39 +312,23 @@ def main(config):
 
         st = st.select(channel=f"*{config['component']}")
 
-
         st0 = st.select(channel=f"*{config['component']}")
+
+        ## convert to hPa
+        if config['component'] == "O":
+            for tr in st0:
+                tr.data *= 1000
 
         config['nperseg'] = int(st0[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
 
-        ff, psds = __calculate_spectra(st0, config, mode=None)
+        ff, psds = __calculate_spectra(st0, config, mode="multitaper")
 
-        # minimal_psd = __get_minimal_psd(psds)
-        # minimal_collection.append(minimal_psd)
-
-        # minimum_psd = __get_minimum_psd(psds)
-        # minimum_collection.append(minimum_psd)
-
-        ## write out column names
-        # columns.append(str(date)[:10])
 
         __save_to_pickle(psds, f"_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         dd.append(str(date).split(" ")[0].replace("-",""))
-#        medians.append(__get_median_psd(psds))
-#        minimals.append(__get_minimal_psd(psds))
-
-#    daily_medians = DataFrame()
-#    for d, med in zip(dd, medians):
-#        daily_medians[d] = med
-
-    # if not Path(config['outpath']+config['outname']).exists():
-    # (config['outpath']+config['outname']).mkdir()    Path
-
-#    daily_medians.to_pickle(config['outpath']+config['outname']+"_daily_medians.pkl")
-#    print(f"\n -> created: {config['outpath']}{config['outname']}_daily_medians.pkl")
 
     __save_to_pickle(config, "_config")
     __save_to_pickle(ff, "_frequency_axis")
@@ -338,5 +342,18 @@ if __name__ == "__main__":
 
 # In[] ___________________________________________________________
 
+st = __get_data(config)
+
+inv = read_inventory("/home/brotzer/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
+
+st = st.remove_sensitivity(inv)
+
+st = st.select(channel=f"*{config['component']}")
+
+## convert to hPa
+if config['component'] == "O":
+    for tr in st:
+        tr.data *= 1000
+st.plot()
 
 ## End of File
