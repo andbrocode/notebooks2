@@ -55,7 +55,7 @@ config['interval'] = 3600
 config['interval_overlap'] = None # in percent
 config['taper'] = 'hanning'
 
-config['tseconds'] = 1800 ## seconds
+config['tseconds'] = 3600 ## seconds
 
 config['nfft'] = None
 config['detrend'] = 'constant'
@@ -63,7 +63,8 @@ config['scaling'] = 'density'
 config['onesided'] = True
 config['frequency_limits'] = None # (0, 0.05) # in Hz
 
-# config['dB']= False
+
+config['mode'] = "welch"  ## "multitaper" | "welch"
 
 ## number of taper for multitaper to use
 config['n_taper'] = 5
@@ -192,7 +193,8 @@ def __calculate_spectra(st, config, mode='welch'):
             elif mode == "multitaper":
 
                 f, psd0 = __multitaper_psd(tr_tmp.data, tr_tmp.stats.delta, n_win=config.get("n_taper"))
-            print(psd0.shape)
+
+            ## add psd to data matrix
             psd[n] = psd0
 
             ## adjust variables
@@ -323,7 +325,7 @@ def main(config):
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
 
-        ff, psds = __calculate_spectra(st0, config, mode="multitaper")
+        ff, psds = __calculate_spectra(st0, config, mode=config['mode'])
 
 
         __save_to_pickle(psds, f"_{str(date).split(' ')[0].replace('-','')}_hourly")
