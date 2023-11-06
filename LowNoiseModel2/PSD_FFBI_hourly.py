@@ -51,6 +51,9 @@ config['path_to_data'] = f"/bay200/mseed_online/archive/"
 
 config['type'] = "baro"
 
+## specify unit
+config['unit'] = "Pa" ## hPa or Pa
+
 config['interval'] = 3600
 config['interval_overlap'] = None # in percent
 config['taper'] = 'hanning'
@@ -316,10 +319,18 @@ def main(config):
 
         st0 = st.select(channel=f"*{config['component']}")
 
-        ## convert to hPa
+
+        ## Pa or hPa
         if config['component'] == "O":
-            for tr in st0:
-                tr.data *= 1000
+
+            if config['unit'] == "Pa":
+                for tr in st0:
+                    tr.data *= 100000
+            else:
+                for tr in st0:
+                    tr.data *= 1000
+
+        # st0.plot()
 
         config['nperseg'] = int(st0[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))

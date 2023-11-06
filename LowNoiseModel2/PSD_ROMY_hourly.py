@@ -48,7 +48,7 @@ config['array'] = "ROMY"
 
 config['year'] = 2023
 
-config['component'] = "Z" # U,V,W,Z
+config['component'] = "U" # U,V,W,Z
 
 config['cha'] = config['component']
 

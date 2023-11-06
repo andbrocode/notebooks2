@@ -40,14 +40,20 @@ config['year'] = 2023
 config['component'] = "I"
 config['name_appendix'] = ""
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-23")
-config['date2'] = UTCDateTime(f"{config['year']}-10-23")
+# config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+# config['date2'] = UTCDateTime(f"{config['year']}-10-23")
+
+config['date1'] = UTCDateTime(f"{config['year']}-11-04")
+config['date2'] = UTCDateTime(f"{config['year']}-11-05")
 
 config['seed'] = f"BW.PROMY..LD{config['component']}"
 
 config['ring'] = config['seed'].split(".")[1]
 
 config['path_to_data'] = f"/import/freenas-ffb-01-data/romy_archive/"
+
+## specify unit
+config['unit'] = "Pa" ## hPa or Pa
 
 config['type'] = "baro"
 
@@ -118,11 +124,9 @@ def __calculate_spectra(st, config, mode='dB'):
         t2 = str(st[0].stats.endtime)
         for tr in st:
             if str(tr.stats.starttime) != t1 or str(tr.stats.endtime) != t2:
-                print(f"ERROR: mismatch in start or endtime of trace: {tr.stats.id}")
+                print(f"ERROR: mismatch in start or endtime of trace: {tr.stats.station}")
                 return
 
-    # def __make_decibel(array, relative_value):
-    #     return 10*log10(array/relative_value)
 
     ## check time consistency for all traces
     __check_stream(st)
@@ -285,9 +289,16 @@ def main(config):
 
         st0 = st.select(channel=f"*{config['component']}")
 
-        ## from Pa to hPa
-        for tr in st0:
-            tr.data /= 100
+        st0.trim(config['tbeg'], config['tend'])
+
+
+        ## Pa or hPa
+        if config['unit'] == "Pa":
+            pass
+        else:
+            for tr in st0:
+                tr.data /= 100
+
 
         config['nperseg'] = int(st0[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
