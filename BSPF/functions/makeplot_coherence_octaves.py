@@ -8,8 +8,7 @@ def __coherence_in_octaves(st_in, fmin, fmax, normalize=False, plot=True):
     from functions.get_octave_bands import __get_octave_bands
     from scipy.signal import coherence
 
-    flower, fupper, fcenter = __get_octave_bands(fmin, fmax, fband_type="one-third-octave")
-    # flower, fupper, fcenter = __get_octave_bands(fmin, fmax, fband_type="octave")
+    flower, fupper, fcenter = __get_octave_bands(fmin, fmax, faction_of_octave=6, plot=False)
 
     fbands = [(fl, fu) for fl, fu in zip(flower, fupper)]
 
@@ -28,8 +27,8 @@ def __coherence_in_octaves(st_in, fmin, fmax, normalize=False, plot=True):
         font = 12
         rot_scale, rot_unit, omega, sqrt_hz = 1e6, r"$\mu$rad/s" , r"$\Omega$", r"$\sqrt{Hz}$"
 
-        fmin_i, fmax_i = 1.0, 10.0 ## 0.16, 16.5
-        fmin_a, fmax_a = 0.1, 1.0  ## 0.02, 1.3
+        fmin_i, fmax_i = 1.0, 6.0 ## 0.16, 16.5
+        fmin_a, fmax_a = 0.5, 1.0  ## 0.02, 1.3
 
 
         fig = plt.figure(figsize=(15,14))
@@ -52,10 +51,10 @@ def __coherence_in_octaves(st_in, fmin, fmax, normalize=False, plot=True):
 
     for ii, comp in enumerate(["Z", "N", "E"]):
 
-        tr0 = st_in.select(station="BSPF", channel=f'*{comp}').copy()[0]
-        tr1 = st_in.select(station="BSPF", channel=f'*{comp}').copy()[0]
-        tr2 = st_in.select(station="RPFO", location="in", channel=f'*{comp}').copy()[0]
-        tr3 = st_in.select(station="RPFO", location="al", channel=f'*{comp}').copy()[0]
+        tr0 = st_in.copy().select(station="BSPF", channel=f'*{comp}')[0]
+        tr1 = st_in.copy().select(station="BSPF", channel=f'*{comp}')[0]
+        tr2 = st_in.copy().select(station="RPFO", location="in", channel=f'*{comp}')[0]
+        tr3 = st_in.copy().select(station="RPFO", location="mi", channel=f'*{comp}')[0]
 
         tr0 = tr0.detrend("linear").taper(0.1).filter("bandpass", freqmin=fmin_i, freqmax=fmax_i, corners=4, zerophase=True)
         tr1 = tr1.detrend("linear").taper(0.1).filter("bandpass", freqmin=fmin_a, freqmax=fmax_a, corners=4, zerophase=True)
@@ -121,10 +120,10 @@ def __coherence_in_octaves(st_in, fmin, fmax, normalize=False, plot=True):
                 ax.legend(loc=1, ncol=2)
                 ax.set_ylabel(f"{omega} ({rot_unit})", fontsize=font)
 
-            ax7.scatter(fcenter, co2, s=50, marker="s", label="BSPF - RPFO_inner", zorder=2, color="w", edgecolors=colors[comp])
+            ax7.scatter(fcenter, co2, s=40, marker="s", label="BSPF - RPFO_inner", zorder=2, color="w", edgecolors=colors[comp])
             ax7.plot(fcenter, co2, ls="-", color=colors[comp])
 
-            ax7.scatter(fcenter, co3, s=50, label="BSPF - PRFO_all", zorder=2, color="w", edgecolors=colors[comp])
+            ax7.scatter(fcenter, co3, s=40, label="BSPF - PRFO_mid", zorder=2, color="w", edgecolors=colors[comp])
             ax7.plot(fcenter, co3, ls=":", color=colors[comp])
 
             ax7.legend(loc=4, ncol=3)
@@ -137,7 +136,7 @@ def __coherence_in_octaves(st_in, fmin, fmax, normalize=False, plot=True):
             ax7.set_ylabel(f"max. coherence per one-third-octave", fontsize=font)
 
             ax1.set_title(f"PRFO inner ({fmin_i} - {fmax_i} Hz)", fontsize=font)
-            ax4.set_title(f"PRFO all ({fmin_a} - {fmax_a} Hz)", fontsize=font)
+            ax4.set_title(f"PRFO mid ({fmin_a} - {fmax_a} Hz)", fontsize=font)
 
 
 

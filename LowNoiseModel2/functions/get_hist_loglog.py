@@ -82,7 +82,9 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
     output['bins_medians'] = 10**array(bins_medians)
     output['set_density'] = density
     output['total'] = psd_array.shape[0]
-
+    output['frequencies'] = ff
+    
+    
     ## check plot
     if plot:
     # _ff[0] = 1e-21
@@ -94,7 +96,7 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
                        antialiased=True, vmin=0.9, norm="log")
         plt.yscale("log")
         plt.xscale("log")
-        plt.xlim(_ff[1], _ff[-1])
+        plt.xlim(ff[1], ff[-1])
 
         plt.show();
 

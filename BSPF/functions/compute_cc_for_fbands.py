@@ -2,7 +2,7 @@
 
 def __compute_cc_for_fbands(tr1, tr2, fbands, plot=False):
     
-    import matplotlib.pyplot as plt   
+    import matplotlib.pyplot as plt
     from numpy import array, corrcoef, correlate
     from obspy.signal.cross_correlation import correlate
     

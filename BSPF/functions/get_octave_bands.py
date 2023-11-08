@@ -1,6 +1,4 @@
-#!/bin/python3
-
-def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
+def __get_octave_bands(fmin, fmax, faction_of_octave=1, plot=False):
 
     """
     Computing octave / one-third-octave bands
@@ -8,7 +6,7 @@ def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
     Arguments:
         - fmin:    (float) minimum center frequency
         - fmax:    (float) maximum center frequency
-        - fband_type:    [octave] / one-third-octave
+        - fraction_of_octave:    (int) octave fraction (e.g. [1] = octaves, 3 = third octaves, 12 = 12th octaves)
         - plot:    (bool) show frequency bands
 
     Example:
@@ -16,34 +14,33 @@ def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
     >>> flower, fupper, fcenter = __get_octave_bands(f_min, f_max, fband_type="octave", plot=False)
 
     """
-    
+
     import matplotlib.pyplot as plt
-    from numpy import sqrt, array
-    from acoustics import bands
+    from acoustics.octave import Octave
+    from numpy import array
+
+    ## avoid fmin = zero
+    if fmin == 0:
+        print(f" -> set fmin to 1e-10")
+        fmin = 1e-10
 
     f_lower, f_upper, f_centers = [], [], []
 
-    if fband_type == "octave":
-        f_centers = bands.octave(fmin, fmax)
-        f_lower = bands.octave_low(fmin, fmax)
-        f_upper = bands.octave_high(fmin, fmax)
+    _octaves = Octave(fraction=faction_of_octave, interval=None, fmin=fmin, fmax=fmax, unique=False, reference=1000.0)
 
-    if fband_type == "one-third-octave":
-        f_centers = bands.third(fmin, fmax)
-        f_lower = bands.third_low(fmin, fmax)
-        f_upper = bands.third_high(fmin, fmax)    
+    f_centers = _octaves.center
+    f_lower = _octaves.lower
+    f_upper = _octaves.upper
 
     if plot:
-        plt.figure()
+        plt.figure(figsize=(15, 5))
         for fl, fc, fu in zip(f_lower, f_centers, f_upper):
             plt.axvline(fu, color="r")
             plt.axvline(fl, color="r")
-            plt.axvline(fc)
+            plt.axvline(fc, ls="--")
             plt.axvline(fmin, color="g")
             plt.axvline(fmax, color="g")
             plt.xscale("log")
-        plt.show()        
+        plt.show();
 
     return array(f_lower), array(f_upper), array(f_centers)
-
-## End of File
