@@ -37,8 +37,8 @@ config['array'] = "FFBI"
 config['year'] = 2023
 
 ##  O = absolute | F = infrasound
-config['component'] = "O"
-config['name_appendix'] = "_absolute" ## _infrasound  |  _absolute
+config['component'] = "F"
+config['name_appendix'] = "_infrasound" ## _infrasound  |  _absolute
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
@@ -52,7 +52,7 @@ config['path_to_data'] = f"/bay200/mseed_online/archive/"
 config['type'] = "baro"
 
 ## specify unit
-config['unit'] = "Pa" ## hPa or Pa
+config['unit'] = None ## hPa or Pa or None
 
 config['interval'] = 3600
 config['interval_overlap'] = None # in percent
@@ -329,6 +329,10 @@ def main(config):
             else:
                 for tr in st0:
                     tr.data *= 1000
+        if config['component'] == "F":
+
+            for tr in st0:
+                tr.data *= 100
 
         # st0.plot()
 
@@ -367,6 +371,7 @@ st = st.select(channel=f"*{config['component']}")
 if config['component'] == "O":
     for tr in st:
         tr.data *= 1000
+
 st.plot()
 
 ## End of File

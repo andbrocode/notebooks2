@@ -571,7 +571,7 @@ df_adr = pd.DataFrame(columns=header_adr)
 df_adr_cc = pd.DataFrame(columns=header_adr)
 
 
-for event in tqdm(config['mseed_files'][:50]):
+for event in tqdm(config['mseed_files']):
 
     yy = int(event.replace(".","_").split("_")[1][:4])
     mm = int(event.replace(".","_").split("_")[1][4:6])
