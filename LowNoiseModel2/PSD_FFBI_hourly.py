@@ -58,7 +58,7 @@ config['interval'] = 3600
 config['interval_overlap'] = None # in percent
 config['taper'] = 'hanning'
 
-config['tseconds'] = 3600 ## seconds
+config['tseconds'] = 1800 ## seconds
 
 config['nfft'] = None
 config['detrend'] = 'constant'
@@ -313,7 +313,8 @@ def main(config):
 
         inv = read_inventory("/home/brotzer/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
 
-        st = st.remove_sensitivity(inv)
+        # st = st.remove_sensitivity(inv)
+        # st = st.remove_response(inv)
 
         st = st.select(channel=f"*{config['component']}")
 
@@ -325,14 +326,15 @@ def main(config):
 
             if config['unit'] == "Pa":
                 for tr in st0:
-                    tr.data *= 100000
-            else:
+                    tr.data = tr.data /1.543 /6.28099e5 /1e-5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
+            elif config['unit'] == "hPa":
                 for tr in st0:
-                    tr.data *= 1000
+                    tr.data = tr.data /1.543 /6.28099e5 /1e-3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
+
         if config['component'] == "F":
 
             for tr in st0:
-                tr.data *= 100
+                tr.data = tr.data /1.0 /6.28099e5 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 VPa
 
         # st0.plot()
 

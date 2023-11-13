@@ -43,8 +43,8 @@ config['name_appendix'] = ""
 # config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 # config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
-config['date1'] = UTCDateTime(f"{config['year']}-11-04")
-config['date2'] = UTCDateTime(f"{config['year']}-11-05")
+config['date1'] = UTCDateTime(f"{config['year']}-11-11")
+config['date2'] = UTCDateTime(f"{config['year']}-11-12")
 
 config['seed'] = f"BW.PROMY..LD{config['component']}"
 
@@ -295,7 +295,7 @@ def main(config):
         ## Pa or hPa
         if config['unit'] == "Pa":
             pass
-        else:
+        elif config['unit'] == "hPa":
             for tr in st0:
                 tr.data /= 100
 
@@ -324,5 +324,8 @@ if __name__ == "__main__":
 # In[] ___________________________________________________________
 
 
+# st = __get_data(config)
+
+# st.plot()
 
 ## End of File
