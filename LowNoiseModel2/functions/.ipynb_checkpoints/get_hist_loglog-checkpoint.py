@@ -1,7 +1,7 @@
 def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False):
 
     import matplotlib.pyplot as plt
-    from numpy import argmax, std, median, isnan, array, histogram, nan, zeros, count_nonzero, isinf, log10
+    from numpy import argmax, std, median, isnan, array, histogram, nan, zeros, count_nonzero, isinf, log10, nanmax, nanmin, nonzero
     from scipy.stats import median_abs_deviation as mad
 
     def __convert_to_log(in_psds):
@@ -53,13 +53,15 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
 #             config['set_density'] = True
 
         ## check if density works
-        DX = abs(max_value-min_value)/bins
-        SUM = sum(hist)
-        if str(SUM*DX) != "1.0":
-            count += 1
+        # DX = abs(max_value-min_value)/bins
+        # SUM = sum(hist)
+        # if str(SUM*DX) != "1.0":
+        #     count += 1
 
         ## modify histogram with range increment
-        hist = hist*DX
+        # hist = hist*DX
+        hist = [h / sum(hist) for h in hist]
+
 
         ## append values to list
         dist.append(hist)
@@ -83,8 +85,8 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
     output['set_density'] = density
     output['total'] = psd_array.shape[0]
     output['frequencies'] = ff
-    
-    
+
+
     ## check plot
     if plot:
     # _ff[0] = 1e-21
@@ -92,10 +94,19 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
         fig = plt.figure(figsize=(15, 5))
         cmap = plt.colormaps.get_cmap('viridis')
         cmap.set_under(color='white')
-        plt.pcolormesh(ff, output['bin_mids'], output['dist'].T, cmap=cmap, shading="auto",
-                       antialiased=True, vmin=0.9, norm="log")
+
+        _tmp = output['dist'].reshape(output['dist'].size)
+        cb = plt.pcolormesh(ff, output['bin_mids'], output['dist'].T, cmap=cmap, shading="auto",
+                       antialiased=True, vmin=min(_tmp[nonzero(_tmp)]), norm="log")
+
         plt.yscale("log")
         plt.xscale("log")
+
+        plt.colorbar(cb)
+
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("PSD")
+
         plt.xlim(ff[1], ff[-1])
 
         plt.show();
