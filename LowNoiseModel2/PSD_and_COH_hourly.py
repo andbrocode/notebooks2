@@ -38,6 +38,7 @@ elif os.uname().nodename == 'lin-ffb-01':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
+    bay_path = '/import/bay200/'
 
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
@@ -58,7 +59,7 @@ config['seed2'] = "BW.ROMY..BJU"
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
-config['path_to_data1'] = root_path+f"bay200/mseed_online/archive/"
+config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data2'] = archive_path+f"romy_archive/"
 
 
