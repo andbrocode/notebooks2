@@ -94,19 +94,6 @@ def __multitaper_psd(arr, dt, n_win=5):
     return f, psd
 
 
-def __get_data(config):
-    '''
-    load data and remove response
-
-    VARIABLES:
-    '''
-    from andbro__read_sds import __read_sds
-
-
-    st0 = __read_sds(config['path_to_data'], f"BW.{config['array']}..BD*", config['tbeg'], config['tend'])
-
-    return st0
-
 
 def __get_minimum_psd(psds):
 
@@ -302,7 +289,7 @@ def main(config):
 
 
         try:
-            st = __get_data(config)
+            st = __read_sds(config['path_to_data'], f"BW.{config['array']}..BD*", config['tbeg'], config['tend'])
         except:
             print(f" -> failed ...")
             continue
@@ -321,7 +308,7 @@ def main(config):
         st0 = st.select(channel=f"*{config['component']}")
 
 
-        ## Pa or hPa
+        ## conversion to Pa or hPa
         if config['component'] == "O":
 
             if config['unit'] == "Pa":
@@ -361,19 +348,19 @@ if __name__ == "__main__":
 
 # In[] ___________________________________________________________
 
-st = __get_data(config)
+# st = __read_sds(config['path_to_data'], f"BW.{config['array']}..BD*", config['tbeg'], config['tend'])
 
-inv = read_inventory("/home/brotzer/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
+# inv = read_inventory("/home/brotzer/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
 
-st = st.remove_sensitivity(inv)
+# st = st.remove_sensitivity(inv)
 
-st = st.select(channel=f"*{config['component']}")
+# st = st.select(channel=f"*{config['component']}")
 
-## convert to hPa
-if config['component'] == "O":
-    for tr in st:
-        tr.data *= 1000
+# ## convert to hPa
+# if config['component'] == "O":
+#     for tr in st:
+#         tr.data *= 1000
 
-st.plot()
+# st.plot()
 
 ## End of File
