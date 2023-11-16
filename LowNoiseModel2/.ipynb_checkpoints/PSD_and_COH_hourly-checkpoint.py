@@ -38,7 +38,7 @@ elif os.uname().nodename == 'lin-ffb-01':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/import/bay200/'
+    bay_path = '/bay200/'
 
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
