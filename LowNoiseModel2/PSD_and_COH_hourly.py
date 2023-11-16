@@ -48,23 +48,22 @@ config= {}
 
 config['year'] = 2023
 
-# config['name_appendix'] = "_infrasound" ## _infrasound  |  _absolute
 
 config['seed1'] = "BW.FFBI..BDO"
 # config['seed2'] = "BW.ROMY.10.BJZ"
-config['seed2'] = "BW.ROMY..BJU"
+# config['seed2'] = "BW.ROMY..BJU"
 # config['seed2'] = "BW.ROMY..BJV"
-
+# config['seed2'] = "GR.FUR..BHZ"
+# config['seed2'] = "GR.FUR..BHN"
+config['seed2'] = "GR.FUR..BHE"
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data2'] = archive_path+f"romy_archive/"
+config['path_to_data2'] = bay_path+f"mseed_online/archive/"
 
-
-
-# config['type'] = "baro"
 
 ## specify unit
 config['unit'] = None ## hPa or Pa or None
@@ -74,7 +73,7 @@ config['interval_overlap'] = 0  ## in seconds
 
 ## __________________________
 ## choose psd method
-config['mode'] = "multitaper"  ## "multitaper" | "welch"
+config['mode'] = "welch"  ## "multitaper" | "welch"
 
 ## __________________________
 ## set welch and coherence settings
@@ -274,7 +273,7 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
 
-            print("st: ", _st1[0].data.size, _st2[0].data.size)
+#            print("st: ", _st1[0].data.size, _st2[0].data.size)
 
             if n == 0:
                 ## prepare lists
@@ -323,7 +322,7 @@ def main(config):
 
                 f2, psd2 = __multitaper_psd(_st2[0].data, _st2[0].stats.delta, n_win=config.get("n_taper"))
 
-            print("psd: ", len(psd1), len(psd2))
+#            print("psd: ", len(psd1), len(psd2))
             psds1[n] = psd1
             psds2[n] = psd2
 

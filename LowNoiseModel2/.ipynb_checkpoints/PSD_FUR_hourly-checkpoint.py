@@ -48,14 +48,14 @@ config['array'] = "FUR"
 
 config['year'] = 2023
 
-config['component'] = "N" # U,V,W,Z
+config['component'] = "Z" # U,V,W,Z
 
 config['cha'] = config['component']
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-22")
 
-config['seed'] = "GR.FUR..HHN"
+config['seed'] = f"GR.FUR..HH{config['component']}"
 
 config['station'] = config['seed'].split(".")[1]
 config['channel'] = config['seed'].split(".")[3]
