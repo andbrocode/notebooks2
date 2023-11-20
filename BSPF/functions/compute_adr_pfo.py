@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 ######################
@@ -55,22 +56,36 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
     ## select stations to consider: 
     if submask is not None:
+        # if submask == "inner":
+        #     config['subarray_mask'] = [0,1,2,3,4]
+        #     config['freq1'] = 0.16  ## 0.00238*3700/100
+        #     config['freq2'] = 16.5 ## 0.25*3700/100
+        # elif submask == "optimal":
+        #     config['subarray_mask'] = [0,1,6,9,10,11,12,13]
+        #     config['freq1'] = 0.02   ## 0.00238*3700/700
+        #     config['freq2'] = 1.3 # 0.25*3700/700
+        # elif submask == "mid":
+        #     config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
+        #     config['freq1'] = 0.03   ## 0.00238*3700/280
+        #     config['freq2'] = 3.3 # 0.25*3700/280
+        # elif submask == "all":
+        #     config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+        #     config['freq1'] = 0.02   ## 0.00238*3700/700
+        #     config['freq2'] = 1.3 # 0.25*3700/700
+
         if submask == "inner":
             config['subarray_mask'] = [0,1,2,3,4]
-            config['freq1'] = 0.16  ## 0.00238*3700/100
-            config['freq2'] = 16.5 ## 0.25*3700/100 
-        elif submask == "optimal":
-            config['subarray_mask'] = [0,1,6,9,10,11,12,13]
-            config['freq1'] = 0.02   ## 0.00238*3700/700
-            config['freq2'] = 1.3 # 0.25*3700/700
+            config['freq1'] = 1.0  ## 0.00238*3700/100
+            config['freq2'] = 10.0 ## 0.25*3700/100 
         elif submask == "mid":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
-            config['freq1'] = 0.03   ## 0.00238*3700/280
-            config['freq2'] = 3.3 # 0.25*3700/280
+            config['freq1'] = 0.5   ## 0.00238*3700/280
+            config['freq2'] = 1.0   ## 0.25*3700/280
         elif submask == "all":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
-            config['freq1'] = 0.02   ## 0.00238*3700/700
-            config['freq2'] = 1.3 # 0.25*3700/700
+            config['freq1'] = 0.1   ## 0.00238*3700/700
+            config['freq2'] = 0.5    ## 0.25*3700/700
+
     else:
         config['subarray_mask'] = [0,1,2,3,4]
 
@@ -105,7 +120,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## parameter for array-derivation
 
     #config['prefilt'] = (0.001, 0.01, 5, 10)
-    config['apply_bandpass'] = False
+    config['apply_bandpass'] = True
 
 
     # adr parameters
@@ -201,8 +216,8 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
                                                                 station=sta,
                                                                 location=loc,
                                                                 channel=cha,
-                                                                starttime=config['tbeg']-20,
-                                                                endtime=config['tend']+20,
+                                                                starttime=config['tbeg']-30,
+                                                                endtime=config['tend']+30,
                                                                 level="response"
                                                                 )
             except:
@@ -217,13 +232,13 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
                                                             station=sta,
                                                             location=loc,
                                                             channel=cha,
-                                                            starttime=config['tbeg']-20,
-                                                            endtime=config['tend']+20,
+                                                            starttime=config['tbeg']-30,
+                                                            endtime=config['tend']+30,
                                                             attach_response=True,
                                                             )
             except Exception as E:
                 print(E) if config['print_details'] else None
-                print(f" -> geting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
+                print(f" -> getting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
                 config['stations_loaded'][k] = 0
                 continue
 
@@ -236,7 +251,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
             ## remove response [VEL -> rad/s | DISP -> rad]
             stats = stats.remove_sensitivity(inventory)
-            # stats.remove_response(output="VEL")
+            # stats.remove_response(output="VEL", water_level=20)
 
             ## sorting
             # stats = stats.sort().reverse()
@@ -261,13 +276,13 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             # if net == "II" and sta == "PFO":
             #     for tr in stats:
             #         if tr.stats.channel[-1] == "1":
-            #             tr.stats.channel = str(tr.stats.channel).replace("1","E")
+            #             tr.stats.channel = str(tr.stats.channel).replace("1", "E")
             #         if tr.stats.channel[-1] == "2":
-            #             tr.stats.channel = str(tr.stats.channel).replace("2","N")
+            #             tr.stats.channel = str(tr.stats.channel).replace("2", "N")
 
             if config['reference_station'] == "PY.PFOIX":
                 stats = stats.resample(40)
-                stats = stats.trim(config['tbeg']-20, config['tend']+20)
+                stats = stats.trim(config['tbeg']-30, config['tend']+30)
 
 
             if station == config['reference_station']:
@@ -309,7 +324,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
                                               config['vs'],
                                               config['coo'],
                                               config['sigmau'],
-                                          )
+                                             )
         except Exception as E:
             print(E)
             print("\n -> failed to compute ADR...")
@@ -390,7 +405,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     st.detrend("demean")
 
     if config['apply_bandpass']:
-        st.taper(0.1)
+        st.taper(0.01)
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
         print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
 
@@ -403,7 +418,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
 
     ## prepare data arrays
-    tsz, tsn, tse = [],[],[]
+    tsz, tsn, tse = [], [], []
     for tr in st:
         try:
             if "Z" in tr.stats.channel:
@@ -427,7 +442,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## plot status of data retrieval for waveforms of array stations
     if status:
 
-        fig, ax = plt.subplots(1,1,figsize=(15,5))
+        fig, ax = plt.subplots(1, 1, figsize=(15,5))
 
         cmap = matplotlib.colors.ListedColormap(['darkred', 'green'])
 
