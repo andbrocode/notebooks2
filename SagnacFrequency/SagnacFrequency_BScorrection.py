@@ -36,6 +36,7 @@ config['interval'] = 60
 config['tbeg'] = UTCDateTime("2023-09-19 00:00")
 config['tend'] = UTCDateTime("2023-09-19 01:00")
 
+config['nominal_sagnac'] = 303.05
 
 ## path to Sagnac data
 config['path_to_autodata'] = archive_path+f"romy_autodata/"
@@ -70,7 +71,7 @@ def __load_romy_raw_data(seed, tbeg, tend, path_to_sds):
 
     return st0
 
-def __get_values(ff, psd, fph, ph, f_sagn):
+def __get_values(ff, psd f_sagn):
 
     from numpy import argmax, sqrt, where, argmin, gradient, mean
 
@@ -167,9 +168,9 @@ def main(config):
 
             _dat = _st.copy().trim(t1, t2)
 
-            f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
+            f, psd, ph[_n] = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
 
-            fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, f, pha, 303)
+            fs[_n], ac[_n], dc[_n] = __get_values(f, psd, config['nominal_sagnac'])
 
             # dc[_n] = np.mean(_dat)
             # ac[_n] = np.percentile(_dat[0].data, 99.9) - np.percentile(_dat[0].data, 100-99.9)
@@ -185,7 +186,8 @@ def main(config):
 
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"
-    out_df.to_pickle(config['path_to_data']+f"{date_str}_{method}.pkl")
+    out_df.to_pickle(config['path_to_data']+f"{date_str}_backscatter.pkl")
+    print(f" -> {config['path_to_data']}{date_str}_backscatter.pkl")
 
 
 ## ________ MAIN  ________
