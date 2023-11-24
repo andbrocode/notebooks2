@@ -13,6 +13,7 @@ __year__   = '2022'
 import matplotlib.pyplot as plt
 import pickle
 import os
+import sys
 
 from obspy import UTCDateTime, read, read_inventory
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
@@ -30,10 +31,12 @@ if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
+    bay_path = '/home/andbro/bay200/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
+    bay_path = '/import/bay200/'
 elif os.uname().nodename == 'lin-ffb-01':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
@@ -43,26 +46,33 @@ elif os.uname().nodename == 'lin-ffb-01':
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
 
-config= {}
+config = {}
 
 
 config['year'] = 2023
 
 
 config['seed1'] = "BW.FFBI..BDO"
-# config['seed2'] = "BW.ROMY.10.BJZ"
-# config['seed2'] = "BW.ROMY..BJU"
-# config['seed2'] = "BW.ROMY..BJV"
-# config['seed2'] = "GR.FUR..BHZ"
-# config['seed2'] = "GR.FUR..BHN"
-config['seed2'] = "GR.FUR..BHE"
+
+if len(sys.argv) > 1:
+    config['seed2'] = sys.argv[1]
+else:
+    config['seed2'] = "GR.FUR..BHZ"
+    # config['seed2'] = "GR.FUR..BHN"
+    # config['seed2'] = "GR.FUR..BHE"
+    # config['seed2'] = "BW.ROMY.10.BJZ"
+    # config['seed2'] = "BW.ROMY..BJU"
+    # config['seed2'] = "BW.ROMY..BJV"
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
-config['path_to_data2'] = archive_path+f"romy_archive/"
-config['path_to_data2'] = bay_path+f"mseed_online/archive/"
+
+if "FUR" in config['seed2']:
+    config['path_to_data2'] = bay_path+f"mseed_online/archive/"
+else:
+    config['path_to_data2'] = archive_path+f"romy_archive/"
 
 
 ## specify unit
@@ -80,7 +90,7 @@ config['mode'] = "welch"  ## "multitaper" | "welch"
 
 config['taper'] = 'hann'
 config['tseconds'] = 1800 ## seconds
-config['toverlap'] = 0.9
+config['toverlap'] = 0.75
 config['nfft'] = None
 config['detrend'] = 'constant'
 config['scaling'] = 'density'
@@ -252,8 +262,8 @@ def main(config):
 
 
         ## Pre-Processing
-        st1 = st1.resample(20.0);
-        st2 = st2.resample(20.0);
+        st1 = st1.resample(5.0);
+        st2 = st2.resample(5.0);
 
         # st1.plot();
         # st2.plot();

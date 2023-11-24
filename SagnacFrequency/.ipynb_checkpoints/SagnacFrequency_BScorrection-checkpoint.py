@@ -145,6 +145,83 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
     return times
 
 
+def __hilbert_frequency_estimator(st, nominal_sagnac, fband):
+
+    from scipy.signal import hilbert
+    import numpy as np
+
+    st0 = st.copy()
+
+    ## extract sampling rate
+    df = st0[0].stats.sampling_rate
+
+    ## define frequency band around Sagnac Frequency
+    f_lower = nominal_sagnac - fband
+    f_upper = nominal_sagnac + fband
+
+    ## bandpass with butterworth around Sagnac Frequency
+    st0.detrend("linear")
+    st0.taper(0.01)
+    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
+
+
+    ## estimate instantaneous frequency with hilbert
+    signal = st0[0].data
+
+    analytic_signal = hilbert(signal)
+    amplitude_envelope = np.abs(analytic_signal)
+    instantaneous_phase = np.unwrap(np.angle(analytic_signal))
+    instantaneous_frequency = (np.diff(instantaneous_phase) / (2.0*np.pi) * df)
+
+    ## cut first and last 5% (corrupted data)
+    dd = int(0.05*len(instantaneous_frequency))
+    insta_f_cut = instantaneous_frequency[dd:-dd]
+
+    ## get times
+    t = st0[0].times()
+    t_mid = t[int((len(t))/2)]
+
+    ## averaging of frequencies
+    # insta_f_cut_mean = np.mean(insta_f_cut)
+    insta_f_cut_mean = np.median(insta_f_cut)
+
+    return t_mid, insta_f_cut_mean, np.mean(amplitude_envelope), np.std(insta_f_cut)
+
+
+def __backscatter_correction(m01, m02, phase0, w_obs, cm_filter_factor=1.033):
+
+    ## Correct for bias
+    m1 = m01 * ( 1 + m01**2 / 4 )
+    m2 = m02 * ( 1 + m02**2 / 4 )
+
+    ## angular correction for phase
+    phase = phase0 + 0.5 * m1 * m2 * np.sin( phase0 )
+
+    ## compute squares of common-mode modulations
+    m2c = ( m1**2 + m2**2 + 2*m1*m2*np.cos( phase ) ) / 4
+
+    ## compute squares of differential-mode modulations
+    m2d = ( m1**2 + m2**2 - 2*m1*m2*np.cos( phase ) ) / 4  ## different angle!
+
+    ## correct m2c for gain saturation of a HeNe laser
+    # m2c = m2c * ( 1 + ( beta + theta )**2 * fL**2 * I0**2 / ws**2 )
+    m2c = m2c * cm_filter_factor
+
+    ## compute backscatter correction factor
+    M = m2c - m2d + 0.25 * m1**2 * m2**2 * np.sin(phase)**2
+
+    ## correction term
+    term = ( 4 + M ) / ( 4 - M )
+
+    ## backscatter correction
+    correction = -1 * ( term -1 ) * 303.05
+
+    w_corrected = np.array(w_obs) + correction
+
+    return w_corrected
+
+## _________________________________
+
 def main(config):
 
     ## load data
@@ -176,17 +253,30 @@ def main(config):
 
             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
+            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=10)
+
             # dc[_n] = np.mean(_dat)
             # ac[_n] = np.percentile(_dat[0].data, 99.9) - np.percentile(_dat[0].data, 100-99.9)
 
         ph = np.unwrap(ph)
 
+        ## fill output dataframe
         if _k == 0:
             out_df['fj_fs'], out_df['fj_ac'], out_df['fj_dc'], out_df['fj_ph'] = fs, ac, dc, ph
         elif _k == 1:
             out_df['f1_fs'], out_df['f1_ac'], out_df['f1_dc'], out_df['f1_ph'] = fs, ac, dc, ph
         elif _k == 2:
             out_df['f2_fs'], out_df['f2_ac'], out_df['f2_dc'], out_df['f2_ph'] = fs, ac, dc, ph
+
+
+    ## prepare values for backscatter correction
+    m01 = out_df.f1_ac / out_df.f1_dc
+    m02 = out_df.f2_ac / out_df.f2_dc
+    phase0 = out_df.f1_ph - out_df.f2_ph
+    w_obs = out_df.fj_fs
+
+    out_df['w_s'] = __backscatter_correction(m01, m02, phase0, w_obs, cm_filter_factor=1.033)
+
 
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"

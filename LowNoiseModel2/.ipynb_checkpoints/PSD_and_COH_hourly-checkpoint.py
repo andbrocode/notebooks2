@@ -13,6 +13,7 @@ __year__   = '2022'
 import matplotlib.pyplot as plt
 import pickle
 import os
+import sys
 
 from obspy import UTCDateTime, read, read_inventory
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
@@ -30,10 +31,12 @@ if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
+    bay_path = '/home/andbro/bay200/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
+    bay_path = '/import/bay200/'
 elif os.uname().nodename == 'lin-ffb-01':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
@@ -43,28 +46,31 @@ elif os.uname().nodename == 'lin-ffb-01':
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
 
-config= {}
+config = {}
 
 
 config['year'] = 2023
 
-# config['name_appendix'] = "_infrasound" ## _infrasound  |  _absolute
 
 config['seed1'] = "BW.FFBI..BDO"
-# config['seed2'] = "BW.ROMY.10.BJZ"
-config['seed2'] = "BW.ROMY..BJU"
-# config['seed2'] = "BW.ROMY..BJV"
 
+if len(sys.argv) > 1:
+    config['seed2'] = sys.argv[1]
+else:
+    config['seed2'] = "GR.FUR..BHZ"
+    # config['seed2'] = "GR.FUR..BHN"
+    # config['seed2'] = "GR.FUR..BHE"
+    # config['seed2'] = "BW.ROMY.10.BJZ"
+    # config['seed2'] = "BW.ROMY..BJU"
+    # config['seed2'] = "BW.ROMY..BJV"
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data2'] = archive_path+f"romy_archive/"
+config['path_to_data2'] = bay_path+f"mseed_online/archive/"
 
-
-
-# config['type'] = "baro"
 
 ## specify unit
 config['unit'] = None ## hPa or Pa or None
@@ -74,14 +80,14 @@ config['interval_overlap'] = 0  ## in seconds
 
 ## __________________________
 ## choose psd method
-config['mode'] = "multitaper"  ## "multitaper" | "welch"
+config['mode'] = "welch"  ## "multitaper" | "welch"
 
 ## __________________________
 ## set welch and coherence settings
 
 config['taper'] = 'hann'
 config['tseconds'] = 1800 ## seconds
-config['toverlap'] = 0.9
+config['toverlap'] = 0.75
 config['nfft'] = None
 config['detrend'] = 'constant'
 config['scaling'] = 'density'
@@ -253,8 +259,8 @@ def main(config):
 
 
         ## Pre-Processing
-        st1 = st1.resample(20.0);
-        st2 = st2.resample(20.0);
+        st1 = st1.resample(5.0);
+        st2 = st2.resample(5.0);
 
         # st1.plot();
         # st2.plot();
@@ -274,7 +280,7 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
 
-            print("st: ", _st1[0].data.size, _st2[0].data.size)
+#            print("st: ", _st1[0].data.size, _st2[0].data.size)
 
             if n == 0:
                 ## prepare lists
@@ -323,7 +329,7 @@ def main(config):
 
                 f2, psd2 = __multitaper_psd(_st2[0].data, _st2[0].stats.delta, n_win=config.get("n_taper"))
 
-            print("psd: ", len(psd1), len(psd2))
+#            print("psd: ", len(psd1), len(psd2))
             psds1[n] = psd1
             psds2[n] = psd2
 
