@@ -34,7 +34,7 @@ config['seeds'] = ["BW.DROMY..FJU", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 config['interval'] = 60
 
 config['tbeg'] = UTCDateTime("2023-09-19 00:00")
-config['tend'] = UTCDateTime("2023-09-19 01:00")
+config['tend'] = UTCDateTime("2023-09-20 00:00")
 
 config['nominal_sagnac'] = 303.05
 
