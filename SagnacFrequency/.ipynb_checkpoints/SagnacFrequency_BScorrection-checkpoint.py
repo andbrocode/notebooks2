@@ -71,7 +71,7 @@ def __load_romy_raw_data(seed, tbeg, tend, path_to_sds):
 
     return st0
 
-def __get_values(ff, psd f_sagn):
+def __get_values(ff, psd, f_sagn):
 
     from numpy import argmax, sqrt, where, argmin, gradient, mean
 
