@@ -71,7 +71,7 @@ def __load_romy_raw_data(seed, tbeg, tend, path_to_sds):
 
     return st0
 
-def __get_values(ff, psd, f_sagn):
+def __get_values(ff, psd, pha, f_sagn):
 
     from numpy import argmax, sqrt, where, argmin, gradient, mean
 
@@ -91,7 +91,10 @@ def __get_values(ff, psd, f_sagn):
     ## estimate DC value at ff = 0
     DC_est = psd[0]
 
-    return f_sagn_est, AC_est, DC_est
+    ## phase at Sagnac frequency
+    ph_est = pha[idx_fs]
+    
+    return f_sagn_est, AC_est, DC_est, ph_est
 
 
 def __get_fft(signal_in, dt, window=None):
@@ -168,9 +171,9 @@ def main(config):
 
             _dat = _st.copy().trim(t1, t2)
 
-            f, psd, ph[_n] = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
+            f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
 
-            fs[_n], ac[_n], dc[_n] = __get_values(f, psd, config['nominal_sagnac'])
+            fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
             # dc[_n] = np.mean(_dat)
             # ac[_n] = np.percentile(_dat[0].data, 99.9) - np.percentile(_dat[0].data, 100-99.9)
