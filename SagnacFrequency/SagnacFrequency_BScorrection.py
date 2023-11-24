@@ -33,8 +33,8 @@ config['seeds'] = ["BW.DROMY..FJU", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 
 config['interval'] = 60
 
-config['tbeg'] = UTCDateTime("2023-09-01 17:00")
-config['tend'] = UTCDateTime("2023-09-01 19:00")
+config['tbeg'] = UTCDateTime("2023-09-19 00:00")
+config['tend'] = UTCDateTime("2023-09-20 00:00")
 
 config['ring_sagnac'] = {"U":303.05, "V":447, "W":447, "Z":553.5}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
