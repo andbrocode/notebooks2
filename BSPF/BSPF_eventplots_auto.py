@@ -242,7 +242,7 @@ config['BSPF_lat'] = 33.610643
 config['outpath_figs'] = data_path+"BSPF/figures/triggered_all/"
 
 ## 
-config['translation_type'] = "DISP" ## ACC | DISP | VEL
+config['translation_type'] = "ACC" ## ACC | DISP | VEL
 
 ## path for output data
 config['outpath_data'] = data_path+f"BSPF/data/waveforms/{config['translation_type']}/"
@@ -258,7 +258,7 @@ config['seed_seismometer2'] = "PY.PFOIX..H*"
 
 config['path_to_catalog'] = data_path+"BSPF/data/catalogs/"
 
-config['catalog'] = "BSPF_catalog_20221001_20230615_triggered.pkl"
+config['catalog'] = "BSPF_catalog_20221001_20230930_triggered.pkl"
 
 
 
@@ -338,8 +338,8 @@ for jj, ev in enumerate(events.index):
         continue
 
     ## processing data
-    if ii_pfo0[0].stats.sampling_rate != py_bspf0[0].stats.sampling_rate:
-        py_bspf0.resample(ii_pfo0[0].stats.sampling_rate)
+#    if ii_pfo0[0].stats.sampling_rate != py_bspf0[0].stats.sampling_rate:
+#        py_bspf0.resample(ii_pfo0[0].stats.sampling_rate)
 
 
     ## joining data
@@ -347,9 +347,9 @@ for jj, ev in enumerate(events.index):
     st0 += ii_pfo0
     
     ## apply bandpass filter for BSPF and PFO
-    st0.detrend("linear")
-    st0.taper(0.01)
-    st0.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
+    st0 = st0.detrend("linear")
+    st0 = st0.taper(0.01)
+    st0 = st0.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
 
     
     ## compute ADR
@@ -374,6 +374,7 @@ for jj, ev in enumerate(events.index):
         print(" -> failed to compute inner ADR ...")
         pfo_adr = __empty_stream(st0)
 
+    st0 = st0.resample(40, no_filter=False)
 
     st0 = st0.sort()
     st0 = st0.trim(config['tbeg'], config['tend'])

@@ -7,8 +7,8 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
     client = Client("IRIS")
 
     net, sta, loc, cha = seed.split(".")
-    
-    
+
+
     ## querry inventory data
     try:
         inventory = client.get_stations(network=net,
@@ -21,8 +21,8 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
     except:
         print(" -> Failed to load inventory!")
         inventory = None
-               
-    
+
+
     ## querry waveform data
     try:
 
@@ -58,7 +58,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
 
     ## adjust channel names
     elif cha[1] == "H" and waveform is not None:
-        waveform.remove_response(inventory=inventory, output=translation_type, plot=False)
+        waveform.remove_response(inventory=inventory, output=translation_type, plot=False, water_level=10)
         print(" -> response removed!")
 
         # waveform.remove_sensitivity(inventory=inventory)

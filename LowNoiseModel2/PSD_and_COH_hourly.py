@@ -22,6 +22,7 @@ from pathlib import Path
 from scipy.signal import coherence, welch
 
 from andbro__read_sds import __read_sds
+from andbro__readYaml import __readYaml
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -36,7 +37,7 @@ elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/import/bay200/'
+    bay_path = '/bay200/'
 elif os.uname().nodename == 'lin-ffb-01':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
@@ -68,15 +69,18 @@ config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
+config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
 
 if "FUR" in config['seed2']:
     config['path_to_data2'] = bay_path+f"mseed_online/archive/"
-else:
+    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.GR_FUR"
+elif "ROMY" in config['seed2']:
     config['path_to_data2'] = archive_path+f"romy_archive/"
+    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_ROMY"
 
 
 ## specify unit
-config['unit'] = None ## hPa or Pa or None
+config['unit'] = "Pa" ## hPa or Pa or None
 
 config['interval_seconds'] = 3600 ## in seconds
 config['interval_overlap'] = 0  ## in seconds
@@ -111,15 +115,15 @@ config['cha1'] = config['seed1'].split(".")[3]
 config['cha2'] = config['seed2'].split(".")[3]
 
 config['outname1'] = f"{config['year']}_{config['sta1']}_{config['interval_seconds']}"
-config['outname2'] = f"{config['year']}_{config['sta2']}_{config['interval_seconds']}"
+config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{config['interval_seconds']}"
 config['outname3'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{config['interval_seconds']}"
 
 config['outpath1'] = data_path+f"LNM2/PSDS/{config['sta1']}/"
 config['outpath2'] = data_path+f"LNM2/PSDS/{config['sta2']}/"
 config['outpath3'] = data_path+f"LNM2/PSDS/{config['sta2']}_coherence/"
 
-config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
-config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_ROMY"
+## tiltmeter configurations
+confTilt = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/","tiltmeter.conf")
 
 
 # In[] ___________________________________________________________
@@ -183,6 +187,32 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
     return times
 
 
+def __conversion_to_tilt(st, conf):
+
+    st0 = st.copy()
+
+    def convertTemp(trace):
+        Tvolt = trace.data * conf.get('gainTemp')
+        coeff = conf.get('calcTempCoefficients')
+        return coeff[0] + coeff[1]*Tvolt + coeff[2]*Tvolt**2 + coeff[3]*Tvolt**3
+
+    def convertTilt(trace, conversion, sensitivity):
+        return trace.data * conversion * sensitivity
+
+    for tr in st0:
+        if tr.stats.channel[-1] == 'T':
+            tr.data = convertTemp(tr)
+        elif tr.stats.channel[-1] == 'N':
+            tr.data = convertTilt(tr, conf['convTN'], conf['gainTilt'])
+        elif tr.stats.channel[-1] == 'E':
+            tr.data = convertTilt(tr, conf['convTE'], conf['gainTilt'])
+        else:
+            print("no match")
+
+    print(f"  -> converted data of {st[0].stats.station}")
+    return st0
+
+
 # In[] ___________________________________________________________
 
 def main(config):
@@ -209,8 +239,8 @@ def main(config):
 
 
         ## load data for the entire day
-        config['tbeg'] = UTCDateTime(date) -1
-        config['tend'] = UTCDateTime(date) + 86400 +1
+        config['tbeg'] = UTCDateTime(date) - 1
+        config['tend'] = UTCDateTime(date) + 86400 + 1
 
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
@@ -237,36 +267,58 @@ def main(config):
             continue
 
 
-        # st1 = st1.remove_sensitivity(inv1)
-        # st2 = st2.remove_sensitivity(inv2)
+        ## conversion
+        if "O" in st1[0].stats.channel:
 
+            if config['unit'] == "Pa":
+                for tr in st1:
+                    tr.data = tr.data *1.589e-6 *1e5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
+            elif config['unit'] == "hPa":
+                for tr in st1:
+                    tr.data = tr.data *1.589e-6 *1e3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
 
-        ## conversion to Pa or hPa
-        for _st in [st1, st2]:
+        elif "F" in st1[0].stats.channel:
+            for tr in st1:
+                tr.data = tr.data *1.589e-6 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 VPa
 
-            if "O" in _st[0].stats.channel:
+        if "J" in st2[0].stats.channel:
+            st2 = st2.remove_sensitivity(inv2)
 
-                if config['unit'] == "Pa":
-                    for tr in _st:
-                        tr.data = tr.data /1.0 /6.28099e5 /1e-5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
-                elif config['unit'] == "hPa":
-                    for tr in _st:
-                        tr.data = tr.data /1.0 /6.28099e5 /1e-3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
-            if "F" in _st[0].stats.channel:
+        if "H" in st2[0].stats.channel:
+            st2 = st2.remove_response(inv2, output="ACC", water_level=10)
 
-                for tr in _st:
-                    tr.data = tr.data /1.0 /6.28099e5 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 VPa
-
-            if "J" in _st[0].stats.channel:
-                _st = _st.remove_sensitivity(inv2)
-
+        if "A" in st2[0].stats.channel:
+            st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
 
         ## Pre-Processing
-        st1 = st1.resample(5.0);
-        st2 = st2.resample(5.0);
+        try:
+            st1 = st1.split()
+            st2 = st2.split()
 
-        # st1.plot();
-        # st2.plot();
+            st1 = st1.detrend("linear")
+            st2 = st2.detrend("linear")
+
+            st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
+
+            if "DROMY" in config['seed2']:
+
+                st1 = st1.decimate(2, no_filter=False) ## 20 -> 10 Hz
+                st1 = st1.decimate(2, no_filter=False) ## 10 -> 5 Hz
+                st1 = st1.decimate(5, no_filter=False) ## 5 -> 1 Hz
+
+            # st1 = st1.filter("highpass", freq=1e-4, corners=4, zerophase=True)
+            # st2 = st2.filter("highpass", freq=1e-4, corners=4, zerophase=True)
+
+            st1 = st1.merge()
+            st2 = st2.merge()
+
+        except Exception as e:
+            print(e)
+            print(f" -> pre-processing failed!")
+            continue
+
+        # st1.plot(equal_scale=False);
+        # st2.plot(equal_scale=False);
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
@@ -275,6 +327,9 @@ def main(config):
         config['nperseg'] = int(st1[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
+
+        print(st1)
+        print(st2)
 
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(times):
@@ -298,6 +353,7 @@ def main(config):
                     psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
                     psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+
 
             ## compute power spectra
             if config['mode'] == "welch":

@@ -251,7 +251,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
             ## remove response [VEL -> rad/s | DISP -> rad]
             stats = stats.remove_sensitivity(inventory)
-            # stats.remove_response(output="VEL", water_level=20)
+            # stats.remove_response(output="VEL", water_level=10)
 
             ## sorting
             # stats = stats.sort().reverse()
@@ -280,8 +280,11 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             #         if tr.stats.channel[-1] == "2":
             #             tr.stats.channel = str(tr.stats.channel).replace("2", "N")
 
+
+            stats = stats.resample(40, no_filter=False)
+
             if config['reference_station'] == "PY.PFOIX":
-                stats = stats.resample(40)
+                # stats = stats.resample(40, no_filter=False)
                 stats = stats.trim(config['tbeg']-30, config['tend']+30)
 
 
