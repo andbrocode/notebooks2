@@ -609,6 +609,9 @@ for event in tqdm(config['mseed_files']):
                 tr.stats.station = "PFO"
                 tr.stats.location = "10"
 
+        for tr in st:
+            if "BSPF" in tr.stats.station:
+                tr.data = np.roll(tr.data, 4)
 
         ## add radial and transverse channels
         st = __add_radial_and_transverse_channel(st, "PFO*", events.backazimuth[jj])

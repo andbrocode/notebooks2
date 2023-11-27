@@ -76,7 +76,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
         if submask == "inner":
             config['subarray_mask'] = [0,1,2,3,4]
             config['freq1'] = 1.0  ## 0.00238*3700/100
-            config['freq2'] = 10.0 ## 0.25*3700/100 
+            config['freq2'] = 6.0 ## 0.25*3700/100 
         elif submask == "mid":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
             config['freq1'] = 0.5   ## 0.00238*3700/280
@@ -377,7 +377,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
         return rotsa
 
-
+    ## __________________________________________________________
     ## MAIN ##
 
     ## launch a times
