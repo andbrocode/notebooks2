@@ -280,9 +280,9 @@ def main(config):
                 ori_v = inv2.get_orientation("BW.ROMY..BJV")
 
                 romy_z, romy_n, romy_e = rotate2zne(
-                                                   _stZ, ori_z['azimuth'], ori_z['dip'],
-                                                   _stU, ori_u['azimuth'], ori_u['dip'],
-                                                   _stV, ori_v['azimuth'], ori_v['dip'],
+                                                   _stZ[0].data, ori_z['azimuth'], ori_z['dip'],
+                                                   _stU[0].data, ori_u['azimuth'], ori_u['dip'],
+                                                   _stV[0].data, ori_v['azimuth'], ori_v['dip'],
                                                    inverse=False
                                                   )
                 if "N" in config['seed2']:
