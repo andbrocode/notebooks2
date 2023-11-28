@@ -16,6 +16,7 @@ import os
 import sys
 
 from obspy import UTCDateTime, read, read_inventory
+from obspy.signal.rotate import rotate2zne
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
@@ -269,6 +270,7 @@ def main(config):
             continue
 
         if "ROMY" in config['seed2'] and "Z" not in config['seed2']:
+            
             _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg'], config['tend'])
             _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg'], config['tend'])
             _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
@@ -349,8 +351,8 @@ def main(config):
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
 
-        print(st1)
-        print(st2)
+        # print(st1)
+        # print(st2)
 
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(times):
