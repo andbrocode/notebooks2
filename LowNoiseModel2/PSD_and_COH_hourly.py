@@ -287,6 +287,7 @@ def main(config):
                                                    _stV[0].data, ori_v['azimuth'], ori_v['dip'],
                                                    inverse=False
                                                   )
+                print(romy_z)
                 if "N" in config['seed2']:
                     st2[0].data = romy_n
                 elif "E" in config['seed2']:
