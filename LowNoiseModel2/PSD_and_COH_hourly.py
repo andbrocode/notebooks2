@@ -276,7 +276,7 @@ def main(config):
                 _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
 
                 print(_stU, _stV, _stZ)
-                
+
                 ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
                 ori_u = inv2.get_orientation("BW.ROMY..BJU")
                 ori_v = inv2.get_orientation("BW.ROMY..BJV")
@@ -287,11 +287,17 @@ def main(config):
                                                    _stV[0].data, ori_v['azimuth'], ori_v['dip'],
                                                    inverse=False
                                                   )
-                print(romy_z)
+
                 if "N" in config['seed2']:
-                    st2[0].data = romy_n
+                    _stU[0].data = romy_n
+                    st2 = _stU.copy()
+                    st2.select(channel="*U")[0].stats.channel = "BJN"
+
                 elif "E" in config['seed2']:
-                    st2[0].data = romy_e
+                    _stV[0].data = romy_e
+                    st2 = _stV.copy()
+                    st2.select(channel="*V")[0].stats.channel = "BJE"
+
             except Exception as e:
                 print(e)
                 print(f" -> failed to rotate ROMY ...")
