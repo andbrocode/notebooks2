@@ -289,7 +289,8 @@ def main(config):
                     st2[0].data = romy_n
                 elif "E" in config['seed2']:
                     st2[0].data = romy_e
-            except:
+            except Exception as e:
+                print(e)
                 print(f" -> failed to rotate ROMY ...")
                 continue
 
