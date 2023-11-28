@@ -270,25 +270,29 @@ def main(config):
             continue
 
         if "ROMY" in config['seed2'] and "Z" not in config['seed2']:
-            
-            _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg'], config['tend'])
-            _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg'], config['tend'])
-            _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
+            try:
+                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg'], config['tend'])
+                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg'], config['tend'])
+                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
 
-            ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
-            ori_u = inv2.get_orientation("BW.ROMY..BJU")
-            ori_v = inv2.get_orientation("BW.ROMY..BJV")
+                ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
+                ori_u = inv2.get_orientation("BW.ROMY..BJU")
+                ori_v = inv2.get_orientation("BW.ROMY..BJV")
 
-            romy_z, romy_n, romy_e = rotate2zne(
-                                               _stZ, ori_z['azimuth'], ori_z['dip'],
-                                               _stU, ori_u['azimuth'], ori_u['dip'],
-                                               _stV, ori_v['azimuth'], ori_v['dip'],
-                                               inverse=False
-                                              )
-            if "N" in config['seed2']:
-                st2[0].data = romy_n
-            elif "E" in config['seed2']:
-                st2[0].data = romy_e
+                romy_z, romy_n, romy_e = rotate2zne(
+                                                   _stZ, ori_z['azimuth'], ori_z['dip'],
+                                                   _stU, ori_u['azimuth'], ori_u['dip'],
+                                                   _stV, ori_v['azimuth'], ori_v['dip'],
+                                                   inverse=False
+                                                  )
+                if "N" in config['seed2']:
+                    st2[0].data = romy_n
+                elif "E" in config['seed2']:
+                    st2[0].data = romy_e
+            except:
+                print(f" -> failed to rotate ROMY ...")
+                continue
+
 
         ## conversion
         if "O" in st1[0].stats.channel:
