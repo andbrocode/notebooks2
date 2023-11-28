@@ -275,6 +275,8 @@ def main(config):
                 _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg'], config['tend'])
                 _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
 
+                print(_stU, _stV, _stZ)
+                
                 ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
                 ori_u = inv2.get_orientation("BW.ROMY..BJU")
                 ori_v = inv2.get_orientation("BW.ROMY..BJV")
