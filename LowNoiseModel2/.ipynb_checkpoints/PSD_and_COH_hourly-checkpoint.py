@@ -291,12 +291,12 @@ def main(config):
                 if "N" in config['seed2']:
                     _stU[0].data = romy_n
                     st2 = _stU.copy()
-                    st2.select(channel="*U")[0].stats.channel = "BJN"
+                    # st2.select(channel="*U")[0].stats.channel = "BJN"
 
                 elif "E" in config['seed2']:
                     _stV[0].data = romy_e
                     st2 = _stV.copy()
-                    st2.select(channel="*V")[0].stats.channel = "BJE"
+                    # st2.select(channel="*V")[0].stats.channel = "BJE"
 
             except Exception as e:
                 print(e)
