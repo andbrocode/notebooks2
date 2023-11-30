@@ -193,7 +193,7 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband):
     return t_mid, insta_f_cut_mean, np.mean(amplitude_envelope), np.std(insta_f_cut)
 
 
-def __backscatter_correction(m01, m02, phase0, w_obs, cm_filter_factor=1.033):
+def __backscatter_correction(m01, m02, phase0, w_obs, fs0, cm_filter_factor=1.033):
 
     ## Correct for bias
     m1 = m01 * ( 1 + m01**2 / 4 )
@@ -219,7 +219,7 @@ def __backscatter_correction(m01, m02, phase0, w_obs, cm_filter_factor=1.033):
     term = ( 4 + M ) / ( 4 - M )
 
     ## backscatter correction
-    correction = -1 * ( term -1 ) * 303.05
+    correction = -1 * ( term -1 ) * fs0
 
     w_corrected = np.array(w_obs) + correction
 
@@ -280,7 +280,7 @@ def main(config):
     phase0 = out_df.f1_ph - out_df.f2_ph
     w_obs = out_df.fj_fs
 
-    out_df['w_s'] = __backscatter_correction(m01, m02, phase0, w_obs, cm_filter_factor=1.033)
+    out_df['w_s'] = __backscatter_correction(m01, m02, phase0, w_obs, config['nominal_sagnac'], cm_filter_factor=1.033)
 
 
     ## store data
