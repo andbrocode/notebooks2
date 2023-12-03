@@ -139,14 +139,14 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
 
     ## check up plot
-    plt.figure(figsize=(15, 5))
+#     plt.figure(figsize=(15, 5))
 
-    for _j, dd in enumerate(psd_avg):
-        plt.scatter(ones(len(dd))*fc[_j], dd, s=5)
-        plt.xscale("log")
-        plt.yscale("log")
+#     for _j, dd in enumerate(psd_avg):
+#         plt.scatter(ones(len(dd))*fc[_j], dd, s=5)
+#         plt.xscale("log")
+#         plt.yscale("log")
 
-    plt.show();
+#     plt.show();
 
 
     ## output
@@ -172,7 +172,7 @@ for name in names:
     elif name == "DROMY":
         comps = ["N", "E"]
     elif name == "ROMY":
-        comps = ["Z", "U", "V"]
+        comps = ["Z", "U", "V", "N", "E"]
     elif name == "FFBI":
         comps = [""]
 
