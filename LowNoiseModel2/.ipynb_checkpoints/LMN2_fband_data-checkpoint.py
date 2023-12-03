@@ -9,7 +9,7 @@
 
 from obspy import UTCDateTime
 from scipy.signal import welch
-from numpy import log10, zeros, pi, append, linspace, mean, median, array, where, transpose, shape, histogram, arange, append
+from numpy import log10, zeros, pi, append, linspace, median, array, where, transpose, shape, histogram, arange, append
 from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan
 from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm
@@ -105,7 +105,7 @@ def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
 
     return array(f_lower), array(f_upper), array(f_centers)
 
-def __get_band_means(freq, data, f_center, f_upper, f_lower):
+def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
     ## get frequency indices
     fl_idx, fu_idx = [], []
@@ -123,35 +123,35 @@ def __get_band_means(freq, data, f_center, f_upper, f_lower):
                     fu_idx.append(int(_i))
                     break
 
-    ## compute mean per band
-    psd_mean, fc, fu, fl = [], [], [], []
+    ## compute average per band
+    psd_avg, fc, fu, fl = [], [], [], []
     for _n, (ifl, ifu) in enumerate(zip(fl_idx, fu_idx)):
 
-        means = []
+        avg = []
         for _psd in data:
-            means.append(mean(_psd[ifl:ifu]))
-        psd_mean.append(array(means))
+            avg.append(median(_psd[ifl:ifu]))
+        psd_avg.append(array(avg))
         fc.append(f_center[_n])
         fu.append(f_upper[_n])
         fl.append(f_lower[_n])
 
-    psd_mean = array(psd_mean)
+    psd_avg = array(psd_avg)
 
 
     ## check up plot
-#     plt.figure(figsize=(15, 5))
+    plt.figure(figsize=(15, 5))
 
-#     for _j, dd in enumerate(psd_mean):
-#         plt.scatter(ones(len(dd))*fc[_j], dd, s=5)
-#         plt.xscale("log")
-#         plt.yscale("log")
+    for _j, dd in enumerate(psd_avg):
+        plt.scatter(ones(len(dd))*fc[_j], dd, s=5)
+        plt.xscale("log")
+        plt.yscale("log")
 
-#     plt.show();
+    plt.show();
 
 
     ## output
     out = {}
-    out['psd_means'] = psd_mean
+    out['psd_avg'] = psd_avg
     out['fcenter'] = array(fc)
     out['fupper'] = array(fu)
     out['flower'] = array(fl)
@@ -235,7 +235,7 @@ for name in names:
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, fband_type="one-third-octave", plot=False)
 
-            out0 = __get_band_means(ff, dat, f_center, f_upper, f_lower)
+            out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
 
             ## create and fill data frame
             df_out = DataFrame()
@@ -243,7 +243,7 @@ for name in names:
             df_out['dates'] = out0['dates']
 
             for _i, fc in enumerate(out0['fcenter']):
-                df_out[round(fc, 5)] = out0['psd_means'][_i]
+                df_out[round(fc, 5)] = out0['psd_avg'][_i]
 
             ## store as pickle file
             df_out.to_pickle(config['path_to_outdata']+config['station']+app+".pkl")
