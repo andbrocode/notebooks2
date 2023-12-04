@@ -404,14 +404,14 @@ def main(config):
             n_over = int(config['toverlap']*n_seg)
 
             ## compute coherence
-            ff_coh, coh = coherence(_st1[0].data, _st2[0].data, fs=df, window='hann', nperseg=n_seg, noverlap=n_over)
+            ff_coh, _coh = coherence(_st1[0].data, _st2[0].data, fs=df, window='hann', nperseg=n_seg, noverlap=n_over)
 
-            cohs[n] = coh
+            cohs[n] = _coh
 
             ## compute cross spectral density
-            ff_csd, csd = csd(_st1[0].data, _st2[0].data, fs=df, window='hann', nperseg=n_seg, noverlap=n_over)
+            ff_csd, _csd = csd(_st1[0].data, _st2[0].data, fs=df, window='hann', nperseg=n_seg, noverlap=n_over)
 
-            csds[n] = csd
+            csds[n] = _csd
 
         ## save psds
         out = {}
