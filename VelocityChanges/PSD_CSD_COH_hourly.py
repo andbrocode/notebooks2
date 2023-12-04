@@ -112,9 +112,9 @@ config['cha1'] = config['seed1'].split(".")[3]
 config['cha2'] = config['seed2'].split(".")[3]
 
 config['outname1'] = f"{config['year']}_{config['sta1']}_{config['interval_seconds']}"
-config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{config['interval_seconds']}"
+config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
 config['outname3'] = f"{config['year']}_{config['sta1']}_{config['sta2']}_coh_{config['interval_seconds']}"
-config['outname4'] = f"{config['year']}_{config['sta1']}_{config['sta2'][2]}_csd_{config['interval_seconds']}"
+config['outname4'] = f"{config['year']}_{config['sta1']}_{config['sta2']}_csd_{config['interval_seconds']}"
 
 config['outpath1'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}/"
 config['outpath2'] = data_path+f"VelocityChanges/data/PSDS/{config['sta2']}/"
