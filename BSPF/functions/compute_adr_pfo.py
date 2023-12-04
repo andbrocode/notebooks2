@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 
 ######################
@@ -253,8 +252,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             stats = stats.remove_sensitivity(inventory)
             # stats.remove_response(output="VEL", water_level=10)
 
-            ## sorting
-            # stats = stats.sort().reverse()
 
             #correct mis-alignment
             # stats[0].data, stats[1].data, stats[2].data = rotate2zne(stats[0],0,-90,
@@ -262,8 +259,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             #                                                          stats[2],90+config['subarray_misorientation'][config['subarray_stations'].index(station)],0)
 
 
-            ## trim to interval
-#             stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
             ## rotate to ZNE
             try:
@@ -272,34 +267,25 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
                 print(f" -> {sta} failed to rotate to ZNE")
                 continue
 
-            ## rename channels
-            # if net == "II" and sta == "PFO":
-            #     for tr in stats:
-            #         if tr.stats.channel[-1] == "1":
-            #             tr.stats.channel = str(tr.stats.channel).replace("1", "E")
-            #         if tr.stats.channel[-1] == "2":
-            #             tr.stats.channel = str(tr.stats.channel).replace("2", "N")
 
-
-            stats = stats.resample(40, no_filter=False)
-
-            if config['reference_station'] == "PY.PFOIX":
-                # stats = stats.resample(40, no_filter=False)
-                stats = stats.trim(config['tbeg']-30, config['tend']+30)
-
+            # if station == "PY.PFOIX":
+            #     stats = stats.decimate(5, no_filter=True) ## 200 -> 40 Hz
 
             if station == config['reference_station']:
-                ref_station = stats.copy()
+                ref_station = stats.copy().resample(40, no_filter=False)
 
             st += stats
             config['subarray'].append(f"{stats[0].stats.network}.{stats[0].stats.station}")
 
+        ## trim to interval
+        # stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
+
         st = st.sort()
 
-        ## update subarray stations if data could not be requested for all stations
-        # if len(st) < 3*len(config['subarray_stations']):
-        #     config['subarray_stations'] = [f"{tr.stats.network}.{tr.stats.station}" for tr in st]
-        #     config['subarray_stations'] = list(set(config['subarray_stations']))
+        ## resample all to 40 Hz
+        st = st.resample(40, no_filter=False)
+
+
         config['subarray_stations'] = config['subarray']
 
         print(f" -> obtained: {len(st)/3} of {len(config['subarray_stations'])} stations!") if config['print_details'] else None
@@ -349,7 +335,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
         rotsa[2].stats.station='RPFO'
 
         rotsa = rotsa.detrend('linear')
-
 
     #     gradient_ZNE = result['ts_ptilde'] #u1,1 u1,2 u1,3 u2,1 u2,2 u2,3
     #     u_ee=gradient_ZNE[:,0]
@@ -403,7 +388,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## get inventory and coordinates/distances
     inv, config['coo'] = __get_inventory_and_distances(config)
 
-
     ## processing
     st.detrend("demean")
 
@@ -411,6 +395,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
         st.taper(0.01)
         st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
         print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
+
 
     ## plot station coordinates for check up
     # import matplotlib.pyplot as plt
@@ -437,21 +422,27 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
 
 
+    ## get mean starttime
+    tstart = [tr.stats.starttime - tbeg for tr in st]
+    for tr in rot:
+        tr.stats.starttime = tbeg + np.mean(tstart)
+
+
     ## trim to requested interval
-#     rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
     rot = rot.trim(config['tbeg'], config['tend'])
 
+    print(rot)
 
     ## plot status of data retrieval for waveforms of array stations
     if status:
 
-        fig, ax = plt.subplots(1, 1, figsize=(15,5))
+        fig, ax = plt.subplots(1, 1, figsize=(15, 5))
 
         cmap = matplotlib.colors.ListedColormap(['darkred', 'green'])
 
         ax.pcolormesh(np.array([config['stations_loaded'], np.ones(len(config['stations_loaded']))*0.5]).T, cmap=cmap, edgecolors="k", lw=0.5)
 
-        ax.set_yticks(np.arange(0,len(config['subarray_sta']))+0.5, labels=config['subarray_sta'])
+        ax.set_yticks(np.arange(0, len(config['subarray_sta']))+0.5, labels=config['subarray_sta'])
 
         # ax.set_xlabel("Event No.",fontsize=12)
         ax.set_xticks([])
@@ -460,9 +451,9 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
         plt.show();
 
 
-    ## stop times      
+    ## stop times
     stop_timer1 = timeit.default_timer()
-    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60,2)} minutes")
+    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60, 2)} minutes")
 
     if status:
         return rot, config['stations_loaded']
