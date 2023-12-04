@@ -283,7 +283,7 @@ def main(config):
 
         ## conversion
         if "J" in st1[0].stats.channel:
-            st1 = st1.remove_sensitivity(inv2)
+            st1 = st1.remove_sensitivity(inv1)
 
         if "J" in st2[0].stats.channel:
             st2 = st2.remove_sensitivity(inv2)
