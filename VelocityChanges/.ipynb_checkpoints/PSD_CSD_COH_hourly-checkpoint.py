@@ -73,10 +73,10 @@ config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-10-23")
 
 config['path_to_data1'] = archive_path+f"romy_archive/"
-config['path_to_inv1'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_RLAS.xml"
+config['path_to_inv1'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_RLAS"
 
 config['path_to_data2'] = archive_path+f"romy_archive/"
-config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_ROMY.xml"
+config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_ROMY"
 
 
 config['interval_seconds'] = 3600 ## in seconds
