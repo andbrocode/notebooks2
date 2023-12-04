@@ -118,8 +118,8 @@ config['outname4'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{co
 
 config['outpath1'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}/"
 config['outpath2'] = data_path+f"VelocityChanges/data/PSDS/{config['sta2']}/"
-config['outpath3'] = data_path+f"VelocityChanges/data/PSDS/{config['sta2']}_coh/"
-config['outpath4'] = data_path+f"VelocityChanges/data/PSDS/{config['sta2']}_csd/"
+config['outpath3'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}_{config['sta2']}_coh/"
+config['outpath4'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}_{config['sta2']}_csd/"
 
 
 # In[] ___________________________________________________________
