@@ -1,9 +1,11 @@
-def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', fmax=None, normalize=True, plot=True):
+def __compute_cwt(times, arr1, tdelta, datalabel="dat1", cmap_scale="lin", period=False, tscale='sec', fmax=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance, cwt
     from numpy import std, nanmean, nan, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape
-    import matplotlib.pyplot as plt
     from numpy import sum as npsum
+
+    import matplotlib.colors as colors
+    import matplotlib.pyplot as plt
 
     times = array(times, dtype='float64')
     arr1 = array(arr1, dtype='float64')
@@ -127,28 +129,55 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
 
         if period:
-            ca2 = ax2.pcolormesh(
-                                times,
-                                pp_cwt,
-                                cwt_power,
-                                vmin=min(reshape(cwt_power, cwt_power.size)),
-                                vmax=max(reshape(cwt_power, cwt_power.size)),
-                                )
+            if cmap_scale == "log":
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    pp_cwt,
+                                    cwt_power,
+                                    norm=colors.LogNorm(min(reshape(cwt_power, cwt_power.size)), vmax=max(reshape(cwt_power, cwt_power.size))),
+                                    rasterized=True,
+                                    )
 
-            ax3.plot(global_mean_cwt_f, pp_cwt, color="black", label="global mean power")
-            ax3.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
+                ax3.plot(global_mean_cwt_f, pp_cwt, color="black", label="global mean power")
+                # ax3.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
+            else:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    pp_cwt,
+                                    cwt_power,
+                                    vmin=min(reshape(cwt_power, cwt_power.size)),
+                                    vmax=max(reshape(cwt_power, cwt_power.size)),
+                                    rasterized=True,
+                                    )
+
+                ax3.plot(global_mean_cwt_f, pp_cwt, color="black", label="global mean power")
+                # ax3.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
 
         else:
-            ca2 = ax2.pcolormesh(
-                                times,
-                                ff_cwt,
-                                cwt_power,
-                                vmin=min(reshape(cwt_power, cwt_power.size)),
-                                vmax=max(reshape(cwt_power, cwt_power.size)),
-                                )
+            if cmap_scale == "log":
+
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    ff_cwt,
+                                    cwt_power,
+                                    norm=colors.LogNorm(min(reshape(cwt_power, cwt_power.size)), vmax=max(reshape(cwt_power, cwt_power.size))),
+                                    rasterized=True,
+                                    )
+                ax3.plot(global_mean_cwt_f, ff_cwt, color="black", label="global mean power")
+                # ax3.plot(global_sum_cwt_f, ff_cwt, color="darkred", label="global sum power")
+
+            else:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    ff_cwt,
+                                    cwt_power,
+                                    vmin=min(reshape(cwt_power, cwt_power.size)),
+                                    vmax=max(reshape(cwt_power, cwt_power.size)),
+                                    rasterized=True,
+                                    )
 
             ax3.plot(global_mean_cwt_f, ff_cwt, color="black", label="global mean power")
-            ax3.plot(global_sum_cwt_f, ff_cwt, color="darkred", label="global sum power")
+            # ax3.plot(global_sum_cwt_f, ff_cwt, color="darkred", label="global sum power")
 
         if period:
             ax2.plot(times, cone_p, color="white", ls="--")
