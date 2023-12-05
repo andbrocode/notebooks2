@@ -26,6 +26,8 @@ from scipy.signal import coherence, welch, csd
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
 
+from functions.get_xwt import __compute_cross_wavelet_transform
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -348,6 +350,7 @@ def main(config):
                     psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
                     csds = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    xwts = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
                     # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
@@ -357,6 +360,7 @@ def main(config):
                     psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
                     csds = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    xwts = zeros([len(times), int(config.get('nperseg')/2)+1])
 
 
             ## compute power spectra
@@ -400,7 +404,8 @@ def main(config):
             ## compute coherence
             _N = len(_st1[0].data)
             df = _st1[0].stats.sampling_rate
-
+            dt = _st1[0].stats.delta
+            
             t_seg = config['tseconds']
             n_seg = int(df*t_seg) if int(df*t_seg) < _N else _N
             n_over = int(config['toverlap']*n_seg)
@@ -415,6 +420,16 @@ def main(config):
 
             csds[n] = _csd
 
+            ## compute cross wavelet transform
+            out = __compute_cross_wavelet_transform(_st1[0].times(), _st1[0].data, _st2[0].data, dt,
+                                                    datalabels=["ROMY", "RLAS"],
+                                                    xscale="log",
+                                                    plot=False,
+                                                   )
+            ff_xwt = out['frequencies']
+            xwts[n] = out['global_mean_xwt']
+            
+            
         ## save psds
         out = {}
         out['frequencies'] = f1
@@ -436,6 +451,13 @@ def main(config):
         out = {}
         out['frequencies'] = ff_coh
         out['coherence'] = cohs
+
+        __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        
+        ## store cross wavelet transform
+        out = {}
+        out['frequencies'] = ff_xwt
+        out['coherence'] = xwts
 
         __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
