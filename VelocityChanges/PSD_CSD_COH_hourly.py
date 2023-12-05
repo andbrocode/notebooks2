@@ -117,11 +117,13 @@ config['outname1'] = f"{config['year']}_{config['sta1']}_{config['interval_secon
 config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
 config['outname3'] = f"{config['year']}_{config['sta1']}_{config['sta2']}_coh_{config['interval_seconds']}"
 config['outname4'] = f"{config['year']}_{config['sta1']}_{config['sta2']}_csd_{config['interval_seconds']}"
+config['outname5'] = f"{config['year']}_{config['sta1']}_{config['sta2']}_xwt_{config['interval_seconds']}"
 
 config['outpath1'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}/"
 config['outpath2'] = data_path+f"VelocityChanges/data/PSDS/{config['sta2']}/"
 config['outpath3'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}_{config['sta2']}_coh/"
 config['outpath4'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}_{config['sta2']}_csd/"
+config['outpath5'] = data_path+f"VelocityChanges/data/PSDS/{config['sta1']}_{config['sta2']}_xwt/"
 
 
 # In[] ___________________________________________________________
@@ -430,20 +432,20 @@ def main(config):
             ff_xwt = out['frequencies']
             xwts.append(out['global_mean_xwt'])
             
-            
+
         ## save psds
         out = {}
         out['frequencies'] = f1
         out['psd'] = psds1
-        
+
         # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         __save_to_pickle(out, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-        
+
         out = {}
         out['frequencies'] = f2
         out['psd'] = psds2
-        
+
         # __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         __save_to_pickle(out, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
@@ -454,13 +456,7 @@ def main(config):
         out['coherence'] = cohs
 
         __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
-        
-        ## store cross wavelet transform
-        out = {}
-        out['frequencies'] = ff_xwt
-        out['coherence'] = array(xwts)
 
-        __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         ## store cross spectral density
         out = {}
@@ -469,6 +465,12 @@ def main(config):
 
         __save_to_pickle(out, config['outpath4'], f"{config['outname4']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
+        ## store cross wavelet transform
+        out = {}
+        out['frequencies'] = ff_xwt
+        out['coherence'] = array(xwts)
+
+        __save_to_pickle(out, config['outpath5'], f"{config['outname5']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         ## add date to dates
         dd.append(str(date).split(" ")[0].replace("-", ""))
