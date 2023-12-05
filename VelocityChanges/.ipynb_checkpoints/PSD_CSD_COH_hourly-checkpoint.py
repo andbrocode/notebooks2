@@ -351,6 +351,7 @@ def main(config):
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
                     csds = zeros([len(times), int(config.get('nperseg')/2)+1])
                     xwts = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    xwts = []
 
                 elif config['mode'] == "multitaper":
                     # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
@@ -427,7 +428,7 @@ def main(config):
                                                     plot=False,
                                                    )
             ff_xwt = out['frequencies']
-            xwts[n] = out['global_mean_xwt']
+            xwts.append(out['global_mean_xwt'])
             
             
         ## save psds
@@ -457,7 +458,7 @@ def main(config):
         ## store cross wavelet transform
         out = {}
         out['frequencies'] = ff_xwt
-        out['coherence'] = xwts
+        out['coherence'] = array(xwts)
 
         __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
