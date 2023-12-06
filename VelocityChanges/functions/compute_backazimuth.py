@@ -74,8 +74,10 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         #         tr.data *= -1
 
     elif wave_type == "rayleigh":
-        ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
-        ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
+        # ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
+        # ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
+        ACC = st_acc.copy()
+        ROT = st_rot.copy()
 
     ## _______________________________
     ## get event if not provided
@@ -167,6 +169,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                     print(f"\n -> using {wave_type} waves for estimation ...")
 
                 ## rotate NE to RT
+
                 R, T = rotate_ne_rt(ROT.select(channel='*N')[0].data,
                                     ROT.select(channel='*E')[0].data,
                                     backas[i_deg]
@@ -215,7 +218,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         plt.subplots_adjust(hspace=0.1)
 
         ## parameters
-        font = 18
+        font = 12
+
         acc_scaling, acc_unit = 1e3, "mm/s$^2$"
         rot_scaling, rot_unit = 1e6, r"$\mu$rad/s"
 
@@ -279,19 +283,19 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         t1, t2 = str(config['tbeg'].time).split(".")[0], str(config['tend'].time).split(".")[0]
         try:
             if flim[0] is not None and flim[1] is not None:
-                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km | {flim[0]}-{flim[1]} Hz")
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km | {flim[0]}-{flim[1]} Hz", fontsize=font-1)
             else:
-                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km")
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Epicentral Distance = {edist} km", fontsize=font-1)
         except:
             try:
-                ax[0].set_title(f" {date} | {t1} - {t2} | {flim[0]}-{flim[1]} Hz  UTC")
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC | Twin = {config['win_length_sec']} s | {flim[0]}-{flim[1]} Hz | {round(1/flim[1], 1)}-{round(1/flim[0],1)} s", fontsize=font-1)
             except:
-                ax[0].set_title(f" {date} | {t1} - {t2} UTC")
+                ax[0].set_title(f" {date} | {t1} - {t2} UTC", fontsize=font-1)
 
         ## tune tick size
         for i in range(3):
-            ax[i].tick_params(axis="y", labelsize=13)
-            ax[i].tick_params(axis="x", labelsize=13)
+            ax[i].tick_params(axis="y", labelsize=font-1)
+            ax[i].tick_params(axis="x", labelsize=font-1)
             ax[i].set_xlim(time[0], time[-1])
 
         ## add legends
@@ -305,7 +309,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ## add colorbar
         cax = ax[2].inset_axes([1.01, 0., 0.02, 1])
         cb1 = plt.colorbar(im, ax=ax[2], cax=cax)
-        cb1.set_label("CC Coefficient", fontsize=14)
+        cb1.set_label("CC Coefficient", fontsize=font)
 
         plt.show();
         return fig
