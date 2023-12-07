@@ -54,7 +54,7 @@ config = {}
 config['year'] = 2023
 
 
-config['seed1'] = "BW.FFBI..BDO"
+config['seed1'] = "BW.FFBI..BDF"  ## F = infrasound | O = absolute
 
 if len(sys.argv) > 1:
     config['seed2'] = sys.argv[1]
@@ -67,7 +67,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
-config['date2'] = UTCDateTime(f"{config['year']}-10-23")
+config['date2'] = UTCDateTime(f"{config['year']}-11-30")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -88,14 +88,14 @@ config['interval_overlap'] = 0  ## in seconds
 
 ## __________________________
 ## choose psd method
-config['mode'] = "welch"  ## "multitaper" | "welch"
+config['mode'] = "multitaper"  ## "multitaper" | "welch"
 
 ## __________________________
 ## set welch and coherence settings
 
 config['taper'] = 'hann'
-config['tseconds'] = 1800 ## seconds
-config['toverlap'] = 0.75
+config['tseconds'] = 3600 ## seconds
+config['toverlap'] = 0 ## 0.75
 config['nfft'] = None
 config['detrend'] = 'constant'
 config['scaling'] = 'density'
@@ -115,9 +115,9 @@ config['sta2'] = config['seed2'].split(".")[1]
 config['cha1'] = config['seed1'].split(".")[3]
 config['cha2'] = config['seed2'].split(".")[3]
 
-config['outname1'] = f"{config['year']}_{config['sta1']}_{config['interval_seconds']}"
-config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{config['interval_seconds']}"
-config['outname3'] = f"{config['year']}_{config['sta2']}_{config['cha2'][2]}_{config['interval_seconds']}"
+config['outname1'] = f"{config['year']}_{config['sta1']}_{config['cha1']}_{config['interval_seconds']}"
+config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
+config['outname3'] = f"{config['year']}_{config['sta1']}_{config['cha1']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
 
 config['outpath1'] = data_path+f"LNM2/PSDS/{config['sta1']}/"
 config['outpath2'] = data_path+f"LNM2/PSDS/{config['sta2']}/"
@@ -130,16 +130,17 @@ confTilt = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/", "tiltmeter.conf")
 # In[] ___________________________________________________________
 '''---- define methods ----'''
 
-def __multitaper_psd(arr, dt, n_win=5):
+def __multitaper_psd(arr, dt, n_win=5, time_bandwidth=4.0):
 
     import multitaper as mt
 
-    out_psd = mt.MTSpec(arr, nw=n_win, kspec=0, dt=dt)
+    out_psd = mt.MTSpec(arr, nw=time_bandwidth, kspec=n_win, dt=dt, iadapt=0)
 
     _f, _psd = out_psd.rspec()
 
     f = _f.reshape(_f.size)
     psd = _psd.reshape(_psd.size)
+
 
     return f, psd
 
@@ -244,21 +245,12 @@ def main(config):
         config['tend'] = UTCDateTime(date) + 86400 + 1
 
         try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
-            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg'], config['tend'])
+            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-10, config['tend']+10)
+            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-10, config['tend']+10)
         except:
             print(f" -> failed to load data ...")
             continue
-
-
-
-        if len(st1) == 0 or len(st2) == 0:
-            print(st1, st2)
-
-        if len(st1) > 1:
-            st1.merge()
-        if len(st2) > 1:
-            st2.merge()
+            
 
 
         ## read inventories
@@ -271,9 +263,11 @@ def main(config):
 
         if "ROMY" in config['seed2'] and "Z" not in config['seed2']:
             try:
-                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg'], config['tend'])
-                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg'], config['tend'])
-                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg'], config['tend'])
+                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-10, config['tend']+10)
+                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-10, config['tend']+10)
+                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-10, config['tend']+10)
+
+                print(_stU, _stV, _stZ)
 
                 ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
                 ori_u = inv2.get_orientation("BW.ROMY..BJU")
@@ -300,21 +294,35 @@ def main(config):
                 print(e)
                 print(f" -> failed to rotate ROMY ...")
                 continue
+            
+        
+        if len(st1) > 1:
+            st1.merge()
+        if len(st2) > 1:
+            st2.merge()
 
+
+        if len(st1) == 0 or len(st2) == 0:
+            print(st1)
+            print(st2)
+            continue
 
         ## conversion
         if "O" in st1[0].stats.channel:
 
             if config['unit'] == "Pa":
                 for tr in st1:
-                    tr.data = tr.data *1.589e-6 *1e5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
+                    tr.data = tr.data *1.589e-6 *1e5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005 = 1 mV/hPa
             elif config['unit'] == "hPa":
                 for tr in st1:
-                    tr.data = tr.data *1.589e-6 *1e3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 1 mV/hPa
+                    tr.data = tr.data *1.589e-6 *1e3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005 = 1 mV/hPa
+
+            
 
         elif "F" in st1[0].stats.channel:
-            for tr in st1:
-                tr.data = tr.data *1.589e-6 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 VPa
+#            for tr in st1:
+#                tr.data = tr.data *1.589e-6 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 V/Pa
+            st1 = st1.remove_response(inv1, water_level=10)
 
         if "J" in st2[0].stats.channel:
             st2 = st2.remove_sensitivity(inv2)
@@ -330,19 +338,21 @@ def main(config):
             st1 = st1.split()
             st2 = st2.split()
 
-            st1 = st1.detrend("linear")
-            st2 = st2.detrend("linear")
+            st1 = st1.trim(config['tbeg'], config['tend'])
+            st2 = st2.trim(config['tbeg'], config['tend'])
 
-            st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
+#            st1 = st1.detrend("linear")
+#            st2 = st2.detrend("linear")
+
+#            st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
+            st1 = st1.resample(20.0, no_filter=False)
+            st2 = st2.resample(20.0, no_filter=False)
 
             if "DROMY" in config['seed2']:
 
                 st1 = st1.decimate(2, no_filter=False) ## 20 -> 10 Hz
                 st1 = st1.decimate(2, no_filter=False) ## 10 -> 5 Hz
                 st1 = st1.decimate(5, no_filter=False) ## 5 -> 1 Hz
-
-            # st1 = st1.filter("highpass", freq=1e-4, corners=4, zerophase=True)
-            # st2 = st2.filter("highpass", freq=1e-4, corners=4, zerophase=True)
 
             st1 = st1.merge()
             st2 = st2.merge()
@@ -363,8 +373,8 @@ def main(config):
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
 
-        # print(st1)
-        # print(st2)
+        print(st1)
+        print(st2)
 
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(times):

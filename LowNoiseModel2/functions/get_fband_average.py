@@ -46,7 +46,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
         ## avoid fmin = zero
         if fmin == 0:
-            print(f" -> set fmin to 1e-10 instead of 0")
+            # print(f" -> set fmin to 1e-10 instead of 0")
             fmin = 1e-10
 
         f_lower, f_upper, f_centers = [], [], []

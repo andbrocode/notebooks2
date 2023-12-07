@@ -39,7 +39,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1 ,t2 = "2023-09-23", "2023-10-22"
+t1 ,t2 = "2023-09-23", "2023-11-30"
 
 
 names = ["FFBI", "ROMY", "FUR", "DROMY"]

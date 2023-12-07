@@ -6,7 +6,7 @@
 
 # ## Load Libraries
 
-# In[ ]:
+# In[1]:
 
 
 from andbro__querrySeismoData import __querrySeismoData
@@ -22,11 +22,12 @@ from pathlib import Path
 from scipy.signal import welch
 
 import os
+import sys
 import pickle
 import matplotlib.pyplot as plt
 
 
-# In[ ]:
+# In[2]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -39,7 +40,7 @@ elif os.uname().nodename == 'kilauea':
     archive_path = '/import/freenas-ffb-01-data/'
 
 
-# In[ ]:
+# In[3]:
 
 
 def __get_minimal_psd(psds):
@@ -55,7 +56,7 @@ def __get_minimal_psd(psds):
     return min_psd
 
 
-# In[ ]:
+# In[4]:
 
 
 def __get_median_psd(psds):
@@ -71,7 +72,7 @@ def __get_median_psd(psds):
     return med_psd
 
 
-# In[ ]:
+# In[5]:
 
 
 def __get_mean_psd(psds):
@@ -87,7 +88,7 @@ def __get_mean_psd(psds):
     return mean_psd
 
 
-# In[ ]:
+# In[6]:
 
 
 def __get_minimum_psd(psds):
@@ -106,7 +107,7 @@ def __get_minimum_psd(psds):
     return psds[idx]
 
 
-# In[ ]:
+# In[7]:
 
 
 def __get_percentiles(arr):
@@ -124,7 +125,7 @@ def __get_percentiles(arr):
     return percentiles_lower, percentiles_upper
 
 
-# In[ ]:
+# In[8]:
 
 
 def __load_psds(file, config):
@@ -173,7 +174,7 @@ def __load_psds(file, config):
     return df
 
 
-# In[ ]:
+# In[9]:
 
 
 def __get_array_from_dataframe(df):
@@ -193,7 +194,7 @@ def __get_array_from_dataframe(df):
     return array(psds)
 
 
-# In[ ]:
+# In[10]:
 
 
 # def __remove_noisy_psds(df, threshold_mean=1e-13):
@@ -212,7 +213,7 @@ def __get_array_from_dataframe(df):
 #     return df
 
 
-# In[ ]:
+# In[11]:
 
 
 # os.listdir( f"{root_path}ROMY/RotationSpectra/data/" )
@@ -220,7 +221,7 @@ def __get_array_from_dataframe(df):
 
 # ## Configurations
 
-# In[ ]:
+# In[12]:
 
 
 ## _________________________________________________________
@@ -257,7 +258,7 @@ config['frequency_limits'] = [1/config['period_limits'][1], 1/config['period_lim
 
 # ## Load as Arrays
 
-# In[ ]:
+# In[13]:
 
 
 def __load_data_files(config, path):
@@ -289,7 +290,7 @@ def __load_data_files(config, path):
     return array(psds_all), times
 
 
-# In[ ]:
+# In[14]:
 
 
 ROMY_Z, ttimes_Z = __load_data_files(config, config['inpath']+config['inname']+"/".replace("Z","Z"))
@@ -298,7 +299,7 @@ fff_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].
 ttimes_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_times_axis.pkl", 'rb'))
 
 
-# In[ ]:
+# In[15]:
 
 
 RLAS_Z, times_Z = __load_data_files(config, (config['inpath']+config['inname']+"/").replace('ROMY-Z','RLAS-Z'))
@@ -307,13 +308,13 @@ ff_Z = pickle.load(open(f"{config['inpath'].replace('ROMY-Z','RLAS-Z')}{config['
 times_Z = pickle.load(open(f"{config['inpath'].replace('Z','Z')}{config['inname'].replace('Z','Z')}_times_axis.pkl", 'rb'))
 
 
-# In[ ]:
+# In[16]:
 
 
 # shape(RLAS_Z), shape(ff_Z), shape(times_Z), shape(ROMY_Z), shape(fff_Z), shape(ttimes_Z)
 
 
-# In[ ]:
+# In[17]:
 
 
 def __cut_frequencies_array(arr, freqs, fmin, fmax):
@@ -329,7 +330,7 @@ def __cut_frequencies_array(arr, freqs, fmin, fmax):
     return pp, ff
 
 
-# In[ ]:
+# In[18]:
 
 
 ROMY_Z, fff_Z = __cut_frequencies_array(ROMY_Z, fff_Z, config['frequency_limits'][0], config['frequency_limits'][1])
@@ -338,7 +339,7 @@ RLAS_Z, ff_Z = __cut_frequencies_array(RLAS_Z, ff_Z, config['frequency_limits'][
 
 # ## Remove Noisy PSDs
 
-# In[ ]:
+# In[19]:
 
 
 def __remove_noisy_psds(arr, times, threshold_mean=1e-16):
@@ -375,14 +376,14 @@ def __remove_noisy_psds(arr, times, threshold_mean=1e-16):
     return arr, times
 
 
-# In[ ]:
+# In[20]:
 
 
 ROMY_Z, ttimes_Z = __remove_noisy_psds(ROMY_Z, ttimes_Z, threshold_mean=config['thres_romy'])
 RLAS_Z, times_Z = __remove_noisy_psds(RLAS_Z, times_Z, threshold_mean=config['thres_rlas'])
 
 
-# In[ ]:
+# In[21]:
 
 
 def __write_stats_mod(config, ff, arr, comp):
@@ -402,7 +403,7 @@ def __write_stats_mod(config, ff, arr, comp):
     out_df.to_pickle(f"{config['inpath'].replace('ROMY-Z',comp)}{config['inname'].replace('ROMY-Z',comp)}_stats_mod.pkl")
 
 
-# In[ ]:
+# In[22]:
 
 
 # __write_stats_mod(config, fff_Z, ROMY_Z, "ROMY-Z")
@@ -413,7 +414,7 @@ def __write_stats_mod(config, ff, arr, comp):
 
 # ### Plot Version 1
 
-# In[ ]:
+# In[23]:
 
 
 def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
@@ -478,7 +479,7 @@ def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
 
     axes[NN-1].set_xlabel("Days of 2019", fontsize=font, labelpad=-1)
 
-    new_ticks = [int(round(t/24,0)) for t in axes[NN-1].get_xticks()]
+    new_ticks = [int(round(t/24, 0)) for t in axes[NN-1].get_xticks()]
     axes[NN-1].set_xticklabels(new_ticks)
 
     ## panel labels
@@ -490,8 +491,8 @@ def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
     axes[1].text(.99, .99, f'G-ring Z', ha='right', va='top', transform=axes[1].transAxes, fontsize=font)
 
 
-    axes[0].set_ylabel(r"Periods (s)", fontsize=font)
-    axes[1].set_ylabel(r"Periods (s)", fontsize=font)
+    axes[0].set_ylabel(r"Period (s)", fontsize=font)
+    axes[1].set_ylabel(r"Period (s)", fontsize=font)
 
     if one_colorbar:
         ## set joint colorbar
@@ -502,7 +503,7 @@ def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
     return fig
 
 
-# In[ ]:
+# In[24]:
 
 
 # fig = __makeplot_image_overview([fff_Z, ff_Z],
@@ -511,7 +512,7 @@ def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
 #                                 one_colorbar=True)
 
 
-# In[ ]:
+# In[25]:
 
 
 # __savefig(fig, outpath=config['outpath_figures'], outname=f"ringlaser_psdimage_final", mode="png", dpi=100)
@@ -519,7 +520,7 @@ def __makeplot_image_overview(ff, psds, times, one_colorbar=False):
 
 # ### Plot Version2
 
-# In[ ]:
+# In[26]:
 
 
 def __makeplot_image_overview2(ff, psds, times):
@@ -573,10 +574,12 @@ def __makeplot_image_overview2(ff, psds, times):
 
     im1 = ax1_1.pcolormesh( times[0], 1/ff[0], psds[0].T,
                             cmap=cmap,
+                            rasterized=True,
                             norm=colors.LogNorm(vmax=nanmax(psds[0]), vmin=nanmin(psds[0])*1e1),
                             )
     im2 = ax2_1.pcolormesh( times[1], 1/ff[1], psds[1].T,
                             cmap=cmap,
+                            rasterized=True,
                             norm=colors.LogNorm(vmax=nanmax(psds[1]), vmin=nanmin(psds[1])*1e1),
                             )
 
@@ -610,20 +613,22 @@ def __makeplot_image_overview2(ff, psds, times):
     ax2_1.set_xlabel("Days of 2019", fontsize=font, labelpad=1)
     ax2_2.set_xlabel(r"PSD (rad$^2$/s$^2$/$Hz$)", fontsize=font, labelpad=-1)
 
-    new_ticks = [int(round(t/24,0)) for t in ax2_1.get_xticks()]
+    new_ticks = [int(round(t/24, 0)) for t in ax2_1.get_xticks()]
     ax2_1.set_xticklabels(new_ticks)
 
 #     ## panel labels
-    ax1_1.text(.01, .99, '(a)', ha='left', va='top', transform=ax1_1.transAxes, fontsize=font+2)
-    ax2_1.text(.01, .99, '(b)', ha='left', va='top', transform=ax2_1.transAxes, fontsize=font+2)
+    # ax1_1.text(.01, .99, '(a)', ha='left', va='top', transform=ax1_1.transAxes, fontsize=font+2)
+    # ax2_1.text(.01, .99, '(b)', ha='left', va='top', transform=ax2_1.transAxes, fontsize=font+2)
+    ax1_1.text(-.1, .99, '(a)', ha='left', va='top', transform=ax1_1.transAxes, fontsize=font+2)
+    ax2_1.text(-.1, .99, '(b)', ha='left', va='top', transform=ax2_1.transAxes, fontsize=font+2)
 
 #     ## data labels
     array = name.split("_")[0]
     ax1_1.text(.99, .99, f'ROMY Z', ha='right', va='top', transform=ax1_1.transAxes, fontsize=font)
     ax2_1.text(.99, .99, f'G-ring Z', ha='right', va='top', transform=ax2_1.transAxes, fontsize=font)
 
-    ax1_1.set_ylabel(r"Periods (s)", fontsize=font)
-    ax2_1.set_ylabel(r"Periods (s)", fontsize=font)
+    ax1_1.set_ylabel(r"Period (s)", fontsize=font)
+    ax2_1.set_ylabel(r"Period (s)", fontsize=font)
 
 
     ## set individual colorbars
@@ -637,8 +642,8 @@ def __makeplot_image_overview2(ff, psds, times):
 #     cbar = fig.colorbar(im1, orientation='vertical', ax=[ax1_2, ax2_2], aspect=33, pad=0.05)
 #     cbar.set_label(r"PSD (rad$^2$/s$^2$/$Hz$)", fontsize=font-2, labelpad=-50)
 
-    plt.show();
-    fig.savefig("/home/andbro/Documents/ROMY/LowNoiseModel/SRL/figures/300dpi/"+"figure2.pdf", format="pdf", bbox_inches="tight", dpi=200, transparent=None)
+#    plt.show();
+    fig.savefig("/home/brotzer/Downloads/"+"figure2.pdf", format="pdf", bbox_inches="tight", dpi=20, transparent=None)
     # return fig
 
 
@@ -650,7 +655,7 @@ __makeplot_image_overview2([fff_Z, ff_Z],
                                 [ttimes_Z, times_Z],
                                 )
 
-
+sys.exit()
 # In[ ]:
 
 
@@ -731,9 +736,12 @@ def __makeplot_colorlines_overview(ff, psds, dates=None):
     axes[NN-1].set_xlabel("  Period (s)", fontsize=font, labelpad=-8)
 
     ## panel labels
-    axes[0].text(.01, .99, 'a)', ha='left', va='top', transform=axes[0].transAxes, fontsize=font+2)
-    axes[1].text(.01, .99, 'b)', ha='left', va='top', transform=axes[1].transAxes, fontsize=font+2)
-    axes[2].text(.01, .99, 'c)', ha='left', va='top', transform=axes[2].transAxes, fontsize=font+2)
+    # axes[0].text(.01, .99, 'a)', ha='left', va='top', transform=axes[0].transAxes, fontsize=font+2)
+    # axes[1].text(.01, .99, 'b)', ha='left', va='top', transform=axes[1].transAxes, fontsize=font+2)
+    # axes[2].text(.01, .99, 'c)', ha='left', va='top', transform=axes[2].transAxes, fontsize=font+2)
+    axes[0].text(-.08, .99, 'a)', ha='left', va='top', transform=axes[0].transAxes, fontsize=font+2)
+    axes[1].text(-.08, .99, 'b)', ha='left', va='top', transform=axes[1].transAxes, fontsize=font+2)
+    axes[2].text(-.08, .99, 'c)', ha='left', va='top', transform=axes[2].transAxes, fontsize=font+2)
 
 
     axes[0].set_ylabel(r"PSD$_{vertical}$ (rad$^2$/s$^2$/$Hz)$", fontsize=font)
