@@ -54,7 +54,7 @@ config = {}
 config['year'] = 2023
 
 
-config['seed1'] = "BW.FFBI..BDF"  ## F = infrasound | O = absolute
+config['seed1'] = "BW.FFBI..BDO"  ## F = infrasound | O = absolute
 
 if len(sys.argv) > 1:
     config['seed2'] = sys.argv[1]
@@ -241,8 +241,8 @@ def main(config):
 
 
         ## load data for the entire day
-        config['tbeg'] = UTCDateTime(date) - 1
-        config['tend'] = UTCDateTime(date) + 86400 + 1
+        config['tbeg'] = UTCDateTime(date)
+        config['tend'] = UTCDateTime(date) + 86400
 
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-10, config['tend']+10)
@@ -261,7 +261,7 @@ def main(config):
             print(f" -> failed to load inventory ...")
             continue
 
-        if "ROMY" in config['seed2'] and "Z" not in config['seed2']:
+        if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
             try:
                 _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-10, config['tend']+10)
                 _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-10, config['tend']+10)
@@ -294,13 +294,12 @@ def main(config):
                 print(e)
                 print(f" -> failed to rotate ROMY ...")
                 continue
-            
-        
+
+
         if len(st1) > 1:
             st1.merge()
         if len(st2) > 1:
             st2.merge()
-
 
         if len(st1) == 0 or len(st2) == 0:
             print(st1)
@@ -317,7 +316,7 @@ def main(config):
                 for tr in st1:
                     tr.data = tr.data *1.589e-6 *1e3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005 = 1 mV/hPa
 
-            
+
 
         elif "F" in st1[0].stats.channel:
 #            for tr in st1:
@@ -327,10 +326,10 @@ def main(config):
         if "J" in st2[0].stats.channel:
             st2 = st2.remove_sensitivity(inv2)
 
-        if "H" in st2[0].stats.channel:
+        elif "H" in st2[0].stats.channel:
             st2 = st2.remove_response(inv2, output="ACC", water_level=10)
 
-        if "A" in st2[0].stats.channel:
+        elif "A" in st2[0].stats.channel:
             st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
 
         ## Pre-Processing
@@ -338,24 +337,33 @@ def main(config):
             st1 = st1.split()
             st2 = st2.split()
 
-            st1 = st1.trim(config['tbeg'], config['tend'])
-            st2 = st2.trim(config['tbeg'], config['tend'])
 
-#            st1 = st1.detrend("linear")
-#            st2 = st2.detrend("linear")
+            if "BW.DROMY" in config['seed2']:
+                st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
+                st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-#            st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
-            st1 = st1.resample(20.0, no_filter=False)
-            st2 = st2.resample(20.0, no_filter=False)
+                st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
+                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
+                st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-            if "DROMY" in config['seed2']:
+                ## convert tilt to acceleration
+                for tr in st2:
+                    tr.data = tr.data*9.81
 
-                st1 = st1.decimate(2, no_filter=False) ## 20 -> 10 Hz
-                st1 = st1.decimate(2, no_filter=False) ## 10 -> 5 Hz
-                st1 = st1.decimate(5, no_filter=False) ## 5 -> 1 Hz
+            else:
+                # st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
+                st1 = st1.resample(20.0, no_filter=False)
+                st2 = st2.resample(20.0, no_filter=False)
+
 
             st1 = st1.merge()
             st2 = st2.merge()
+
+            st1 = st1.trim(config['tbeg'], config['tend'])
+            st2 = st2.trim(config['tbeg'], config['tend'])
 
         except Exception as e:
             print(e)
@@ -375,6 +383,12 @@ def main(config):
 
         print(st1)
         print(st2)
+
+
+        if len(st1[0].data) != len(st2[0].data):
+            print(" -> not sampe amount of samples!")
+            continue
+
 
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(times):
@@ -433,7 +447,6 @@ def main(config):
 
                 f2, psd2 = __multitaper_psd(_st2[0].data, _st2[0].stats.delta, n_win=config.get("n_taper"))
 
-#            print("psd: ", len(psd1), len(psd2))
             psds1[n] = psd1
             psds2[n] = psd2
 
@@ -453,32 +466,42 @@ def main(config):
 
 
         ## save psds
-        __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        out = {}
+        out['frequencies'] = f1
+        out['psd'] = psds1
 
-        __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+
+        out = {}
+        out['frequencies'] = f2
+        out['psd'] = psds2
+
+        __save_to_pickle(out, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        # __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
         ## save coherence
-#         out = {}
-#         out['frequencies'] = ff_coh
-#         out['coherence'] = cohs
+        out = {}
+        out['frequencies'] = ff_coh
+        out['coherence'] = cohs
 
-#         __save_to_pickle(out, config['outpath3'], f"Coherence_{str(date).split(' ')[0].replace('-','')}_hourly")
-        __save_to_pickle(cohs, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        # __save_to_pickle(cohs, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
         ## add date to dates
         dd.append(str(date).split(" ")[0].replace("-", ""))
 
     ## save config and frequencies
-    __save_to_pickle(config, config['outpath1'], f"{config['outname1']}_config")
-    __save_to_pickle(f1, config['outpath1'], f"{config['outname1']}_frequency_axis")
+#     __save_to_pickle(config, config['outpath1'], f"{config['outname1']}_config")
+#     __save_to_pickle(f1, config['outpath1'], f"{config['outname1']}_frequency_axis")
 
-    __save_to_pickle(config, config['outpath2'], f"{config['outname2']}_config")
-    __save_to_pickle(f2, config['outpath2'], f"{config['outname2']}_frequency_axis")
+#     __save_to_pickle(config, config['outpath2'], f"{config['outname2']}_config")
+#     __save_to_pickle(f2, config['outpath2'], f"{config['outname2']}_frequency_axis")
 
-    __save_to_pickle(config, config['outpath3'], f"{config['outname3']}_config")
-    __save_to_pickle(ff_coh, config['outpath3'], f"{config['outname3']}_frequency_axis")
+#     __save_to_pickle(config, config['outpath3'], f"{config['outname3']}_config")
+#     __save_to_pickle(ff_coh, config['outpath3'], f"{config['outname3']}_frequency_axis")
 
 
     print("\nDone\n")
