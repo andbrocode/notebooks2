@@ -92,6 +92,7 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
     # _ff[0] = 1e-21
 
         fig = plt.figure(figsize=(15, 5))
+
         cmap = plt.colormaps.get_cmap('viridis')
         cmap.set_under(color='white')
 
@@ -102,10 +103,11 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
         plt.yscale("log")
         plt.xscale("log")
 
-        plt.colorbar(cb)
+        cbar = plt.colorbar(cb)
+        cbar.set_label("Propability Density", labelpad=-55, fontsize=12)
 
-        plt.xlabel("Frequency (Hz)")
-        plt.ylabel("PSD")
+        plt.xlabel("Frequency (Hz)", fontsize=12)
+        plt.ylabel("PSD", fontsize=12)
 
         plt.xlim(ff[1], ff[-1])
 
