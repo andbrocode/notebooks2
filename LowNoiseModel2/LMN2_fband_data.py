@@ -52,12 +52,16 @@ def __load_data_file(path, file):
     from numpy import array
 
     psds_all = []
-    psds_hourly = read_pickle(path+file)
+    file = read_pickle(path+file)
 
-    for psd in psds_hourly:
+    psds = file['psd']
+    ff = file['frequencies']
+
+    for psd in psds:
         psds_all.append(psd)
 
-    return array(psds_all)
+    return ff, array(psds_all)
+
 
 def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
 
@@ -163,34 +167,37 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 ## ---------------------------------------
 ## load configurations
 
-apps = ["", "_coherence"]
+apps = ["", "BDF", "BDO"]
 
-for name in names:
+for name in tqdm(names):
 
     if name == "FUR":
-        comps = ["Z", "N", "E"]
+        comps = ["BHZ", "BHN", "BHE"]
     elif name == "DROMY":
-        comps = ["N", "E"]
+        comps = ["LAN", "LAE"]
     elif name == "ROMY":
-        comps = ["Z", "U", "V", "N", "E"]
+        comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
     elif name == "FFBI":
-        comps = [""]
+        comps = ["BDF", "BDO"]
 
     for comp in comps:
 
         for app in apps:
 
-
+            config = {}
             try:
-                if len(comp) != 0:
-                    config = pickle.load(open(path+name+app+"/"+f"{year}_{name}_{comp}_3600_config.pkl", 'rb'))
+
+                if apps == "BDO":
+                    config['filename'] = f"{name}{app}/{year}_FFBI_BDO_{name}_{comp}_3600"
+                    config['station'] = f"{name}"
+                elif apps == "BDF":
+                    config['filename'] = f"{name}{app}/{year}_FFBI_BDF_{name}_{comp}_3600"
+                    config['station'] = f"{name}"
+                else:
                     config['filename'] = f"{name}{app}/{year}_{name}_{comp}_3600"
                     config['station'] = f"{name}_{comp}"
-                else:
-                    config = pickle.load(open(path+name+app+"/"+f"{year}_{name}_3600_config.pkl", 'rb'))
-                    config['filename'] = f"{name}{app}/{year}_{name}_3600"
-                    config['station'] = f"{name}"
-            except:
+            except Exception as e:
+                # print(e)
                 continue
 
             config['path'] = path
@@ -208,18 +215,16 @@ for name in names:
 
             psds_medians_out, times_out = [], []
 
-            ff = pickle.load(open(config['path']+f"{config['filename']}_frequency_axis.pkl", 'rb'))
-
             dat, dates = [], []
             for jj, day in enumerate(date_range(d1, d2)):
 
 
                 day = str(day).split(" ")[0].replace("-", "")
 
-                print(f"{config['filename']}_{day}_hourly.pkl")
+                # print(f"{config['filename']}_{day}_hourly.pkl")
 
                 try:
-                    _dat = __load_data_file(path, f"{config['filename']}_{day}_hourly.pkl")
+                    ff, _dat = __load_data_file(path, f"{config['filename']}_{day}_hourly.pkl")
                     # _dat, _rejected = __remove_noisy_psds(_dat, threshold_mean=1e-15, ff=ff1, flim=0.1)
 
                 except Exception as e:
