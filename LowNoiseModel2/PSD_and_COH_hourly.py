@@ -15,12 +15,14 @@ import pickle
 import os
 import sys
 
+from tqdm import tqdm
 from obspy import UTCDateTime, read, read_inventory
 from obspy.signal.rotate import rotate2zne
 from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from scipy.signal import coherence, welch
+from multitaper import MTCross
 
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
@@ -67,7 +69,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-23")
-config['date2'] = UTCDateTime(f"{config['year']}-11-30")
+config['date2'] = UTCDateTime(f"{config['year']}-09-30")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -107,6 +109,8 @@ config['frequency_limits'] = None # (0, 0.05) # in Hz
 
 ## number of taper for multitaper to use
 config['n_taper'] = 5
+config['time_bandwith'] = 4.0
+config['mt_method'] = 2 ## 0 = adaptive, 1 = unweighted, 2 = weighted with eigenvalues
 
 
 config['sta1'] = config['seed1'].split(".")[1]
@@ -134,7 +138,7 @@ def __multitaper_psd(arr, dt, n_win=5, time_bandwidth=4.0):
 
     import multitaper as mt
 
-    out_psd = mt.MTSpec(arr, nw=time_bandwidth, kspec=n_win, dt=dt, iadapt=0)
+    out_psd = mt.MTSpec(arr, nw=time_bandwidth, kspec=n_win, dt=dt, iadapt=config['mt_method'])
 
     _f, _psd = out_psd.rspec()
 
@@ -230,10 +234,10 @@ def main(config):
         print(f" -> created {config['outpath2']}")
 
 
-    minimum_collection = []
-    minimal_collection = []
-    columns = []
-    medians, dd = [], []
+    # minimum_collection = []
+    # minimal_collection = []
+    # columns = []
+    # medians, dd = [], []
 
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
@@ -245,27 +249,35 @@ def main(config):
         config['tend'] = UTCDateTime(date) + 86400
 
         try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-10, config['tend']+10)
-            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-10, config['tend']+10)
+            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-1800, config['tend']+1800)
         except:
-            print(f" -> failed to load data ...")
+            print(f" -> failed to load data for {config['seed1']}...")
             continue
-            
-
+        try:
+            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-1800, config['tend']+1800)
+        except:
+            print(f" -> failed to load data for {config['seed2']} ...")
+            continue
 
         ## read inventories
         try:
             inv1 = read_inventory(config['path_to_inv1'])
+        except:
+            print(f" -> failed to load inventory {config['path_to_inv1']}...")
+            continue
+
+        try:
             inv2 = read_inventory(config['path_to_inv2'])
         except:
-            print(f" -> failed to load inventory ...")
+            print(f" -> failed to load inventory {config['path_to_inv2']}...")
             continue
+
 
         if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
             try:
-                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-10, config['tend']+10)
-                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-10, config['tend']+10)
-                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-10, config['tend']+10)
+                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-1800, config['tend']+1800)
+                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-1800, config['tend']+1800)
+                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-1800, config['tend']+1800)
 
                 print(_stU, _stV, _stZ)
 
@@ -354,9 +366,14 @@ def main(config):
                     tr.data = tr.data*9.81
 
             else:
-                # st1 = st1.decimate(2, no_filter=False) ## 40 -> 20 Hz
-                st1 = st1.resample(20.0, no_filter=False)
-                st2 = st2.resample(20.0, no_filter=False)
+                st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
+                st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
+
+                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                # st1 = st1.resample(20.0, no_filter=False)
+                # st2 = st2.resample(20.0, no_filter=False)
 
 
             st1 = st1.merge()
@@ -391,13 +408,12 @@ def main(config):
 
 
         ## run operations for time intervals
-        for n, (t1, t2) in enumerate(times):
+        for n, (t1, t2) in enumerate(tqdm(times)):
 
             ## trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
 
-#            print("st: ", _st1[0].data.size, _st2[0].data.size)
 
             if n == 0:
                 ## prepare lists
@@ -405,13 +421,14 @@ def main(config):
                     psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
                     psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+
                 elif config['mode'] == "multitaper":
                     # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
                     # psds2 = zeros([len(times), int((config['interval_seconds']*20))])
                     # cohs = zeros([len(times), int(config.get('nperseg')/2)])
                     psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
                     psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
-                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
 
 
             ## compute power spectra
@@ -441,57 +458,84 @@ def main(config):
                                 scaling=config.get('scaling'),
                                )
 
+                ## compute coherence
+                ff_coh, coh = coherence(_st1[0].data,
+                                        _st2[0].data,
+                                        fs=_st2[0].stats.sampling_rate,
+                                        window=config.get('taper'),
+                                        nperseg=config.get('nperseg'),
+                                        noverlap=config.get('noverlap')
+                                       )
+
+                cohs[n] = coh
+
             elif config['mode'] == "multitaper":
 
-                f1, psd1 = __multitaper_psd(_st1[0].data, _st1[0].stats.delta, n_win=config.get("n_taper"))
+                f1, psd1 = __multitaper_psd(_st1[0].data,
+                                            _st1[0].stats.delta,
+                                            n_win=config.get("n_taper"),
+                                            time_bandwidth=config['time_bandwith'],
+                                           )
 
-                f2, psd2 = __multitaper_psd(_st2[0].data, _st2[0].stats.delta, n_win=config.get("n_taper"))
+                f2, psd2 = __multitaper_psd(_st2[0].data,
+                                            _st2[0].stats.delta,
+                                            n_win=config.get("n_taper"),
+                                            time_bandwidth=config['time_bandwith'],
+                                           )
+
+                Pxy  = MTCross(psd1, psd2, wl=0.001)
+                N = Pxy.freq.size
+                ff_coh, coh = Pxy.freq[:,0][:N//2], Pxy.cohe[:,0][:N//2]
+
+                # print(ff_coh.size, coh.size, _st1[0].data.size, psd1.size)
+                # print(ff_coh[0], ff_coh[-1], f1[0], f1[-1])
 
             psds1[n] = psd1
             psds2[n] = psd2
-
-
-            ## compute coherence
-            _N = len(_st1[0].data)
-            df = _st1[0].stats.sampling_rate
-
-            t_seg = config['tseconds']
-            n_seg = int(df*t_seg) if int(df*t_seg) < _N else _N
-            n_over = int(config['toverlap']*n_seg)
-
-            ff_coh, coh = coherence(_st1[0].data, _st2[0].data, fs=df, window='hann', nperseg=n_seg, noverlap=n_over)
-
             cohs[n] = coh
 
 
 
-        ## save psds
-        out = {}
-        out['frequencies'] = f1
-        out['psd'] = psds1
 
-        __save_to_pickle(out, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        # plt.figure()
+        # plt.plot(_st1[0].times(), _st1[0].data)
+        # plt.figure()
+        # plt.plot(_st2[0].times(), _st2[0].data)
+        # plt.figure()
+        # plt.loglog(f1, psd1)
+        # plt.figure()
+        # plt.loglog(f2, psd2)
+        # plt.figure()
+        # plt.semilogx(ff_coh, coh)
+        # plt.show()
+
+        ## save psds
+        out1 = {}
+        out1['frequencies'] = f1
+        out1['psd'] = psds1
+
+        __save_to_pickle(out1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-        out = {}
-        out['frequencies'] = f2
-        out['psd'] = psds2
+        out2 = {}
+        out2['frequencies'] = f2
+        out2['psd'] = psds2
 
-        __save_to_pickle(out, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         # __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
         ## save coherence
-        out = {}
-        out['frequencies'] = ff_coh
-        out['coherence'] = cohs
+        out3 = {}
+        out3['frequencies'] = ff_coh
+        out3['coherence'] = cohs
 
-        __save_to_pickle(out, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out3, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         # __save_to_pickle(cohs, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
         ## add date to dates
-        dd.append(str(date).split(" ")[0].replace("-", ""))
+        # dd.append(str(date).split(" ")[0].replace("-", ""))
 
     ## save config and frequencies
 #     __save_to_pickle(config, config['outpath1'], f"{config['outname1']}_config")

@@ -20,6 +20,11 @@ import pickle
 import matplotlib.pyplot as plt
 
 from andbro__store_as_pickle import __store_as_pickle
+from functions.get_octave_bands import __get_octave_bands
+
+
+import warnings
+warnings.filterwarnings('ignore')
 
 ## ---------------------------------------
 
@@ -39,7 +44,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1 ,t2 = "2023-09-23", "2023-11-30"
+t1 ,t2 = "2023-09-23", "2023-09-30"
 
 
 names = ["FFBI", "ROMY", "FUR", "DROMY"]
@@ -52,9 +57,14 @@ def __load_data_file(path, file):
     from numpy import array
 
     psds_all = []
+
     file = read_pickle(path+file)
 
-    psds = file['psd']
+    try:
+        psds = file['psd']
+    except:
+        psds = file['coherence']
+
     ff = file['frequencies']
 
     for psd in psds:
@@ -63,51 +73,6 @@ def __load_data_file(path, file):
     return ff, array(psds_all)
 
 
-def __get_octave_bands(fmin, fmax, fband_type="octave", plot=False):
-
-    """
-    Computing octave / one-third-octave bands
-
-    Arguments:
-        - fmin:    (float) minimum center frequency
-        - fmax:    (float) maximum center frequency
-        - fband_type:    [octave] / one-third-octave
-        - plot:    (bool) show frequency bands
-
-    Example:
-
-    >>> flower, fupper, fcenter = __get_octave_bands(f_min, f_max, fband_type="octave", plot=False)
-
-    """
-
-    import matplotlib.pyplot as plt
-    from numpy import sqrt, array
-    from acoustics import bands
-
-    f_lower, f_upper, f_centers = [], [], []
-
-    if fband_type == "octave":
-        f_centers = bands.octave(fmin, fmax)
-        f_lower = bands.octave_low(fmin, fmax)
-        f_upper = bands.octave_high(fmin, fmax)
-
-    if fband_type == "one-third-octave":
-        f_centers = bands.third(fmin, fmax)
-        f_lower = bands.third_low(fmin, fmax)
-        f_upper = bands.third_high(fmin, fmax)
-
-    if plot:
-        plt.figure()
-        for fl, fc, fu in zip(f_lower, f_centers, f_upper):
-            plt.axvline(fu, color="r")
-            plt.axvline(fl, color="r")
-            plt.axvline(fc)
-            plt.axvline(fmin, color="g")
-            plt.axvline(fmax, color="g")
-            plt.xscale("log")
-        plt.show()
-
-    return array(f_lower), array(f_upper), array(f_centers)
 
 def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
@@ -134,7 +99,9 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
         avg = []
         for _psd in data:
             avg.append(median(_psd[ifl:ifu]))
+
         psd_avg.append(array(avg))
+
         fc.append(f_center[_n])
         fu.append(f_upper[_n])
         fl.append(f_lower[_n])
@@ -167,9 +134,9 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 ## ---------------------------------------
 ## load configurations
 
-apps = ["", "BDF", "BDO"]
+apps = ["", "BDO_coh", "BDF_coh"]
 
-for name in tqdm(names):
+for name in names:
 
     if name == "FUR":
         comps = ["BHZ", "BHN", "BHE"]
@@ -180,22 +147,25 @@ for name in tqdm(names):
     elif name == "FFBI":
         comps = ["BDF", "BDO"]
 
-    for comp in comps:
+    print(f"\n -> {name} ...")
+
+    for comp in tqdm(comps):
 
         for app in apps:
 
             config = {}
             try:
 
-                if apps == "BDO":
-                    config['filename'] = f"{name}{app}/{year}_FFBI_BDO_{name}_{comp}_3600"
+                if apps == "BDO_coh":
+                    config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
                     config['station'] = f"{name}"
-                elif apps == "BDF":
-                    config['filename'] = f"{name}{app}/{year}_FFBI_BDF_{name}_{comp}_3600"
+                elif apps == "BDF_coh":
+                    config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
                     config['station'] = f"{name}"
                 else:
-                    config['filename'] = f"{name}{app}/{year}_{name}_{comp}_3600"
+                    config['filename'] = f"{name}/{year}_{name}_{comp}_3600"
                     config['station'] = f"{name}_{comp}"
+
             except Exception as e:
                 # print(e)
                 continue
@@ -238,20 +208,22 @@ for name in tqdm(names):
 
             dat = array(dat)
 
-            f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, fband_type="one-third-octave", plot=False)
+            f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
             out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
 
             ## create and fill data frame
-            df_out = DataFrame()
+            _df_out = DataFrame()
 
-            df_out['dates'] = out0['dates']
+            _df_out['dates'] = out0['dates']
 
             for _i, fc in enumerate(out0['fcenter']):
-                df_out[round(fc, 5)] = out0['psd_avg'][_i]
+                _df_out[round(fc, 5)] = array(out0['psd_avg'][_i])
+
+            df_out = _df_out.copy()
 
             ## store as pickle file
-            df_out.to_pickle(config['path_to_outdata']+config['station']+app+".pkl")
+            df_out.to_pickle(config['path_to_outdata']+f"{name}_{comp}{app[-4:]}.pkl")
 
 
 ## End of File
