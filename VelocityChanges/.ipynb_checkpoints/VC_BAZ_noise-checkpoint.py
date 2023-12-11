@@ -44,7 +44,6 @@ elif os.uname().nodename == 'lin-ffb-01':
 
 config = {}
 
-
 # config['station1'] = "BW.ROMY.10.BJZ"
 # config['station2'] = "GR.FUR..BHN"
 

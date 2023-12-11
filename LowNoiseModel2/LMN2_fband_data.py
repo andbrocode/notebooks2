@@ -159,10 +159,10 @@ for name in names:
             config = {}
             try:
 
-                if apps == "BDO_coh":
+                if app == "BDO_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}_coherence"
-                elif apps == "BDF_coh":
+                elif app == "BDF_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}_coherence"
                 else:
@@ -199,7 +199,7 @@ for name in names:
                 dat = ones((date_range(d1, d2).size*24, 36001))*nan
             dates = ones((date_range(d1, d2).size*24))*nan
             index = 0
-            
+
             for jj, day in enumerate(date_range(d1, d2)):
 
                 day = str(day).split(" ")[0].replace("-", "")
