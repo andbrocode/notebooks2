@@ -82,6 +82,8 @@ baz_tangent_std = []
 baz_rayleigh_std = []
 baz_love_std = []
 
+ttime = []
+
 for t1, t2 in tqdm(times):
 
     try:
@@ -104,23 +106,31 @@ for t1, t2 in tqdm(times):
 
     except:
         print(f" -> data loading failed !")
-        continue
+        pass
+
+## ---------------------------------------
+
+    try:
+        st1.detrend("linear");
+        st2.detrend("linear");
+
+        acc = st2.copy();
+        rot = st1.copy();
 
 
-    st1.detrend("linear");
-    st2.detrend("linear");
+        acc = acc.detrend("linear");
+        acc = acc.taper(0.01);
+        acc = acc.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
-    acc = st2.copy();
-    rot = st1.copy();
+        rot = rot.detrend("linear");
+        rot = rot.taper(0.01);
+        rot = rot.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
+    except:
+        print(f" -> processing failed !")
+        pass
 
-    acc = acc.detrend("linear");
-    acc = acc.taper(0.01);
-    acc = acc.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
-
-    rot = rot.detrend("linear");
-    rot = rot.taper(0.01);
-    rot = rot.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
+## ---------------------------------------
 
     conf = {}
 
@@ -152,6 +162,8 @@ for t1, t2 in tqdm(times):
         baz_rayleigh_std.append(out['baz_rayleigh_std'])
         baz_love_std.append(out['baz_love_std'])
 
+        ttime.append(t1)
+
     except:
         print(f" -> baz computation failed!")
 
@@ -163,8 +175,14 @@ for t1, t2 in tqdm(times):
         baz_rayleigh_std.append(np.nan)
         baz_love_std.append(np.nan)
 
+        ttime.append(t1)
+
+## ---------------------------------------
+
+
 ## prepare output dictionary
 output = {}
+output['time'] = np.array(ttime)
 output['baz_tangent'] = np.array(baz_tangent)
 output['baz_rayleigh'] = np.array(baz_rayleigh)
 output['baz_love'] = np.array(baz_love)
