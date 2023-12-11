@@ -57,11 +57,12 @@ config = {}
 config['year'] = 2023
 
 
-config['seed1'] = "BW.FFBI..BDO"  ## F = infrasound | O = absolute
 
 if len(sys.argv) > 1:
-    config['seed2'] = sys.argv[1]
+    config['seed1'] = sys.argv[1]
+    config['seed2'] = sys.argv[2]
 else:
+    config['seed1'] = "BW.FFBI..BDO"  ## F = infrasound | O = absolute
     config['seed2'] = "GR.FUR..BHZ"
     # config['seed2'] = "GR.FUR..BHN"
     # config['seed2'] = "GR.FUR..BHE"
@@ -124,7 +125,11 @@ config['outname1'] = f"{config['year']}_{config['sta1']}_{config['cha1']}_{confi
 config['outname2'] = f"{config['year']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
 config['outname3'] = f"{config['year']}_{config['sta1']}_{config['cha1']}_{config['sta2']}_{config['cha2']}_{config['interval_seconds']}"
 
-config['outpath1'] = data_path+f"LNM2/PSDS/{config['sta1']}/"
+if "BW.DROMY" in config['seed2']:
+    config['outpath1'] = data_path+f"LNM2/PSDS/{config['sta1']}I/"
+else:
+    config['outpath1'] = data_path+f"LNM2/PSDS/{config['sta1']}/"
+
 config['outpath2'] = data_path+f"LNM2/PSDS/{config['sta2']}/"
 config['outpath3'] = data_path+f"LNM2/PSDS/{config['sta2']}_coherence/"
 
