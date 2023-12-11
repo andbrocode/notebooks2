@@ -193,7 +193,10 @@ for name in names:
             psds_medians_out, times_out = [], []
 
             # dat, dates = [], []
-            dat = ones((date_range(d1, d2).size*24, 36001))*nan
+            if name == "DROMY":
+                dat = ones((date_range(d1, d2).size*24, 1802))*nan
+            else:
+                dat = ones((date_range(d1, d2).size*24, 36001))*nan
             dates = ones((date_range(d1, d2).size*24))*nan
             index = 0
             
@@ -201,7 +204,7 @@ for name in names:
 
                 day = str(day).split(" ")[0].replace("-", "")
 
-                print(f"{config['filename']}_{day}_hourly.pkl")
+                # print(f"{config['filename']}_{day}_hourly.pkl")
 
                 try:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
