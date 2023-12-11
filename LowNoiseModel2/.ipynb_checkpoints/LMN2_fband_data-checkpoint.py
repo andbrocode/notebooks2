@@ -44,7 +44,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2023-09-23", "2023-11-30"
+t1, t2 = "2023-10-01", "2023-11-30"
 
 
 names = ["FFBI", "ROMY", "FUR", "DROMY"]
@@ -215,7 +215,7 @@ for name in names:
                     # _dat, _rejected = __remove_noisy_psds(_dat, threshold_mean=1e-15, ff=ff1, flim=0.1)
 
                 except Exception as e:
-                    # print(e)
+                    print(e)
                     print(f" -> {day}: no data found")
                     continue
 
