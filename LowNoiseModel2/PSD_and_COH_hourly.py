@@ -411,8 +411,10 @@ def main(config):
         for n, (t1, t2) in enumerate(tqdm(times)):
 
             ## trim streams for current interval
-            _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
-            _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
+            # _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
+            # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
+            _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
+            _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
 
             if n == 0:
@@ -492,12 +494,12 @@ def main(config):
                 _f2, _psd2 = psd_st2.rspec()
                 f2, psd2 = _f2.reshape(_f2.size), _psd2.reshape(_psd2.size)
 
-                print(psd1.size, psd2.size)
                 if psd1.size == psd2.size:
                     Pxy  = MTCross(psd_st1, psd_st2, wl=0.001)
                     N = Pxy.freq.size
                     ff_coh, coh = Pxy.freq[:,0][:N//2+1], Pxy.cohe[:,0][:N//2+1]
                 else:
+                    print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
                 # print(ff_coh.size, coh.size, _st1[0].data.size, psd1.size)

@@ -44,7 +44,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1 ,t2 = "2023-09-23", "2023-09-30"
+t1, t2 = "2023-09-23", "2023-11-30"
 
 
 names = ["FFBI", "ROMY", "FUR", "DROMY"]
@@ -143,7 +143,8 @@ for name in names:
     elif name == "DROMY":
         comps = ["LAN", "LAE"]
     elif name == "ROMY":
-        comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
+        # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
+        comps = ["BJZ", "BJN", "BJE"]
     elif name == "FFBI":
         comps = ["BDF", "BDO"]
 
@@ -158,16 +159,16 @@ for name in names:
 
                 if apps == "BDO_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
-                    config['station'] = f"{name}"
+                    config['outname'] = f"{name}_{comp}_coherence"
                 elif apps == "BDF_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
-                    config['station'] = f"{name}"
+                    config['outname'] = f"{name}_{comp}_coherence"
                 else:
                     config['filename'] = f"{name}/{year}_{name}_{comp}_3600"
-                    config['station'] = f"{name}_{comp}"
+                    config['outname'] = f"{name}_{comp}"
 
             except Exception as e:
-                # print(e)
+                print(e)
                 continue
 
             config['path'] = path
@@ -187,7 +188,6 @@ for name in names:
 
             dat, dates = [], []
             for jj, day in enumerate(date_range(d1, d2)):
-
 
                 day = str(day).split(" ")[0].replace("-", "")
 
@@ -213,6 +213,7 @@ for name in names:
             try:
                 dat = array(dat)
                 out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
+
             except Exception as e:
                 print(e)
                 continue
@@ -228,7 +229,7 @@ for name in names:
             df_out = _df_out.copy()
 
             ## store as pickle file
-            df_out.to_pickle(config['path_to_outdata']+f"{name}_{comp}{app[-4:]}.pkl")
+            df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
 
 ## End of File
