@@ -155,7 +155,7 @@ for name in names:
     for comp in tqdm(comps):
 
         for app in apps:
-
+            print(name, comp, app)
             config = {}
             try:
 
