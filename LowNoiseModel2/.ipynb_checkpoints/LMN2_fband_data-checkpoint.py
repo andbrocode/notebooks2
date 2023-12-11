@@ -162,12 +162,15 @@ for name in names:
                 if app == "BDO_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}_coherence"
+                    N = 36002
                 elif app == "BDF_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}_coherence"
+                    N = 36002
                 else:
                     config['filename'] = f"{name}/{year}_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}"
+                    N = 36001
 
             except Exception as e:
                 print(e)
@@ -196,7 +199,7 @@ for name in names:
             if name == "DROMY":
                 dat = ones((date_range(d1, d2).size*24, 1802))*nan
             else:
-                dat = ones((date_range(d1, d2).size*24, 36001))*nan
+                dat = ones((date_range(d1, d2).size*24, N))*nan
             dates = ones((date_range(d1, d2).size*24))*nan
             index = 0
 
