@@ -48,6 +48,7 @@ t1, t2 = "2023-10-01", "2023-11-30"
 
 if len(sys.argv) > 1:
     names = [sys.arv[1]]
+    print("yes")
 else:
     names = ["FFBI", "ROMY", "FUR", "DROMY"]
 
