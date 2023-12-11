@@ -47,8 +47,7 @@ path = data_path+f"LNM2/PSDS/"
 t1, t2 = "2023-10-01", "2023-11-30"
 
 if len(sys.argv) > 1:
-    names = [sys.arv[1]]
-    print("yes")
+    names = [sys.argv[1]]
 else:
     names = ["FFBI", "ROMY", "FUR", "DROMY"]
 
