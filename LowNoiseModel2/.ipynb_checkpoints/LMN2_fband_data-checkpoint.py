@@ -206,11 +206,16 @@ for name in names:
                     dat.append(_psd)
                     dates.append(f"{day}_{str(_k).rjust(2, '0')}")
 
-            dat = array(dat)
+
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
-            out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
+            try:
+                dat = array(dat)
+                out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
+            except Exception as e:
+                print(e)
+                continue
 
             ## create and fill data frame
             _df_out = DataFrame()

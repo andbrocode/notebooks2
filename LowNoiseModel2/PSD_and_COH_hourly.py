@@ -22,7 +22,7 @@ from numpy import log10, zeros, append, linspace, mean, median, array, where, tr
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from scipy.signal import coherence, welch
-from multitaper import MTCross
+from multitaper import MTCross, MTSpec
 
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
@@ -68,8 +68,8 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-23")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+config['date1'] = UTCDateTime(f"{config['year']}-10-23")
+config['date2'] = UTCDateTime(f"{config['year']}-11-30")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -471,21 +471,34 @@ def main(config):
 
             elif config['mode'] == "multitaper":
 
-                f1, psd1 = __multitaper_psd(_st1[0].data,
-                                            _st1[0].stats.delta,
-                                            n_win=config.get("n_taper"),
-                                            time_bandwidth=config['time_bandwith'],
-                                           )
+                psd_st1 = MTSpec(_st1[0].data,
+                                 dt=_st1[0].stats.delta,
+                                 nw=config['time_bandwith'],
+                                 kspec=config.get("n_taper"),
+                                 iadapt=config['mt_method'],
+                                )
 
-                f2, psd2 = __multitaper_psd(_st2[0].data,
-                                            _st2[0].stats.delta,
-                                            n_win=config.get("n_taper"),
-                                            time_bandwidth=config['time_bandwith'],
-                                           )
+                _f1, _psd1 = psd_st1.rspec()
+                f1, psd1 = _f1.reshape(_f1.size), _psd1.reshape(_psd1.size)
 
-                Pxy  = MTCross(psd1, psd2, wl=0.001)
-                N = Pxy.freq.size
-                ff_coh, coh = Pxy.freq[:,0][:N//2], Pxy.cohe[:,0][:N//2]
+
+                psd_st2 = MTSpec(_st2[0].data,
+                                 dt=_st2[0].stats.delta,
+                                 nw=config['time_bandwith'],
+                                 kspec=config.get("n_taper"),
+                                 iadapt=config['mt_method'],
+                                )
+
+                _f2, _psd2 = psd_st2.rspec()
+                f2, psd2 = _f2.reshape(_f2.size), _psd2.reshape(_psd2.size)
+
+                print(psd1.size, psd2.size)
+                if psd1.size == psd2.size:
+                    Pxy  = MTCross(psd_st1, psd_st2, wl=0.001)
+                    N = Pxy.freq.size
+                    ff_coh, coh = Pxy.freq[:,0][:N//2+1], Pxy.cohe[:,0][:N//2+1]
+                else:
+                    continue
 
                 # print(ff_coh.size, coh.size, _st1[0].data.size, psd1.size)
                 # print(ff_coh[0], ff_coh[-1], f1[0], f1[-1])
@@ -514,7 +527,7 @@ def main(config):
         out1['frequencies'] = f1
         out1['psd'] = psds1
 
-        __save_to_pickle(out1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
         # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         out2 = {}
