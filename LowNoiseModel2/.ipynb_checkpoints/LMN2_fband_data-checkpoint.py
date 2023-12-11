@@ -195,12 +195,13 @@ for name in names:
 
             psds_medians_out, times_out = [], []
 
-            # dat, dates = [], []
-            if name == "DROMY":
-                dat = ones((date_range(d1, d2).size*24, 1802))*nan
-            else:
-                dat = ones((date_range(d1, d2).size*24, N))*nan
-            dates = ones((date_range(d1, d2).size*24))*nan
+            dat, dates = [], []
+            # if name == "DROMY":
+            #     dat = ones((date_range(d1, d2).size*24, 1802))*nan
+            # else:
+            #     dat = ones((date_range(d1, d2).size*24, N))*nan
+
+            # dates = ones((date_range(d1, d2).size*24))*nan
             index = 0
 
             for jj, day in enumerate(date_range(d1, d2)):
@@ -220,9 +221,10 @@ for name in names:
 
                 try:
                     for _k, _psd in enumerate(_dat):
-                        # dat.append(_psd)
-                        dat[index] = _psd
-                        dates[index] = f"{day}_{str(_k).rjust(2, '0')}"
+                        dat.append(_psd)
+                        dates.append(f"{day}_{str(_k).rjust(2, '0')}")
+                        # dat[index] = _psd
+                        # dates[index] = f"{day}_{str(_k).rjust(2, '0')}"
                         index += 1
 
                 except Exception as e:
@@ -230,7 +232,6 @@ for name in names:
                     print(f" -> skip {day}")
                     continue
 
-            # dat = array(dat)
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
