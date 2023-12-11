@@ -46,8 +46,10 @@ path = data_path+f"LNM2/PSDS/"
 
 t1, t2 = "2023-10-01", "2023-11-30"
 
-
-names = ["FFBI", "ROMY", "FUR", "DROMY"]
+if len(sys.argv) > 1:
+    names = [sys.arv[1]]
+else:
+    names = ["FFBI", "ROMY", "FUR", "DROMY"]
 
 ## ---------------------------------------
 
