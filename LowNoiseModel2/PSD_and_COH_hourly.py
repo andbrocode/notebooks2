@@ -503,7 +503,7 @@ def main(config):
                 if psd1.size == psd2.size:
                     Pxy  = MTCross(psd_st1, psd_st2, wl=0.001)
                     N = Pxy.freq.size
-                    ff_coh, coh = Pxy.freq[:,0][:N//2], Pxy.cohe[:,0][:N//2]
+                    ff_coh, coh = Pxy.freq[:,0][:N//2+1], Pxy.cohe[:,0][:N//2+1]
                 else:
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
