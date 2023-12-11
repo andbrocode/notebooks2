@@ -70,7 +70,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 config['date1'] = UTCDateTime(f"{config['year']}-10-01")
-config['date2'] = UTCDateTime(f"{config['year']}-11-30")
+config['date2'] = UTCDateTime(f"{config['year']}-10-10")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -498,7 +498,7 @@ def main(config):
                 if psd1.size == psd2.size:
                     Pxy  = MTCross(psd_st1, psd_st2, wl=0.001)
                     N = Pxy.freq.size
-                    ff_coh, coh = Pxy.freq[:,0][:N//2+1], Pxy.cohe[:,0][:N//2+1]
+                    ff_coh, coh = Pxy.freq[:,0][:N//2], Pxy.cohe[:,0][:N//2]
                 else:
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
