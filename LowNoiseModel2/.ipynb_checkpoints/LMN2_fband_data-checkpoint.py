@@ -250,6 +250,7 @@ for name in names:
             df_out = _df_out.copy()
 
             ## store as pickle file
+            print(f" -> {config['outname']}.pkl")
             df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
 gc.collect()
