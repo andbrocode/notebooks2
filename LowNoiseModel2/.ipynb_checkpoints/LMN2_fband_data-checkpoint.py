@@ -15,7 +15,7 @@ from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm
 from pathlib import Path
 
-import os, sys
+import os, sys, gc
 import pickle
 import matplotlib.pyplot as plt
 
@@ -58,14 +58,16 @@ def __load_data_file(path, file):
 
     psds_all = []
 
-    file = read_pickle(path+file)
+    datafile = read_pickle(path+file)
 
     try:
-        psds = file['psd']
+        psds = datafile['psd']
     except:
-        psds = file['coherence']
+        psds = datafile['coherence']
 
-    ff = file['frequencies']
+    ff = datafile['frequencies']
+
+    del datafile
 
     for psd in psds:
         psds_all.append(psd)
@@ -186,27 +188,43 @@ for name in names:
 
             psds_medians_out, times_out = [], []
 
-            dat, dates = [], []
+            d1, d2 = config['startdate'], config['enddate']
+
+            psds_medians_out, times_out = [], []
+
+            # dat, dates = [], []
+            dat = ones((date_range(d1, d2).size*24, 36001))*nan
+            dates = ones((date_range(d1, d2).size*24))*nan
+            index = 0
+            
             for jj, day in enumerate(date_range(d1, d2)):
 
                 day = str(day).split(" ")[0].replace("-", "")
 
-                # print(f"{config['filename']}_{day}_hourly.pkl")
+                print(f"{config['filename']}_{day}_hourly.pkl")
 
                 try:
-                    ff, _dat = __load_data_file(path, f"{config['filename']}_{day}_hourly.pkl")
+                    ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
                     # _dat, _rejected = __remove_noisy_psds(_dat, threshold_mean=1e-15, ff=ff1, flim=0.1)
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     print(f" -> {day}: no data found")
                     continue
 
-                for _k, _psd in enumerate(_dat):
-                    dat.append(_psd)
-                    dates.append(f"{day}_{str(_k).rjust(2, '0')}")
+                try:
+                    for _k, _psd in enumerate(_dat):
+                        # dat.append(_psd)
+                        dat[index] = _psd
+                        dates[index] = f"{day}_{str(_k).rjust(2, '0')}"
+                        index += 1
 
+                except Exception as e:
+                    print(e)
+                    print(f" -> skip {day}")
+                    continue
 
+            # dat = array(dat)
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
@@ -231,5 +249,6 @@ for name in names:
             ## store as pickle file
             df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
+gc.collect()
 
 ## End of File

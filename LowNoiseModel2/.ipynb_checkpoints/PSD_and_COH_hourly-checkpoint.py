@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import pickle
 import os
 import sys
+import gc
 
 from tqdm import tqdm
 from obspy import UTCDateTime, read, read_inventory
@@ -570,5 +571,6 @@ def main(config):
 if __name__ == "__main__":
     main(config)
 
+    gc.collect()
 
 ## End of File
