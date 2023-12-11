@@ -285,6 +285,10 @@ def main(config):
                 _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-1800, config['tend']+1800)
                 _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-1800, config['tend']+1800)
 
+                _stU = _stU.merge()
+                _stV = _stV.merge()
+                _stZ = _stZ.merge()
+
                 print(_stU, _stV, _stZ)
 
                 ori_z = inv2.get_orientation("BW.ROMY.10.BJZ")
