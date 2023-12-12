@@ -9,7 +9,7 @@
 
 from obspy import UTCDateTime
 from scipy.signal import welch
-from numpy import log10, zeros, pi, append, linspace, median, array, where, transpose, shape, histogram, arange, append
+from numpy import log10, zeros, pi, append, linspace, array, where, transpose, shape, histogram, arange, append
 from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan
 from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm
@@ -102,7 +102,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
         avg = []
         for _psd in data:
-            avg.append(median(_psd[ifl:ifu]))
+            avg.append(nanmedian(_psd[ifl:ifu]))
 
         psd_avg.append(array(avg))
 
