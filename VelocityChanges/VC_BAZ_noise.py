@@ -66,7 +66,7 @@ config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
 config['fmin'], config['fmax'] = 1/10, 1/7
 
-config['cc_threshold'] = 0.8
+config['cc_threshold'] = 0.5
 
 ## ---------------------------------------
 
@@ -468,7 +468,7 @@ for t1, t2 in tqdm(times):
     conf['station_latitude']  = 48.162941
 
     ## specify window length for baz estimation in seconds
-    conf['win_length_sec'] = 5/config['fmin']
+    conf['win_length_sec'] = 2/config['fmin']
 
     ## define an overlap for the windows in percent (50 -> 50%)
     conf['overlap'] = 75
