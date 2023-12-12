@@ -236,7 +236,7 @@ for name in names:
                     print(e)
                     print(f" -> skip {day}")
                     continue
-
+            print(dat)
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
