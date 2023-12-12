@@ -24,6 +24,7 @@ from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from scipy.signal import coherence, welch
 from multitaper import MTCross, MTSpec
+from scipy.fftpack import diff
 
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
@@ -329,8 +330,12 @@ def main(config):
         ## integrate romy data from rad/s to rad
         if integrate:
             print(f" -> integrating ...")
-            st2 = st2.integrate(method='cumtrapz');
+            # st2 = st2.integrate(method='cumtrapz');
             # st2 = st2.integrate(method='spline');
+            for tr in st2:
+                tr.dat = diff(tr.data, -1)
+
+            ## tilt to acceleration
             for tr in st2:
                 tr.data *= 9.81 ## m/s^2
 
@@ -353,7 +358,6 @@ def main(config):
             elif config['unit'] == "hPa":
                 for tr in st1:
                     tr.data = tr.data *1.589e-6 *1e3   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005 = 1 mV/hPa
-
 
 
         elif "F" in st1[0].stats.channel:
