@@ -70,12 +70,6 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
-if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
-    config['seed2'] = config['seed2'].replace("A", "J")
-    integrate = True
-else:
-    integrate = False
-    
 
 config['date1'] = UTCDateTime(f"{config['year']}-10-01")
 config['date2'] = UTCDateTime(f"{config['year']}-11-30")
@@ -142,6 +136,14 @@ config['outpath3'] = data_path+f"LNM2/PSDS/{config['sta2']}_coherence/"
 
 ## tiltmeter configurations
 confTilt = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/", "tiltmeter.conf")
+
+## adjustments if ROMY is to be integrated
+if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
+    config['seed2'] = config['seed2'].replace("A", "J")
+    integrate = True
+else:
+    integrate = False
+
 
 
 # In[] ___________________________________________________________
