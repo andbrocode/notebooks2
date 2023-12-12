@@ -9,7 +9,7 @@
 
 from obspy import UTCDateTime
 from scipy.signal import welch
-from numpy import log10, zeros, pi, append, linspace, array, where, transpose, shape, histogram, arange, append
+from numpy import log10, zeros, pi, append, linspace, array, where, transpose, shape, histogram, arange, append, nanmedian
 from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan
 from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm
@@ -49,7 +49,7 @@ t1, t2 = "2023-10-01", "2023-11-30"
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
 else:
-    names = ["FFBI", "ROMY", "FUR", "DROMY"]
+    names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA"]
 
 ## ---------------------------------------
 
@@ -79,6 +79,8 @@ def __load_data_file(path, file):
 
 
 def __get_band_average(freq, data, f_center, f_upper, f_lower):
+
+    from numpy import nanmedian
 
     ## get frequency indices
     fl_idx, fu_idx = [], []
@@ -160,7 +162,9 @@ for name in names:
     for comp in tqdm(comps):
 
         for app in apps:
+
             print(name, comp, app)
+
             config = {}
             try:
 
@@ -236,14 +240,16 @@ for name in names:
                     print(e)
                     print(f" -> skip {day}")
                     continue
-            print(dat)
 
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
             try:
                 dat = array(dat)
-                out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
+            except Exception as e:
+                print(e)
 
+            try:
+                out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
             except Exception as e:
                 print(e)
                 continue

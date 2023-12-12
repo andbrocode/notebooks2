@@ -468,10 +468,10 @@ for t1, t2 in tqdm(times):
     conf['station_latitude']  = 48.162941
 
     ## specify window length for baz estimation in seconds
-    conf['win_length_sec'] = 2/config['fmin']
+    conf['win_length_sec'] = 5/config['fmin']
 
     ## define an overlap for the windows in percent (50 -> 50%)
-    conf['overlap'] = 75
+    conf['overlap'] = 90
 
     ## specify steps for degrees of baz
     conf['step'] = 1
