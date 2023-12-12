@@ -113,7 +113,7 @@ config['frequency_limits'] = None # (0, 0.05) # in Hz
 
 ## number of taper for multitaper to use
 config['n_taper'] = 5
-config['time_bandwith'] = 4.0
+config['time_bandwith'] = 3.5
 config['mt_method'] = 2 ## 0 = adaptive, 1 = unweighted, 2 = weighted with eigenvalues
 
 
