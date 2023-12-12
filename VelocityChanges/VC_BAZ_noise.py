@@ -66,7 +66,7 @@ config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
 config['fmin'], config['fmax'] = 1/10, 1/7
 
-config['cc_threshold'] = 0.2
+config['cc_threshold'] = 0.8
 
 ## ---------------------------------------
 
