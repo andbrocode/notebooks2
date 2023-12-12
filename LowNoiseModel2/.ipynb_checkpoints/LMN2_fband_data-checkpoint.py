@@ -151,6 +151,9 @@ for name in names:
         comps = ["BJZ", "BJN", "BJE"]
     elif name == "FFBI":
         comps = ["BDF", "BDO"]
+    elif name == "ROMYA":
+        name = "ROMY"
+        comps = ["BAZ", "BAN", "BAE"]
 
     print(f"\n -> {name} ...")
 
