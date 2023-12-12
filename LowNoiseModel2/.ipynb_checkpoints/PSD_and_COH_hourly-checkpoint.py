@@ -326,9 +326,11 @@ def main(config):
 
         ## integrate romy data from rad/s to rad
         if integrate:
+            print(f" -> integrating ...")
             st2 = st2.integrate(method='cumtrapz');
             # st2 = st2.integrate(method='spline');
-
+            for tr in st2:
+                tr.data *= 9.81 ## m/s^2
 
         if len(st1) > 1:
             st1.merge()
