@@ -333,7 +333,9 @@ def main(config):
             # st2 = st2.integrate(method='cumtrapz');
             # st2 = st2.integrate(method='spline');
             for tr in st2:
-                tr.dat = diff(tr.data, -1)
+                T = tr.stats.npts * tr.stats.delta
+                tr.dat = diff(tr.data, -1, period=T)
+
 
             ## tilt to acceleration
             for tr in st2:
