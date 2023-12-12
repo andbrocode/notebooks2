@@ -170,11 +170,11 @@ for name in names:
 
                 if app == "BDO_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
-                    config['outname'] = f"{name}_{comp}_coherence"
+                    config['outname'] = f"FFBI_BDO_{name}_{comp}_coherence"
                     N = 36002
                 elif app == "BDF_coh":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
-                    config['outname'] = f"{name}_{comp}_coherence"
+                    config['outname'] = f"FFBI_BDF_{name}_{comp}_coherence"
                     N = 36002
                 else:
                     config['filename'] = f"{name}/{year}_{name}_{comp}_3600"
