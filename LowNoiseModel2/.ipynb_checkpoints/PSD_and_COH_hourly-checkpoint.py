@@ -70,6 +70,13 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
+if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
+    config['seed2'] = config['seed2'].replace("A", "J")
+    integrate = True
+else:
+    integrate = False
+    
+
 config['date1'] = UTCDateTime(f"{config['year']}-10-01")
 config['date2'] = UTCDateTime(f"{config['year']}-11-30")
 
@@ -316,6 +323,11 @@ def main(config):
                 print(e)
                 print(f" -> failed to rotate ROMY ...")
                 continue
+
+        ## integrate romy data from rad/s to rad
+        if integrate:
+            st2 = st2.integrate(method='cumtrapz');
+            # st2 = st2.integrate(method='spline');
 
 
         if len(st1) > 1:

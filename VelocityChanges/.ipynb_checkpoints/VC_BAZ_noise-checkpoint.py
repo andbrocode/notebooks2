@@ -58,7 +58,7 @@ config['path_to_sds1'] = archive_path+"romy_archive/"
 
 config['path_to_sds2'] = bay_path+f"mseed_online/archive/"
 
-config['path_to_figures'] = data_path+f"VelocityChanges/figures/"
+config['path_to_figures'] = data_path+f"VelocityChanges/figures/autoplots/"
 
 config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
