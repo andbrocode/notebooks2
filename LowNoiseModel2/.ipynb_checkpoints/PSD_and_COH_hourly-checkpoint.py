@@ -542,17 +542,17 @@ def main(config):
 
 
 
-        # plt.figure()
-        # plt.plot(_st1[0].times(), _st1[0].data)
-        # plt.figure()
-        # plt.plot(_st2[0].times(), _st2[0].data)
-        # plt.figure()
-        # plt.loglog(f1, psd1)
-        # plt.figure()
-        # plt.loglog(f2, psd2)
-        # plt.figure()
-        # plt.semilogx(ff_coh, coh)
-        # plt.show()
+        plt.figure()
+        plt.plot(_st1[0].times(), _st1[0].data)
+        plt.figure()
+        plt.plot(_st2[0].times(), _st2[0].data)
+        plt.figure()
+        plt.loglog(f1, psd1)
+        plt.figure()
+        plt.loglog(f2, psd2)
+        plt.figure()
+        plt.semilogx(ff_coh, coh)
+        plt.show()
 
         ## save psds
         out1 = {}
