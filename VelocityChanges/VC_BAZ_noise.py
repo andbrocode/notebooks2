@@ -8,13 +8,11 @@ import numpy as np
 
 from tqdm import tqdm
 from obspy import UTCDateTime, read_inventory
-from scipy.signal import welch
 
-from functions.get_fband_average import __get_fband_average
-from functions.get_median_psd import __get_median_psd
-from functions.compute_backazimuth_noise import __compute_backazimuth_noise
+# from functions.compute_backazimuth_noise import __compute_backazimuth_noise
 from functions.rotate_romy_ZUV_ZNE import __rotate_romy_ZUV_ZNE
 from functions.get_time_intervals import __get_time_intervals
+from functions.compute_beamforming_ROMY import __compute_beamforming_ROMY
 
 from andbro__read_sds import __read_sds
 from andbro__save_to_pickle import __save_to_pickle
@@ -64,11 +62,16 @@ config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
 config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
-config['fmin'], config['fmax'] = 1/10, 1/7
+config['fmin'], config['fmax'] = 1/10, 1/8
 
 config['cc_threshold'] = 0.5
 
+config['interval_seconds'] = 3600
+
 ## ---------------------------------------
+
+
+
 
 
 def __compute_backazimuth_noise(confx, rot0, acc0, cat_event, fmin, fmax, cc_thres=None, plot=False):
@@ -397,7 +400,7 @@ def __compute_backazimuth_noise(confx, rot0, acc0, cat_event, fmin, fmax, cc_thr
     return out
 
 
-times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=3600, interval_overlap=0)
+times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval_seconds'], interval_overlap=0)
 
 baz_tangent = []
 baz_rayleigh = []
@@ -406,6 +409,11 @@ baz_love = []
 baz_tangent_std = []
 baz_rayleigh_std = []
 baz_love_std = []
+
+baz_bf = []
+baz_bf_std = []
+
+vel_bf = []
 
 ttime = []
 
@@ -506,6 +514,30 @@ for t1, t2 in tqdm(times):
 
         ttime.append(t1)
 
+    try:
+        out_bf = __compute_beamforming_ROMY(
+                                            conf['tbeg'],
+                                            conf['tend'],
+                                            submask=None,
+                                            fmin=config['fmin'],
+                                            fmax=config['fmax'],
+                                            component="Z",
+                                            bandpass=True,
+                                            plot=False
+                                           )
+
+        baz_bf.append(out_bf['baz_bf_max'])
+        baz_bf_std.append(out_bf['baz_bf_std'])
+        vel_bf.append(out_bf['slow'])
+
+
+        ttime.append(t1)
+
+    except Exception as e:
+        print(e)
+        print(f" -> baz computation failed!")
+
+        
 ## ---------------------------------------
 
 
@@ -518,6 +550,9 @@ output['baz_love'] = np.array(baz_love)
 output['baz_tangent_std'] = np.array(baz_tangent_std)
 output['baz_rayleigh_std'] = np.array(baz_rayleigh_std)
 output['baz_love_std'] = np.array(baz_love_std)
+output['baz_bf'] = np.array(baz_bf)
+output['baz_bf_std'] = np.array(baz_bf_std)
+output['vel_bf'] = np.array(vel_bf)
 
 ## store output dictionary
 __save_to_pickle(output, config['path_to_data_out'], f"VC_BAZ_{config['tbeg'].date}_{config['tend'].date}")

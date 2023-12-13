@@ -72,7 +72,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-10-01")
+config['date1'] = UTCDateTime(f"{config['year']}-09-15")
 config['date2'] = UTCDateTime(f"{config['year']}-11-30")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
@@ -327,24 +327,27 @@ def main(config):
                 print(f" -> failed to rotate ROMY ...")
                 continue
 
+        if len(st1) > 1:
+            st1.merge()
+        if len(st2) > 1:
+            st2.merge()
+
         ## integrate romy data from rad/s to rad
         if integrate:
             print(f" -> integrating ...")
-            # st2 = st2.integrate(method='cumtrapz');
+            st2 = st2.detrend("demean")
+            st2 = st2.integrate(method='cumtrapz');
             # st2 = st2.integrate(method='spline');
-            for tr in st2:
-                T = tr.stats.npts * tr.stats.delta
-                tr.dat = diff(tr.data, -1, period=T)
+
+            # for tr in st2:
+            #     T = tr.stats.npts * tr.stats.delta
+            #     tr.dat = diff(tr.data, -1, period=T)
 
 
             ## tilt to acceleration
             for tr in st2:
                 tr.data *= 9.81 ## m/s^2
 
-        if len(st1) > 1:
-            st1.merge()
-        if len(st2) > 1:
-            st2.merge()
 
         if len(st1) == 0 or len(st2) == 0:
             print(st1)
