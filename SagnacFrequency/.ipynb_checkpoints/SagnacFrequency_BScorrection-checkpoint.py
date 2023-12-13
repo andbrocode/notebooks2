@@ -50,6 +50,8 @@ else:
     config['tbeg'] = UTCDateTime("2023-12-01 00:00")
     config['tend'] = UTCDateTime("2023-12-04 00:00")
 
+print(config['tbeg'], config['tend'])
+    
 config['ring_sagnac'] = {"U":303.05, "V":447, "W":447, "Z":553.5}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
@@ -261,6 +263,8 @@ def main(config):
 
         for _n, (t1, t2) in enumerate(times):
 
+            print(t1,t2)
+            
             _dat = _st.copy().trim(t1, t2)
 
             f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
