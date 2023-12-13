@@ -43,9 +43,9 @@ config['seeds'] = ["BW.DROMY..FJU", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 
 config['interval'] = 60
 
-if len(sys.argv) > 2:
-    config['tbeg'] = sys.argv[2]
-    config['tbeg'] = config['tbeg']+86400
+if len(sys.argv) > 1:
+    config['tbeg'] = sys.argv[1]
+    config['tend'] = config['tbeg']+86400
 else:
     config['tbeg'] = UTCDateTime("2023-12-01 00:00")
     config['tend'] = UTCDateTime("2023-12-04 00:00")
