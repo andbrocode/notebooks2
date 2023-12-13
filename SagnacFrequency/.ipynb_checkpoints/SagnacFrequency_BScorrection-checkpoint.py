@@ -263,7 +263,7 @@ def main(config):
 
         for _n, (t1, t2) in enumerate(times):
 
-            print(t1,t2)
+            # print(t1,t2)
             
             _dat = _st.copy().trim(t1, t2)
 
@@ -298,8 +298,8 @@ def main(config):
 
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"
-    out_df.to_pickle(config['path_to_data']+f"{date_str}_backscatter.pkl")
-    print(f" -> writing: {config['path_to_data']}{date_str}_backscatter.pkl")
+    out_df.to_pickle(config['path_to_data']+f"{date_str}_{str(_k).rjust(2, '0')}_backscatter.pkl")
+    print(f" -> writing: {config['path_to_data']}{date_str}_{str(_k).rjust(2, '0')}_backscatter.pkl")
 
 
 ## ________ MAIN  ________
