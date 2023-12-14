@@ -245,6 +245,7 @@ def main(config):
     mon1 = __load_romy_raw_data(config['seeds'][1], config['tbeg'], config['tend'], config['path_to_sds'])
     mon2 = __load_romy_raw_data(config['seeds'][2], config['tbeg'], config['tend'], config['path_to_sds'])
 
+
     ## get time intervals for iteration
     times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval'], interval_overlap=0)
 
@@ -298,8 +299,9 @@ def main(config):
 
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"
-    out_df.to_pickle(config['path_to_data']+f"{date_str}_{str(_k).rjust(2, '0')}_backscatter.pkl")
-    print(f" -> writing: {config['path_to_data']}{date_str}_{str(_k).rjust(2, '0')}_backscatter.pkl")
+    time_str = f"{str(config['tbeg'].time).split('.')[0]}"
+    out_df.to_pickle(config['path_to_data']+f"FJU_{date_str}_{time_str}_backscatter.pkl")
+    print(f" -> writing: {config['path_to_data']}FJU_{date_str}_{time_str}_backscatter.pkl")
 
 
 ## ________ MAIN  ________
