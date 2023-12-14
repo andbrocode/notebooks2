@@ -2,7 +2,7 @@ def __multitaper_psd(arr, dt, n_win=5, time_bandwidth=4.0):
 
     import multitaper as mt
 
-    out_psd = mt.MTSpec(arr, nw=time_bandwidth, kspec=n_win, dt=dt, iadapt=0)
+    out_psd = mt.MTSpec(arr, nw=time_bandwidth, kspec=n_win, dt=dt, iadapt=2)
 
     _f, _psd = out_psd.rspec()
 
