@@ -147,7 +147,7 @@ for name in names:
     if name == "FUR":
         comps = ["BHZ", "BHN", "BHE"]
     elif name == "DROMY":
-        comps = ["LAN", "LAE"]
+        comps = ["LAT", "LAN", "LAE"]
     elif name == "ROMY":
         # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
         comps = ["BJZ", "BJN", "BJE"]

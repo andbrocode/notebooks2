@@ -66,7 +66,7 @@ config['fmin'], config['fmax'] = 1/10, 1/8
 
 config['cc_threshold'] = 0.5
 
-config['interval_seconds'] = 3600
+config['interval_seconds'] = 1800
 
 ## ---------------------------------------
 
@@ -537,7 +537,11 @@ for t1, t2 in tqdm(times):
         print(e)
         print(f" -> baz computation failed!")
 
-        
+        baz_bf.append(np.nan)
+        baz_bf_std.append(np.nan)
+        vel_bf.append(np.nan)
+
+
 ## ---------------------------------------
 
 
