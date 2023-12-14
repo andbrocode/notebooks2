@@ -335,8 +335,10 @@ def main(config):
         ## integrate romy data from rad/s to rad
         if integrate:
             print(f" -> integrating ...")
-            st2 = st2.detrend("demean")
-            st2 = st2.integrate(method='cumtrapz');
+            st2 = st2.detrend("linear")
+            st2 = st2.integrate(method='spline');
+            st2 = st2.detrend("linear")
+
             # st2 = st2.integrate(method='spline');
 
             # for tr in st2:
