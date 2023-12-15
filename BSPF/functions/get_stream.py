@@ -1,4 +1,5 @@
-def __get_stream(tbeg, tend):
+def __get_stream(tbeg, tend, status=False):
+
     from functions.request_data import __request_data
     from functions.compute_adr_pfo import __compute_adr_pfo
 
@@ -35,25 +36,39 @@ def __get_stream(tbeg, tend):
 
     ## ADR
     submask = "inner"
-    adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    if status:
+        adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    else:
+        adr0 = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=False)
+
     for tr in adr0:
         tr.stats.location = "in"
     st0 += adr0.copy();
 
     submask = "mid"
-    adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    if status:
+        adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    else:
+        adr0 = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=False)
+
     for tr in adr0:
         tr.stats.location = "mi"
     st0 += adr0.copy();
 
     # submask = "all"
-    adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    if status:
+        adr0, status = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=True)
+    else:
+        adr0 = __compute_adr_pfo(tbeg-100, tend+100, submask=submask, status=False)
+
     for tr in adr0:
         tr.stats.location = "al"
     st0 += adr0.copy();
 
     st0.resample(40, no_filter=False);
 
-    st0.trim(tbeg, tend)
+    st0.sort();
+
+    st0.trim(tbeg, tend);
 
     return st0

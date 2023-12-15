@@ -38,44 +38,6 @@ else:
 
 
 
-# In[3]:
-
-
-def __process_xpfo(config, st, inv):
-
-    ii_pfo = st.copy()
-
-#     pre_filt = [0.005, 0.01, 19, 20]
-
-    ## cut properly
-#     ii_pfo.trim(config['tbeg'], config['tend'])
-
-    ## demean
-    ii_pfo.detrend("demean")
-
-    ## remove response
-#     ii_pfo.remove_response(inventory=inv,
-#     #                        pre_filt=pre_filt,
-#                            output="VEL",
-#     #                        water_level=60,
-#                            plot=False)
-
-    ## taper
-    ii_pfo.taper(0.1)
-
-    ## bandpass
-    ii_filter = ii_pfo.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True)
-
-    ## adjust channel names
-    for tr in ii_pfo:
-        if tr.stats.channel[-1] == "1":
-            tr.stats.channel = str(tr.stats.channel).replace("1","N")
-        if tr.stats.channel[-1] == "2":
-            tr.stats.channel = str(tr.stats.channel).replace("2","E")
-
-    return ii_pfo
-
-
 # In[7]:
 
 

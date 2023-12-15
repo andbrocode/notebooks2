@@ -437,7 +437,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## trim to requested interval
     rot = rot.trim(config['tbeg'], config['tend'])
 
-    print(rot)
 
     ## plot status of data retrieval for waveforms of array stations
     if status:
