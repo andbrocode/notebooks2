@@ -249,8 +249,8 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
 
             ## remove response [VEL -> rad/s | DISP -> rad]
-            stats = stats.remove_sensitivity(inventory)
-            # stats.remove_response(output="VEL", water_level=10)
+            # stats = stats.remove_sensitivity(inventory)
+            stats.remove_response(output="VEL", water_level=60)
 
 
             #correct mis-alignment

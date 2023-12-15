@@ -48,7 +48,8 @@ def __get_stream(tbeg, tend, status=False):
         for tr in adr0:
             tr.stats.location = "in"
         st0 += adr0.copy();
-    except:
+    except Exception as e:
+        print(e)
         pass
 
 
@@ -62,7 +63,8 @@ def __get_stream(tbeg, tend, status=False):
         for tr in adr0:
             tr.stats.location = "mi"
         st0 += adr0.copy();
-    except:
+    except Exception as e:
+        print(e)
         pass
 
 
@@ -76,7 +78,8 @@ def __get_stream(tbeg, tend, status=False):
         for tr in adr0:
             tr.stats.location = "al"
         st0 += adr0.copy();
-    except:
+    except Exception as e:
+        print(e)
         pass
 
     st0.resample(40, no_filter=False);
