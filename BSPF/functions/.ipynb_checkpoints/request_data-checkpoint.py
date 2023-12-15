@@ -58,7 +58,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
 
     ## adjust channel names
     elif cha[1] == "H" and waveform is not None:
-        waveform.remove_response(inventory=inventory, output=translation_type, plot=False, water_level=10)
+        waveform.remove_response(inventory=inventory, output=translation_type, plot=False)
         print(" -> response removed!")
 
         # waveform.remove_sensitivity(inventory=inventory)
