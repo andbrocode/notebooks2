@@ -213,16 +213,16 @@ def __compute_beamforming_pfo(tbeg, tend, submask, fmin=None, fmax=None, compone
     if submask is not None:
         if submask == "inner":
             config['subarray_mask'] = [0,1,2,3,4]
-            config['freq1'] = 0.16  ## 0.00238*3700/100
-            config['freq2'] = 16.5 ## 0.25*3700/100
+            config['freq1'] = 1.0  ## 0.16  ## 0.00238*3700/100
+            config['freq2'] = 6.0  ## 16.5 ## 0.25*3700/100
         elif submask == "mid":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
-            config['freq1'] = 0.03   ## 0.00238*3700/280
-            config['freq2'] = 3.3 # 0.25*3700/280
+            config['freq1'] = 0.5 ## 0.03   ## 0.00238*3700/280
+            config['freq2'] = 1.0 ## # 0.25*3700/280
         elif submask == "all":
             config['subarray_mask'] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
-            config['freq1'] = 0.02   ## 0.00238*3700/700
-            config['freq2'] = 1.3 # 0.25*3700/700
+            config['freq1'] = 0.1 ## 0.02   ## 0.00238*3700/700
+            config['freq2'] = 0.5 ## 1.3 # 0.25*3700/700
     else:
         config['subarray_mask'] = [0,1,2,3,4]
 
@@ -231,7 +231,7 @@ def __compute_beamforming_pfo(tbeg, tend, submask, fmin=None, fmax=None, compone
     config['print_details'] = False
 
     ## apply bandpass to data
-    config['apply_bandpass'] = bandpass
+    config['apply_bandpass'] = True
 
 
     ## _____________________

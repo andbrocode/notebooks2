@@ -1,7 +1,7 @@
 def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', fmax=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance, cwt
-    from numpy import std, nanmean, nan, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape
+    from numpy import std, nanmean, nan, nansum, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape, nanpercentile
     import matplotlib.pyplot as plt
     from numpy import sum as npsum
 
@@ -84,11 +84,11 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
     ## compute global cross wavelet transform power
     global_mean_cwt_f = nanmean(cwt_power_masked, axis=1)
-    global_sum_cwt_f = npsum(nan_to_num(cwt_power_masked, 0), axis=1)
+    global_sum_cwt_f = nansum(cwt_power_masked, axis=1)
 
-    if normalize:
-        global_sum_cwt_f /= max(global_sum_cwt_f)
-        global_mean_cwt_f /= max(global_mean_cwt_f)
+    # if normalize:
+    #     global_sum_cwt_f /= max(global_sum_cwt_f)
+    #     global_mean_cwt_f /= max(global_mean_cwt_f)
 
 
     ## ____________________________________________________
@@ -131,43 +131,54 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
                                 times,
                                 pp_cwt,
                                 cwt_power,
-                                vmin=min(reshape(cwt_power, cwt_power.size)),
-                                vmax=max(reshape(cwt_power, cwt_power.size)),
+                                # vmin=min(reshape(cwt_power, cwt_power.size)),
+                                # vmax=max(reshape(cwt_power, cwt_power.size)),
+                                vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 2),
+                                vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 98),
                                 )
 
             ax3.plot(global_mean_cwt_f, pp_cwt, color="black", label="global mean power")
-            ax3.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
+
+            ax33 = ax3.twiny()
+            ax33.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
 
         else:
             ca2 = ax2.pcolormesh(
                                 times,
                                 ff_cwt,
                                 cwt_power,
-                                vmin=min(reshape(cwt_power, cwt_power.size)),
-                                vmax=max(reshape(cwt_power, cwt_power.size)),
+                                # vmin=min(reshape(cwt_power, cwt_power.size)),
+                                # vmax=max(reshape(cwt_power, cwt_power.size)),
+                                vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 2),
+                                vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 98),
                                 )
 
+
             ax3.plot(global_mean_cwt_f, ff_cwt, color="black", label="global mean power")
-            ax3.plot(global_sum_cwt_f, ff_cwt, color="darkred", label="global sum power")
+
+            ax33 = ax3.twiny()
+            ax33.plot(global_sum_cwt_f, ff_cwt, color="darkred", label="global sum power")
 
         if period:
             ax2.plot(times, cone_p, color="white", ls="--")
             ax2.fill_between(times, cone_p, max(pp_cwt), color="white", alpha=0.2)
             ax2.set_ylabel(f"Period ({unit})", fontsize=font)
-            ax3.set_xlabel("global power", fontsize=font)
         else:
             ax2.plot(times, cone_f, color="white")
             ax2.fill_between(times, cone_f, min(ff_cwt), color="white", alpha=0.2)
             ax2.set_ylabel("Frequency (Hz)", fontsize=font)
             ax3.set_xlabel("Frequency (Hz)", fontsize=font)
 
-        ax3.legend()
+        # ax3.legend()
+        ax3.set_xlabel("global mean power", fontsize=font)
+        ax33.set_xlabel("global sum power", fontsize=font, color="darkred")
+        ax33.tick_params(axis='x', labelcolor="darkred")
         ax2.set_xlabel(f"Time ({unit})", fontsize=font)
 
 
         ## add colorbar
         cbar_ax = fig.add_axes([0.73, 0.75, 0.17, 0.08]) #[left, bottom, width, height]
-        cb = plt.colorbar(ca2, cax=cbar_ax, orientation="horizontal")
+        cb = plt.colorbar(ca2, cax=cbar_ax, orientation="horizontal", extend="both")
         cb.set_label("CWT power", fontsize=font, color="black")
 
 

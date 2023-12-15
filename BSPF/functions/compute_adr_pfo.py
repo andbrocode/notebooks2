@@ -267,12 +267,21 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
                 print(f" -> {sta} failed to rotate to ZNE")
                 continue
 
-
+            ## resampling using decitmate
+            # stats = stats.detrend("linear");
+            # stats = stats.taper(0.01);
+            # stats = stats.filter("lowpass", freq=18, corners=4, zerophase=True);
             # if station == "PY.PFOIX":
-            #     stats = stats.decimate(5, no_filter=True) ## 200 -> 40 Hz
+            #     stats = stats.decimate(5, no_filter=True); ## 200 Hz -> 40 Hz
+            # else:
+            #     stats = stats.decimate(2, no_filter=True); ## 40 Hz -> 20 Hz
+
+            ## resample all to 40 Hz
+            st = st.resample(40, no_filter=False)
 
             if station == config['reference_station']:
-                ref_station = stats.copy().resample(40, no_filter=False)
+                # ref_station = stats.copy().resample(40, no_filter=False)
+                ref_station = stats.copy()
 
             st += stats
             config['subarray'].append(f"{stats[0].stats.network}.{stats[0].stats.station}")
@@ -281,9 +290,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
         # stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
         st = st.sort()
-
-        ## resample all to 40 Hz
-        st = st.resample(40, no_filter=False)
 
 
         config['subarray_stations'] = config['subarray']
