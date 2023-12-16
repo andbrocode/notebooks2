@@ -280,7 +280,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
 
         fig3 = plt.figure(figsize=(15, 10))
 
-        gs = GridSpec(Nrow, Ncol, figure=fig, hspace=0.15)
+        gs = GridSpec(Nrow, Ncol, figure=fig3, hspace=0.15)
 
         ax0 = fig3.add_subplot(gs[0, :])
         ax1 = fig3.add_subplot(gs[1, :])

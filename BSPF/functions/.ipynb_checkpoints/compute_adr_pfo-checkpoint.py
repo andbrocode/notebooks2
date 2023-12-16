@@ -22,7 +22,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     import matplotlib.pyplot as plt
     import matplotlib.colors
 
-    from obspy import UTCDateTime, Stream
+    from obspy import UTCDateTime, Stream, read_inventory
     from obspy.clients import fdsn
     from obspy.geodetics.base import gps2dist_azimuth
     from obspy.geodetics import locations2degrees
@@ -34,6 +34,22 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
     import warnings
     warnings.filterwarnings('ignore')
+
+    if os.uname().nodename == 'lighthouse':
+        root_path = '/home/andbro/'
+        data_path = '/home/andbro/kilauea-data/'
+        archive_path = '/home/andbro/freenas/'
+        bay_path = '/home/andbro/bay200/'
+    elif os.uname().nodename == 'kilauea':
+        root_path = '/home/brotzer/'
+        data_path = '/import/kilauea-data/'
+        archive_path = '/import/freenas-ffb-01-data/'
+        bay_path = '/bay200/'
+    elif os.uname().nodename == 'lin-ffb-01':
+        root_path = '/home/brotzer/'
+        data_path = '/import/kilauea-data/'
+        archive_path = '/import/freenas-ffb-01-data/'
+        bay_path = '/bay200/'
 
     ## _____________________________________________________
 
@@ -147,18 +163,24 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             else:
                 loc, cha = "", "BH*"
 
-            inven = config['fdsn_client'].get_stations(network=net,
-                                                       station=sta,
-                                                       channel=cha,
-                                                       location=loc,
-                                                       starttime=config['tbeg'],
-                                                       endtime=config['tend'],
-                                                       level='response'
-                                                      )
+            try:
+                ## load local version
+                inven = read_inventory(data_path+f"BSPF/data/stationxml/{net}.{sta}.xml")
+            except:
+                inven = config['fdsn_client'].get_stations(network=net,
+                                                           station=sta,
+                                                           channel=cha,
+                                                           location=loc,
+                                                           starttime=config['tbeg'],
+                                                           endtime=config['tend'],
+                                                           level='response'
+                                                          )
 
             l_lon =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['longitude'])
             l_lat =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
             height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
+
+            inven.write("/home/andbro/kilauea-data/BSPF/data/stationxml/"+f"{station}.xml",format="STATIONXML")
 
             ## set coordinates of seismometer manually, since STATIONXML is wrong...
             if sta == "XPFO" or sta == "PFO" or sta == "PFOIX":
@@ -210,7 +232,11 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
             ## querry inventory data
             try:
-                inventory = config['fdsn_client'].get_stations(
+                try:
+                    ## load local version
+                    inventory = read_inventory(data_path+f"BSPF/data/stationxml/{net}.{sta}.xml")
+                except:
+                    inventory = config['fdsn_client'].get_stations(
                                                                 network=net,
                                                                 station=sta,
                                                                 location=loc,
@@ -250,7 +276,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
             ## remove response [VEL -> rad/s | DISP -> rad]
             # stats = stats.remove_sensitivity(inventory)
-            stats.remove_response(output="VEL", water_level=60)
+            stats.remove_response(inventory, output="VEL", water_level=60)
 
 
             #correct mis-alignment
@@ -458,7 +484,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
 
     ## stop times
     stop_timer1 = timeit.default_timer()
-    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60, 2)} minutes")
+    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60, 2)} minutes\n")
 
     if status:
         return rot, config['stations_loaded']
