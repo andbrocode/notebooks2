@@ -623,9 +623,10 @@ def __compute_adr_cc(header, st_in, out_lst, trigger_time, win_length_sec):
 
     return out
 
-
-
 # In[ ]:
+
+config['mseed_files'] = sorted([file for file in os.listdir(config['path_to_mseed'])])
+
 
 ## create dataframe for output
 out_df = pd.DataFrame()
@@ -692,7 +693,7 @@ df_adr_snr = pd.DataFrame(columns=header_adr_snr)
 
 
 # for event in tqdm(config['mseed_files'][:50]):
-for event in tqdm(config['mseed_files'][:10]):
+for event in tqdm(config['mseed_files']):
 
     yy = int(event.replace(".","_").split("_")[1][:4])
     mm = int(event.replace(".","_").split("_")[1][4:6])
