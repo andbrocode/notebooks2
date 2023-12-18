@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from pprint import pprint
 
 from functions.request_data import __request_data
@@ -424,18 +424,6 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, win_length_sec=10):
     bspf_i = st_in.select(station="BSPF").copy()
     bspf_a = st_in.select(station="BSPF").copy()
     bspf_m = st_in.select(station="BSPF").copy()
-    adr_i = st_in.select(station="RPFO", location="in").copy()
-    adr_a = st_in.select(station="RPFO", location="al").copy()
-    adr_m = st_in.select(station="RPFO", location="mi").copy()
-
-    bspf_a = bspf_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
-    adr_a = adr_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
-
-    bspf_i = bspf_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
-    adr_i = adr_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
-
-    bspf_m = bspf_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
-    adr_m = adr_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
 
     for tr in bspf_a:
         tr.stats.location = "al"
@@ -444,23 +432,58 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, win_length_sec=10):
     for tr in bspf_i:
         tr.stats.location = "in"
 
+    pfo_i = st_in.select(station="PFO*").copy()
+    pfo_a = st_in.select(station="PFO*").copy()
+    pfo_m = st_in.select(station="PFO*").copy()
+
+    for tr in pfo_a:
+        tr.stats.location = "al"
+    for tr in pfo_m:
+        tr.stats.location = "mi"
+    for tr in pfo_i:
+        tr.stats.location = "in"
+
+    adr_i = st_in.select(station="RPFO", location="in").copy()
+    adr_a = st_in.select(station="RPFO", location="al").copy()
+    adr_m = st_in.select(station="RPFO", location="mi").copy()
+
+    bspf_a = bspf_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
+    adr_a = adr_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
+    pfo_a = pfo_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
+
+    bspf_i = bspf_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
+    adr_i = adr_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
+    pfo_i = pfo_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
+
+    bspf_m = bspf_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
+    adr_m = adr_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
+    pfo_m = pfo_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
+
+
+
     bspf_a.detrend("linear")
     adr_a.detrend("linear")
+    pfo_a.detrend("linear")
 
     bspf_i.detrend("linear")
     adr_i.detrend("linear")
+    pfo_i.detrend("linear")
 
     adr_m.detrend("linear")
     adr_m.detrend("linear")
+    pfo_m.detrend("linear")
 
     st0 = adr_i
     st0 += bspf_i
+    st0 += pfo_i
 
     st0 += bspf_a
     st0 += adr_a
+    st0 += pfo_a
 
     st0 += bspf_m
     st0 += adr_m
+    st0 += pfo_m
 
 
 
@@ -601,16 +624,8 @@ def __compute_adr_cc(header, st_in, out_lst, trigger_time, win_length_sec):
     return out
 
 
-# In[ ]:
-
-
-config['mseed_files'] = sorted([file for file in os.listdir(config['path_to_mseed'])])
-
-len(config['mseed_files'])
-
 
 # In[ ]:
-
 
 ## create dataframe for output
 out_df = pd.DataFrame()
@@ -648,6 +663,9 @@ header_adr_snr = []
 for hh in ["BSPF_al_N_snr", "BSPF_al_E_snr", "BSPF_al_Z_snr", "BSPF_al_T_snr", "BSPF_al_R_snr",
            "BSPF_mi_N_snr", "BSPF_mi_E_snr", "BSPF_mi_Z_snr", "BSPF_mi_T_snr", "BSPF_mi_R_snr",
            "BSPF_in_N_snr", "BSPF_in_E_snr", "BSPF_in_Z_snr", "BSPF_in_T_snr", "BSPF_in_R_snr",
+           "PFO_in_N_snr", "PFO_in_E_snr", "PFO_in_Z_snr",
+           "PFO_al_N_snr", "PFO_al_E_snr", "PFO_al_Z_snr",
+           "PFO_mi_N_snr", "PFO_mi_E_snr", "PFO_mi_Z_snr",
            "RPFO_in_N_snr", "RPFO_in_E_snr", "RPFO_in_Z_snr",
            "RPFO_al_N_snr", "RPFO_al_E_snr", "RPFO_al_Z_snr",
            "RPFO_mi_N_snr", "RPFO_mi_E_snr", "RPFO_mi_Z_snr"]:
@@ -674,7 +692,7 @@ df_adr_snr = pd.DataFrame(columns=header_adr_snr)
 
 
 # for event in tqdm(config['mseed_files'][:50]):
-for event in tqdm(config['mseed_files']):
+for event in tqdm(config['mseed_files'][:10]):
 
     yy = int(event.replace(".","_").split("_")[1][:4])
     mm = int(event.replace(".","_").split("_")[1][4:6])
@@ -761,9 +779,6 @@ for event in tqdm(config['mseed_files']):
         skipped += 1
         continue
 
-
-        
-        
 ## _______________________________________
 
 out_df['origin'] = out_df['Torigin']
@@ -796,234 +811,3 @@ print(f"\n -> writing: {config['outpath_data']}bspf_analysisdata_adr_cc_{config[
 
 
 print(f"\n -> skipped: {skipped}")
-
-# ## Testing Signal-to-Noise ratios
-
-# In[ ]:
-
-
-def __compute_SNR(header, st_in, out_lst, trigger_time, win_length_sec=10, plot=False, plot_save=False):
-
-    from numpy import nanmean, sqrt, isnan, ones, nan, nanpercentile, nanargmax, argmax
-    from obspy import UTCDateTime
-
-    st_in = st_in.sort()
-    # st_in = st_in.detrend("demean").taper(0.01).filter("bandpass", freqmin=0.5, freqmax=15.0, corners=4, zerophase=True)
-
-    if plot or plot_save:
-        fig, ax = plt.subplots(len(st_in), 1, figsize=(15, 15), sharex=True)
-
-    out = {}
-    for ii, h in enumerate(header):
-
-        sta, loc, cha = h.split("_")[0], h.split("_")[1], h.split("_")[2]
-
-        try:
-            tr = st_in.select(station=sta, location=loc, channel=f"*{cha}")[0]
-        except:
-            out[h+"_snr"] = nan
-
-        t_rel_sec = abs(UTCDateTime(trigger_time)-tr.stats.starttime)
-
-        df = tr.stats.sampling_rate
-
-        NN = int(df * win_length_sec) ## samples
-
-        n_rel_spl = t_rel_sec * df ## samples
-
-        n_offset = df * 2 ## samples
-
-        n_noise_1, n_noise_2 = int(n_rel_spl-NN-n_offset), int(n_rel_spl-n_offset)
-        n_signal_1, n_signal_2 = int(n_rel_spl), int(n_rel_spl+NN)
-
-        ## noise, signal and ratio using mean
-        # noise = nanmean(tr.data[n_noise_1:n_noise_2]**2)
-        # signal = nanmean(tr.data[n_signal_1:n_signal_2]**2)
-        # out[h+"_snr"] = sqrt(signal/noise)
-
-        ## find index of maximum for PFO Z
-        tr_ = st_in.select(station="PFO*", location="10", channel=f"*R")[0]
-        max_idx = argmax(abs(tr_.data[n_signal_1:n_signal_2]))
-
-        ## samples offset around maximum
-        n_off = int(0.1 * df)
-
-
-        ## noise, signal and ratio using percentile
-        try:
-            noise = nanpercentile(abs(tr.data[n_noise_1:n_noise_2]), 99.9)
-            signal = nanpercentile(abs(tr.data[n_signal_1:n_signal_2]), 99.9)
-            out[h+"_snr"] = signal/noise
-        except:
-            out[h+"_snr"] = nan
-            print(f" -> snr: {h} adding nan")
-
-
-        if plot or plot_save:
-
-            if ii < len(st_in):
-
-                scaling = 1
-
-
-                ax[ii].plot(abs(tr.data)*scaling, label=f"{tr.stats.station}.{tr.stats.location}.{tr.stats.channel}")
-
-                ax[ii].legend(loc=1)
-
-                ## signal period
-                ax[ii].axvline(n_rel_spl, color="g")
-                ax[ii].axvline(n_rel_spl+NN, color="g")
-
-                # ax[ii].axhline(signal*scaling, n_rel_spl, n_rel_spl+NN, color="g", ls="--", zorder=3)
-
-                ## noise period
-                ax[ii].axvline(n_rel_spl-n_offset, color="r")
-                ax[ii].axvline(n_rel_spl-NN-n_offset, color="r")
-
-                # ax[ii].axhline(noise*scaling, n_rel_spl-n_offset, n_rel_spl-NN-n_offset, color="r", ls="--", zorder=3)
-
-                ## New direct picking
-                # maximal_value = abs(tr.data[n_signal_1+max_idx])
-                # ax[ii].scatter(n_signal_1+max_idx, maximal_value*scaling, color="tab:orange", alpha=0.7, zorder=4)
-
-
-                ## OLD window picking
-                maximal_idx = nanargmax(abs(tr.data[n_signal_1+max_idx-n_off:n_signal_1+max_idx+n_off]))
-                maximal_value = abs(tr.data[n_signal_1+max_idx-n_off+maximal_idx])
-                ax[ii].scatter(maximal_idx+n_signal_1+max_idx-n_off, maximal_value*scaling, color="tab:orange", alpha=0.7)
-
-                ax[ii].axvline(n_signal_1+max_idx-n_off, color="orange")
-                ax[ii].axvline(n_signal_1+max_idx+n_off, color="orange")
-                ax[ii].axvline(n_signal_1+max_idx-n_off+maximal_idx, color="orange", ls="--")
-
-                ax[ii].set_ylim(bottom=-0)
-
-    if plot:
-        plt.show();
-
-    if plot_save:
-        fig.savefig(config['outpath_figs']+f"SNR_{st_in[0].stats.starttime}.png", format="png", dpi=200, bbox_inches='tight')
-        plt.close();
-
-    return out
-
-
-# In[ ]:
-
-
-## create dataframe for output
-out_df = pd.DataFrame()
-
-out_df["Torigin"] = events.origin
-out_df["Magnitude"] = events.magnitude
-out_df["CoincidenceSum"] = events.cosum
-out_df["Mag_type"] = events.type
-out_df["BAZ"] = events.backazimuth
-out_df["Edistance_km"] = events.distances_km
-out_df["Hdistance_km"] = events.Hdistance_km
-
-tmp_events = [str(ee).split(".")[0] for ee in events.origin]
-
-data_amax, data_snr, data_adr, skipped, nan_row = [], [], [], 0, 0
-
-## pre-define header for data frames
-header = ['BSPF__E','BSPF__N','BSPF__R','BSPF__T','BSPF__Z',
-          'PFO_10_E','PFO_10_N','PFO_10_R','PFO_10_T','PFO_10_Z',
-          'RPFO_al_E','RPFO_al_N','RPFO_al_Z',
-          'RPFO_in_E','RPFO_in_N','RPFO_in_Z',
-          'RPFO_mi_E','RPFO_mi_N','RPFO_mi_Z'
-         ]
-
-## prepare dataframes
-header_amax = [h+"_amax" for h in header]
-header_amax.insert(0,"origin")
-df_amax = pd.DataFrame(columns=header_amax)
-
-header_snr = [h+"_snr" for h in header]
-header_snr.insert(0,"origin")
-df_snr = pd.DataFrame(columns=header_snr)
-
-
-header_adr = []
-for hh in ["BSPF_a_N_adr", "BSPF_a_E_adr", "BSPF_a_Z_adr", "BSPF_a_T_adr", "BSPF_a_R_adr",
-           "BSPF_m_N_adr", "BSPF_m_E_adr", "BSPF_m_Z_adr", "BSPF_m_T_adr", "BSPF_m_R_adr",
-           "BSPF_i_N_adr", "BSPF_i_E_adr", "BSPF_i_Z_adr", "BSPF_i_T_adr", "BSPF_i_R_adr",
-           "RPFO_in_N_adr", "RPFO_in_E_adr", "RPFO_in_Z_adr",
-           "RPFO_al_N_adr", "RPFO_al_E_adr", "RPFO_al_Z_adr",
-           "RPFO_mi_N_adr", "RPFO_mi_E_adr", "RPFO_mi_Z_adr"]:
-    header_adr.append(hh)
-
-# header_adr = [h+"_adr" for h in header]
-header_adr.insert(0, "origin")
-df_adr = pd.DataFrame(columns=header_adr)
-
-
-
-for event in tqdm(config['mseed_files'][200:201]):
-
-    yy = int(event.replace(".","_").split("_")[1][:4])
-    mm = int(event.replace(".","_").split("_")[1][4:6])
-    dd = int(event.replace(".","_").split("_")[1][6:8])
-    h = int(event.replace(".","_").split("_")[2][0:2])
-    m = int(event.replace(".","_").split("_")[2][2:4])
-    s = int(event.replace(".","_").split("_")[2][4:6])
-
-    otime = f"{yy}-{mm:02d}-{dd:02d} {h:02d}:{m:02d}:{s:02d}"
-
-
-    if otime not in tmp_events:
-        skipped += 1
-        continue
-    else:
-        jj = tmp_events.index(otime)
-
-#     print(f"\n -> {jj} {events.origin[jj]} ")
-
-    event_name = str(events.origin[jj]).replace("-","").replace(":","").replace(" ", "_").split(".")[0]
-
-
-    try:
-        st = obs.read(config['path_to_mseed']+event)
-
-        st = st.resample(40)
-
-        for tr in st:
-            if "PFOIX" in tr.stats.station:
-                tr.stats.station = "PFO"
-                tr.stats.location = "10"
-
-
-        ## add radial and transverse channels
-        st = __add_radial_and_transverse_channel(st, "PFO*", events.backazimuth[jj])
-        st = __add_radial_and_transverse_channel(st, "BSPF", events.backazimuth[jj])
-
-        if len(st) != 19:
-            print(f"{len(st)} is not 19")
-
-        ## processing data stream
-        st = st.detrend("linear")
-        st = st.taper(0.01)
-        st = st.filter("highpass", freq=0.01, corners=4, zerophase=True)
-
-        ## compute maximal amplitude values (PGA and PGR)
-        data_amax = __compute_Amax(header, st, data_amax, events.trigger_time[jj], win_length_sec=15)
-        row = {**{"origin":events.origin[jj]}, **data_amax}
-        df_amax.loc[len(df_amax)] = row
-
-        ## compute signal-to-noise ratios
-        data_snr = __compute_SNR(header, st, data_snr, events.trigger_time[jj], win_length_sec=15, plot=False, plot_save=False)
-        row = {**{"origin":events.origin[jj]}, **data_snr}
-        df_snr.loc[len(df_snr)] = row
-
-        # ## compute signal-to-noise ratios
-        # data_adr = __compute_adr_max(header, st, data_adr, events.trigger_time[jj], win_length_sec=15)
-        # row = {**{"origin":events.origin[jj]}, **data_adr}
-        # df_adr.loc[len(df_adr)] = row
-
-    except Exception as e:
-        print(e)
-        print(f" -> failed for {event}")
-        skipped += 1
-        continue
-
-
