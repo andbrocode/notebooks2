@@ -212,119 +212,9 @@ def __compute_Amax(header, st_in, out_lst, trigger_time, win_length_sec):
 # In[ ]:
 
 
-def __compute_SNR(header, st_in, out_lst, trigger_time, win_length_sec=10, plot=False, plot_save=False):
+def __compute_adr_max(header, st_in, out_lst, trigger_time, win_length_sec):
 
-    from numpy import nanmean, sqrt, isnan, ones, nan, nanpercentile, nanargmax, argmax
-    from obspy import UTCDateTime
-
-    st_in = st_in.sort()
-    st_in = st_in.detrend("demean")
-    # st_in = st_in.taper(0.01)
-    # st_in = st_in.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=4, zerophase=True)
-
-    if plot or plot_save:
-        fig, ax = plt.subplots(len(st_in), 1, figsize=(15, 15), sharex=True)
-
-    out = {}
-    for ii, h in enumerate(header):
-
-        sta, loc, cha = h.split("_")[0], h.split("_")[1], h.split("_")[2]
-
-        try:
-            tr = st_in.select(station=sta, location=loc, channel=f"*{cha}")[0]
-        except:
-            out[h+"_snr"] = nan
-
-        t_rel_sec = abs(UTCDateTime(trigger_time)-tr.stats.starttime)
-
-        df = tr.stats.sampling_rate
-
-        NN = int(df * win_length_sec) ## samples
-
-        n_rel_spl = t_rel_sec * df ## samples
-
-        n_offset = df * 2 ## samples
-
-        n_noise_1, n_noise_2 = int(n_rel_spl-NN-n_offset), int(n_rel_spl-n_offset)
-        n_signal_1, n_signal_2 = int(n_rel_spl), int(n_rel_spl+NN)
-
-        ## noise, signal and ratio using mean
-        # noise = nanmean(tr.data[n_noise_1:n_noise_2]**2)
-        # signal = nanmean(tr.data[n_signal_1:n_signal_2]**2)
-        # out[h+"_snr"] = sqrt(signal/noise)
-
-        ## find index of maximum for PFO Z
-        tr_ = st_in.select(station="PFO*", location="10", channel=f"*R")[0]
-        max_idx = argmax(abs(tr_.data[n_signal_1:n_signal_2]))
-
-        ## samples offset around maximum
-        n_off = int(1 * df)
-
-
-        ## noise, signal and ratio using percentile
-        try:
-            noise = nanpercentile(abs(tr.data[n_noise_1:n_noise_2]), 99.9)
-            signal = nanpercentile(abs(tr.data[n_signal_1:n_signal_2]), 99.9)
-            out[h+"_snr"] = signal/noise
-        except:
-            out[h+"_snr"] = nan
-            print(f" -> snr: {h} adding nan")
-
-
-        if plot or plot_save:
-
-            if ii < len(st_in):
-
-                scaling = 1
-
-
-                ax[ii].plot(abs(tr.data)*scaling, label=f"{tr.stats.station}.{tr.stats.location}.{tr.stats.channel}")
-
-                ax[ii].legend(loc=1)
-
-                ## signal period
-                ax[ii].axvline(n_rel_spl, color="g")
-                ax[ii].axvline(n_rel_spl+NN, color="g")
-
-                # ax[ii].axhline(signal*scaling, n_rel_spl, n_rel_spl+NN, color="g", ls="--", zorder=3)
-
-                ## noise period
-                ax[ii].axvline(n_rel_spl-n_offset, color="r")
-                ax[ii].axvline(n_rel_spl-NN-n_offset, color="r")
-
-                # ax[ii].axhline(noise*scaling, n_rel_spl-n_offset, n_rel_spl-NN-n_offset, color="r", ls="--", zorder=3)
-
-                maximal_value = abs(tr.data[n_signal_1+max_idx])
-                ax[ii].scatter(n_signal_1+max_idx, maximal_value*scaling, color="tab:orange", alpha=0.7)
-
-
-                ## OLD window picking
-                # maximal_idx = nanargmax(abs(tr.data[n_signal_1+max_idx-n_off:n_signal_1+max_idx+n_off]))
-                # maximal_value = abs(tr.data[n_signal_1+max_idx-n_off+maximal_idx])
-                # ax[ii].scatter(maximal_idx+n_signal_1+max_idx-n_off, maximal_value*scaling, color="tab:orange", alpha=0.7)
-
-                # ax[ii].axvline(n_signal_1+max_idx-n_off, color="orange")
-                # ax[ii].axvline(n_signal_1+max_idx+n_off, color="orange")
-                # ax[ii].axvline(n_signal_1+max_idx-n_off+maximal_idx, color="orange", ls="--")
-
-                ax[ii].set_ylim(bottom=-0)
-
-    if plot:
-        plt.show();
-
-    if plot_save:
-        fig.savefig(config['outpath_figs']+f"SNR_{st_in[0].stats.starttime}.png", format="png", dpi=200, bbox_inches='tight')
-        plt.close();
-
-    return out
-
-
-# In[ ]:
-
-
-def __compute_adr_snr(header, st_in, out_lst, trigger_time, method="maximum", win_length_sec=10):
-
-    from numpy import ones, nan, argmax, nanpercentile, nanmax, nanmean
+    from numpy import ones, nan, argmax
     from obspy import UTCDateTime
 
     st_in = st_in.copy().sort()
@@ -334,6 +224,18 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, method="maximum", wi
     bspf_i = st_in.select(station="BSPF").copy()
     bspf_a = st_in.select(station="BSPF").copy()
     bspf_m = st_in.select(station="BSPF").copy()
+    adr_i = st_in.select(station="RPFO", location="in").copy()
+    adr_a = st_in.select(station="RPFO", location="al").copy()
+    adr_m = st_in.select(station="RPFO", location="mi").copy()
+
+    bspf_a = bspf_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
+    adr_a = adr_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
+
+    bspf_i = bspf_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
+    adr_i = adr_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
+
+    bspf_m = bspf_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
+    adr_m = adr_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
 
     for tr in bspf_a:
         tr.stats.location = "al"
@@ -342,59 +244,23 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, method="maximum", wi
     for tr in bspf_i:
         tr.stats.location = "in"
 
-    pfo_i = st_in.select(station="PFO*").copy()
-    pfo_a = st_in.select(station="PFO*").copy()
-    pfo_m = st_in.select(station="PFO*").copy()
-
-    for tr in pfo_a:
-        tr.stats.location = "al"
-    for tr in pfo_m:
-        tr.stats.location = "mi"
-    for tr in pfo_i:
-        tr.stats.location = "in"
-
-    adr_i = st_in.select(station="RPFO", location="in").copy()
-    adr_a = st_in.select(station="RPFO", location="al").copy()
-    adr_m = st_in.select(station="RPFO", location="mi").copy()
-
-    bspf_a = bspf_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
-    adr_a = adr_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
-    pfo_a = pfo_a.filter("bandpass", freqmin=0.1, freqmax=0.5, corners=8, zerophase=True)
-
-    bspf_i = bspf_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
-    adr_i = adr_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
-    pfo_i = pfo_i.filter("bandpass", freqmin=1.0, freqmax=6.0, corners=8, zerophase=True)
-
-    bspf_m = bspf_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
-    adr_m = adr_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
-    pfo_m = pfo_m.filter("bandpass", freqmin=0.5, freqmax=1.0, corners=8, zerophase=True)
-
-
-
     bspf_a.detrend("linear")
     adr_a.detrend("linear")
-    pfo_a.detrend("linear")
 
     bspf_i.detrend("linear")
     adr_i.detrend("linear")
-    pfo_i.detrend("linear")
 
     adr_m.detrend("linear")
     adr_m.detrend("linear")
-    pfo_m.detrend("linear")
 
     st0 = adr_i
     st0 += bspf_i
-    st0 += pfo_i
 
     st0 += bspf_a
     st0 += adr_a
-    st0 += pfo_a
 
     st0 += bspf_m
     st0 += adr_m
-    st0 += pfo_m
-
 
 
     ## get relative samples of signal window
@@ -406,11 +272,15 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, method="maximum", wi
 
     n_rel_spl = t_rel_sec * df ## samples
 
-
-    n_offset = df * 2 ## samples
-
-    n_noise_1, n_noise_2 = int(n_rel_spl-NN-n_offset), int(n_rel_spl-n_offset)
     n_signal_1, n_signal_2 = int(n_rel_spl), int(n_rel_spl+NN)
+
+
+    ## find index of maximum for PFO Z
+    tr_ = st_in.select(station="PFO*", location="10", channel=f"*T")[0]
+    max_idx = argmax(abs(tr_.data[n_signal_1:n_signal_2]))
+
+    ## samples offset around maximum
+    n_off = int(0.1 * df)
 
 
     out = {}
@@ -419,25 +289,13 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, method="maximum", wi
         if h == "origin":
             continue
 
-        ## noise, signal and ratio using percentile
         sta, loc, cha = h.split("_")[0], h.split("_")[1], h.split("_")[2]
         try:
             tr = st0.select(station=sta, location=loc, channel=f"*{cha}")[0]
-
-            if method == "percentile":
-                noise = nanpercentile(abs(tr.data[n_noise_1:n_noise_2]), 99)
-                signal = nanpercentile(abs(tr.data[n_signal_1:n_signal_2]), 99)
-            elif method == "maximum":
-                noise = nanmax(abs(tr.data[n_noise_1:n_noise_2]))
-                signal = nanmax(abs(tr.data[n_signal_1:n_signal_2]))
-            elif method == "mean":
-                noise = nanmean(abs(tr.data[n_noise_1:n_noise_2]))
-                signal = nanmean(abs(tr.data[n_signal_1:n_signal_2]))
-
-            out[h] = signal/noise
-        except:
+            out[h] = max(abs(tr.data[n_signal_1+max_idx-n_off:n_signal_1+max_idx+n_off]))
+        except Exception as e:
             out[h] = nan
-            print(f" -> snr: {h} adding nan")
+            print(f" -> adr: {h} adding nan")
 
     return out
 
