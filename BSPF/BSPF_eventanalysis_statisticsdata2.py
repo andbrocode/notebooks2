@@ -414,7 +414,7 @@ def __compute_adr_max(header, st_in, out_lst, trigger_time, win_length_sec):
 
 def __compute_adr_snr(header, st_in, out_lst, trigger_time, win_length_sec=10):
 
-    from numpy import ones, nan, argmax, nanpercentile
+    from numpy import ones, nan, argmax, nanpercentile, nanmax
     from obspy import UTCDateTime
 
     st_in = st_in.copy().sort()
@@ -514,8 +514,12 @@ def __compute_adr_snr(header, st_in, out_lst, trigger_time, win_length_sec=10):
         try:
             tr = st0.select(station=sta, location=loc, channel=f"*{cha}")[0]
 
-            noise = nanpercentile(abs(tr.data[n_noise_1:n_noise_2]), 99)
-            signal = nanpercentile(abs(tr.data[n_signal_1:n_signal_2]), 99)
+            # noise = nanpercentile(abs(tr.data[n_noise_1:n_noise_2]), 99)
+            # signal = nanpercentile(abs(tr.data[n_signal_1:n_signal_2]), 99)
+
+            noise = nanmax(abs(tr.data[n_noise_1:n_noise_2]))
+            signal = nanmax(abs(tr.data[n_signal_1:n_signal_2]))
+
             out[h] = signal/noise
         except:
             out[h] = nan
