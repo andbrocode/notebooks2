@@ -111,7 +111,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
     ## _____________________
     ## PFO array information
 
-    if config['tbeg'] > UTCDateTime("2023-04-01"):
+    if config['tbeg'] > UTCDateTime("2023-04-02"):
         config['reference_station'] = 'PY.PFOIX' ## 'BPH01'  ## reference station
 
         config['array_stations'] = ['PY.PFOIX','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
@@ -180,7 +180,6 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             l_lat =  float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
             height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
 
-            inven.write("/home/andbro/kilauea-data/BSPF/data/stationxml/"+f"{station}.xml",format="STATIONXML")
 
             ## set coordinates of seismometer manually, since STATIONXML is wrong...
             if sta == "XPFO" or sta == "PFO" or sta == "PFOIX":
@@ -303,7 +302,7 @@ def __compute_adr_pfo(tbeg, tend, submask=None, status=False):
             #     stats = stats.decimate(2, no_filter=True); ## 40 Hz -> 20 Hz
 
             ## resample all to 40 Hz
-            st = st.resample(40, no_filter=False)
+            stats = stats.resample(40, no_filter=False)
 
             if station == config['reference_station']:
                 # ref_station = stats.copy().resample(40, no_filter=False)

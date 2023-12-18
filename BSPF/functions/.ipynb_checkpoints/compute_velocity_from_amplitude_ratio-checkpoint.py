@@ -1,6 +1,6 @@
 #!/bin/python3
 
-def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", win_time_s=2.0, cc_thres=0.8, overlap=0.5, flim=(None,None), plot=False):
+def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", reverse_rotZ=False, reverse_accZ=False, win_time_s=2.0, cc_thres=0.8, overlap=0.5, flim=(None,None), plot=False):
 
     from scipy.stats import pearsonr
     from numpy import zeros, nan, ones, nanmean, array, nanmax, linspace, std
@@ -40,7 +40,10 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         acc = t_acc
 
         ## change polarity !!!
-        rot = rot0.select(channel="*JZ")[0].data * -1
+        if reverse_rotZ:
+            rot = rot0.select(channel="*JZ")[0].data * -1
+        else:
+            rot = rot0.select(channel="*JZ")[0].data
 
 
     elif mode == "rayleigh":
@@ -51,7 +54,11 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
         rot = t_rot
 
         ## invert vertical acceleration for rayleigh waves
-        acc = -1*acc0.select(channel="*HZ")[0].data
+        if reverse_accZ:
+            acc = acc0.select(channel="*HZ")[0].data*-1
+        else:
+            acc = acc0.select(channel="*HZ")[0].data
+
 
     ## add overlap
     windows_overlap = []
@@ -137,9 +144,9 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", w
             formula = r"a$_T$/2$\Omega_Z$"
             ax.set_title(f"{sta}{loc} | Love ({formula}) | CC_min={cc_thres} | {flim[0]} - {flim[1]} Hz", fontsize=14)
 
-        out = {"time":time, "velocity":vel, "ccoef":ccor, "fig":fig}
+        out = {"time":time, "velocity":vel, "ccoef":ccor, "terr":terr, "fig":fig}
     else:
-        out = {"time":time, "velocity":vel, "ccoef":ccor}
+        out = {"time":time, "velocity":vel, "ccoef":ccor, "terr":terr, }
 
     return out
 

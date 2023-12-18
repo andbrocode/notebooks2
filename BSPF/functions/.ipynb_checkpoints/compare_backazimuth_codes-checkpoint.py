@@ -322,12 +322,12 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
 
         t1, t2 = hz.times().min(), hz.times().max()
 
-        ax0.plot(hz.times(), ht*trans_scaling, 'black', label=f"PFO.T")
-        ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R")
+        ax0.plot(hz.times(), (ht-hr)*trans_scaling, 'black', label=f"PFO.T - PFO.R")
+        ax1.plot(hz.times(), (hr+hz)*trans_scaling, 'black', label=f"PFO.R + PFO.Z")
         ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"PFO.Z")
 
-        ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
-        ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+        ax0.set_ylim(-max(abs((ht-hr)*trans_scaling)), max(abs((ht-hr)*trans_scaling)))
+        ax1.set_ylim(-max(abs((hr+hz)*trans_scaling)), max(abs((hr+hz)*trans_scaling)))
         ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
 
         ax00 = ax0.twinx()
@@ -346,9 +346,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         cmap = plt.get_cmap("viridis", 10)
 
         ca3 = ax3.scatter(out1['cc_max_t'], out1['cc_max_y'], c=out1['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
         ca4 = ax4.scatter(out2['cc_max_t'], out2['cc_max_y'], c=out2['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
         ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
         cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
@@ -363,15 +361,15 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
         cb5.set_label("CC-Coeff.", fontsize=font)
 
-        ax3.set_ylabel(f"Rayleigh Baz.(°)")
-        ax4.set_ylabel(f"Love Baz.(°)")
-        ax5.set_ylabel(f"CoVar. Baz.(°)")
+        ax3.set_ylabel(f"Rayleigh Baz.(°)", fontsize=font)
+        ax4.set_ylabel(f"Love Baz.(°)", fontsize=font)
+        ax5.set_ylabel(f"CoVar. Baz.(°)", fontsize=font)
 
         ax66 = ax6.twinx()
         ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax66.plot(kde1.pdf(angles), angles, c="tab:blue", lw=2, label='KDE')
-        ax66.axhline(baz_rayleigh_max, color="tab:blue", ls="--")
+        ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
+        ax66.axhline(baz_rayleigh_max, color="k", ls="--")
         ax66.set_axis_off()
         ax66.yaxis.tick_right()
         ax66.invert_xaxis()
@@ -379,8 +377,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         ax77 = ax7.twinx()
         ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax77.plot(kde2.pdf(angles), angles, c="tab:blue", lw=2, label='KDE')
-        ax77.axhline(baz_love_max, color="tab:blue", ls="--")
+        ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
+        ax77.axhline(baz_love_max, color="k", ls="--")
         ax77.set_axis_off()
         ax77.yaxis.tick_right()
         ax77.invert_xaxis()
@@ -388,8 +386,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         ax88 = ax8.twinx()
         ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
-        ax88.plot(kde3.pdf(angles), angles, c="tab:blue", lw=2, label='KDE')
-        ax88.axhline(baz_tangent_max, color="tab:blue", ls="--")
+        ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
+        ax88.axhline(baz_tangent_max, color="k", ls="--")
         ax88.set_axis_off()
         ax88.yaxis.tick_right()
         ax88.invert_xaxis()
@@ -407,7 +405,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         for _ax in [ax0, ax1, ax2]:
             _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
             _ax.legend(loc=1)
-            _ax.set_ylabel(f"a ({trans_unit})")
+            _ax.set_ylabel(f"a ({trans_unit})", fontsize=font)
             _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
 
         for _ax in [ax3 ,ax4, ax5]:
@@ -416,18 +414,17 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
             _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
             _ax.set_xlim(0,  (config['tend']-config['tbeg'])*1.15)
 
-            _ax.set_ylabel(f"Baz.(°)")
             _ax.plot([t1, t2], ones(2)*out3['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
-            _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", ls="--", zorder=1)
+            _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", zorder=1)
 
         for aaxx in [ax00, ax11, ax22]:
             aaxx.tick_params(axis='y', colors="darkred")
-            aaxx.set_ylabel(f"$\omega$ ({rot_unit})", color="darkred")
+            aaxx.set_ylabel(f"$\Omega$ ({rot_unit})", color="darkred", fontsize=font)
             aaxx.legend(loc=4)
 
         ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {fmin}-{fmax} Hz | T = {config['win_length_sec']} s | {config['overlap']} % overlap")
 
-        ax5.set_xlabel("Time (s)")
+        ax5.set_xlabel("Time (s)", fontsize=font)
 
         plt.show();
 
