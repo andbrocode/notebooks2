@@ -332,7 +332,7 @@ def main(config):
 
 #             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
-            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, fs0)
+            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, config['nominal_sagnac'])
 
             t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=10)
 
