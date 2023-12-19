@@ -178,7 +178,7 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband):
     ## bandpass with butterworth around Sagnac Frequency
     st0.detrend("linear")
     st0.taper(0.01)
-    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=8, zerophase=True)
+    st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=4, zerophase=True)
 
 
     ## estimate instantaneous frequency with hilbert
@@ -236,6 +236,66 @@ def __backscatter_correction(m01, m02, phase0, w_obs, fs0, cm_filter_factor=1.03
 
     return w_corrected
 
+def __get_fft_values(signal_in, dt, f_sagn, window=None):
+
+    from numpy import argmax, sqrt, where, argmin, gradient, mean
+    from scipy.fft import fft, fftfreq, fftshift
+    from scipy import signal
+    from numpy import angle, imag, unwrap
+
+    ## determine length of the input time series
+    n = int(len(signal_in))
+
+    signal_in = fftshift(signal_in)
+
+    ## calculate spectrum (with or without window function applied to time series)
+    if window:
+        win = signal.get_window(window, n);
+        spectrum = fft(signal_in * win, norm="forward")
+
+    else:
+        spectrum = fft(signal_in, norm="forward")
+
+    ## calculate frequency array
+    frequencies = fftfreq(n, d=dt)
+
+    ## correct amplitudes of spectrum
+    magnitude_corrected = abs(spectrum) *2 /n
+
+    ## none corrected magnitudes
+    magnitude = abs(spectrum)
+
+    ## phase spectrum
+    phase = angle(spectrum, deg=False)
+
+
+    freq = frequencies[0:n//2]
+    spec = magnitude[0:n//2]
+    pha = phase[0:n//2]
+
+
+    ## specify f-band around Sagnac frequency
+    fl = f_sagn - 2
+    fu = f_sagn + 2
+
+    ## get index of Sagnac peak
+    idx_fs = where(spec == max(spec[(freq > fl) & (freq < fu)]))[0][0]
+
+    ## estimate Sagnac frequency
+    f_sagn_est = freq[idx_fs]
+
+    ## estimate AC value at Sagnac peak
+    AC_est = spec[idx_fs] * 2
+
+    ## estimate DC value at ff = 0
+    DC_est = spec[0]
+
+    ## estimate phase at Sagnac peak
+    phase_est = pha[idx_fs] ## select phase of Sagnac
+
+    return f_sagn_est, AC_est, DC_est, phase_est
+
+
 ## _________________________________
 
 def main(config):
@@ -265,12 +325,14 @@ def main(config):
         for _n, (t1, t2) in enumerate(times):
 
             # print(t1,t2)
-            
+
             _dat = _st.copy().trim(t1, t2)
 
-            f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
+#             f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
 
-            fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
+#             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
+
+            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, fs0)
 
             t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=10)
 
