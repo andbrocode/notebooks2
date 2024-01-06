@@ -531,8 +531,6 @@ for t1, t2 in tqdm(times):
         vel_bf.append(out_bf['slow'])
 
 
-        ttime.append(t1)
-
     except Exception as e:
         print(e)
         print(f" -> baz computation failed!")
@@ -540,6 +538,7 @@ for t1, t2 in tqdm(times):
         baz_bf.append(np.nan)
         baz_bf_std.append(np.nan)
         vel_bf.append(np.nan)
+
 
 
 ## ---------------------------------------
