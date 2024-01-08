@@ -29,6 +29,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     import matplotlib.pyplot as plt
 
     from numpy import ones, arange, linspace, asarray, array, meshgrid, round, shape
+    from scipy import odr
     from pprint import pprint
     from obspy import read, read_events, UTCDateTime
     from obspy.clients.fdsn import Client
@@ -192,7 +193,6 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
             corrbaz.append(cc_max)
 
-
     corrbaz = asarray(corrbaz)
     corrbaz = corrbaz.reshape(len(backas), config['num_windows'])
 
@@ -207,6 +207,45 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     mesh = meshgrid(t_win, backas)
 
 
+    ## estimat velocity
+    vel = []
+    for _j, i_win in enumerate(range(0, config['num_windows'])):
+
+        ## infer indices
+        idx1 = int(config['sampling_rate'] * config['win_length_sec'] * i_win)
+        idx2 = int(config['sampling_rate'] * config['win_length_sec'] * (i_win + 1))
+
+        ## add overlap
+        if i_win > 0 and i_win < config['num_windows']:
+            idx1 = int(idx1 - config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
+            idx2 = int(idx2 + config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
+
+        ## prepare traces according to selected wave type
+        if wave_type == "love":
+            R_acc, T_acc = rotate_ne_rt(ACC.select(channel='*N')[0].data,
+                                        ACC.select(channel='*E')[0].data,
+                                        maxcorr[_j]
+                                       )
+            ## ODR
+            data = odr.RealData(ROT.select(channel="*Z")[0][idx1:idx2], 0.5*T_acc[idx1:idx2])
+            out = odr.ODR(data, model=odr.unilinear).run()
+            slope, intercept = out.beta
+            _vel = abs(slope)
+
+        elif wave_type == "rayleigh":
+            R_rot, T_rot = rotate_ne_rt(ROT.select(channel='*N')[0].data,
+                                        ROT.select(channel='*E')[0].data,
+                                        maxcorr[_j]
+                                       )
+            ## ODR
+            data = odr.RealData(T_rot[idx1:idx2], ACC.select(channel="*Z")[0][idx1:idx2])
+            out = odr.ODR(data, model=odr.unilinear).run()
+            slope, intercept = out.beta
+            _vel = abs(slope)
+
+        vel.append(_vel)
+
+    corrvel = asarray(vel)
 
     ## _______________________________
     ## Plotting
@@ -303,7 +342,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ax[1].legend(loc=1, fontsize=font-2)
 
         ## adjust tick label style
-        ax[1].ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
+        ax[1].ticklabel_format(axis='y', style='sci', scilimits=(-2, 2))
 
 
         ## add colorbar
@@ -331,6 +370,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     output['cc_max_t'] = t_win_center
     output['cc_max_y'] = maxcorr
     output['cc_max'] = maxcorr_value
+    output['vel'] = corrvel
 
     if event is not None:
         output['baz_theo'] = config['baz'][2]
