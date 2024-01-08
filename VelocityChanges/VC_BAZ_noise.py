@@ -64,7 +64,7 @@ config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
 config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
-config['fmin'], config['fmax'] = 1/10, 1/8
+config['fmin'], config['fmax'] = 1/10, 1/7
 
 config['cc_threshold'] = 0.5
 
@@ -72,7 +72,7 @@ config['interval_seconds'] = 1800
 
 config['window_overlap'] = 90
 
-config['window_length_sec'] = 5/config['fmin']
+config['window_length_sec'] = 2/config['fmin']
 
 ## ---------------------------------------
 
@@ -170,11 +170,8 @@ for t1, t2 in tqdm(times):
 
     conf['cc_thres'] = config['cc_threshold']
 
-
-    out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=True);
-
     try:
-        out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=True);
+        out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=False, save=True);
 
         baz_tangent.append(out['baz_tangent_max'])
         baz_rayleigh.append(out['baz_rayleigh_max'])
@@ -256,5 +253,8 @@ output['vel_bf'] = np.array(vel_bf)
 ## store output dictionary
 __save_to_pickle(output, config['path_to_data_out'], f"VC_BAZ_{config['tbeg'].date}_{config['tend'].date}")
 
+## store plot
+out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{config['tbeg'].date}_{config['tend'].date}.png", format="png", dpi=150, bbox_inches='tight')
+print(f" -> stored: {config['path_to_figures']}VC_BAZ_{config['tbeg'].date}_{config['tend'].date}.png")
 
 ## End of File
