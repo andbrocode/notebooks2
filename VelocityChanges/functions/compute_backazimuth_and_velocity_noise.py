@@ -1,4 +1,4 @@
-def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=False):
+def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=False, save=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -9,9 +9,14 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     from functions.compute_backazimuth import __compute_backazimuth
     from functions.compute_backazimuth_tangent import __compute_backazimuth_tangent
 
+    ## minimum number of data points for histogram
+    min_num_of_datapoints = 10
+
+    ## rotation and acceleration data
     rot = rot0.copy()
     acc = acc0.copy()
 
+    ## remove mean and filter
     rot.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
     acc.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
 
@@ -103,9 +108,12 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         baz_rayleigh_mean = round(average(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan), 0)
         baz_rayleigh_std = sqrt(cov(baz_rayleigh_no_nan, aweights=cc_rayleigh_no_nan))
 
-        # baz_rayleigh_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
         kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan)
-        baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
+
+        if len(baz_rayleigh_no_nan) > min_num_of_datapoints:
+            baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
+        else:
+            baz_rayleigh_max = nan
 
         ## ______________________________________
         ## Love
@@ -119,7 +127,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
         # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
         kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
-        baz_love_max = angles2[argmax(kde2.pdf(angles2))]
+
+        if len(baz_love_no_nan) > min_num_of_datapoints:
+            baz_love_max = angles2[argmax(kde2.pdf(angles2))]
+        else:
+            baz_love_max = nan
 
         ## ______________________________________
         ## Tangent
@@ -131,9 +143,12 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
         baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
 
-        # baz_tangent_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
         kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
-        baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
+
+        if len(baz_tangent_no_nan) > min_num_of_datapoints:
+            baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
+        else:
+            baz_lbaz_tangent_maxove_max = nan
 
     except Exception as e:
         print(e)
@@ -159,7 +174,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         vel_rayleigh_std = sqrt(cov(vel_rayleigh_no_nan, aweights=cc_vel_rayleigh_no_nan))
 
         vel_kde1 = sts.gaussian_kde(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan)
-        vel_rayleigh_max = velocities_fine[argmax(vel_kde1.pdf(velocities_fine))]
+
+        if len(vel_rayleigh_no_nan) > min_num_of_datapoints:
+            vel_rayleigh_max = velocities_fine[argmax(vel_kde1.pdf(velocities_fine))]
+        else:
+            vel_rayleigh_max = nan
 
         ## Love
         vel_love_no_nan, cc_vel_love_no_nan = zeros(len(out2['vel'])), zeros(len(out2['cc_max']))
@@ -174,7 +193,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         vel_love_std = sqrt(cov(vel_love_no_nan, aweights=cc_vel_love_no_nan))
 
         vel_kde2 = sts.gaussian_kde(vel_love_no_nan, weights=cc_vel_love_no_nan)
-        vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
+
+        if len(vel_love_no_nan) > min_num_of_datapoints:
+            vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
+        else:
+            vel_love_max = nan
 
     except Exception as e:
         print("no velocities")
@@ -184,7 +207,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     ## ______________________________________
     ## Plotting
 
-    if plot:
+    if plot or save:
 
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
@@ -340,7 +363,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
         ax5.set_xlabel("Time (s)")
 
-        plt.show();
+        if plot:
+            plt.show();
 
     ## prepare output directory
     out = {}
@@ -362,7 +386,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     out['vel_rayleigh_max'] = vel_rayleigh_max
     out['vel_rayleigh_std'] = vel_rayleigh_std
 
-    if plot:
+    if plot or save:
         # out['fig1'] = fig1
         # out['fig2'] = fig2
         out['fig3'] = fig3
