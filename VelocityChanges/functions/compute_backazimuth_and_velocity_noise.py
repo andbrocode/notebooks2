@@ -212,9 +212,9 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
 
-        Ncol, Nrow = 8, 6
+        Ncol, Nrow = 8, 7
 
-        fig3 = plt.figure(figsize=(15, 10))
+        fig3 = plt.figure(figsize=(15, 12))
 
         gs = GridSpec(Nrow, Ncol, figure=fig3, hspace=0.15)
 
@@ -230,11 +230,13 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax7 = fig3.add_subplot(gs[4, 7:])
         ax8 = fig3.add_subplot(gs[5, 7:])
 
+        ax9 = fig3.add_subplot(gs[6, :])
+
         ax6.set_axis_off()
         ax7.set_axis_off()
         ax8.set_axis_off()
 
-        for _ax in [ax0, ax1, ax2, ax3, ax4]:
+        for _ax in [ax0, ax1, ax2, ax3, ax4, ax5]:
             _ax.set_xticklabels([])
 
         rot_scaling, rot_unit = 1e9, r"nrad/s"
@@ -285,6 +287,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
         ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
+        ca9 = ax9.scatter(out1['cc_max_t'], out1['vel'], c=out1['cc_max'], marker='s', label="Rayleigh",
+                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+        ca9 = ax9.scatter(out2['cc_max_t'], out2['vel'], c=out2['cc_max'], marker='^', label="Love",
+                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+
         cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
         cb3 = plt.colorbar(ca3, ax=ax3, cax=cax3)
         cb3.set_label("CC-Coeff.", fontsize=font)
@@ -297,9 +304,14 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
         cb5.set_label("CC-Coeff.", fontsize=font)
 
-        ax3.set_ylabel(f"Rayleigh Baz.(°)")
-        ax4.set_ylabel(f"Love Baz.(°)")
-        ax5.set_ylabel(f"CoVar. Baz.(°)")
+        cax9 = ax9.inset_axes([1.01, 0., 0.02, 1])
+        cb9 = plt.colorbar(ca9, ax=ax9, cax=cax9)
+        cb9.set_label("CC-Coeff.", fontsize=font)
+
+        ax3.set_ylabel(f"Rayleigh Baz. (°)")
+        ax4.set_ylabel(f"Love Baz. (°)")
+        ax5.set_ylabel(f"CoVar. Baz. (°)")
+        ax9.set_ylabel(f"Phase Velocity (m/s)")
 
         ax66 = ax6.twinx()
         ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
@@ -361,7 +373,10 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
         ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {round(fmin ,3)}-{round(fmax,3)} Hz | T = {config['win_length_sec']} s | CC > {config['cc_thres']} | {config['overlap']} % overlap")
 
-        ax5.set_xlabel("Time (s)")
+        ax9.set_xlabel("Time (s)")
+        ax9.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+        ax9.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+        ax9.legend(loc=1, fontsize=font-1)
 
         if plot:
             plt.show();
@@ -381,10 +396,19 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     out['baz_love_mean'] = baz_love_mean
     out['baz_love_std'] = baz_love_std
 
+    out['baz_rayleigh_all'] = out1['cc_max_y']
+    out['baz_love_all'] = out2['cc_max_y']
+    out['baz_tangent_all'] = out3['baz_est']
+
     out['vel_love_max'] = vel_love_max
     out['vel_love_std'] = vel_love_std
     out['vel_rayleigh_max'] = vel_rayleigh_max
     out['vel_rayleigh_std'] = vel_rayleigh_std
+
+    out['vel_rayleigh_all'] = out1['vel']
+    out['vel_love_all'] = out2['vel']
+
+    out['times_relative'] = out1['cc_max_t']
 
     if plot or save:
         # out['fig1'] = fig1
