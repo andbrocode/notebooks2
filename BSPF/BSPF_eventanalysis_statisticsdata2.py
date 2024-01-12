@@ -657,7 +657,7 @@ for event in tqdm(config['mseed_files']):
         # df_snr.loc[len(df_snr)] = row
 
         ## compute signal-to-noise ratios
-        data_adr_snr = __compute_adr_snr(header_adr_snr, st, data_adr_snr, events.trigger_time[jj], method="mean", win_length_sec=15)
+        data_adr_snr = __compute_adr_snr(header_adr_snr, st, data_adr_snr, events.trigger_time[jj], method="maximum", win_length_sec=15)
         row = {**{"origin":events.origin[jj]}, **data_adr_snr}
         df_adr_snr.loc[len(df_adr_snr)] = row
 

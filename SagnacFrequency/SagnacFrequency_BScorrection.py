@@ -234,7 +234,7 @@ def __backscatter_correction(m01, m02, phase0, w_obs, fs0, cm_filter_factor=1.03
 
     w_corrected = np.array(w_obs) + correction
 
-    return w_corrected
+    return w_corrected, correction, term
 
 def __get_fft_values(signal_in, dt, f_sagn, window=None):
 
@@ -356,7 +356,7 @@ def main(config):
     phase0 = out_df.f1_ph - out_df.f2_ph
     w_obs = out_df.fj_fs
 
-    out_df['w_s'] = __backscatter_correction(m01, m02, phase0, w_obs, config['nominal_sagnac'], cm_filter_factor=1.033)
+    out_df['w_s'], out_df['bscorrection'], out_df['term'] = __backscatter_correction(m01, m02, phase0, w_obs, config['nominal_sagnac'], cm_filter_factor=1.033)
 
 
     ## store data

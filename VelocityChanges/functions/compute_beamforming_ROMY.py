@@ -28,6 +28,13 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
     from andbro__read_sds import __read_sds
 
+    username = os.environ.get('USER')
+    if username == "brotzer":
+        bay_path = "/bay200/"
+    elif username == "andbro":
+        bay_path = "/home/andbro/bay200/"
+        
+        
     ## _____________________________________________________
 
     def __get_data(config):
@@ -47,7 +54,9 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
             try:
                 try:
                     # print(" -> loading inventory via archive")
-                    inventory = read_inventory(f"/home/andbro/Documents/ROMY/stationxml_ringlaser/dataless.seed.{net}_{sta}", format="SEED")
+                    # inventory = read_inventory(f"/home/{username}/Documents/ROMY/stationxml_ringlaser/dataless.seed.{net}_{sta}", format="SEED")
+                    inventory = read_inventory(f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}", format="STATIONXML")
+
                 except:
                     # print(" -> loading inventory via Client")
                     inventory = Client(config['fdsn_clients'][k]).get_stations(
@@ -78,7 +87,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
                                                                             )
                 except Exception as e:
                     # print(" -> loading waveforms via archive")
-                    stats = __read_sds("/home/andbro/bay200/mseed_online/archive/", f"{net}.{sta}.{loc}.{cha}", config['tbeg']-20, config['tend']+20)
+                    stats = __read_sds(f"{bay_path}mseed_online/archive/", f"{net}.{sta}.{loc}.{cha}", config['tbeg']-20, config['tend']+20)
 
             except Exception as e:
                 print(e)
@@ -131,7 +140,9 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
             st += stats
 
-        st = st.resample(20, no_filter=False)
+        ## make sure all have same sampling rate for HH* only
+        if cha[0] == "H":
+            st = st.resample(20, no_filter=False)
 
         # print(st.__str__(extended=True))
 
