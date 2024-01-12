@@ -148,7 +148,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         if len(baz_tangent_no_nan) > min_num_of_datapoints:
             baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
         else:
-            baz_lbaz_tangent_maxove_max = nan
+            baz_tangent_max = nan
 
     except Exception as e:
         print(e)
@@ -399,6 +399,10 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     out['baz_rayleigh_all'] = out1['cc_max_y']
     out['baz_love_all'] = out2['cc_max_y']
     out['baz_tangent_all'] = out3['baz_est']
+
+    out['cc_rayleigh_all'] = out1['cc_max']
+    out['cc_love_all'] = out2['cc_max']
+    out['cc_tangent_all'] = out3['ccoef']
 
     out['vel_love_max'] = vel_love_max
     out['vel_love_std'] = vel_love_std

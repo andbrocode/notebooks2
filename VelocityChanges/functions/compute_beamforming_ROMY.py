@@ -7,7 +7,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     import matplotlib.dates as mdates
     import scipy.stats as sts
 
-    from obspy import UTCDateTime, Stream
+    from obspy import UTCDateTime, Stream, read_inventory
     from obspy.clients import fdsn
     from obspy.geodetics.base import gps2dist_azimuth
     from obspy.geodetics import locations2degrees
@@ -26,6 +26,8 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     import warnings
     warnings.filterwarnings('ignore')
 
+    from andbro__read_sds import __read_sds
+
     ## _____________________________________________________
 
     def __get_data(config):
@@ -36,39 +38,50 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
         for k, station in enumerate(config['subarray_stations']):
 
-            net, sta, loc, cha = station.split(".")[0], station.split(".")[1], "", f"BH{config['component']}"
+            net, sta, loc, cha = station.split(".")[0], station.split(".")[1], "", f"HH{config['component']}"
 
-            # print(f" -> requesting {net}.{sta}.{loc}.{cha}")
+            # print(f"-> requesting {net}.{sta}.{loc}.{cha}")
 
 
             ## querry inventory data
             try:
-                inventory = Client(config['fdsn_clients'][k]).get_stations(
-                                                                             network=net,
-                                                                             station=sta,
-                                                                             # channel=cha,
-                                                                             starttime=config['tbeg']-20,
-                                                                             endtime=config['tend']+20,
-                                                                             level="response"
-                                                                            )
+                try:
+                    # print(" -> loading inventory via archive")
+                    inventory = read_inventory(f"/home/andbro/Documents/ROMY/stationxml_ringlaser/dataless.seed.{net}_{sta}", format="SEED")
+                except:
+                    # print(" -> loading inventory via Client")
+                    inventory = Client(config['fdsn_clients'][k]).get_stations(
+                                                                                 network=net,
+                                                                                 station=sta,
+                                                                                 # channel=cha,
+                                                                                 starttime=config['tbeg']-20,
+                                                                                 endtime=config['tend']+20,
+                                                                                 level="response"
+                                                                                )
             except Exception as e:
-                print(e)
+                # print(e)
                 print(f" -> {station}: Failed to load inventory!")
                 inventory = None
 
             ## try to get waveform data
             try:
-                stats = Client(config['fdsn_clients'][k]).get_waveforms(
-                                                                        network=net,
-                                                                        station=sta,
-                                                                        location=loc,
-                                                                        channel=cha,
-                                                                        starttime=config['tbeg']-20,
-                                                                        endtime=config['tend']+20,
-                                                                        attach_response=True
-                                                                        )
+                try:
+                    # print(" -> loading waveforms via Client")
+                    stats = Client(config['fdsn_clients'][k]).get_waveforms(
+                                                                            network=net,
+                                                                            station=sta,
+                                                                            location=loc,
+                                                                            channel=cha,
+                                                                            starttime=config['tbeg']-20,
+                                                                            endtime=config['tend']+20,
+                                                                            # attach_response=True
+                                                                            )
+                except Exception as e:
+                    # print(" -> loading waveforms via archive")
+                    stats = __read_sds("/home/andbro/bay200/mseed_online/archive/", f"{net}.{sta}.{loc}.{cha}", config['tbeg']-20, config['tend']+20)
+
             except Exception as e:
-                # print(e)
+                print(e)
                 print(f" -> getting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
                 continue
 
@@ -118,8 +131,9 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
             st += stats
 
+        st = st.resample(20, no_filter=False)
 
-        print(st.__str__(extended=True)) if config['print_details'] else None
+        # print(st.__str__(extended=True))
 
         print(f" -> obtained: {int(len(st)/1)} of {len(config['subarray_stations'])} stations!")
 
@@ -387,6 +401,8 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     output['baz_bf_max'] = baz_bf_max
     output['baz_bf_std'] = baz_bf_std
 
+    output['num_stations_used'] = len(config['subarray_stations'])
+    output['num_stations_array'] = len(config['array_stations'])
 
     if plot:
         output['fig1'] = fig1

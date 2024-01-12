@@ -48,8 +48,8 @@ if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
 
-# config['tbeg'] = UTCDateTime("2023-09-23 00:00")
-# config['tend'] = UTCDateTime("2023-09-23 01:00")
+# config['tbeg'] = UTCDateTime("2023-09-20 00:00")
+# config['tend'] = UTCDateTime("2023-09-20 01:00")
 
 config['path_to_sds1'] = archive_path+"romy_archive/"
 
@@ -60,6 +60,9 @@ config['path_to_figures'] = data_path+f"VelocityChanges/figures/autoplots/"
 config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
 config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
+
+
+config['num_mlti'] = 3
 
 config['fmin'], config['fmax'] = 1/10, 1/7
 
@@ -73,6 +76,26 @@ config['window_length_sec'] = 2/config['fmin']
 
 ## ---------------------------------------
 
+def __load_mlti(tbeg, tend, ring, path_to_archive):
+
+    from obspy import UTCDateTime
+    from pandas import read_csv
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    year = tbeg.year
+
+    rings = {"U":"03", "Z":"01", "V":"02", "W":"04"}
+
+    path_to_mlti = path_to_archive+f"romy_archive/{year}/BW/CROMY/{year}_romy_{rings[ring]}_mlti.log"
+
+    mlti = read_csv(path_to_mlti, names=["time_utc","Action","ERROR"])
+
+    mlti = mlti[(mlti.time_utc > tbeg) & (mlti.time_utc < tend)]
+
+    return mlti
+
+## ---------------------------------------
 
 times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval_seconds'], interval_overlap=0)
 
@@ -88,13 +111,18 @@ baz_tangent_all = []
 baz_rayleigh_all = []
 baz_love_all = []
 
+cc_tangent_all = []
+cc_rayleigh_all = []
+cc_love_all = []
+
 vel_love_max = []
 vel_love_std = []
-vel_rayleigh_std = []
+vel_rayleigh_max = []
 vel_rayleigh_std = []
 
 vel_rayleigh_all = []
 vel_love_all = []
+vel_bf_all = []
 
 times_relative = []
 times_all = []
@@ -106,7 +134,15 @@ vel_bf = []
 
 ttime = []
 
-for t1, t2 in tqdm(times):
+num_stations_used = []
+
+status = np.zeros((2, len(times)))
+
+for _n, (t1, t2) in enumerate(tqdm(times)):
+
+    mltiU = __load_mlti(t1, t2, "U", archive_path)
+    mltiV = __load_mlti(t1, t2, "V", archive_path)
+    mltiZ = __load_mlti(t1, t2, "Z", archive_path)
 
     try:
         inv1 = read_inventory(config['path_to_inv']+"dataless.seed.BW_ROMY")
@@ -122,7 +158,12 @@ for t1, t2 in tqdm(times):
         st2 += __read_sds(config['path_to_sds2'], "GR.FUR..BHE", t1, t2);
 
         st1.remove_sensitivity(inv1);
-        st2.remove_response(inv2, output="ACC", water_level=10);
+        st2.remove_response(inv2, output="ACC", water_level=60);
+
+        levels = {}
+        for tr in st1:
+            ring = tr.stats.channel[-1]
+            levels[ring] = np.percentile(abs(tr.data), 90)
 
         st1 = __rotate_romy_ZUV_ZNE(st1, inv1)
 
@@ -178,28 +219,53 @@ for t1, t2 in tqdm(times):
     conf['cc_thres'] = config['cc_threshold']
 
     try:
-        print(f"computing backazimuth estimation")
+        print(f" computing backazimuth estimation")
         out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=False, save=True);
 
-        baz_tangent.append(out['baz_tangent_max'])
-        baz_rayleigh.append(out['baz_rayleigh_max'])
-        baz_love.append(out['baz_love_max'])
+        if mltiU.size > config['num_mlti'] or mltiV.size > config['num_mlti'] or levels["U"] > 1e-6 or levels["V"] > 1e-6:
+            print(" -> to many MLTI")
 
+            out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, np.nan
+
+            out['baz_rayleigh_max'], out['baz_rayleigh_std'], out['baz_rayleigh_all'] = np.nan, np.nan, np.nan
+
+            out['vel_rayleigh_max'], out['vel_rayleigh_all'], out['vel_rayleigh_std'] = np.nan, np.nan, np.nan
+
+            out['cc_rayleigh_all'], out['cc_tangent_all'] = np.nan, np.nan
+
+        if mltiZ.size > config['num_mlti'] or mltiZ.size > config['num_mlti'] or levels["Z"] > 1e-6:
+
+            out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, np.nan
+
+            out['vel_love_max'], out['vel_love_std'], out['vel_love_all'] = np.nan, np.nan, np.nan
+
+            out['cc_love_all'] = np.nan
+
+        baz_tangent.append(out['baz_tangent_max'])
         baz_tangent_std.append(out['baz_tangent_std'])
+        baz_tangent_all.append(out['baz_tangent_all'])
+
+        baz_rayleigh.append(out['baz_rayleigh_all'])
         baz_rayleigh_std.append(out['baz_rayleigh_std'])
+        baz_rayleigh_all.append(out['baz_rayleigh_all'])
+
+        vel_rayleigh_max.append(out['vel_rayleigh_max'])
+        vel_rayleigh_all.append(out['vel_rayleigh_all'])
+        vel_rayleigh_std.append(out['vel_rayleigh_std'])
+
+        cc_rayleigh_all.append(out['cc_rayleigh_all'])
+        cc_tangent_all.append(out['cc_tangent_all'])
+
+        baz_love.append(out['baz_love_max'])
         baz_love_std.append(out['baz_love_std'])
 
-        baz_tangent_all.append(out['baz_tangent_all'])
-        baz_rayleigh_all.append(out['baz_rayleigh_all'])
         baz_love_all.append(out['baz_love_all'])
 
         vel_love_max.append(out['vel_love_max'])
         vel_love_std.append(out['vel_love_std'])
-        vel_rayleigh_std.append(out['vel_rayleigh_max'])
-        vel_rayleigh_std.append(out['vel_rayleigh_std'])
-
-        vel_rayleigh_all.append(out['vel_rayleigh_all'])
         vel_love_all.append(out['vel_love_all'])
+
+        cc_love_all.append(out['cc_love_all'])
 
         times_relative.append(out['times_relative'])
         times_absolute = [t1 + float(_t) for _t in out['times_relative']]
@@ -209,7 +275,10 @@ for t1, t2 in tqdm(times):
 
         ## store plot
         out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1}_{t2}.png", format="png", dpi=150, bbox_inches='tight')
-        print(f" -> stored: {config['path_to_figures']}VC_BAZ_{config['tbeg']}_{config['tend']}.png")
+        print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1}_{t2}.png")
+
+        ## change status to success
+        status[0, _n] = 1
 
     except Exception as e:
         print(e)
@@ -223,15 +292,28 @@ for t1, t2 in tqdm(times):
         baz_rayleigh_std.append(np.nan)
         baz_love_std.append(np.nan)
 
+        baz_tangent_all.append(np.nan)
+        baz_rayleigh_all.append(np.nan)
+        baz_love_all.append(np.nan)
+
+        cc_tangent_all.append(np.nan)
+        cc_rayleigh_all.append(np.nan)
+        cc_love_all.append(np.nan)
+
         vel_love_max.append(np.nan)
         vel_love_std.append(np.nan)
-        vel_rayleigh_std.append(np.nan)
+        vel_rayleigh_max.append(np.nan)
         vel_rayleigh_std.append(np.nan)
 
-        ttime.append(t1)
+        vel_rayleigh_all.append(np.nan)
+        vel_love_all.append(np.nan)
+
+        times_relative.append(np.nan)
+        times_all.append(np.nan)
+        ttime.append(np.nan)
 
     try:
-        print(f"computing beamforming")
+        print(f" computing beamforming")
         out_bf = __compute_beamforming_ROMY(
                                             conf['tbeg'],
                                             conf['tend'],
@@ -245,8 +327,11 @@ for t1, t2 in tqdm(times):
 
         baz_bf.append(out_bf['baz_bf_max'])
         baz_bf_std.append(out_bf['baz_bf_std'])
-        vel_bf.append(out_bf['slow'])
+        vel_bf_all.append(out_bf['slow'])
+        num_stations_used.append(out_bf['num_stations_used'])
 
+        ## change status to success
+        status[1, _n] = 1
 
     except Exception as e:
         print(e)
@@ -254,7 +339,7 @@ for t1, t2 in tqdm(times):
 
         baz_bf.append(np.nan)
         baz_bf_std.append(np.nan)
-        vel_bf.append(np.nan)
+        vel_bf_all.append(np.nan)
 
 
 
@@ -273,9 +358,19 @@ output['baz_rayleigh_std'] = np.array(baz_rayleigh_std)
 output['baz_love_std'] = np.array(baz_love_std)
 output['baz_bf'] = np.array(baz_bf)
 output['baz_bf_std'] = np.array(baz_bf_std)
+
 output['vel_bf'] = np.array(vel_bf)
+output['vel_love_max'] = np.array(vel_love_max)
+output['vel_rayleigh_max'] = np.array(vel_rayleigh_max)
+
+output['vel_love_std'] = np.array(vel_love_std)
+output['vel_rayleigh_std'] = np.array(vel_rayleigh_std)
+
+output['num_stations_used'] = num_stations_used
+
 
 ## store output to file
+print(f"-> store: {config['path_to_data_out']}statistics/VC_BAZ_{config['tbeg'].date}.pkl")
 __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{config['tbeg'].date}")
 
 
@@ -288,12 +383,27 @@ output1['baz_tangent_all'] = np.array(baz_tangent_all)
 output1['baz_rayleigh_all'] = np.array(baz_rayleigh_all)
 output1['baz_love_all'] = np.array(baz_love_all)
 
+output1['cc_tangent_all'] = np.array(cc_tangent_all)
+output1['cc_rayleigh_all'] = np.array(cc_rayleigh_all)
+output1['cc_love_all'] = np.array(cc_love_all)
+
 output1['vel_rayleigh_all'] = np.array(vel_rayleigh_all)
 output1['vel_love_all'] = np.array(vel_love_all)
+output1['vel_bf_all'] = np.array(vel_bf_all)
+
 
 
 ## store output to file
+print(f"-> store: {config['path_to_data_out']}all/VC_BAZ_{config['tbeg'].date}_all.pkl")
 __save_to_pickle(output1, config['path_to_data_out']+"all/", f"VC_BAZ_{config['tbeg'].date}_all")
+
+
+## status plot
+import matplotlib.colors
+cmap = matplotlib.colors.ListedColormap(['red', 'green'])
+
+fig = plt.figure()
+plt.imshow(status)
 
 print("\n")
 
