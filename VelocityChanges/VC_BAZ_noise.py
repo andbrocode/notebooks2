@@ -48,8 +48,8 @@ if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
 
-# config['tbeg'] = UTCDateTime("2023-09-23 21:00")
-# config['tend'] = UTCDateTime("2023-09-23 22:00")
+# config['tbeg'] = UTCDateTime("2023-09-20 21:00")
+# config['tend'] = UTCDateTime("2023-09-20 22:00")
 
 config['path_to_sds1'] = archive_path+"romy_archive/"
 
@@ -170,7 +170,7 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
             ring = tr.stats.channel[-1]
             levels[ring] = np.percentile(abs(tr.data), 90)
 
-        st1 = __rotate_romy_ZUV_ZNE(st1, inv1)
+        st1 = __rotate_romy_ZUV_ZNE(st1, inv1);
 
     except:
         print(f" -> data loading failed !")
@@ -230,20 +230,20 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         if mltiU.size > config['num_mlti'] or mltiV.size > config['num_mlti'] or levels["U"] > 1e-6 or levels["V"] > 1e-6:
             print(" -> to many MLTI (horizontal)")
 
-            out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, np.nan
+            out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, nan_dummy
 
-            out['baz_rayleigh_max'], out['baz_rayleigh_std'], out['baz_rayleigh_all'] = np.nan, np.nan, np.nan
+            out['baz_rayleigh_max'], out['baz_rayleigh_std'], out['baz_rayleigh_all'] = np.nan, np.nan, nan_dummy
 
-            out['vel_rayleigh_max'], out['vel_rayleigh_all'], out['vel_rayleigh_std'] = np.nan, np.nan, np.nan
+            out['vel_rayleigh_max'], out['vel_rayleigh_std'], out['vel_rayleigh_all'] = np.nan, np.nan, nan_dummy
 
             out['cc_rayleigh_all'], out['cc_tangent_all'] = nan_dummy, nan_dummy
 
         if mltiZ.size > config['num_mlti'] or mltiZ.size > config['num_mlti'] or levels["Z"] > 1e-6:
             print(" -> to many MLTI (vertical)")
 
-            out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, np.nan
+            out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, nan_dummy
 
-            out['vel_love_max'], out['vel_love_std'], out['vel_love_all'] = np.nan, np.nan, np.nan
+            out['vel_love_max'], out['vel_love_std'], out['vel_love_all'] = np.nan, np.nan, nan_dummy
 
             out['cc_love_all'] = nan_dummy
 
@@ -299,6 +299,11 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         baz_rayleigh_std.append(np.nan)
         baz_love_std.append(np.nan)
 
+        vel_love_max.append(np.nan)
+        vel_love_std.append(np.nan)
+        vel_rayleigh_max.append(np.nan)
+        vel_rayleigh_std.append(np.nan)
+
         baz_tangent_all.append(nan_dummy)
         baz_rayleigh_all.append(nan_dummy)
         baz_love_all.append(nan_dummy)
@@ -307,16 +312,12 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         cc_rayleigh_all.append(nan_dummy)
         cc_love_all.append(nan_dummy)
 
-        vel_love_max.append(np.nan)
-        vel_love_std.append(np.nan)
-        vel_rayleigh_max.append(np.nan)
-        vel_rayleigh_std.append(np.nan)
-
         vel_rayleigh_all.append(nan_dummy)
         vel_love_all.append(nan_dummy)
 
-        times_relative.append(np.nan)
+        times_relative.append(nan_dummy)
         times_all.append(nan_dummy)
+
         ttime.append(np.nan)
 
     try:
@@ -346,14 +347,23 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
 
         baz_bf.append(np.nan)
         baz_bf_std.append(np.nan)
-        vel_bf_all.append(list(np.nan))
+        vel_bf_all.append(np.nan)
 
 
 ## ---------------------------------------
+def __to_array(arr_in):
+    arr_out = []
+    for _t in arr_in:
+        _t = np.array(_t)
+        if _t.size > 1:
+            for _x in _t:
+                arr_out.append(_x)
+        elif _t.size == 1:
+            arr_out.append(np.nan)
 
 
-def __make_unified_array(xx):
-    return np.array(sum([_x for _x in xx], []))
+    return np.array(arr_out)
+
 
 ## prepare output dictionary
 output = {}
@@ -386,19 +396,19 @@ __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{con
 ## prepare output dictionary
 output1 = {}
 
-output1['time'] = __make_unified_array(times_all)
+output1['time'] = __to_array(times_all)
 
-output1['baz_tangent_all'] = np.concatenate(baz_tangent_all, axis=0 )
-output1['baz_rayleigh_all'] = np.concatenate(baz_rayleigh_all, axis=0 )
-output1['baz_love_all'] = np.concatenate(baz_love_all, axis=0 )
+output1['baz_tangent_all'] = __to_array(baz_tangent_all)
+output1['baz_rayleigh_all'] = __to_array(baz_rayleigh_all)
+output1['baz_love_all'] = __to_array(baz_love_all)
 
-output1['cc_tangent_all'] = np.concatenate(cc_tangent_all, axis=0 )
-output1['cc_rayleigh_all'] = np.concatenate(cc_rayleigh_all, axis=0 )
-output1['cc_love_all'] = np.concatenate(cc_love_all, axis=0 )
+output1['cc_tangent_all'] = __to_array(cc_tangent_all)
+output1['cc_rayleigh_all'] = __to_array(cc_rayleigh_all)
+output1['cc_love_all'] = __to_array(cc_love_all)
 
-output1['vel_rayleigh_all'] = np.concatenate(vel_rayleigh_all, axis=0 )
-output1['vel_love_all'] = np.concatenate(vel_love_all, axis=0 )
-output1['vel_bf_all'] = np.concatenate(vel_bf_all, axis=0 )
+output1['vel_rayleigh_all'] = __to_array(vel_rayleigh_all)
+output1['vel_love_all'] = __to_array(vel_love_all)
+output1['vel_bf_all'] = __to_array(vel_bf_all)
 
 
 
@@ -416,8 +426,10 @@ fig = plt.figure()
 c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
 
-fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{t1_t2}_status.png", format="png", dpi=100, bbox_inches='tight')
-print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{t1_t2}.png")
+fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
+print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{config['tbeg'].date}.png")
+
+
 
 
 print("\n")
