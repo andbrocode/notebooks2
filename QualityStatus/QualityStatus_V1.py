@@ -75,6 +75,8 @@ config['DC_threshold'] = 0.1
 
 config['AC_threshold'] = 0.15
 
+config['delta_fsagnac'] = 1.0
+
 
 # ### Load MLTI Logs
 
@@ -144,7 +146,7 @@ for idx in range(beat.shape[0]):
     if _time > mlti_t2[idx_mlti] and idx_mlti < len(mlti_t1)-1:
         idx_mlti += 1
 
-    if beat.fj.iloc[idx] < config['fsagnac_nominal'] - 0.3 or beat.fj.iloc[idx] > config['fsagnac_nominal'] + 0.3:
+    if beat.fj.iloc[idx] < config['fsagnac_nominal'] - config['delta_fsagnac'] or beat.fj.iloc[idx] > config['fsagnac_nominal'] + config['delta_fsagnac']:
         quality[idx] = 0
         fsagnac[idx] = 0
 
