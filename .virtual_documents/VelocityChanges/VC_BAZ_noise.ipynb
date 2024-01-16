@@ -110,6 +110,7 @@ baz_love_std = []
 baz_tangent_all = []
 baz_rayleigh_all = []
 baz_love_all = []
+baz_bf_all = []
 
 cc_tangent_all = []
 cc_rayleigh_all = []
@@ -336,7 +337,10 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         baz_bf.append(out_bf['baz_bf_max'])
         baz_bf_std.append(out_bf['baz_bf_std'])
         vel_bf_all.append(out_bf['slow'])
+        baz_bf_all.append(out_bf['baz'])
+
         num_stations_used.append(out_bf['num_stations_used'])
+
 
         ## change status to success
         status[1, _n] = 1
@@ -401,6 +405,7 @@ output1['time'] = __to_array(times_all)
 output1['baz_tangent_all'] = __to_array(baz_tangent_all)
 output1['baz_rayleigh_all'] = __to_array(baz_rayleigh_all)
 output1['baz_love_all'] = __to_array(baz_love_all)
+output1['baz_bf_all'] = __to_array(baz_bf_all)
 
 output1['cc_tangent_all'] = __to_array(cc_tangent_all)
 output1['cc_rayleigh_all'] = __to_array(cc_rayleigh_all)

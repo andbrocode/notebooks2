@@ -68,7 +68,8 @@ config['path_to_figures'] = archive_path+f"romy_plots/{config['tbeg'].year}/R{co
 
 config['path_to_output'] = archive_path+f"temp_archive/{config['tbeg'].year}/BW/R{config['ring']}/"
 
-config['fsagnac_nominal'] = 303
+config['fsagnac_rings'] = {"U":303, "V":447.5, "W":447.5, "Z":553.5}
+config['fsagnac_nominal'] = config['fsagnac_rings'][config['ring']]
 
 config['DC_threshold'] = 0.1
 
@@ -79,10 +80,17 @@ config['AC_threshold'] = 0.15
 
 # In[5]:
 
+try:
+    mlti_log = __load_mlti(config['tbeg'], config['tend'], config['ring'], archive_path)
+except:
+    print(f"no MLTI log: {config['tbeg']}")
+    quit()
 
-mlti_log = __load_mlti(config['tbeg'], config['tend'], config['ring'], archive_path)
-
-mlti_t1, mlti_t2 = __get_mlti_intervals(mlti_log.time_utc, time_delta=100)
+try:
+    mlti_t1, mlti_t2 = __get_mlti_intervals(mlti_log.time_utc, time_delta=100)
+except:
+    print("mlti intervals failed!")
+    mlti_t1, mlti_t2 = np.array([]), np.array([])
 
 
 # ### Load Beat Data
@@ -92,8 +100,10 @@ mlti_t1, mlti_t2 = __get_mlti_intervals(mlti_log.time_utc, time_delta=100)
 try:
     beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
 except:
-    print(" -> failed to load data!")
+    print(" -> failed to load data: {config['tbeg']")
     quit()
+
+print(beat.fj.iloc[0:2])
 
 # ### Define Variables
 
@@ -200,7 +210,7 @@ plt.title(f"Quality Status of R{config['ring']} on {config['tbeg'].date}")
 
 # plt.show();
 
-# fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{t1_t2}_status.png", format="png", dpi=100, bbox_inches='tight')
-# print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{t1_t2}.png")
+print(f" -> stored: {config['path_to_figures']}R{config['ring']}_{config['tbeg'].date}_status.png")
+fig.savefig(config['path_to_figures']+f"R{config['ring']}_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
 
 ## End of File
