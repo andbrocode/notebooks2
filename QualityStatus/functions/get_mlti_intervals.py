@@ -21,7 +21,7 @@ def __get_mlti_intervals(mlti_times, time_delta=60):
 
         _tlast = _t
 
-    # t2.append(_t)
-    t2.append(mlti_times[-1])
+    t2.append(_t)
+    # t2.append(mlti_times[-1])
 
     return array(t1), array(t2)
