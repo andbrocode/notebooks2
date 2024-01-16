@@ -132,6 +132,7 @@ baz_bf = []
 baz_bf_std = []
 
 vel_bf = []
+time_bf = []
 
 ttime = []
 
@@ -336,6 +337,7 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
 
         baz_bf.append(out_bf['baz_bf_max'])
         baz_bf_std.append(out_bf['baz_bf_std'])
+        time_bf.append(out_bf['time'])
         vel_bf_all.append(out_bf['slow'])
         baz_bf_all.append(out_bf['baz'])
 
@@ -352,6 +354,8 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         baz_bf.append(np.nan)
         baz_bf_std.append(np.nan)
         vel_bf_all.append(np.nan)
+        time_bf.append(np.nan)
+        baz_bf_all.append(np.nan)
 
 
 ## ---------------------------------------
@@ -401,6 +405,7 @@ __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{con
 output1 = {}
 
 output1['time'] = __to_array(times_all)
+output1['time_bf'] = __to_array(time_bf)
 
 output1['baz_tangent_all'] = __to_array(baz_tangent_all)
 output1['baz_rayleigh_all'] = __to_array(baz_rayleigh_all)
