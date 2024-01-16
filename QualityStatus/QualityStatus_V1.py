@@ -103,7 +103,6 @@ except:
     print(" -> failed to load data: {config['tbeg']")
     quit()
 
-print(beat.fj.iloc[0:2])
 
 # ### Define Variables
 
