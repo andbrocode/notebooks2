@@ -105,7 +105,7 @@ except:
     print(f" -> failed to load data: {config['tbeg']}")
     quit()
 
-if beat.empty():
+if len(beat) == 0:
     print(f" -> no beat file: {config['tbeg']}")
     quit()
 
