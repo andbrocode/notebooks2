@@ -102,9 +102,12 @@ except:
 try:
     beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
 except:
-    print(" -> failed to load data: {config['tbeg']")
+    print(f" -> failed to load data: {config['tbeg']}")
     quit()
 
+if beat.empty():
+    print(f" -> no beat file: {config['tbeg']}")
+    quit()
 
 # ### Define Variables
 
@@ -138,13 +141,14 @@ for idx in range(beat.shape[0]):
 
     ## check if time conincides with MLTI
     # print(_time, mlti_t1[idx_mlti], mlti_t2[idx_mlti])
-    if _time >= mlti_t1[idx_mlti] and _time <= mlti_t2[idx_mlti]:
-        quality[idx] = 0
-        mlti[idx] = 0
+    if len(mlti_t1) > 0 and len(mlti_t2) > 0:
+        if _time >= mlti_t1[idx_mlti] and _time <= mlti_t2[idx_mlti]:
+            quality[idx] = 0
+            mlti[idx] = 0
 
-    ## update mlti interval
-    if _time > mlti_t2[idx_mlti] and idx_mlti < len(mlti_t1)-1:
-        idx_mlti += 1
+        ## update mlti interval
+        if _time > mlti_t2[idx_mlti] and idx_mlti < len(mlti_t1)-1:
+            idx_mlti += 1
 
     if beat.fj.iloc[idx] < config['fsagnac_nominal'] - config['delta_fsagnac'] or beat.fj.iloc[idx] > config['fsagnac_nominal'] + config['delta_fsagnac']:
         quality[idx] = 0
@@ -185,33 +189,38 @@ arr[2] *= status['mlti']
 
 # In[10]:
 
+try:
+    names = ["quality", "fsagnac", "mlti", "ac_threshold", "dc_threshold"]
+    bars = np.ones(len(names))-0.5
 
-names = ["quality", "fsagnac", "mlti", "ac_threshold", "dc_threshold"]
-bars = np.ones(len(names))-0.5
+    arr = np.ones((len(names), status['quality'].size))
 
-arr = np.ones((len(names), status['quality'].size))
-
-for _n, name in enumerate(names):
-    arr[_n] *= status[name]
-
-
-cmap = matplotlib.colors.ListedColormap(['darkred', 'green'])
-
-fig = plt.figure(figsize=(15, 4))
-
-c = plt.pcolormesh(np.arange(0, arr.shape[1]), names, arr, cmap=cmap, rasterized=True, alpha=0.8)
-
-for _k, bar in enumerate(bars):
-    plt.axhline(bar+_k, color="k", alpha=0.5)
-
-plt.xlabel("Time (min)")
+    for _n, name in enumerate(names):
+        arr[_n] *= status[name]
 
 
-plt.title(f"Quality Status of R{config['ring']} on {config['tbeg'].date}")
+    cmap = matplotlib.colors.ListedColormap(['darkred', 'green'])
 
-# plt.show();
+    fig = plt.figure(figsize=(15, 4))
 
-print(f" -> stored: {config['path_to_figures']}R{config['ring']}_{config['tbeg'].date}_status.png")
-fig.savefig(config['path_to_figures']+f"R{config['ring']}_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
+    c = plt.pcolormesh(np.arange(0, arr.shape[1]), names, arr, cmap=cmap, rasterized=True, alpha=0.8)
+
+    for _k, bar in enumerate(bars):
+        plt.axhline(bar+_k, color="k", alpha=0.5)
+
+    plt.xlabel("Time (min)")
+
+
+    plt.title(f"Quality Status of R{config['ring']} on {config['tbeg'].date}")
+
+    # plt.show();
+
+    print(f" -> stored: {config['path_to_figures']}R{config['ring']}_{config['tbeg'].date}_status.png")
+    fig.savefig(config['path_to_figures']+f"R{config['ring']}_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
+
+except:
+    print(" -> failed to plot: {config['tbeg']")
+
+
 
 ## End of File
