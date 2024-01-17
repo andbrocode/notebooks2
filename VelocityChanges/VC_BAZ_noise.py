@@ -337,7 +337,7 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
 
         baz_bf.append(out_bf['baz_bf_max'])
         baz_bf_std.append(out_bf['baz_bf_std'])
-        time_bf.append(out_bf['time'])
+        time_bf.append(t1+out_bf['time'])
         vel_bf_all.append(out_bf['slow'])
         baz_bf_all.append(out_bf['baz'])
 
