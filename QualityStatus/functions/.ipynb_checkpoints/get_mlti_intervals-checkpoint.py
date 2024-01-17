@@ -13,15 +13,15 @@ def __get_mlti_intervals(mlti_times, time_delta=60):
 
         if k == 0:
             _tlast = _t
-            t1.append(_t)
+            t1.append(UTCDateTime(str(_t)[:16]))
 
         if _t -_tlast > time_delta:
-            t2.append(_tlast)
-            t1.append(_t)
+            t2.append(UTCDateTime(str(_tlast)[:16])+60)
+            t1.append(UTCDateTime(str(_t)[:16]))
 
         _tlast = _t
 
-    t2.append(_t)
+    t2.append(UTCDateTime(str(_t)[:16])+60)
     # t2.append(mlti_times[-1])
 
     return array(t1), array(t2)
