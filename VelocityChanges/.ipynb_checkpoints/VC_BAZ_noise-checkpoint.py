@@ -172,7 +172,7 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
             ring = tr.stats.channel[-1]
             levels[ring] = np.percentile(abs(tr.data), 90)
 
-        st1 = __rotate_romy_ZUV_ZNE(st1, inv1);
+        st1 = __rotate_romy_ZUV_ZNE(st1, inv1, keep_z=True);
 
     except:
         print(f" -> data loading failed !")

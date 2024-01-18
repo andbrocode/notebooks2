@@ -1,4 +1,4 @@
-def __rotate_romy_ZUV_ZNE(st, inv):
+def __rotate_romy_ZUV_ZNE(st, inv, keep_z=False):
 
     from obspy.signal.rotate import rotate2zne
 
@@ -20,7 +20,11 @@ def __rotate_romy_ZUV_ZNE(st, inv):
 
     st_new = st.copy()
 
-    st_new.select(channel="*Z")[0].data = romy_z
+    if keep_z:
+        st_new.select(channel="*Z")[0].data = st.select(channel="*Z")[0].data
+    else:
+        st_new.select(channel="*Z")[0].data = romy_z
+
     st_new.select(channel="*U")[0].data = romy_n
     st_new.select(channel="*V")[0].data = romy_e
 
