@@ -384,6 +384,9 @@ def main(config):
         elif "A" in st2[0].stats.channel:
             st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
 
+        print(st1)
+        print(st2)
+            
         ## Pre-Processing
         try:
             st1 = st1.split()
