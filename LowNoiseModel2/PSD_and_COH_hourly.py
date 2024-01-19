@@ -407,8 +407,11 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
-                st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+
+                # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
+                # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
 
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
