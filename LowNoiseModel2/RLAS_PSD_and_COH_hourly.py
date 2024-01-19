@@ -452,8 +452,8 @@ def main(config):
         print(st1)
         print(st2)
 
-        st1.plot();
-        st2.plot();
+        # st1.plot();
+        # st2.plot();
 
         if len(st1[0].data) != len(st2[0].data):
             print(" -> not sampe amount of samples!")
