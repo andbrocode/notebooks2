@@ -431,8 +431,8 @@ def main(config):
             print(e)
             continue
 
-        st1.plot(equal_scale=False)
-        st2.plot(equal_scale=False)
+        # st1.plot(equal_scale=False)
+        # st2.plot(equal_scale=False)
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
