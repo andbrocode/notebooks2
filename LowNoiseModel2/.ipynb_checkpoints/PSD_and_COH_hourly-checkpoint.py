@@ -404,8 +404,8 @@ def main(config):
                     tr.data = tr.data*9.81
 
             else:
-                # st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                # st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
+                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
                 st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
@@ -428,7 +428,6 @@ def main(config):
             print(e)
             continue
 
-        print("plot")
         st1.plot(equal_scale=False)
         st2.plot(equal_scale=False)
 
