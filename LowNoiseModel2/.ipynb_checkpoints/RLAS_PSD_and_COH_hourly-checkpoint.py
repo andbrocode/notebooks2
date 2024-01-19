@@ -69,7 +69,7 @@ else:
 
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-01")
-config['date2'] = UTCDateTime(f"{config['year']}-12-31")
+config['date2'] = UTCDateTime(f"{config['year']}-09-02")
 
 if "FFBI" in config['seed1']:
     config['path_to_data1'] = bay_path+f"mseed_online/archive/"
@@ -410,8 +410,8 @@ def main(config):
 
             else:
 
-                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+                # st1 = st1.detrend("linear").detrend("demean").taper(0.05)
+                # st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
                 st1 = st1.filter("lowpass", freq=0.005, corners=4, zerophase=True)
                 st2 = st2.filter("lowpass", freq=0.005, corners=4, zerophase=True)
@@ -452,8 +452,8 @@ def main(config):
         print(st1)
         print(st2)
 
-        # st1.plot();
-        # st2.plot();
+        st1.plot();
+        st2.plot();
 
         if len(st1[0].data) != len(st2[0].data):
             print(" -> not sampe amount of samples!")
