@@ -406,14 +406,15 @@ def main(config):
                     tr.data = tr.data*9.81
 
             else:
-                st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
-                st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
+                st1 = st1.filter("lowpass", freq=0.01, corners=4, zerophase=True)
+                st2 = st2.filter("lowpass", freq=0.01, corners=4, zerophase=True)
 
-                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                # st1 = st1.resample(20.0, no_filter=False)
-                # st2 = st2.resample(20.0, no_filter=False)
+                # st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                # st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+
+                # st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.resample(0.01, no_filter=True)
+                st2 = st2.resample(0.01, no_filter=True)
 
 
             st1 = st1.merge()
