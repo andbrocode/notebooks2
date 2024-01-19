@@ -410,8 +410,8 @@ def main(config):
 
             else:
 
-                # st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                # st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
+                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
                 st1 = st1.filter("lowpass", freq=0.005, corners=4, zerophase=True)
                 st2 = st2.filter("lowpass", freq=0.005, corners=4, zerophase=True)
