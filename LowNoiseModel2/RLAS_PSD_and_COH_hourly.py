@@ -267,13 +267,15 @@ def main(config):
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
+        offset_sec = 7200  ## seconds
+        
         try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-1800, config['tend']+1800)
+            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
         try:
-            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-1800, config['tend']+1800)
+            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed2']} ...")
             continue
@@ -294,9 +296,9 @@ def main(config):
 
         if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
             try:
-                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-1800, config['tend']+1800)
-                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-1800, config['tend']+1800)
-                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-1800, config['tend']+1800)
+                _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-offset_sec, config['tend']+offset_sec)
+                _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-offset_sec, config['tend']+offset_sec)
+                _stZ = __read_sds(config['path_to_data2'], "BW.ROMY.10.BJZ", config['tbeg']-offset_sec, config['tend']+offset_sec)
 
                 _stU = _stU.merge()
                 _stV = _stV.merge()
