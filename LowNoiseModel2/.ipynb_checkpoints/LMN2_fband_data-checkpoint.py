@@ -163,16 +163,16 @@ for name in names:
 
         for app in apps:
 
-            print(name, comp, app)
+            # print(name, comp, app)
 
             config = {}
             try:
 
-                if app == "BDO_coh":
+                if app == "BDO_coh" and name != "FFBI":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
                     config['outname'] = f"FFBI_BDO_{name}_{comp}_coherence"
                     N = 36002
-                elif app == "BDF_coh":
+                elif app == "BDF_coh" and name != "FFBI":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
                     config['outname'] = f"FFBI_BDF_{name}_{comp}_coherence"
                     N = 36002
