@@ -72,8 +72,8 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-12-01")
-config['date2'] = UTCDateTime(f"{config['year']}-12-10")
+config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+config['date2'] = UTCDateTime(f"{config['year']}-12-31")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
