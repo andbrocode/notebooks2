@@ -428,6 +428,7 @@ def main(config):
             print(f" -> pre-processing failed!")
             continue
 
+        print("plot")
         st1.plot(equal_scale=False);
         st2.plot(equal_scale=False);
 
