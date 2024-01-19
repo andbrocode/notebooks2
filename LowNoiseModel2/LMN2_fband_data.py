@@ -44,7 +44,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2023-12-01", "2023-12-31"
+t1, t2 = "2023-09-23", "2023-12-31"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
