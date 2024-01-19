@@ -80,10 +80,10 @@ config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FF
 
 if "FUR" in config['seed2']:
     config['path_to_data2'] = bay_path+f"mseed_online/archive/"
-    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.GR_FUR"
+    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
 elif "ROMY" in config['seed2']:
     config['path_to_data2'] = archive_path+f"romy_archive/"
-    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless.seed.BW_ROMY"
+    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
 
 
 ## specify unit
