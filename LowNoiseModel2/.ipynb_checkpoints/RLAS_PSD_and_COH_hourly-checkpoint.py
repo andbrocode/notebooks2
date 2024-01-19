@@ -267,8 +267,8 @@ def main(config):
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
-        offset_sec = 7200  ## seconds
-        
+        offset_sec = 10800  ## seconds
+
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
@@ -415,8 +415,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("lowpass", freq=0.005, corners=4, zerophase=True)
-                st2 = st2.filter("lowpass", freq=0.005, corners=4, zerophase=True)
+                st1 = st1.filter("lowpass", freq=0.07, corners=4, zerophase=True)
+                st2 = st2.filter("lowpass", freq=0.07, corners=4, zerophase=True)
 
                 # st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=0.005, corners=4, zerophase=True)
                 # st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=0.005, corners=4, zerophase=True)
@@ -425,8 +425,8 @@ def main(config):
                 # st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
 
                 # st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st1 = st1.resample(0.01, no_filter=True)
-                st2 = st2.resample(0.01, no_filter=True)
+                st1 = st1.resample(0.015, no_filter=True)
+                st2 = st2.resample(0.015, no_filter=True)
 
 
             st1 = st1.merge()
