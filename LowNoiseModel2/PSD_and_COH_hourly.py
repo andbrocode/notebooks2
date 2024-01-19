@@ -73,7 +73,7 @@ else:
 
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-15")
-config['date2'] = UTCDateTime(f"{config['year']}-11-30")
+config['date2'] = UTCDateTime(f"{config['year']}-09-16")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -424,13 +424,13 @@ def main(config):
             st2 = st2.trim(config['tbeg'], config['tend'])
 
         except Exception as e:
-            print(e)
             print(f" -> pre-processing failed!")
+            print(e)
             continue
 
         print("plot")
-        st1.plot(equal_scale=False);
-        st2.plot(equal_scale=False);
+        st1.plot(equal_scale=False)
+        st2.plot(equal_scale=False)
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
