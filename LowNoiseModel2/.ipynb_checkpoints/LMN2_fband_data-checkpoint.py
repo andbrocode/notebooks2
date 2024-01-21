@@ -10,7 +10,7 @@
 from obspy import UTCDateTime
 from scipy.signal import welch
 from numpy import log10, zeros, pi, append, linspace, array, where, transpose, shape, histogram, arange, append, nanmedian
-from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan
+from numpy import logspace, linspace, log, log10, isinf, ones, nan, count_nonzero, sqrt, isnan, nanmean
 from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm
 from pathlib import Path
@@ -234,7 +234,8 @@ for name in names:
                     for _k, _psd in enumerate(_dat):
 
                         if name == "FFBI":
-                            if np.nanmean(_psd[:10] > 1e4:
+                            if nanmean(_psd[:10] > 1e4):
+                                print(f" -> level too high!")
                                 pass
                             else:
                                 dat.append(_psd)
