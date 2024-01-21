@@ -532,7 +532,7 @@ def main(config):
 
             if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
                 try:
-                    statusZ = __load_status(config['tbeg'], config['tend'], "Z", config['path_to_status_data'])
+                    statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
                 except:
                     print(f" -> cannot load status file!")
                     continue
