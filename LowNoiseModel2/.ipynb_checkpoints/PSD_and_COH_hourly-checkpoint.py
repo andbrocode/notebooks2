@@ -514,32 +514,32 @@ def main(config):
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
 
-        ## check data quality
-        if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
-            try:
-                statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
-                statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
-            except:
-                print(f" -> cannot load status file!")
-                continue
+            ## check data quality
+            if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
+                try:
+                    statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
+                    statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
+                except:
+                    print(f" -> cannot load status file!")
+                    continue
 
-            if statusU.quality.eq(0).any():
-                print(f" -> U: bad quality status detected!")
-                continue
-            elif statusU.quality.eq(0).any():
-                print(f" -> V: bad quality status detected!")
-                continue
+                if statusU.quality.eq(0).any():
+                    print(f" -> U: bad quality status detected!")
+                    continue
+                elif statusU.quality.eq(0).any():
+                    print(f" -> V: bad quality status detected!")
+                    continue
 
-        if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
-            try:
-                statusZ = __load_status(config['tbeg'], config['tend'], "Z", config['path_to_status_data'])
-            except:
-                print(f" -> cannot load status file!")
-                continue
+            if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
+                try:
+                    statusZ = __load_status(config['tbeg'], config['tend'], "Z", config['path_to_status_data'])
+                except:
+                    print(f" -> cannot load status file!")
+                    continue
 
-            if statusZ.quality.eq(0).any():
-                print(f" -> Z: bad quality status detected!")
-                continue
+                if statusZ.quality.eq(0).any():
+                    print(f" -> Z: bad quality status detected!")
+                    continue
 
             if n == 0:
                 ## prepare lists
