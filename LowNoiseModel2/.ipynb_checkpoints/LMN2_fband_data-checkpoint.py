@@ -205,12 +205,15 @@ for name in names:
             psds_medians_out, times_out = [], []
 
             dat, dates = [], []
+
             # if name == "DROMY":
             #     dat = ones((date_range(d1, d2).size*24, 1802))*nan
             # else:
             #     dat = ones((date_range(d1, d2).size*24, N))*nan
 
             # dates = ones((date_range(d1, d2).size*24))*nan
+
+
             index = 0
 
             for jj, day in enumerate(date_range(d1, d2)):
@@ -221,7 +224,6 @@ for name in names:
 
                 try:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
-                    # _dat, _rejected = __remove_noisy_psds(_dat, threshold_mean=1e-15, ff=ff1, flim=0.1)
 
                 except Exception as e:
                     print(e)
@@ -230,10 +232,18 @@ for name in names:
 
                 try:
                     for _k, _psd in enumerate(_dat):
-                        dat.append(_psd)
-                        dates.append(f"{day}_{str(_k).rjust(2, '0')}")
-                        # dat[index] = _psd
-                        # dates[index] = f"{day}_{str(_k).rjust(2, '0')}"
+
+                        if name == "FFBI":
+                            if np.nanmean(_psd[:10] > 1e4:
+                                pass
+                            else:
+                                dat.append(_psd)
+                                dates.append(f"{day}_{str(_k).rjust(2, '0')}")
+
+                        else:
+                            dat.append(_psd)
+                            dates.append(f"{day}_{str(_k).rjust(2, '0')}")
+
                         index += 1
 
                 except Exception as e:

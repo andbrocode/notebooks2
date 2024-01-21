@@ -85,6 +85,8 @@ elif "ROMY" in config['seed2']:
     config['path_to_data2'] = archive_path+f"romy_archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
 
+config['path_to_status_data'] = archive_path+f"temp_archive/"
+
 
 ## specify unit
 config['unit'] = "Pa" ## hPa or Pa or None
@@ -165,7 +167,6 @@ def __multitaper_psd(arr, dt, n_win=5, time_bandwidth=4.0):
     return f, psd
 
 
-
 def __write_to_csv(data, text, config):
 
     import csv
@@ -233,6 +234,57 @@ def __conversion_to_tilt(st, conf):
 
     print(f"  -> converted data of {st[0].stats.station}")
     return st0
+
+
+def __load_status(tbeg, tend, ring, path_to_data):
+
+    from datetime import date
+    from pandas import read_pickle, concat, DataFrame, date_range
+    from obspy import UTCDateTime
+    from os.path import isfile
+    from numpy import array, arange, ones, nan
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    dd1 = date.fromisoformat(str(tbeg.date))
+    dd2 = date.fromisoformat(str(tend.date))
+
+    ## dummy
+    def __make_dummy(date):
+        NN = 1440
+        df_dummy = DataFrame()
+        df_dummy['times_utc'] = array([UTCDateTime(date) + _t for _t in arange(30, 86400, 60)])
+        for col in ["quality", "fsagnac", "mlti", "ac_threshold", "dc_threshold"]:
+            df_dummy[col]  = ones(NN)*nan
+
+        return df_dummy
+
+    df = DataFrame()
+    for dat in date_range(dd1, dd2):
+        file = f"{str(dat)[:4]}/BW/R{ring}/R{ring}_"+str(dat)[:10]+"_status.pkl"
+
+        try:
+
+            if not isfile(f"{path_to_data}{file}"):
+                print(f" -> no such file: {file}")
+                df = concat([df, __make_dummy(dat)])
+            else:
+                df0 = read_pickle(path_to_data+file)
+                df = concat([df, df0])
+        except:
+            print(f" -> error for {file}")
+
+    if df.empty:
+        print(" -> empty dataframe!")
+        return df
+
+    ## trim to defined times
+    df = df[(df.times_utc >= tbeg) & (df.times_utc < tend)]
+
+    ## correct seconds
+    df['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df['times_utc']]
+
+    return df
 
 
 # In[] ___________________________________________________________
@@ -333,6 +385,7 @@ def main(config):
         if len(st2) > 1:
             st2.merge()
 
+
         ## integrate romy data from rad/s to rad
         if integrate:
             print(f" -> integrating ...")
@@ -407,8 +460,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
 
                 # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
@@ -460,6 +513,33 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
+
+        ## check data quality
+        if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
+            try:
+                statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
+                statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
+            except:
+                print(f" -> cannot load status file!")
+                continue
+
+            if statusU.quality.eq(0).any():
+                print(f" -> U: bad quality status detected!")
+                continue
+            elif statusU.quality.eq(0).any():
+                print(f" -> V: bad quality status detected!")
+                continue
+
+        if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
+            try:
+                statusZ = __load_status(config['tbeg'], config['tend'], "Z", config['path_to_status_data'])
+            except:
+                print(f" -> cannot load status file!")
+                continue
+
+            if statusZ.quality.eq(0).any():
+                print(f" -> Z: bad quality status detected!")
+                continue
 
             if n == 0:
                 ## prepare lists
