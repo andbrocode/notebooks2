@@ -442,15 +442,26 @@ def main(config):
 
 
             if "BW.DROMY" in config['seed2']:
-                st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
-                st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-                st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
+                ## remove mean, trend and taper trace
+                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
+                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+
+                ## set a filter for resampling
+                # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
+
+                # st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
+
+                ## resampling
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
                 st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+
+                st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
                 ## convert tilt to acceleration
                 for tr in st2:
@@ -516,7 +527,7 @@ def main(config):
 
             ## check data quality
             max_num_of_bad_quality = 3
-            
+
             if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
                 try:
                     statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
