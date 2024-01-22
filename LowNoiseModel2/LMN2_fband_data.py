@@ -156,6 +156,10 @@ for name in names:
     elif name == "ROMYA":
         name = "ROMY"
         comps = ["BAZ", "BAN", "BAE"]
+    elif name == "BFO":
+        name = "BFO"
+        comps = ["LHZ", "LHN", "LHE"]
+
 
     print(f"\n -> {name} ...")
 
@@ -234,7 +238,7 @@ for name in names:
                     for _k, _psd in enumerate(_dat):
 
                         if name == "FFBI":
-                            if nanmean(_psd[:10] > 5e4):
+                            if nanmean(_psd[:15] > 1e4):
                                 print(f" -> level too high (>5e4)!")
                                 pass
                             else:

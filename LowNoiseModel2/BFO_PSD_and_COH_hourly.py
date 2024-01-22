@@ -501,8 +501,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.1, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.1, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.5, corners=4, zerophase=True)
 
                 # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
