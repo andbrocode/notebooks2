@@ -239,7 +239,7 @@ for name in names:
 
                         if name == "FFBI":
                             if nanmean(_psd[:15] > 1e4):
-                                print(f" -> level too high (>5e4)!")
+                                print(f" -> level too high (>1e4)!")
                                 pass
                             else:
                                 dat.append(_psd)
