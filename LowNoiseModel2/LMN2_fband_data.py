@@ -146,19 +146,25 @@ for name in names:
 
     if name == "FUR":
         comps = ["BHZ", "BHN", "BHE"]
+
     elif name == "DROMY":
         comps = ["LAT", "LAN", "LAE"]
+
     elif name == "ROMY":
         # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
         comps = ["BJZ", "BJN", "BJE"]
     elif name == "FFBI":
         comps = ["BDF", "BDO"]
+
     elif name == "ROMYA":
         name = "ROMY"
         comps = ["BAZ", "BAN", "BAE"]
-    elif name == "BFO":
-        comps = ["LHZ", "LHN", "LHE"]
 
+    elif name == "BFO":
+        comps = ["LHZ", "LHN", "LHE", "LDO"]
+
+    # elif name == "BFO":
+    #     comps = ["LDO"]
 
     print(f"\n -> {name} ...")
 
@@ -202,7 +208,6 @@ for name in names:
 
             config['startdate'], config['enddate'] = t1, t2
 
-            print(name, config['filename'])
             ## specify paths
             config['outpath_figures'] = data_path+f"LNM2/figures/"
 
@@ -249,7 +254,8 @@ for name in names:
                         if name == "FFBI":
                             if nanmean(_psd) > 1e4:
                                 print(f" -> level too high ({nanmean(_psd)} > 1e4)!")
-                                pass
+                                dat.append(ones(len(_psd))*nan)
+                                dates.append(f"{day}_{str(_k).rjust(2, '0')}")
                             else:
                                 dat.append(_psd)
                                 dates.append(f"{day}_{str(_k).rjust(2, '0')}")
