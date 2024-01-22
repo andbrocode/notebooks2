@@ -515,6 +515,8 @@ def main(config):
 
 
             ## check data quality
+            max_num_of_bad_quality = 3
+            
             if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
                 try:
                     statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
@@ -523,10 +525,12 @@ def main(config):
                     print(f" -> cannot load status file!")
                     continue
 
-                if statusU.quality.eq(0).any():
+                # if statusU.quality.eq(0).any():
+                if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
                     print(f" -> U: bad quality status detected!")
                     continue
-                elif statusV.quality.eq(0).any():
+                elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
+                # elif statusV.quality.eq(0).any():
                     print(f" -> V: bad quality status detected!")
                     continue
 
@@ -537,9 +541,11 @@ def main(config):
                     print(f" -> cannot load status file!")
                     continue
 
-                if statusZ.quality.eq(0).any():
+                if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
+                # if statusZ.quality.eq(0).any():
                     print(f" -> Z: bad quality status detected!")
                     continue
+
 
             if n == 0:
                 ## prepare lists
