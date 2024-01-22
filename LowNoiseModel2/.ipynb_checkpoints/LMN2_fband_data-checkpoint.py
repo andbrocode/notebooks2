@@ -238,8 +238,8 @@ for name in names:
                     for _k, _psd in enumerate(_dat):
 
                         if name == "FFBI":
-                            if nanmean(_psd[:15] > 1e4):
-                                print(f" -> level too high (>1e4)!")
+                            if nanmean(_psd) > 1e4:
+                                print(f" -> level too high ({nanmean(_psd)} > 1e4)!")
                                 pass
                             else:
                                 dat.append(_psd)
