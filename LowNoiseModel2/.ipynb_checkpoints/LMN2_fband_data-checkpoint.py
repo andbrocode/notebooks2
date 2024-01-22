@@ -157,7 +157,6 @@ for name in names:
         name = "ROMY"
         comps = ["BAZ", "BAN", "BAE"]
     elif name == "BFO":
-        name = "BFO"
         comps = ["LHZ", "LHN", "LHE"]
 
 
@@ -172,14 +171,24 @@ for name in names:
             config = {}
             try:
 
-                if app == "BDO_coh" and name != "FFBI":
+                if app == "BDF_coh" and name == "BFO":
+                    continue
+
+                elif app == "BDO_coh" and name == "BFO":
+                    config['filename'] = f"{name}_coherence/{year}_BFO_LDO_{name}_{comp}_3600"
+                    config['outname'] = f"BFO_LDO_{name}_{comp}_coherence"
+                    N = 18001
+
+                elif app == "BDO_coh" and name != "FFBI":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
                     config['outname'] = f"FFBI_BDO_{name}_{comp}_coherence"
                     N = 36002
+
                 elif app == "BDF_coh" and name != "FFBI":
                     config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
                     config['outname'] = f"FFBI_BDF_{name}_{comp}_coherence"
                     N = 36002
+
                 else:
                     config['filename'] = f"{name}/{year}_{name}_{comp}_3600"
                     config['outname'] = f"{name}_{comp}"
@@ -193,7 +202,7 @@ for name in names:
 
             config['startdate'], config['enddate'] = t1, t2
 
-
+            print(name, config['filename'])
             ## specify paths
             config['outpath_figures'] = data_path+f"LNM2/figures/"
 
