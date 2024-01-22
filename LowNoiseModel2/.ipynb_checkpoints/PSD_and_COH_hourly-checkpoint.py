@@ -526,7 +526,7 @@ def main(config):
                 if statusU.quality.eq(0).any():
                     print(f" -> U: bad quality status detected!")
                     continue
-                elif statusU.quality.eq(0).any():
+                elif statusV.quality.eq(0).any():
                     print(f" -> V: bad quality status detected!")
                     continue
 
