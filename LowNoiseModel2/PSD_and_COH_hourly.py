@@ -147,7 +147,7 @@ if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
 else:
     integrate = False
 
-
+path_to_figs = data_path+"LNM2/test_figs/"
 
 # In[] ___________________________________________________________
 '''---- define methods ----'''
@@ -499,8 +499,8 @@ def main(config):
             print(e)
             continue
 
-        st1.plot(equal_scale=False)
-        st2.plot(equal_scale=False)
+        st1.plot(equal_scale=False, outfile=path_to_figs+"st1_all.png")
+        st2.plot(equal_scale=False, outfile=path_to_figs+"st2_all.png")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
@@ -531,7 +531,9 @@ def main(config):
             _st1 = _st1.detrend("demean")
             _st2 = _st2.detrend("demean")
 
-
+            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1.png")
+            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1.png")
+            
             ## check data quality
             max_num_of_bad_quality = 3
 
