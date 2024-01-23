@@ -19,7 +19,7 @@ import gc
 from tqdm import tqdm
 from obspy import UTCDateTime, read, read_inventory
 from obspy.signal.rotate import rotate2zne
-from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
+from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram, nan
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from scipy.signal import coherence, welch
@@ -474,11 +474,11 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                # st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
-                # st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
 
-                st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
-                st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
+                # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
+                # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
 
 #                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
 #                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
@@ -534,43 +534,11 @@ def main(config):
             _st1 = _st1.detrend("linear").taper(0.05)
             _st2 = _st2.detrend("linear").taper(0.05)
 
-            _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
-            _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
+            # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
+            # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
 
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
-
-            ## check data quality
-            max_num_of_bad_quality = 3
-
-            if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
-                try:
-                    statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
-                    statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
-                except:
-                    print(f" -> cannot load status file!")
-                    continue
-
-                # if statusU.quality.eq(0).any():
-                if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
-                    print(f" -> U: bad quality status detected!")
-                    continue
-                elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
-                # elif statusV.quality.eq(0).any():
-                    print(f" -> V: bad quality status detected!")
-                    continue
-
-            if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
-                try:
-                    statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
-                except:
-                    print(f" -> cannot load status file!")
-                    continue
-
-                if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
-                # if statusZ.quality.eq(0).any():
-                    print(f" -> Z: bad quality status detected!")
-                    continue
 
 
             if n == 0:
@@ -660,6 +628,37 @@ def main(config):
 
                 # print(ff_coh.size, coh.size, _st1[0].data.size, psd1.size)
                 # print(ff_coh[0], ff_coh[-1], f1[0], f1[-1])
+            ## check data quality
+            max_num_of_bad_quality = 3
+
+            if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
+                try:
+                    statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
+                    statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
+                except:
+                    print(f" -> cannot load status file!")
+                    continue
+
+                # if statusU.quality.eq(0).any():
+                if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
+                    print(f" -> U: bad quality status detected!")
+                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
+                # elif statusV.quality.eq(0).any():
+                    print(f" -> V: bad quality status detected!")
+                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+
+            if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
+                try:
+                    statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
+                except:
+                    print(f" -> cannot load status file!")
+                    continue
+
+                if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
+                # if statusZ.quality.eq(0).any():
+                    print(f" -> Z: bad quality status detected!")
+                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
 
             psds1[n] = psd1
             psds2[n] = psd2
