@@ -445,7 +445,7 @@ def main(config):
 
                 ## remove mean, trend and taper trace
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05
+                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
                 ## set a filter for resampling
                 # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
