@@ -484,8 +484,8 @@ def main(config):
                 st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
 
-                # st1 = st1.resample(20.0, no_filter=False)
-                # st2 = st2.resample(20.0, no_filter=False)
+                # st1 = st1.resample(10.0, no_filter=False)
+                # st2 = st2.resample(10.0, no_filter=False)
 
 
             st1 = st1.merge()
@@ -527,6 +527,9 @@ def main(config):
             # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+
+            _st1 = _st1.detrend("demean")
+            _st2 = _st2.detrend("demean")
 
 
             ## check data quality
