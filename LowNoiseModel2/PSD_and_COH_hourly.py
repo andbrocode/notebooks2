@@ -474,8 +474,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
 
                 # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
@@ -534,8 +534,8 @@ def main(config):
             _st1 = _st1.detrend("linear").taper(0.05)
             _st2 = _st2.detrend("linear").taper(0.05)
 
-            # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
-            # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=1, corners=4, zerophase=True)
+            # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+            # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
 
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
