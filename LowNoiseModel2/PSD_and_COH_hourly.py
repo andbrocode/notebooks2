@@ -455,16 +455,16 @@ def main(config):
                 st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
 
                 ## resampling
-#                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-#                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
-#                 st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
-#                 st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
-#                 st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
+                st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-#                 st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-                st1 = st1.resample(0.1, no_filter=False)
-                st2 = st2.resample(0.1, no_filter=False)
+#                 st1 = st1.resample(0.1, no_filter=False)
+#                 st2 = st2.resample(0.1, no_filter=False)
                                                                     
                 ## convert tilt to acceleration
                 for tr in st2:
