@@ -161,7 +161,7 @@ for name in names:
         comps = ["BAZ", "BAN", "BAE"]
 
     elif name == "BFO":
-        comps = ["LHZ", "LHN", "LHE", "LDO"]
+        comps = ["LDO", "LHZ", "LHN", "LHE"]
 
     # elif name == "BFO":
     #     comps = ["LDO"]
