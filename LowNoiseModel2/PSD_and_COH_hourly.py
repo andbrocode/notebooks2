@@ -424,13 +424,13 @@ def main(config):
         elif "F" in st1[0].stats.channel:
 #            for tr in st1:
 #                tr.data = tr.data *1.589e-6 /0.02  # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity_mb2005=0.02 V/Pa
-            st1 = st1.remove_response(inv1, water_level=10)
+            st1 = st1.remove_response(inv1, water_level=60)
 
         if "J" in st2[0].stats.channel:
             st2 = st2.remove_sensitivity(inv2)
 
         elif "H" in st2[0].stats.channel:
-            st2 = st2.remove_response(inv2, output="ACC", water_level=10)
+            st2 = st2.remove_response(inv2, output="ACC", water_level=60)
 
         elif "A" in st2[0].stats.channel:
             st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
@@ -444,8 +444,8 @@ def main(config):
             if "BW.DROMY" in config['seed2']:
 
                 ## remove mean, trend and taper trace
-                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+                st1 = st1.detrend("linear").detrend("demean").taper(0.1)
+                st2 = st2.detrend("linear").detrend("demean").taper(0.1)
 
                 ## set a filter for resampling
                 # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
@@ -468,8 +468,8 @@ def main(config):
                     tr.data = tr.data*9.81
 
             else:
-                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+                st1 = st1.detrend("linear").detrend("demean").taper(0.1)
+                st2 = st2.detrend("linear").detrend("demean").taper(0.1)
 
                 st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
                 st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=5, corners=4, zerophase=True)
@@ -479,7 +479,11 @@ def main(config):
 
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
+
                 st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
+
                 # st1 = st1.resample(20.0, no_filter=False)
                 # st2 = st2.resample(20.0, no_filter=False)
 
