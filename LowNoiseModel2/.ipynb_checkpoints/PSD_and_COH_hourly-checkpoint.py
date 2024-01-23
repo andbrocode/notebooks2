@@ -477,15 +477,15 @@ def main(config):
                 # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
 
-                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
+#                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+#                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+#                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
 
-                st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
+#                 st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
+#                 st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
 
-                # st1 = st1.resample(10.0, no_filter=False)
-                # st2 = st2.resample(10.0, no_filter=False)
+                st1 = st1.resample(10.0, no_filter=False)
+                st2 = st2.resample(10.0, no_filter=False)
 
 
             st1 = st1.merge()
@@ -499,8 +499,8 @@ def main(config):
             print(e)
             continue
 
-        st1.plot(equal_scale=False, outfile=path_to_figs+"st1_all.png")
-        st2.plot(equal_scale=False, outfile=path_to_figs+"st2_all.png")
+        st1.plot(equal_scale=False, outfile=path_to_figs+"all/st1_all.png")
+        st2.plot(equal_scale=False, outfile=path_to_figs+"all/st2_all.png")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
@@ -532,8 +532,8 @@ def main(config):
             _st2 = _st2.detrend("demean")
 
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1.png")
-            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1.png")
-            
+            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2.png")
+
             ## check data quality
             max_num_of_bad_quality = 3
 
