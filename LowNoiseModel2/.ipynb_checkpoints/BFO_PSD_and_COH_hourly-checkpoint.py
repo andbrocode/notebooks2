@@ -555,6 +555,9 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
+            _st1 = _st1.detrend("linear").taper(0.05)
+            _st2 = _st2.detrend("linear").taper(0.05)
+
 
             ## check data quality
             if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
