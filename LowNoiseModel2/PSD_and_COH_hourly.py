@@ -528,8 +528,8 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            # _st1 = _st1.detrend("linear").taper(0.05)
-            # _st2 = _st2.detrend("linear").taper(0.05)
+            _st1 = _st1.detrend("linear").taper(0.05)
+            _st2 = _st2.detrend("linear").taper(0.05)
 
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
