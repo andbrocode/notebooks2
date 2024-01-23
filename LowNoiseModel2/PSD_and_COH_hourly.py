@@ -499,8 +499,8 @@ def main(config):
             print(e)
             continue
 
-        st1.plot(equal_scale=False, outfile=path_to_figs+"all/st1_all.png")
-        st2.plot(equal_scale=False, outfile=path_to_figs+"all/st2_all.png")
+        st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
+        st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
@@ -528,11 +528,11 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            _st1 = _st1.detrend("demean")
-            _st2 = _st2.detrend("demean")
+            _st1 = _st1.detrend("simple")
+            _st2 = _st2.detrend("simple")
 
-            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1.png")
-            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2.png")
+            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
+            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
 
             ## check data quality
             max_num_of_bad_quality = 3
