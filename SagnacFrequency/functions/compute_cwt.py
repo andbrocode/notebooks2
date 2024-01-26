@@ -52,6 +52,7 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
                                                     )
 
     cone_f = 1/cone_p
+    print(ff_cwt[0])
     pp_cwt = 1/ff_cwt
 
     if tscale == "min":
