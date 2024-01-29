@@ -19,7 +19,7 @@ import gc
 from tqdm import tqdm
 from obspy import UTCDateTime, read, read_inventory
 from obspy.signal.rotate import rotate2zne
-from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram
+from numpy import log10, zeros, append, linspace, mean, median, array, where, transpose, shape, histogram, isnan
 from pandas import DataFrame, concat, Series, date_range, to_pickle
 from pathlib import Path
 from scipy.signal import coherence, welch
@@ -63,13 +63,13 @@ if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
     config['seed2'] = sys.argv[2]
 else:
-    config['seed1'] = "BW.WETR..BDO"  ## F = infrasound | O = absolute
+    config['seed1'] = "BW.WETR.01.BDO"  ## F = infrasound | O = absolute
     config['seed2'] = "BW.RLAS..BJZ"
 
 
 
 config['date1'] = UTCDateTime(f"{config['year']}-09-01")
-config['date2'] = UTCDateTime(f"{config['year']}-09-02")
+config['date2'] = UTCDateTime(f"{config['year']}-12-31")
 
 if "FFBI" in config['seed1']:
     config['path_to_data1'] = bay_path+f"mseed_online/archive/"
@@ -238,6 +238,23 @@ def __conversion_to_tilt(st, conf):
     return st0
 
 
+def __interpolate_nan(array_like):
+
+    from numpy import isnan, interp
+
+    array = array_like.copy()
+
+    nans = isnan(array)
+
+    def get_x(a):
+        return a.nonzero()[0]
+
+    array[nans] = interp(get_x(nans), get_x(~nans), array[~nans])
+
+    return array
+
+
+
 # In[] ___________________________________________________________
 
 def main(config):
@@ -389,10 +406,24 @@ def main(config):
         print(st1)
         print(st2)
 
+        # st1.plot(equal_scale=False);
+        # st2.plot(equal_scale=False);
+
+
+
         ## Pre-Processing
         try:
             st1 = st1.split()
             st2 = st2.split()
+
+            ## interpolate NaN
+            for tr in st1:
+                dat = tr.data
+                tr.data = __interpolate_nan(tr.data)
+                print(f" -> interpolate NaN for st1 ({len(dat[isnan(dat)])})")
+
+                ## from hPa to Pa
+                tr.data *= 100
 
 
             if "BW.DROMY" in config['seed2']:
@@ -415,8 +446,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("lowpass", freq=0.005, corners=4, zerophase=True)
-                st2 = st2.filter("lowpass", freq=0.005, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
 
                 # st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=0.005, corners=4, zerophase=True)
                 # st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=0.005, corners=4, zerophase=True)
@@ -425,8 +456,9 @@ def main(config):
                 # st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
 
                 # st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
-                st1 = st1.resample(0.01, no_filter=True)
-                st2 = st2.resample(0.01, no_filter=True)
+
+                st1 = st1.resample(1.0, no_filter=True)
+                st2 = st2.resample(1.0, no_filter=True)
 
 
             st1 = st1.merge()
@@ -454,8 +486,8 @@ def main(config):
         print(st1)
         print(st2)
 
-        st1.plot();
-        st2.plot();
+        # st1.plot();
+        # st2.plot();
 
         if len(st1[0].data) != len(st2[0].data):
             print(" -> not sampe amount of samples!")
@@ -470,6 +502,25 @@ def main(config):
             # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+
+#             try:
+#                 _st1 = _st1.detrend("linear").taper(0.05)
+#                 _st2 = _st2.detrend("linear").taper(0.05)
+
+#             except:
+#                 _st1 = _st1.split()
+#                 _st2 = _st2.split()
+#                 _st1 = _st1.detrend("linear").taper(0.05)
+#                 _st2 = _st2.detrend("linear").taper(0.05)
+#                 # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+#                 # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+#                 _st1 = _st1.merge()
+#                 _st2 = _st2.merge()
+
+            if len(_st1) != 1 or len(_st2) != 1:
+                print(len(_st1))
+                print(len(_st2))
+                continue
 
 
             if n == 0:
