@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -24,8 +24,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
     config['eventtime'] = UTCDateTime(cat_event.origins[0].time)
 
     ## specify coordinates of station
-    config['station_longitude'] =  -116.455439
-    config['station_latitude']  = 33.6106
+    config['station_longitude'] = 11.275501
+    config['station_latitude']  = 48.162941
 
     ## specify window length for baz estimation in seconds
     config['win_length_sec'] = round(1/fmin, 1)
@@ -56,7 +56,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
                                 event=cat_event,
                                 plot=False,
                                 flim=(fmin, fmax),
-                                show_details=False,
+                                show_details=True,
     )
 
     out3 = __compute_backazimuth_tangent(
@@ -186,8 +186,10 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
         hr, ht = rotate_ne_rt(hn.data, he.data, out3['baz_theo'])
         jr, jt = rotate_ne_rt(jn.data, je.data, out3['baz_theo'])
 
-        ## reverse polarity of transverse rotation!!
-        # jt *= -1
+        ## invert traces
+        if invert_acc_z:
+            hz.data = -hz.data
+
 
         t1, t2 = hz.times().min(), hz.times().max()
 
@@ -283,8 +285,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
             _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
             _ax.set_xlim(0,  (config['tend']-config['tbeg'])*1.15)
 
-            _ax.plot([t1, t2], ones(2)*out3['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
-            _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", zorder=1)
+            _ax.plot([t1, t2], ones(2)*out2['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
+            _ax.fill_between([t1, t2], ones(2)*out2['baz_theo']-10, ones(2)*out2['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", zorder=1)
 
         for aaxx in [ax00, ax11, ax22]:
             aaxx.tick_params(axis='y', colors="darkred")
@@ -314,8 +316,6 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
 
 
     if plot:
-        # out['fig1'] = fig1
-        # out['fig2'] = fig2
-        out['fig3'] = fig3
+        out['fig'] = fig3
 
     return out

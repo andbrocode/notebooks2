@@ -67,7 +67,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     if wave_type == "love":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
-        
+
         ## revert polarity for Z
         # for tr in ROT:
         #     if "Z" in tr.stats.channel:
@@ -151,6 +151,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                                     ACC.select(channel='*E')[0].data,
                                     backas[i_deg]
                                    )
+                ## reverse polarity for ACC-T
+                T *= -1
 
                 ## compute correlation for backazimuth
 #                 corrbaz0 = xcorr(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)
@@ -173,11 +175,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                                    )
 
                 ## compute correlation for backazimuth
-                ## vertical acceleration has to be reversed for definition of polarization reasons
-                ccorr = correlate(-1*ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
+                ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
                                   demean=True, normalize='naive', method='fft')
-#                 ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
-#                                   demean=True, normalize='naive', method='fft')
+
 
                 xshift, cc_max = xcorr_max(ccorr)
 

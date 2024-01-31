@@ -67,7 +67,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     if wave_type == "love":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
-        
+
         ## revert polarity for Z
         # for tr in ROT:
         #     if "Z" in tr.stats.channel:
@@ -241,7 +241,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
 
         ## backazimuth estimation plot
-        im = ax[2].pcolormesh(t_win, backas, corrbaz[:-1,:], cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading='auto')
+        im = ax[2].pcolormesh(t_win, backas, corrbaz[:-1, :], cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading='auto')
 
 #         ax[2].set_xlim(time[0], time[-1])
         ax[2].set_xlim(t_win[0], t_win[-1])

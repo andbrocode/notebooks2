@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -67,6 +67,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
                                         baz_theo=out2['baz_theo'],
                                         cc_thres=0,
                                         plot=False,
+                                        invert_acc_z=invert_acc_z,
     )
 
     ## filter according to cc-threshold
