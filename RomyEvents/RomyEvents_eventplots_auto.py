@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # RomyEvents - Automatic Eventplots
+
+# Creates automatic event plots based on catalog 
+
+# In[44]:
+
+
 import os
 import obspy as obs
 import matplotlib.pyplot as plt
@@ -13,6 +23,9 @@ from functions.add_distances_and_backazimuth import __add_distances_and_backazim
 from andbro__querrySeismoData import __querrySeismoData
 
 
+# In[45]:
+
+
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
@@ -21,6 +34,9 @@ elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
+
+
+# In[46]:
 
 
 def __makeplot(config, st):
@@ -54,6 +70,9 @@ def __makeplot(config, st):
     plt.show();
     del st_in
     return fig
+
+
+# In[47]:
 
 
 def __makeplotStreamSpectra2(st, config, fscale=None):
@@ -146,6 +165,9 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
     return fig
 
 
+# In[48]:
+
+
 def __empty_stream(reference_stream):
 
     from numpy import ones
@@ -164,6 +186,11 @@ def __empty_stream(reference_stream):
         empty += t
 
     return empty
+
+
+# ## Configurations
+
+# In[49]:
 
 
 config = {}
@@ -195,20 +222,40 @@ config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
 config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
 
 
+# ## Load Events
+
+# In[50]:
+
+
 events = pd.read_pickle(config['path_to_catalog']+config['catalog'])
+
+
+# In[51]:
 
 
 events['origin'] = events.timestamp
 
 
+# In[52]:
+
+
 events
+
+
+# In[53]:
 
 
 events = events[events.magnitude > 6]
 events
 
 
+# In[ ]:
 
+
+
+
+## RUN LOOP
+# In[ ]:
 
 
 global errors
@@ -323,8 +370,15 @@ for jj in range(events.shape[0]):
 
 
 
+# In[ ]:
+
 
 pprint(errors)
+
+
+# ## Make StatusPlot for ADR
+
+# In[ ]:
 
 
 config['array_stations'] = ['II.PFO','PY.BPH01','PY.BPH02','PY.BPH03','PY.BPH04','PY.BPH05','PY.BPH06','PY.BPH07',
@@ -344,6 +398,11 @@ ax.set_yticks(np.arange(0,len(config['array_stations']))+0.5, labels=config['arr
 ax.set_xlabel("Event No.",fontsize=12)
 
 plt.show();
+
+
+# ## Testing Signal-to-Noise ratios
+
+# In[ ]:
 
 
 # from numpy import nanmean, sqrt
@@ -382,6 +441,9 @@ plt.show();
 #     print(SNR)
 
 # plt.show();
+
+
+# In[ ]:
 
 
 
