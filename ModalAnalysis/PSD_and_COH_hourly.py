@@ -79,7 +79,7 @@ config['date2'] = UTCDateTime(f"{config['year']}-04-10")
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
 
-config['path_to_data2'] = archive_path+f"romy_archive/"
+config['path_to_data2'] = archive_path+f"ModalAnalysis/data/SDS/"
 config['path_to_inv2'] = archive_path+f"ModalAnalysis/data/StationXML/{net2}.{sta2}.xml"
 
 
