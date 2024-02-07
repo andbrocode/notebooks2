@@ -73,7 +73,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-12")
+config['date1'] = UTCDateTime(f"{config['year']}-09-23")
 config['date2'] = UTCDateTime(f"{config['year']}-12-31")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
