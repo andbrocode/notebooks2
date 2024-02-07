@@ -44,7 +44,7 @@ def __makeplot(config, st):
 
     st_in = st.copy()
 
-    fig, ax = plt.subplots(6,1, figsize=(15, 10), sharex=True)
+    fig, ax = plt.subplots(len(st_in), 1, figsize=(15, 10), sharex=True)
 
     font = 14
 
