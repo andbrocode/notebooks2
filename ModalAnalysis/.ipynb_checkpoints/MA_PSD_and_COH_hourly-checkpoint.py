@@ -75,9 +75,12 @@ net2, sta2, loc2, cha2 = config['seed2'].split('.')
 config['date1'] = UTCDateTime(f"{config['year']}-03-10")
 config['date2'] = UTCDateTime(f"{config['year']}-04-10")
 
-
-config['path_to_data1'] = bay_path+f"mseed_online/archive/"
-config['path_to_inv1'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
+if "FUR" in sta1:
+    config['path_to_data1'] = bay_path+f"mseed_online/archive/"
+    config['path_to_inv1'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
+else:
+    config['path_to_data1'] = archive_path+f"ModalAnalysis/data/SDS/"
+    config['path_to_inv1'] = archive_path+f"ModalAnalysis/data/StationXML/{net1}.{sta1}.xml"
 
 config['path_to_data2'] = archive_path+f"ModalAnalysis/data/SDS/"
 config['path_to_inv2'] = archive_path+f"ModalAnalysis/data/StationXML/{net2}.{sta2}.xml"
