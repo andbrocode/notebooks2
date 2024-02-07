@@ -55,9 +55,9 @@ def __makeplot(config, st):
         ax[i].legend(loc=1)
 
         if "FUR" in tr.stats.station:
-            ax[i].set_ylim(-5e-7, 5e-7)
+            ax[i].set_ylim(-5e-6, 5e-6)
         else:
-            ax[i].set_ylim(-5e-9, 5e-9)
+            ax[i].set_ylim(-2e-9, 2e-9)
 
     return fig
 
