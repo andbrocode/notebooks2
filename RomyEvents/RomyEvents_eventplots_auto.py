@@ -53,7 +53,11 @@ def __makeplot(config, st):
         ax[i].plot(tr.times(), tr.data, 'k', label=tr.stats.station+"."+tr.stats.channel)
 
         ax[i].legend(loc=1)
-        ax[i].set_ylim(-5e-8, 5e-8)
+
+        if "FUR" in tr.stats.station:
+            ax[i].set_ylim(-5e-7, 5e-7)
+        else:
+            ax[i].set_ylim(-5e-9, 5e-9)
 
     return fig
 
