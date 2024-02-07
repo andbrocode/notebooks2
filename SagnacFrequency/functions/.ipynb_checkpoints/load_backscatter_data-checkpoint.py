@@ -15,7 +15,7 @@ def __load_backscatter_data(tbeg, tend, ring, path_to_data):
         file = f"FJ{ring}_{dat_str}_backscatter.pkl"
 
         if not path.isfile(path_to_data+file):
-            _path = data_path+"sagnac_frequency/data/"
+            _path = path_to_data+"sagnac_frequency/data/"
 
             out = DataFrame()
             for m in range(24):

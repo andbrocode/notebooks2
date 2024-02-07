@@ -1,16 +1,20 @@
 def __cc_lag_matrix(dat1, dat2, dt, twin_sec, T_lag_sec, dT_lag_sec, plot=False):
 
+    from numpy import arange, zeros
+    from functions.cross_correlation_windows import __cross_correlation_windows
+    import matplotlib.pyplot as plt
+
     L, dL = int(T_lag_sec/dt), int(dT_lag_sec/dt)
 
-    Tlags = np.arange(-T_lag_sec, T_lag_sec+dT_lag_sec, dT_lag_sec)
-    Nlags = np.arange(-L, L+dL, dL)
+    Tlags = arange(-T_lag_sec, T_lag_sec+dT_lag_sec, dT_lag_sec)
+    Nlags = arange(-L, L+dL, dL)
 
     for _k, lag in enumerate(Nlags):
 
         tt, cc = __cross_correlation_windows(dat1, dat2, dt, twin_sec, overlap=0.5, lag=lag, demean=True)
 
         if _k == 0:
-            ccc = np.zeros((len(Nlags), len(cc)))
+            ccc = zeros((len(Nlags), len(cc)))
 
         ccc[_k] = cc
 

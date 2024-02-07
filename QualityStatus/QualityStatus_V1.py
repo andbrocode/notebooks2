@@ -40,10 +40,102 @@ elif os.uname().nodename == 'lin-ffb-01':
 # In[3]:
 
 
-from functions.load_beat import __load_beat
-from functions.load_mlti import __load_mlti
-from functions.get_mlti_intervals import __get_mlti_intervals
+# from functions.load_beat import __load_beat
+# from functions.load_mlti import __load_mlti
+# from functions.get_mlti_intervals import __get_mlti_intervals
 
+def __get_mlti_intervals(mlti_times, time_delta=60):
+
+    from obspy import UTCDateTime
+    from numpy import array
+
+    if len(mlti_times) == 0:
+        return array([]), array([])
+
+    t1, t2 = [], []
+    for k, _t in enumerate(mlti_times):
+
+        _t = UTCDateTime(_t)
+
+        if k == 0:
+            _tlast = _t
+            t1.append(UTCDateTime(str(_t)[:16]))
+
+        if _t -_tlast > time_delta:
+            t2.append(UTCDateTime(str(_tlast)[:16])+60)
+            t1.append(UTCDateTime(str(_t)[:16]))
+
+        _tlast = _t
+
+    t2.append(UTCDateTime(str(_t)[:16])+60)
+    # t2.append(mlti_times[-1])
+
+    return array(t1), array(t2)
+
+
+def __load_mlti(tbeg, tend, ring, path_to_archive):
+
+    from obspy import UTCDateTime
+    from pandas import read_csv, concat
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    rings = {"U":"03", "Z":"01", "V":"02", "W":"04"}
+
+    if tbeg.year == tend.year:
+        year = tbeg.year
+
+        path_to_mlti = path_to_archive+f"romy_archive/{year}/BW/CROMY/{year}_romy_{rings[ring]}_mlti.log"
+
+        mlti = read_csv(path_to_mlti, names=["time_utc","Action","ERROR"])
+
+    else:
+
+        path_to_mlti1 = path_to_archive+f"romy_archive/{tbeg.year}/BW/CROMY/{tbeg.year}_romy_{rings[ring]}_mlti.log"
+        mlti1 = read_csv(path_to_mlti1, names=["time_utc","Action","ERROR"])
+
+        path_to_mlti2 = path_to_archive+f"romy_archive/{tend.year}/BW/CROMY/{tend.year}_romy_{rings[ring]}_mlti.log"
+        mlti2 = read_csv(path_to_mlti2, names=["time_utc","Action","ERROR"])
+
+        mlti = concat([mlti1, mlti2])
+
+    mlti = mlti[(mlti.time_utc > tbeg) & (mlti.time_utc < tend)]
+
+    return mlti
+
+
+def __load_beat(tbeg, tend, ring, path_to_data):
+
+    from datetime import date
+    from pandas import read_pickle, concat, DataFrame, date_range
+    from obspy import UTCDateTime
+
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    dd1 = date.fromisoformat(str(tbeg.date))
+    dd2 = date.fromisoformat(str(tend.date))
+
+    df = DataFrame()
+    for dat in date_range(dd1, dd2):
+        file = f"{str(dat)[:4]}/R{ring}/FJ{ring}_"+str(dat)[:10].replace("-", "")+".pkl"
+        print(path_to_data, file)
+        # try:
+        df0 = read_pickle(path_to_data+file)
+        df = concat([df, df0])
+        # except:
+            # print(f"error for {file}")
+    if df.empty:
+        print(" -> empty dataframe!")
+        return df
+
+    ## trim to defined times
+    df = df[(df.times_utc >= tbeg) & (df.times_utc < tend)]
+
+    ## correct seconds
+    df['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df['times_utc']]
+
+    return df
 
 # ## Configurations
 
@@ -98,12 +190,12 @@ except:
 # ### Load Beat Data
 
 # In[6]:
-
-try:
-    beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
-except:
-    print(f" -> failed to load data: {config['tbeg']}")
-    quit()
+print("loading")
+# try:
+beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
+# except:
+#     print(f" -> failed to load data: {config['tbeg']}")
+#     quit()
 
 if len(beat) == 0:
     print(f" -> no beat file: {config['tbeg']}")
