@@ -53,7 +53,7 @@ def __makeplot(config, st):
         ax[i].plot(tr.times(), tr.data, 'k', label=tr.stats.station+"."+tr.stats.channel)
 
         ax[i].legend(loc=1)
-        ax[i].set_ylim(-1e7, 1e7)
+        ax[i].set_ylim(-5e-8, 5e-8)
 
     return fig
 
