@@ -687,14 +687,14 @@ def main(config):
         out1['frequencies'] = f1
         out1['psd'] = psds1
 
-        __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}")
         # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         out2 = {}
         out2['frequencies'] = f2
         out2['psd'] = psds2
 
-        __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}")
         # __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
@@ -703,7 +703,7 @@ def main(config):
         out3['frequencies'] = ff_coh
         out3['coherence'] = cohs
 
-        __save_to_pickle(out3, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
+        __save_to_pickle(out3, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}")
         # __save_to_pickle(cohs, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
