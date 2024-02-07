@@ -25,6 +25,7 @@ from pathlib import Path
 from scipy.signal import coherence, welch
 from multitaper import MTCross, MTSpec
 from scipy.fftpack import diff
+from numpy import ma
 
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
@@ -72,7 +73,7 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-23")
+config['date1'] = UTCDateTime(f"{config['year']}-09-12")
 config['date2'] = UTCDateTime(f"{config['year']}-12-31")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
@@ -255,7 +256,7 @@ def __load_status(tbeg, tend, ring, path_to_data):
         df_dummy = DataFrame()
         df_dummy['times_utc'] = array([UTCDateTime(date) + _t for _t in arange(30, 86400, 60)])
         for col in ["quality", "fsagnac", "mlti", "ac_threshold", "dc_threshold"]:
-            df_dummy[col]  = ones(NN)*nan
+            df_dummy[col] = ones(NN)*nan
 
         return df_dummy
 
@@ -302,10 +303,13 @@ def main(config):
         print(f" -> created {config['outpath2']}")
 
 
-    # minimum_collection = []
-    # minimal_collection = []
-    # columns = []
-    # medians, dd = [], []
+    ## set counter
+    size_counter = 0
+    mask_counter = 0
+    mltiU_counter = 0
+    mltiV_counter = 0
+    mltiZ_counter = 0
+
 
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
@@ -519,17 +523,26 @@ def main(config):
 
         if len(st1[0].data) != len(st2[0].data):
             print(" -> not sampe amount of samples!")
+            size_counter += 1
             continue
 
 
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
+
+
             ## trim streams for current interval
             # _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
             # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+
+            ## check if masked array
+            if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
+                print(" -> masked array found")
+                mask_counter += 1
+                continue
 
             _st1 = _st1.detrend("linear").taper(0.05)
             _st2 = _st2.detrend("linear").taper(0.05)
@@ -540,6 +553,10 @@ def main(config):
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
 
+            ## check for same length
+            if len(_st1[0].data) != len(_st2[0].data):
+                print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
+                continue
 
             if n == 0:
                 ## prepare lists
@@ -639,13 +656,14 @@ def main(config):
                     print(f" -> cannot load status file!")
                     continue
 
-                # if statusU.quality.eq(0).any():
                 if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
                     print(f" -> U: bad quality status detected!")
+                    mltiU_counter += 1
                     psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+
                 elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
-                # elif statusV.quality.eq(0).any():
                     print(f" -> V: bad quality status detected!")
+                    mltiV_counter += 1
                     psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
 
             if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
@@ -656,8 +674,8 @@ def main(config):
                     continue
 
                 if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
-                # if statusZ.quality.eq(0).any():
                     print(f" -> Z: bad quality status detected!")
+                    mltiZ_counter += 1
                     psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
 
             psds1[n] = psd1
@@ -685,14 +703,13 @@ def main(config):
         out1['psd'] = psds1
 
         __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
-        # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
+        ## save psds
         out2 = {}
         out2['frequencies'] = f2
         out2['psd'] = psds2
 
         __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
-        # __save_to_pickle(psds2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
         ## save coherence
@@ -701,22 +718,15 @@ def main(config):
         out3['coherence'] = cohs
 
         __save_to_pickle(out3, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
-        # __save_to_pickle(cohs, config['outpath3'], f"{config['outname3']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
-        ## add date to dates
-        # dd.append(str(date).split(" ")[0].replace("-", ""))
 
-    ## save config and frequencies
-#     __save_to_pickle(config, config['outpath1'], f"{config['outname1']}_config")
-#     __save_to_pickle(f1, config['outpath1'], f"{config['outname1']}_frequency_axis")
+    print(f" MLTI-U count: {mltiU_counter}")
+    print(f" MLTI-V count: {mltiV_counter}")
+    print(f" MLTI-Z count: {mltiZ_counter}")
 
-#     __save_to_pickle(config, config['outpath2'], f"{config['outname2']}_config")
-#     __save_to_pickle(f2, config['outpath2'], f"{config['outname2']}_frequency_axis")
-
-#     __save_to_pickle(config, config['outpath3'], f"{config['outname3']}_config")
-#     __save_to_pickle(ff_coh, config['outpath3'], f"{config['outname3']}_frequency_axis")
-
+    print(f" Size count: {size_counter}")
+    print(f" Mask count: {mask_counter}")
 
     print("\nDone\n")
 
@@ -726,5 +736,6 @@ if __name__ == "__main__":
     main(config)
 
     gc.collect()
+
 
 ## End of File
