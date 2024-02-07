@@ -344,7 +344,7 @@ for jj in range(events.shape[0]):
 
     st0 = st0.trim(config['tbeg'], config['tend']);
 
-    st.plot(equal_scale=False);
+    #st.plot(equal_scale=False);
 
     ## store waveform data
 #     num = str(jj).rjust(3, "0")
