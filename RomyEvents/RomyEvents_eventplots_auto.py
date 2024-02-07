@@ -45,12 +45,12 @@ def __makeplot(config, st):
     st_in = st.copy()
 
     try:
-        acc_min, acc_max = -max(abs(st_in.select(station="FUR")[0].data), max(abs(st_in.select(station="FUR")[0].data)
+        acc_min, acc_max = -max(abs(st_in.select(station="FUR")[0].data)), max(abs(st_in.select(station="FUR")[0].data))
     except:
         acc_min, acc_max = -1e-6, 1e-6
 
     try:
-        rot_min, rot_max = -max(abs(st_in.select(station="RLAS")[0].data), max(abs(st_in.select(station="RLAS")[0].data)
+        rot_min, rot_max = -max(abs(st_in.select(station="RLAS")[0].data)), max(abs(st_in.select(station="RLAS")[0].data))
     except:
         rot_min, rot_max = -1e-9, 1e-9
 
