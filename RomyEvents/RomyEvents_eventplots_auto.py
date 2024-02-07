@@ -66,9 +66,9 @@ def __makeplot(config, st):
         ax[i].legend(loc=1)
 
         if "FUR" in tr.stats.station:
-            ax[i].set_ylim(acc_min*1.1, acc_max*1.1)
+            ax[i].set_ylim(acc_min*1.2, acc_max*1.2)
         else:
-            ax[i].set_ylim(rot_min*1.1, rot_max*1.1)
+            ax[i].set_ylim(rot_min*1.2, rot_max*1.2)
 
     return fig
 
@@ -340,6 +340,8 @@ for jj in range(events.shape[0]):
     st1 = st1.taper(0.1);
     st1 = st1.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
+    st0 = st0.merge();
+    st1 = st1.merge();
 
     st0 = st0.trim(config['tbeg'], config['tend']);
     st1 = st1.trim(config['tbeg'], config['tend']);
