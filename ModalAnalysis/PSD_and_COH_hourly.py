@@ -474,8 +474,8 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=80, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=80, corners=4, zerophase=True)
 
                 # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
                 # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
@@ -487,8 +487,8 @@ def main(config):
 #                 st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
 #                 st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
 
-                st1 = st1.resample(10.0, no_filter=True)
-                st2 = st2.resample(10.0, no_filter=True)
+                # st1 = st1.resample(100.0, no_filter=True)
+                # st2 = st2.resample(100.0, no_filter=True)
 
 
             st1 = st1.merge()
@@ -502,8 +502,8 @@ def main(config):
             print(e)
             continue
 
-        st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
-        st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
+        # st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
+        # st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
@@ -537,8 +537,8 @@ def main(config):
             # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
             # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
 
-            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
-            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
+            # _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
+            # _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
 
 
             if n == 0:
