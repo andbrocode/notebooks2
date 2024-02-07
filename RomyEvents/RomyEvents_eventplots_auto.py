@@ -9,6 +9,7 @@
 
 
 import os
+import gc
 import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -372,6 +373,7 @@ for jj in range(events.shape[0]):
     fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
     fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
 
+    gc.collect()
 
 # In[ ]:
 
