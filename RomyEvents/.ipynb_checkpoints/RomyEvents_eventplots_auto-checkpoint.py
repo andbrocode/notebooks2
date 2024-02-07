@@ -44,6 +44,17 @@ def __makeplot(config, st):
 
     st_in = st.copy()
 
+    try:
+        acc_min, acc_max = -max(abs(st_in.select(station="FUR")[0].data), max(abs(st_in.select(station="FUR")[0].data)
+    except:
+        acc_min, acc_max = -1e-6, 1e-6
+
+    try:
+        rot_min, rot_max = -max(abs(st_in.select(station="RLAS")[0].data), max(abs(st_in.select(station="RLAS")[0].data)
+    except:
+        rot_min, rot_max = -1e-9, 1e-9
+
+
     fig, ax = plt.subplots(len(st_in), 1, figsize=(15, 10), sharex=True)
 
     font = 14
@@ -55,9 +66,9 @@ def __makeplot(config, st):
         ax[i].legend(loc=1)
 
         if "FUR" in tr.stats.station:
-            ax[i].set_ylim(-5e-6, 5e-6)
+            ax[i].set_ylim(acc_min, acc_max)
         else:
-            ax[i].set_ylim(-2e-9, 2e-9)
+            ax[i].set_ylim(rot_min, rot_max)
 
     return fig
 
