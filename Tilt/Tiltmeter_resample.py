@@ -137,8 +137,8 @@ config['seed_id'] = "BW.DROMY..LA*"
 config['datapath'] =  f"{data_path}romy_archive/"
 
 ## define time window
-config['tbeg'] = UTCDateTime("2022-05-21 00:00")
-config['tend'] = UTCDateTime("2023-07-07 00:00")
+config['tbeg'] = UTCDateTime("2023-12-01 00:00")
+config['tend'] = UTCDateTime("2023-12-31 00:00")
 
 ## add some time before and after one day to avoid filter effects
 config['temporal_puffer'] = 6*3600 # seconds
