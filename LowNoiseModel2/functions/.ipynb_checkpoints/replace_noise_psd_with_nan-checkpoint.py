@@ -1,4 +1,4 @@
-def __replace_noisy_psds_with_nan(arr, threshold_mean=1e-16, ff=None, flim=None):
+def __replace_noisy_psds_with_nan(arr, threshold_mean=1e-16, ff=None, flim=None, threshold_min=None):
 
     from numpy import delete, shape, sort, array, ones, nan, nanmean, array
 
@@ -29,6 +29,11 @@ def __replace_noisy_psds_with_nan(arr, threshold_mean=1e-16, ff=None, flim=None)
                 rejected.append(arr[ii, :])
                 arr[ii, :] = ones(shape(arr)[1]) * nan
 
+        ## appy minimum threshold
+        if ff is not None and threshold_min is not None:
+            if any(arr[ii, :] < threshold_min):
+                rejected.append(arr[ii, :])
+                arr[ii, :] = ones(shape(arr)[1]) * nan
 
     l2 = len(rejected)
 
