@@ -323,13 +323,13 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
         t1, t2 = hz.times().min(), hz.times().max()
 
-        ax0.plot(hz.times(), (ht-hr)*trans_scaling, 'black', label=f"PFO.T - PFO.R")
-        ax1.plot(hz.times(), (hr+hz)*trans_scaling, 'black', label=f"PFO.R + PFO.Z")
-        ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"PFO.Z")
+        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T")
+        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z")
+        ax2.plot(hz.times(), hr.data*trans_scaling, 'black', label=f"PFO.R")
 
-        ax0.set_ylim(-max(abs((ht-hr)*trans_scaling)), max(abs((ht-hr)*trans_scaling)))
-        ax1.set_ylim(-max(abs((hr+hz)*trans_scaling)), max(abs((hr+hz)*trans_scaling)))
-        ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+        ax0.set_ylim(-max(abs((ht)*trans_scaling)), max(abs((ht)*trans_scaling)))
+        ax1.set_ylim(-max(abs((hz.data)*trans_scaling)), max(abs((hz.data)*trans_scaling)))
+        ax2.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
 
         ax00 = ax0.twinx()
         ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"BSPF.Z")
