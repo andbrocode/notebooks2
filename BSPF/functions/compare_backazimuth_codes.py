@@ -325,7 +325,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
         ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T")
         ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z")
-        ax2.plot(hz.times(), hr.data*trans_scaling, 'black', label=f"PFO.R")
+        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R")
 
         ax0.set_ylim(-max(abs((ht)*trans_scaling)), max(abs((ht)*trans_scaling)))
         ax1.set_ylim(-max(abs((hz.data)*trans_scaling)), max(abs((hz.data)*trans_scaling)))
