@@ -1,8 +1,9 @@
-def __makeplot_waveform_comparison_cc(rot0, acc0, baz, twin_sec=5, twin_overlap=0.5):
+def __makeplot_waveform_comparison_cc(rot0, acc0, baz, fmin, fmax, distance=None, twin_sec=5, twin_overlap=0.5):
 
     from obspy.signal.cross_correlation import correlate
     from obspy.signal.rotate import rotate_ne_rt
-    from numpy import linspace
+    from numpy import linspace, ones
+    import matplotlib.pyplot as plt
 
     def __cross_correlation_windows(arr1, arr2, dt, Twin, overlap=0, lag=0, demean=True, plot=False):
 
@@ -29,7 +30,7 @@ def __makeplot_waveform_comparison_cc(rot0, acc0, baz, twin_sec=5, twin_overlap=
             _arr1 = roll(arr1[n1:n2], lag)
             _arr2 = arr2[n1:n2]
             ccf = correlate(_arr1, _arr2, 0, demean=demean, normalize='naive', method='fft')
-            shift, val = xcorr_max(ccf)
+            shift, val = xcorr_max(ccf, abs_max=False)
             cc.append(val)
 
         return array(times), array(cc)
@@ -73,51 +74,54 @@ def __makeplot_waveform_comparison_cc(rot0, acc0, baz, twin_sec=5, twin_overlap=
 
     dt = rot[0].stats.delta
 
+    rot0 ,acc0, rot0_lbl, acc0_lbl = rot_z, acc_t, "ROT-Z", "ACC-T"
+    rot1 ,acc1, rot1_lbl, acc1_lbl = rot_t, acc_z, "ROT_T", "ACC-Z"
+    rot2 ,acc2, rot2_lbl, acc2_lbl = rot_z, -acc_r, "ROT-Z", "-1xACC-R"
 
-    tt0, cc0 = __cross_correlation_windows(rot_z, -acc_t, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
-    tt1, cc1 = __cross_correlation_windows(rot_t, acc_z, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
-    tt2, cc2 = __cross_correlation_windows(rot_z, acc_r, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
+    tt0, cc0 = __cross_correlation_windows(rot0 ,acc0, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
+    tt1, cc1 = __cross_correlation_windows(rot1, acc1, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
+    tt2, cc2 = __cross_correlation_windows(rot2, acc2, dt, twin_sec, overlap=twin_overlap, lag=0, demean=True)
 
     cmap = plt.get_cmap("coolwarm", 12)
 
 
-    ax[0].plot(rot.select(channel="*Z")[0].times(), rot_z, label="ROT-Z", color="tab:red", lw=lw, zorder=3)
+    ax[0].plot(rot.select(channel="*Z")[0].times(), rot0, label=rot0_lbl, color="tab:red", lw=lw, zorder=3)
     ax00 = ax[0].twinx()
-    ax00.plot(acc.select(channel="*Z")[0].times(), -acc_t, label="-1*ACC-T", color="black", lw=lw)
+    ax00.plot(acc.select(channel="*Z")[0].times(), acc0, label=acc0_lbl, color="black", lw=lw)
     ax01 = ax[0].twinx()
-    cm = ax01.scatter(tt0, np.ones(len(tt0))*-0.9, c=cc0, alpha=(cc0+1)/2, cmap=cmap, label="")
+    cm = ax01.scatter(tt0, ones(len(tt0))*-0.9, c=cc0, alpha=abs(cc0), cmap=cmap, label="")
 
     ax[0].set_ylim(-rot_z_max, rot_z_max)
     ax00.set_ylim(-acc_t_max, acc_t_max)
     ax01.set_ylim(-1, 1)
     ax01.yaxis.set_visible(False)
 
-    ax[1].plot(rot.select(channel="*N")[0].times(), rot_t, label="ROT-T", color="tab:red", lw=lw, zorder=3)
+    ax[1].plot(rot.select(channel="*N")[0].times(), rot1, label=rot1_lbl, color="tab:red", lw=lw, zorder=3)
     ax11 = ax[1].twinx()
-    ax11.plot(acc.select(channel="*Z")[0].times(), acc_z, label="ACC-Z", color="black", lw=lw)
+    ax11.plot(acc.select(channel="*Z")[0].times(), acc1, label=acc1_lbl, color="black", lw=lw)
     ax12 = ax[1].twinx()
-    ax12.scatter(tt1, np.ones(len(tt1))*-0.9, c=cc1, alpha=(cc1+1)/2, cmap=cmap, label="")
+    ax12.scatter(tt1, ones(len(tt1))*-0.9, c=cc1, alpha=abs(cc1), cmap=cmap, label="")
 
     ax[1].set_ylim(-rot_t_max, rot_t_max)
     ax11.set_ylim(-acc_z_max, acc_z_max)
     ax12.set_ylim(-1, 1)
     ax12.yaxis.set_visible(False)
 
-    ax[2].plot(rot.select(channel="*N")[0].times(), rot_z, label="ROT-Z", color="tab:red", lw=lw, zorder=3)
+    ax[2].plot(rot.select(channel="*N")[0].times(), rot2, label=rot2_lbl, color="tab:red", lw=lw, zorder=3)
     ax22 = ax[2].twinx()
-    ax22.plot(acc.select(channel="*Z")[0].times(), acc_r, label="ACC-R", color="black", lw=lw)
+    ax22.plot(acc.select(channel="*Z")[0].times(), acc2, label=acc2_lbl, color="black", lw=lw)
     ax23 = ax[2].twinx()
-    ax23.scatter(tt2, np.ones(len(tt2))*-0.9, c=cc2, alpha=(cc2+1)/2, cmap=cmap, label="")
+    ax23.scatter(tt2, ones(len(tt2))*-0.9, c=cc2, alpha=abs(cc2), cmap=cmap, label="")
 
     ax[2].set_ylim(-rot_z_max, rot_z_max)
     ax22.set_ylim(-acc_r_max, acc_r_max)
     ax23.set_ylim(-1, 1)
     ax23.yaxis.set_visible(False)
 
-    cc1 = round(correlate(rot_z, -acc_t, 0, demean=True, normalize='naive', method='auto')[0], 2)
-    cc2 = round(correlate(rot_t, acc_z, 0, demean=True, normalize='naive', method='auto')[0], 2)
-    cc3 = round(correlate(rot_z, acc_r, 0, demean=True, normalize='naive', method='auto')[0], 2)
-    cc = [cc1, cc2, cc3]
+    cc0 = round(correlate(rot0, acc0, 0, demean=True, normalize='naive', method='auto')[0], 2)
+    cc1 = round(correlate(rot1, acc1, 0, demean=True, normalize='naive', method='auto')[0], 2)
+    cc2 = round(correlate(rot2, acc2, 0, demean=True, normalize='naive', method='auto')[0], 2)
+    cc = [cc0, cc1, cc2]
 
     ## sync twinx
     ax[0].set_yticks(linspace(ax[0].get_yticks()[0], ax[0].get_yticks()[-1], len(ax[0].get_yticks())))
@@ -128,6 +132,7 @@ def __makeplot_waveform_comparison_cc(rot0, acc0, baz, twin_sec=5, twin_overlap=
 
     ax[2].set_yticks(linspace(ax[2].get_yticks()[0], ax[2].get_yticks()[-1], len(ax[2].get_yticks())))
     ax22.set_yticks(linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax[2].get_yticks())))
+
     for i in range(3):
         ax[i].legend(loc=1, ncols=4)
         ax[i].grid(which="both", alpha=0.5)
@@ -141,11 +146,12 @@ def __makeplot_waveform_comparison_cc(rot0, acc0, baz, twin_sec=5, twin_overlap=
     ax[2].set_xlabel("Time (s)", fontsize=font)
 
     tbeg = acc[0].stats.starttime
-    ax[0].set_title(f"{tbeg.date} {str(tbeg.time).split('.')[0]} UTC  |  f = {fmin}-{fmax} Hz  |  BAz = {round(baz, 1)}°  |  ED = {round(dist/1000,1)} km  |  T = {twin_sec}s ({int(100*twin_overlap)}%)")
+    ax[0].set_title(f"{tbeg.date} {str(tbeg.time).split('.')[0]} UTC  |  f = {fmin}-{fmax} Hz  |  BAz = {round(baz, 1)}°  |  ED = {round(distance/1000,1)} km  |  T = {twin_sec}s ({int(100*twin_overlap)}%)")
 
-    cax = ax[Nrow-1].inset_axes([0.8, -0.3, 0.2, 0.1], transform=ax[Nrow-1].transAxes)
+    cax = ax[Nrow-1].inset_axes([0.8, -0.35, 0.2, 0.1], transform=ax[Nrow-1].transAxes)
     cb = plt.colorbar(cm, cax=cax, shrink=0.4, location='bottom', orientation='horizontal')
     cm.set_clim(-1, 1)
+    cb.set_label("Cross-Correlation", fontsize=font, loc="left", labelpad=-43, color="black", backgroundcolor="w")
 
     plt.show();
     return fig

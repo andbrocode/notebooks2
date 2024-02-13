@@ -4,7 +4,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
     import matplotlib.pyplot as plt
 
     from numpy import ones, linspace, histogram, concatenate, average, argmax, isnan, sqrt, cov, nan, array, arange
-    from obspy import UTCDateTime    
+    from obspy import UTCDateTime
     from obspy.signal.rotate import rotate_ne_rt
     from functions.compute_backazimuth import __compute_backazimuth
     from functions.compute_backazimuth_tangent import __compute_backazimuth_tangent

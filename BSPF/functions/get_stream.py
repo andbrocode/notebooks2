@@ -88,6 +88,9 @@ def __get_stream(tbeg, tend, status=False):
 
     st0 = st0.resample(40, no_filter=True);
 
+    st0 = st0.detrend("demean")
+    st0 = st0.taper(0.01, type="cosine")
+
     st0 = st0.sort();
 
     st0 = st0.trim(tbeg, tend);

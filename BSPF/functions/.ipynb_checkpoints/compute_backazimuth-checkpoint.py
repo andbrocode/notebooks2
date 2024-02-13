@@ -151,8 +151,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                                     ACC.select(channel='*E')[0].data,
                                     backas[i_deg]
                                    )
+
                 ## reverse polarity for ACC-T
-                T *= -1
+                # T *= -1
 
                 ## compute correlation for backazimuth
 #                 corrbaz0 = xcorr(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)
