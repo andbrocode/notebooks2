@@ -1,4 +1,4 @@
-def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, None), event=None, plot=True, show_details=False):
+def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, None), event=None, invert_rot_z=False, plot=True, show_details=False):
 
     """
     This method estimates a backazimuth for either
@@ -69,9 +69,10 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
 
         ## revert polarity for Z
-        # for tr in ROT:
-        #     if "Z" in tr.stats.channel:
-        #         tr.data *= -1
+        if invert_rot_z:
+            for tr in ROT:
+                if "Z" in tr.stats.channel:
+                    tr.data *= -1
 
     elif wave_type == "rayleigh":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])

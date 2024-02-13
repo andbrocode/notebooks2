@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None, invert_acc_z=False, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -28,10 +28,10 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, cc_thres=None
     config['station_latitude']  = 33.6106
 
     ## specify window length for baz estimation in seconds
-    config['win_length_sec'] = 1/fmin
+    config['win_length_sec'] = Twin
 
     ## define an overlap for the windows in percent (50 -> 50%)
-    config['overlap'] = 90
+    config['overlap'] = Toverlap
 
     ## specify steps for degrees of baz
     config['step'] = 1
