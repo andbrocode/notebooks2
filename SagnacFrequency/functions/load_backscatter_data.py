@@ -1,21 +1,21 @@
 def __load_backscatter_data(tbeg, tend, ring, path_to_data):
 
-    from os import path
+    from os.path import isfile
     from obspy import UTCDateTime
     from datetime import date
     from pandas import read_pickle, concat, DataFrame, date_range
 
     t1 = date.fromisoformat(str(UTCDateTime(tbeg).date))
-    t2 = date.fromisoformat(str((UTCDateTime(tend)-86400).date))
+    t2 = date.fromisoformat(str((UTCDateTime(tend)+86400).date))
 
     df = DataFrame()
     for dat in date_range(t1, t2):
         # print(dat)
-        dat_str = str(dat)[:10].replace("-","")
+        dat_str = str(dat)[:10].replace("-", "")
         file = f"FJ{ring}_{dat_str}_backscatter.pkl"
 
-        if not path.isfile(path_to_data+file):
-            _path = path_to_data+"sagnac_frequency/data/"
+        if not isfile(path_to_data+file):
+            _path = data_path+"sagnac_frequency/data/"
 
             out = DataFrame()
             for m in range(24):
@@ -39,6 +39,10 @@ def __load_backscatter_data(tbeg, tend, ring, path_to_data):
             df = concat([df, df0])
         except:
             print(f"error for {file}")
+
+    ## trim to time interval
+    df = df[df.time1 >= tbeg]
+    df = df[df.time2 <= tend]
 
     df.reset_index(inplace=True)
 
