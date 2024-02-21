@@ -56,7 +56,7 @@ elif os.uname().nodename == 'lin-ffb-01':
 config = {}
 
 
-config['year'] = 2023
+config['year'] = 2024
 
 
 
@@ -73,8 +73,8 @@ else:
     # config['seed2'] = "BW.ROMY..BJV"
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-23")
-config['date2'] = UTCDateTime(f"{config['year']}-12-31")
+config['date1'] = UTCDateTime(f"{config['year']}-01-01")
+config['date2'] = UTCDateTime(f"{config['year']}-01-31")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"

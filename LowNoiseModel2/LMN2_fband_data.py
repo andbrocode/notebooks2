@@ -20,8 +20,9 @@ import pickle
 import matplotlib.pyplot as plt
 
 from andbro__store_as_pickle import __store_as_pickle
-from functions.get_octave_bands import __get_octave_bands
 
+from functions.get_octave_bands import __get_octave_bands
+from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -50,6 +51,28 @@ if len(sys.argv) > 1:
     names = [sys.argv[1]]
 else:
     names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA"]
+
+## define dates to ignore
+filter_dates = {"FUR": ["20231106", "20231115"],
+                "FFBI": ["20231215", "20231222", "20231227", "20231228", "20231229"],
+                "ROMY": [],
+                "ROMYA": [],
+                "DROMY": [],
+               }
+
+## define rejection limits for PSDs
+rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
+                     "N": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
+                     "E": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]}
+                    },
+            "ROMY": {"Z": {"tmean":1e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
+                     "N": {"tmean":2e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
+                     "E": {"tmean":2e-19, "tmin":1e-23, "flim":[0.002, 0.01]}
+                    },
+            "FFBI": {"F": {"tmean":1e6, "tmin":1e-7, "flim":[0.001, 1.0]},
+                     "O": {"tmean":1e6, "tmin":1e-5, "flim":[0.001, 1.0]},
+                    },
+            }
 
 ## ---------------------------------------
 
@@ -239,6 +262,11 @@ for name in names:
                 day = str(day).split(" ")[0].replace("-", "")
 
                 # print(f"{config['filename']}_{day}_hourly.pkl")
+
+                ## check dates to be filtered out
+                if day in filter_dates[name]:
+                    print(f" -> skip {day} due to date filter")
+                    continue
 
                 try:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")

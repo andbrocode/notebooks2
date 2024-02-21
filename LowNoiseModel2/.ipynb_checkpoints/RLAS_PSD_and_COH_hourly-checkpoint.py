@@ -55,7 +55,7 @@ elif os.uname().nodename == 'lin-ffb-01':
 config = {}
 
 
-config['year'] = 2023
+config['year'] = 2024
 
 
 
@@ -68,8 +68,8 @@ else:
 
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-01")
-config['date2'] = UTCDateTime(f"{config['year']}-12-31")
+config['date1'] = UTCDateTime(f"{config['year']}-01-01")
+config['date2'] = UTCDateTime(f"{config['year']}-01-31")
 
 if "FFBI" in config['seed1']:
     config['path_to_data1'] = bay_path+f"mseed_online/archive/"
