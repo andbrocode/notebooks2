@@ -167,7 +167,7 @@ config['DC_threshold'] = 0.1
 
 config['AC_threshold'] = 0.15
 
-config['delta_fsagnac'] = 1.0
+config['delta_fsagnac'] = 2.0
 
 
 # ### Load MLTI Logs
@@ -190,7 +190,7 @@ except:
 # ### Load Beat Data
 
 # In[6]:
-print("loading")
+print(f"\nR{config['ring']} loading ...")
 # try:
 beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
 # except:

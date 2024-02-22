@@ -56,10 +56,6 @@ elif os.uname().nodename == 'lin-ffb-01':
 config = {}
 
 
-config['year'] = 2024
-
-
-
 if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
     config['seed2'] = sys.argv[2]
@@ -72,9 +68,10 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
+config['year'] = 2023
 
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-01-31")
+config['date1'] = UTCDateTime(f"{config['year']}-09-01")
+config['date2'] = UTCDateTime(f"{config['year']}-12-31")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -544,8 +541,8 @@ def main(config):
                 mask_counter += 1
                 continue
 
-            _st1 = _st1.detrend("linear").taper(0.05)
-            _st2 = _st2.detrend("linear").taper(0.05)
+            _st1 = _st1.detrend("linear")
+            _st2 = _st2.detrend("linear")
 
             # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
             # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
@@ -659,12 +656,14 @@ def main(config):
                 if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
                     print(f" -> U: bad quality status detected!")
                     mltiU_counter += 1
-                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    psd2, coh = psd2*nan, coh*nan
 
                 elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
                     print(f" -> V: bad quality status detected!")
                     mltiV_counter += 1
-                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    psd2, coh = psd2*nan, coh*nan
 
             if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
                 try:
@@ -676,7 +675,8 @@ def main(config):
                 if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
                     print(f" -> Z: bad quality status detected!")
                     mltiZ_counter += 1
-                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                    psd2, coh = psd2*nan, coh*nan
 
             psds1[n] = psd1
             psds2[n] = psd2

@@ -23,11 +23,11 @@ def __replace_noisy_psds_with_nan(arr, ff=None, threshold_mean=1e-16, flim=[None
 
     l1 = shape(arr)[0]
 
-    rejected = []
+    rejected, all_nan = [], []
     for ii in range(shape(arr)[0]):
 
         if isnan(arr[ii, :]).all():
-            rejected.append(arr[ii, :])
+            all_nan.append(arr[ii, :])
             continue
 
         ## appy upper threshold
@@ -49,8 +49,10 @@ def __replace_noisy_psds_with_nan(arr, ff=None, threshold_mean=1e-16, flim=[None
                 arr[ii, :] = ones(shape(arr)[1]) * nan
 
     l2 = len(rejected)
+    l3 = len(all_nan)
 
-    print(f" -> removed {l2} rows due to mean thresholds ({round(ff[idx_min],4)} and {round(ff[idx_max],4)} Hz)!")
-    print(f" -> {l1-l2} / {l1} psds remain")
+    print(f" -> {l3} are all NaN")
+    print(f" -> {l2} rows removed due to mean thresholds ({round(ff[idx_min],4)} and {round(ff[idx_max],4)} Hz)!")
+    print(f" -> {l1-l2-l3} / {l1} psds remain")
 
     return arr, array(rejected)

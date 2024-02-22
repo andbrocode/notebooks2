@@ -167,7 +167,7 @@ config['DC_threshold'] = 0.1
 
 config['AC_threshold'] = 0.15
 
-config['delta_fsagnac'] = 1.0
+config['delta_fsagnac'] = 2.0
 
 
 # ### Load MLTI Logs
@@ -190,12 +190,13 @@ except:
 # ### Load Beat Data
 
 # In[6]:
-print("loading")
+print(f"\nR{config['ring']} loading ...")
 # try:
 beat = __load_beat(config['tbeg'], config['tend'], config['ring'], config['path_to_autodata'])
 # except:
 #     print(f" -> failed to load data: {config['tbeg']}")
 #     quit()
+
 
 if len(beat) == 0:
     print(f" -> no beat file: {config['tbeg']}")
@@ -305,10 +306,10 @@ try:
 
     plt.title(f"Quality Status of R{config['ring']} on {config['tbeg'].date}")
 
-    # plt.show();
-
     print(f" -> stored: {config['path_to_figures']}R{config['ring']}_{config['tbeg'].date}_status.png")
     fig.savefig(config['path_to_figures']+f"R{config['ring']}_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
+
+    plt.close();
 
 except:
     print(" -> failed to plot: {config['tbeg']")
