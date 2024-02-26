@@ -66,8 +66,8 @@ rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "E": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]}
                     },
             "ROMY": {"Z": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
-                     "N": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
-                     "E": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]}
+                     "N": {"tmean":5e-19, "tmin":1e-22, "flim":[0.002, 0.01]},
+                     "E": {"tmean":5e-19, "tmin":1e-22, "flim":[0.002, 0.01]}
                     },
             "FFBI": {"F": {"tmean":1e7, "tmin":1e-7, "flim":[0.001, 1.0]},
                      "O": {"tmean":1e7, "tmin":1e-5, "flim":[0.001, 1.0]},
