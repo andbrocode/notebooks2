@@ -45,7 +45,7 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2023-09-23", "2023-12-31"
+t1, t2 = "2023-09-23", "2024-01-31"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
@@ -54,8 +54,8 @@ else:
 
 ## define dates to ignore
 filter_dates = {"FUR": ["20231106", "20231115"],
-                "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229"],
-                "ROMY": [],
+                "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231"],
+                "ROMY": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231"],
                 "ROMYA": [],
                 "DROMY": [],
                }
@@ -65,12 +65,12 @@ rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "N": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "E": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]}
                     },
-            "ROMY": {"Z": {"tmean":1e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
-                     "N": {"tmean":2e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
-                     "E": {"tmean":2e-19, "tmin":1e-23, "flim":[0.002, 0.01]}
+            "ROMY": {"Z": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
+                     "N": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
+                     "E": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]}
                     },
-            "FFBI": {"F": {"tmean":1e6, "tmin":1e-7, "flim":[0.001, 1.0]},
-                     "O": {"tmean":1e6, "tmin":1e-5, "flim":[0.001, 1.0]},
+            "FFBI": {"F": {"tmean":1e7, "tmin":1e-7, "flim":[0.001, 1.0]},
+                     "O": {"tmean":1e7, "tmin":1e-5, "flim":[0.001, 1.0]},
                     },
             }
 
@@ -260,6 +260,12 @@ for name in names:
             for jj, day in enumerate(date_range(d1, d2)):
 
                 day = str(day).split(" ")[0].replace("-", "")
+
+                yr = day[:4]
+
+                ## update year if necessary
+                if year != yr:
+                    config['filename'] = config['filename'].replace(year, yr)
 
                 # print(f"{config['filename']}_{day}_hourly.pkl")
 
