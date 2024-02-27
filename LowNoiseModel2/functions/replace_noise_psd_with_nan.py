@@ -55,4 +55,4 @@ def __replace_noisy_psds_with_nan(arr, ff=None, threshold_mean=1e-16, flim=[None
     print(f" -> {l2} rows removed due to mean thresholds ({round(ff[idx_min],4)} and {round(ff[idx_max],4)} Hz)!")
     print(f" -> {l1-l2-l3} / {l1} psds remain")
 
-    return arr, array(rejected)
+    return arr, rejected

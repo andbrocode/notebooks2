@@ -5,7 +5,7 @@ Spyder Editor
 
 """
 __author__ = 'AndreasBrotzer'
-__year__   = '2022'
+__year__   = '2023'
 
 # In[] ___________________________________________________________
 '''---- import libraries ----'''
@@ -70,8 +70,8 @@ else:
 
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-01-31")
+config['date1'] = UTCDateTime(f"{config['year']}-02-01")
+config['date2'] = UTCDateTime(f"{config['year']}-02-25")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
@@ -285,6 +285,37 @@ def __load_status(tbeg, tend, ring, path_to_data):
     return df
 
 
+def __load_lxx(tbeg, tend, path_to_archive):
+
+    from obspy import UTCDateTime
+    from pandas import read_csv, concat
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    rings = {"U":"03", "Z":"01", "V":"02", "W":"04"}
+
+    if tbeg.year == tend.year:
+        year = tbeg.year
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{year}/logfiles/LXX_maintenance.log"
+
+        lxx = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+    else:
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{tbeg.year}/logfiles/LXX_maintenance.log"
+        lxx1 = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{tend.year}/logfiles/LXX_maintenance.log"
+        lxx2 = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+        lxx = concat([lxx1, lxx2])
+
+    lxx = lxx[(lxx.datetime > tbeg) & (lxx.datetime < tend)]
+
+    return lxx
+
+
 # In[] ___________________________________________________________
 
 def main(config):
@@ -306,7 +337,7 @@ def main(config):
     mltiU_counter = 0
     mltiV_counter = 0
     mltiZ_counter = 0
-
+    lxx_counter = 0
 
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
@@ -640,10 +671,16 @@ def main(config):
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
-                # print(ff_coh.size, coh.size, _st1[0].data.size, psd1.size)
-                # print(ff_coh[0], ff_coh[-1], f1[0], f1[-1])
+            ## load maintenance file
+            lxx = __load_lxx(t1, t2, archive_path)
+
+            if lxx[lxx.sum_all.eq(1)].sum_all.size > 0:
+                print(f" -> maintenance period! Skipping...")
+                lxx_counter += 1
+                psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+
             ## check data quality
-            max_num_of_bad_quality = 3
+            max_num_of_bad_quality = 10
 
             if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
                 try:
@@ -653,13 +690,13 @@ def main(config):
                     print(f" -> cannot load status file!")
                     continue
 
-                if statusU[statusU.quality.eq(0)].size > max_num_of_bad_quality:
+                if statusU[statusU.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> U: bad quality status detected!")
                     mltiU_counter += 1
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-                elif statusV[statusV.quality.eq(0)].size > max_num_of_bad_quality:
+                if statusV[statusV.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> V: bad quality status detected!")
                     mltiV_counter += 1
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
@@ -672,7 +709,7 @@ def main(config):
                     print(f" -> cannot load status file!")
                     continue
 
-                if statusZ[statusZ.quality.eq(0)].size > max_num_of_bad_quality:
+                if statusZ[statusZ.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> Z: bad quality status detected!")
                     mltiZ_counter += 1
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
@@ -727,6 +764,7 @@ def main(config):
 
     print(f" Size count: {size_counter}")
     print(f" Mask count: {mask_counter}")
+    print(f" LXX count: {lxx_counter}")
 
     print("\nDone\n")
 
