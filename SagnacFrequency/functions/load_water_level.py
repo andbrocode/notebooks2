@@ -20,7 +20,14 @@ def __load_water_level(tbeg, tend):
         file = f"{str(dat)[:4]}/PG"+str(dat)[:10].replace("-", "")+".dat"
         try:
             df0 = read_csv(path_to_data+file, delimiter=" ")
+
+            ## correct seconds
+            df0['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df0['day'], df0['hour'])]
+            df0['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df0['times_utc']]
+
+            ## merge
             df = concat([df, df0])
+
         except:
             print(f"error for {file}")
 
@@ -29,8 +36,8 @@ def __load_water_level(tbeg, tend):
     df['temperatur'] = df.temperatur*5
 
     ## correct seconds
-    df['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df['day'], df['hour'])]
-    df['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df['times_utc']]
+    # df['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df['day'], df['hour'])]
+    # df['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df['times_utc']]
 
     ## remove columns hour and day
     df.drop(columns=["hour", "day"], inplace=True)
