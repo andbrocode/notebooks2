@@ -61,11 +61,15 @@ for day in days:
     year = day[0:4]
     doy  = day[4:]
 
-    ## read REFTEK raw files
-    st = obspy.read(ipath+f"/{day}/{reftek}/1/*")
+    try:
+        ## read REFTEK raw files
+        st = obspy.read(ipath+f"/{day}/{reftek}/1/*")
 
-    st.merge()
-    
+        st.merge()
+    except:
+        print(f"-> failed to read data {day}")
+        continue
+        
     ## check if merging worked
     if len(st) < amount_of_channels:
         print("seems like a channel is missing !")
