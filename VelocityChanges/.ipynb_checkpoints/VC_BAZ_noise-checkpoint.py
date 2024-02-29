@@ -13,6 +13,7 @@ from functions.rotate_romy_ZUV_ZNE import __rotate_romy_ZUV_ZNE
 from functions.get_time_intervals import __get_time_intervals
 from functions.compute_beamforming_ROMY import __compute_beamforming_ROMY
 from functions.compute_backazimuth_and_velocity_noise import __compute_backazimuth_and_velocity_noise
+from functions.load_lxx import __load_lxx
 
 from andbro__read_sds import __read_sds
 from andbro__save_to_pickle import __save_to_pickle
@@ -95,6 +96,8 @@ def __load_mlti(tbeg, tend, ring, path_to_archive):
 
     return mlti
 
+
+
 ## ---------------------------------------
 
 times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval_seconds'], interval_overlap=0)
@@ -144,9 +147,13 @@ nan_dummy = np.ones(90)*np.nan
 
 for _n, (t1, t2) in enumerate(tqdm(times)):
 
+    ## load MLTI logs
     mltiU = __load_mlti(t1, t2, "U", archive_path)
     mltiV = __load_mlti(t1, t2, "V", archive_path)
     mltiZ = __load_mlti(t1, t2, "Z", archive_path)
+
+    ## load maintenance file
+    lxx = __load_lxx(t1, t2, archive_path)
 
     try:
         # inv1 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.BW_ROMY")
@@ -229,7 +236,10 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
         out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=False, save=True);
 
 
-        if mltiU.size > config['num_mlti'] or mltiV.size > config['num_mlti'] or levels["U"] > 1e-6 or levels["V"] > 1e-6:
+        ## check maintenance periods
+        maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
+
+        if mltiU.size > config['num_mlti'] or mltiV.size > config['num_mlti'] or levels["U"] > 1e-6 or levels["V"] > 1e-6 or maintenance:
             print(" -> to many MLTI (horizontal)")
 
             out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, nan_dummy
@@ -240,7 +250,7 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
 
             out['cc_rayleigh_all'], out['cc_tangent_all'] = nan_dummy, nan_dummy
 
-        if mltiZ.size > config['num_mlti'] or mltiZ.size > config['num_mlti'] or levels["Z"] > 1e-6:
+        if mltiZ.size > config['num_mlti'] or mltiZ.size > config['num_mlti'] or levels["Z"] > 1e-6 or maintenance:
             print(" -> to many MLTI (vertical)")
 
             out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, nan_dummy
@@ -248,6 +258,8 @@ for _n, (t1, t2) in enumerate(tqdm(times)):
             out['vel_love_max'], out['vel_love_std'], out['vel_love_all'] = np.nan, np.nan, nan_dummy
 
             out['cc_love_all'] = nan_dummy
+
+
 
         baz_tangent.append(out['baz_tangent_max'])
         baz_tangent_std.append(out['baz_tangent_std'])
