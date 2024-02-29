@@ -2,7 +2,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
     """
     Computing averages for frequency octave bands. 
-    
+
     Arguments:
         - freq:    (array) frequency values
         - psd:    (array) psd values
@@ -16,13 +16,13 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
     >>> out = __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=False)
 
-    
-    
+
+
     """
-    
+
     import matplotlib.pyplot as plt
     from numpy import nanmean, nanmedian, array
-    
+
     def __get_octave_bands(fmin, fmax, faction_of_octave=1, plot=False):
 
         """
