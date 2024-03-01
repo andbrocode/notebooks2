@@ -137,7 +137,7 @@ psd_1, ff_1 = __cut_frequencies_array(psd_1, ff_1, 1e-3, 5e0)
 # ff_1, psd_1 = __get_fband_averages(ff_1, psd_1)
 
 ## filter corrupt psds
-psd_1, rejected_1 = __replace_noisy_psds_with_nan(psd_1, ff=ff_1,
+psd_1, rejected_1 = __replace_noisy_psds_with_nan(psd_1, ff_1,
                                                   threshold_mean=5e-19,
                                                   threshold_min=1e-23,
                                                   threshold_max=1e-16,
@@ -162,7 +162,7 @@ psd_2, ff_2 = __cut_frequencies_array(psd_2, ff_2, 1e-3, 5e0)
 # ff_2, psd_2 = __get_fband_averages(ff_2, psd_2)
 
 ## filter corrupt psds
-psd_2, rejected_2 = __replace_noisy_psds_with_nan(psd_2, ff=ff_2,
+psd_2, rejected_2 = __replace_noisy_psds_with_nan(psd_2, ff_2,
                                                   threshold_mean=5e-19,
                                                   threshold_min=1e-23,
                                                   threshold_max=1e-16,
@@ -187,7 +187,7 @@ psd_3, ff_3 = __cut_frequencies_array(psd_3, ff_3, 1e-3, 5e0)
 # ff_3, psd_3 = __get_fband_averages(ff_3, psd_3)
 
 ## filter corrupt psds
-psd_3, rejected_3 = __replace_noisy_psds_with_nan(psd_3, ff=ff_3,
+psd_3, rejected_3 = __replace_noisy_psds_with_nan(psd_3, ff_3,
                                                   threshold_mean=5e-19,
                                                   threshold_min=1e-23,
                                                   threshold_max=1e-16,
@@ -212,7 +212,7 @@ psd_4, ff_4 = __cut_frequencies_array(psd_4, ff_4, 1e-3, 5e0)
 # ff_4, psd_4 = __get_fband_averages(ff_4, psd_4)
 
 ## filter corrupt psds
-psd_4, rejected_4 = __replace_noisy_psds_with_nan(psd_4, ff=ff_4,
+psd_4, rejected_4 = __replace_noisy_psds_with_nan(psd_4, ff_4,
                                                   threshold_mean=None,
                                                   threshold_min=1e-7,
                                                   threshold_max=1e5,
