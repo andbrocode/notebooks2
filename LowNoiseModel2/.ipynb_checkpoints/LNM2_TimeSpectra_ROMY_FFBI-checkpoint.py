@@ -119,6 +119,8 @@ def __load_data_files(path, name, d1, d2):
     # psds_all_array = sum([_s for _s in psds_all], [])
     psds_all_array = array(psds_all)
 
+    tt = array(tt)
+
     return ff, tt, psds_all_array
 
 

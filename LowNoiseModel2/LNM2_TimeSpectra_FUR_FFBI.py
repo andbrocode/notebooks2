@@ -119,11 +119,10 @@ def __load_data_files(path, name, d1, d2):
             ## increase time counter
             tcount += 1
 
-
     # psds_all_array = sum([_s for _s in psds_all], [])
     psds_all_array = array(psds_all)
 
-    return ff, psds_all_array
+    return ff, tt, psds_all_array
 
 
 def __makeplot_image_overview(ff, psds, times, names):
