@@ -623,7 +623,7 @@ out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p
 out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
 
 
-In[ ]:
+# In[ ]:
 
 
 if "FUR" in config['sta']:
