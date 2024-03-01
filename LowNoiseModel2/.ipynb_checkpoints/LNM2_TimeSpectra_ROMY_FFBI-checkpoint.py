@@ -203,7 +203,7 @@ gc.collect();
 name = names[3]
 
 ff_4, psd_4 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_4 = np.arange(0, psd_3.shape[0], 1)
+tt_4 = np.arange(0, psd_4.shape[0], 1)
 
 ## cut to specified frequency range
 psd_4, ff_4 = __cut_frequencies_array(psd_4, ff_4, 1e-3, 5e0)
