@@ -397,58 +397,6 @@ def __read_files(seed, tbeg, tend):
     return dat, ff1
 
 
-# In[ ]:
-
-
-ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
-ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
-
-ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
-ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
-
-out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
-out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
-
-
-# In[ ]:
-
-
-if "FUR" in config['sta']:
-
-    fur_z, ff_z = __read_files("GR.FUR..BHZ", config['d1'], config['d2'])
-    fur_n, ff_n = __read_files("GR.FUR..BHN", config['d1'], config['d2'])
-    fur_e, ff_e = __read_files("GR.FUR..BHE", config['d1'], config['d2'])
-
-    fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-10, flim=(0, 0.05))
-    fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-10, flim= (0, 0.05))
-    fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-10, flim=(0, 0.05))
-
-    out_fur_z = __get_hist_loglog(fur_z, ff_z, bins=100, density=False, axis=1, plot=False)
-    out_fur_n = __get_hist_loglog(fur_n, ff_n, bins=100, density=False, axis=1, plot=False)
-    out_fur_e = __get_hist_loglog(fur_e, ff_e, bins=100, density=False, axis=1, plot=False)
-
-if "ROMY" in config['sta']:
-
-    romy_z, ff_z = __read_files("BW.ROMY..BJZ", config['d1'], config['d2'])
-    romy_n, ff_n = __read_files("BW.ROMY..BJN", config['d1'], config['d2'])
-    romy_e, ff_e = __read_files("BW.ROMY..BJE", config['d1'], config['d2'])
-
-    romy_z, _ = __replace_noisy_psds_with_nan(romy_z, ff_z, threshold_mean=1e-19, threshold_min=1e-23,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_n, _ = __replace_noisy_psds_with_nan(romy_n, ff_n, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_e, _ = __replace_noisy_psds_with_nan(romy_e, ff_e, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-
-    out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
-    out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
-    out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
-
-
-# ## Plotting
-
-# In[ ]:
-
 
 def __makeplot_density(data, name="FUR"):
 
@@ -554,22 +502,169 @@ def __makeplot_density(data, name="FUR"):
     # plt.show();
     return fig
 
+def __makeplot_density_single(data, name="FUR"):
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+
+    def __get_median_psd(psds):
+
+        from numpy import median, zeros, isnan
+
+        med_psd = zeros(psds.shape[1])
+
+        for f in range(psds.shape[1]):
+            a = psds[:, f]
+            med_psd[f] = median(a[~isnan(a)])
+
+        return med_psd
+
+
+    # psd_median = __get_median_psd(dat)
+
+
+    font = 12
+
+    Nrow, Ncol = 1, 1
+
+    fig, ax = plt.subplots(Nrow, Ncol, figsize=(12, 5), sharex=True)
+
+
+    ## theoretical rlnm
+    # plt.plot(periods, rlnm_psd, color="black", zorder=2, lw=2, ls="--", label="RLNM")
+
+    out = data
+
+    out['dist'] = np.ma.masked_array(out['dist'], out['dist'] == 0)
+
+    y_axis = 10**(out['bin_mids']/10)
+
+    x_axis = out['frequencies']
+
+    x_axis[0] == 1e-20
+
+        ## plotting
+
+    cmap = plt.colormaps.get_cmap('viridis')
+    # cmap.set_under(color='white')
+
+    _tmp = out['dist'].reshape(out['dist'].size)
+
+    im = ax.pcolormesh(out['frequencies'], out['bin_mids'], out['dist'].T,
+                       cmap=cmap, shading="auto", antialiased=True, rasterized=True,
+                       vmin=min(_tmp[np.nonzero(_tmp)]), zorder=2, norm="log")
+
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.tick_params(axis='both', labelsize=font-1)
+    ax.set_xlim(1e-3, 2e0)
+    ax.grid(axis="both", which="both", ls="--", zorder=1)
+
+    if name == "FUR":
+        ax.set_ylim(1e-20, 1e-10)
+    elif name == "ROMY":
+        ax.set_ylim(1e-23, 1e-16)
+    elif name == "FFBI":
+        ax.set_ylim(1e-5, 1e7)
+
+
+    ax.set_xlabel("Frequency (Hz)", fontsize=font)
+
+    if name == "FUR":
+        ax.set_ylabel(r"PSD ($m^2 /s^4 /Hz$)", fontsize=font)
+
+    elif name == "ROMY":
+        ax.set_ylabel(r"PSD ($rad^2 /s^2 /Hz$)", fontsize=font)
+
+    ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
+    ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
+
+
+    ## add colorbar
+    cbar_ax = fig.add_axes([0.91, 0.11, 0.02, 0.77]) #[left, bottom, width, height]
+    cb = plt.colorbar(im, cax=cbar_ax)
+    cb.set_label("Propability Density", fontsize=font, labelpad=-45, color="white")
+
+    gc.collect()
+
+    plt.show();
+    return fig
+
+
+# In[ ]:
+
+
+ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
+ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
+
+ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
+ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
+
+out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
+out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
+
+
+# In[ ]:
+
+
+if "FUR" in config['sta']:
+
+    fur_z, ff_z = __read_files("GR.FUR..BHZ", config['d1'], config['d2'])
+    fur_n, ff_n = __read_files("GR.FUR..BHN", config['d1'], config['d2'])
+    fur_e, ff_e = __read_files("GR.FUR..BHE", config['d1'], config['d2'])
+
+    fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-10, flim=(0, 0.05))
+    fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-10, flim= (0, 0.05))
+    fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-10, flim=(0, 0.05))
+
+    out_fur_z = __get_hist_loglog(fur_z, ff_z, bins=100, density=False, axis=1, plot=False)
+    out_fur_n = __get_hist_loglog(fur_n, ff_n, bins=100, density=False, axis=1, plot=False)
+    out_fur_e = __get_hist_loglog(fur_e, ff_e, bins=100, density=False, axis=1, plot=False)
+
+if "ROMY" in config['sta']:
+
+    romy_z, ff_z = __read_files("BW.ROMY..BJZ", config['d1'], config['d2'])
+    romy_n, ff_n = __read_files("BW.ROMY..BJN", config['d1'], config['d2'])
+    romy_e, ff_e = __read_files("BW.ROMY..BJE", config['d1'], config['d2'])
+
+    romy_z, _ = __replace_noisy_psds_with_nan(romy_z, ff_z, threshold_mean=1e-19, threshold_min=1e-23,
+                                              threshold_max=1e-15, flim=[0.5, 0.9],)
+    romy_n, _ = __replace_noisy_psds_with_nan(romy_n, ff_n, threshold_mean=1e-19, threshold_min=1e-22,
+                                              threshold_max=1e-15, flim=[0.5, 0.9],)
+    romy_e, _ = __replace_noisy_psds_with_nan(romy_e, ff_e, threshold_mean=1e-19, threshold_min=1e-22,
+                                              threshold_max=1e-15, flim=[0.5, 0.9],)
+
+    out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
+    out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
+    out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
+
+
+# ## Plotting
+
+
 
 # In[ ]:
 
 if "FUR" in config['sta']:
 
     for _data in [out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f]:
-        fig = __makeplot_density([_data], name=config['sta'])
 
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1]}.png", format="png", dpi=200, bbox_inches='tight')
+        _name = str(_data).split("_")[1].upper()
+
+        fig = __makeplot_density_single(_data, name=_name)
+
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1]}.png", format="png", dpi=150, bbox_inches='tight')
 
 if "ROMY" in config['sta']:
     for _data in [out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f]:
 
-        fig = __makeplot_density([_data], name=config['sta'])
+        _name = str(_data).split("_")[1].upper()
 
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}__{str(_data)[-1]}.png", format="png", dpi=200, bbox_inches='tight')
+        fig = __makeplot_density_single(_data, name=_name)
+
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}__{str(_data)[-1]}.png", format="png", dpi=150, bbox_inches='tight')
+
 
 
 # In[ ]:
