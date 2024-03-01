@@ -24,6 +24,8 @@ from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm_notebook
 from pathlib import Path
 
+import warnings
+warnings.filterwarnings('ignore')
 
 # In[2]:
 
