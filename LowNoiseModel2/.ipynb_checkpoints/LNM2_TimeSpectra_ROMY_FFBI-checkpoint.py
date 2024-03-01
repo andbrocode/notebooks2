@@ -90,7 +90,6 @@ def __load_data_files(path, name, d1, d2):
 
         ## check if file is available, otherwise replace with nan array
         if os.path.isfile(path+filename):
-            print(f" -> no such file: {filename}")
 
             ## read file
             out = read_pickle(path+filename)
@@ -105,6 +104,7 @@ def __load_data_files(path, name, d1, d2):
             if NN == 0:
                 NN = psds_hourly[0, :].size
         else:
+            print(f" -> no such file: {filename}")
             psds_hourly = ones((24, NN)) * nan
 
         for psd in psds_hourly:
