@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Time Spectra for ROMY & FFBI
-# 
+# # Time Spectra for FUR & FFBI
+
 
 # In[ ]:
-
-
-
 
 
 # ## Load Libraries
@@ -371,7 +368,7 @@ def __makeplot_image_overview(ff, psds, times, names):
 
     gc.collect()
 
-    plt.show();
+    # plt.show();
     return fig
 
 
