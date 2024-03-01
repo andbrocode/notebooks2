@@ -79,7 +79,9 @@ def __load_data_files(path, name, d1, d2):
 
     sta, cha = name.split("_")
 
-    psds_all = []
+    NN = 0
+    tcount = 0
+    tt, psds_all = [], []
     for _i, day in enumerate(date_range(config['d1'], config['d2'])):
 
         day = str(day).split(" ")[0].replace("-", "")
@@ -89,20 +91,34 @@ def __load_data_files(path, name, d1, d2):
         # filename = f"{name}_3600_{day}_hourly.pkl"
         filename = f"{sta}/{year}_{sta}_{cha}_3600_{day}_hourly.pkl"
 
-        if not os.path.isfile(path+filename):
+        ## check if file is available, otherwise replace with nan array
+        if os.path.isfile(path+filename):
             print(f" -> no such file: {filename}")
-            continue
 
-        out = read_pickle(path+filename)
-        ff = out['frequencies']
+            ## read file
+            out = read_pickle(path+filename)
 
-        psds_hourly = out['psd']
+            ## extract frequencies
+            ff = out['frequencies']
+
+            ## extract psds
+            psds_hourly = out['psd']
+
+            ## set length of psds at first possible time
+            if NN == 0:
+                NN = psds_hourly[0, :].size
+        else:
+            psds_hourly = ones((24, NN)) * nan
+
         for psd in psds_hourly:
-            # if psd.size == 36002:
+            ## add psd
             psds_all.append(psd)
-            # else:
-            #     psds_all.append(ones(36002)*nan)
-            #     print(psd.size)
+
+            ## add time (as hour)
+            tt.append(tcount)
+            ## increase time counter
+            tcount += 1
+
 
     # psds_all_array = sum([_s for _s in psds_all], [])
     psds_all_array = array(psds_all)
