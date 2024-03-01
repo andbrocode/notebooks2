@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Time Spectra for ROMY & FFBI
-# 
+# Time Spectra for ROMY & FFBI
 
 
 
@@ -106,7 +105,7 @@ config['path_to_figures'] = f"{data_path}LNM2/figures/"
 
 config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
 
-config['d1'], config['d2'] = "2023-12-01", "2024-02-28"
+config['d1'], config['d2'] = "2024-01-01", "2024-02-28"
 
 # config['path_to_data'] = data_path+f"VelocityChanges/data/PSDS/"
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
