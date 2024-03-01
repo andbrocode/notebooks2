@@ -375,7 +375,6 @@ fig.savefig(config['path_to_figures']+f"TimeSpectra_ROMY_PSD_{config['d1']}_{con
 
 
 names = ["FUR_BHZ", "FUR_BHN", "FUR_BHE"]
-threshold = 1e-13
 
 
 # In[ ]:
@@ -389,8 +388,13 @@ tt_1 = np.arange(0, psd_1.shape[0], 1)
 
 ff_1, psd_1 = __get_fband_averages(ff_1, psd_1)
 
-psd_1, rejected_1 = __replace_noisy_psds_with_nan(psd_1, threshold_mean=threshold, ff=ff_1, flim=(0.002, 0.05))
-
+psd_1, rejected_1 = __replace_noisy_psds_with_nan(psd_1, f=ff_1,
+                                                  threshold_mean=1e-13,
+                                                  threshold_min=None,
+                                                  threshold_max=None,
+                                                  flim=[0.002, 0.05],
+                                                  )
+gc.collect();
 
 # In[ ]:
 
@@ -403,8 +407,13 @@ tt_2 = np.arange(0, psd_2.shape[0], 1)
 
 ff_2, psd_2 = __get_fband_averages(ff_2, psd_2)
 
-psd_2, rejected_2 = __replace_noisy_psds_with_nan(psd_2, threshold_mean=threshold, ff=ff_2, flim=(0.002, 0.05))
-
+psd_2, rejected_2 = __replace_noisy_psds_with_nan(psd_2, f=ff_2,
+                                                  threshold_mean=1e-13,
+                                                  threshold_min=None,
+                                                  threshold_max=None,
+                                                  flim=[0.002, 0.05],
+                                                  )
+gc.collect();
 
 # In[ ]:
 
@@ -417,8 +426,13 @@ tt_3 = np.arange(0, psd_3.shape[0], 1)
 
 ff_3, psd_3 = __get_fband_averages(ff_3, psd_3)
 
-psd_3, rejected_3 = __replace_noisy_psds_with_nan(psd_3, threshold_mean=threshold, ff=ff_3, flim=(0.002, 0.05))
-
+psd_3, rejected_3 = __replace_noisy_psds_with_nan(psd_3, ff=ff_3,
+                                                  threshold_mean=1e-13,
+                                                  threshold_min=None,
+                                                  threshold_max=None,
+                                                  flim=[0.002, 0.05],
+                                                  )
+gc.collect();
 
 # In[ ]:
 
