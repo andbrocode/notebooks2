@@ -310,8 +310,7 @@ def main(config):
     name = names[0]
     print("\n Data 1")
 
-    ff_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-    tt_1 = np.arange(0, psd_1.shape[0], 1)
+    ff_1, tt_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
     ff_1, psd_1 = __get_fband_averages(ff_1, psd_1)
 
@@ -331,8 +330,7 @@ def main(config):
     name = names[1]
     print("\n Data 2")
 
-    ff_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-    tt_2 = np.arange(0, psd_2.shape[0], 1)
+    ff_2, tt_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
     ff_2, psd_2 = __get_fband_averages(ff_2, psd_2)
 
@@ -352,8 +350,7 @@ def main(config):
     name = names[2]
     print("\n Data 3")
 
-    ff_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-    tt_3 = np.arange(0, psd_3.shape[0], 1)
+    ff_3, tt_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
     ff_3, psd_3 = __get_fband_averages(ff_3, psd_3)
 
@@ -373,8 +370,7 @@ def main(config):
     name = names[3]
     print("\n Data 4")
 
-    ff_4, psd_4 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-    tt_4 = np.arange(0, psd_3.shape[0], 1)
+    ff_4, tt_4, psd_4 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
     ## cut to specified frequency range
     psd_4, ff_4 = __cut_frequencies_array(psd_4, ff_4, 1e-3, 5e0)
