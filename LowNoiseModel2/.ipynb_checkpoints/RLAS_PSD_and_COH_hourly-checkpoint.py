@@ -68,8 +68,8 @@ else:
 
 
 
-config['date1'] = UTCDateTime(f"{config['year']}-02-28")
-config['date2'] = UTCDateTime(f"{config['year']}-02-29")
+config['date1'] = UTCDateTime(f"{config['year']}-01-01")
+config['date2'] = UTCDateTime(f"{config['year']}-01-31")
 
 if "FFBI" in config['seed1']:
     config['path_to_data1'] = bay_path+f"mseed_online/archive/"
