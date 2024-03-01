@@ -64,13 +64,13 @@ config = {}
 # config['sta'] = "FUR"
 config['sta'] = "ROMY"
 
-config['d1'], config['d2'] = "2023-09-23", "2024-01-31"
+config['d1'], config['d2'] = "2023-09-23", "2024-02-29"
 
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
 
 config['path_to_outdata'] = data_path+f"LNM2/data/"
 
-config['outpath_figures'] = data_path+f"LNM2/figures/"
+config['outpath_figures'] = data_path+f"LNM2/figures/PPSD/"
 
 config['frequency_limits'] = 1e-3, 1e1
 
@@ -586,9 +586,9 @@ def __makeplot_density_single(data, name="FUR"):
     cb = plt.colorbar(im, cax=cbar_ax)
     cb.set_label("Propability Density", fontsize=font, labelpad=-45, color="white")
 
-    gc.collect()
+    gc.collect();
 
-    plt.show();
+    # plt.show();
     return fig
 
 
@@ -654,7 +654,7 @@ if "FUR" in config['sta']:
 
         fig = __makeplot_density_single(_data, name=_name)
 
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1]}.png", format="png", dpi=150, bbox_inches='tight')
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
 
 if "ROMY" in config['sta']:
     for _data in [out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f]:
@@ -663,7 +663,7 @@ if "ROMY" in config['sta']:
 
         fig = __makeplot_density_single(_data, name=_name)
 
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}__{str(_data)[-1]}.png", format="png", dpi=150, bbox_inches='tight')
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
 
 
 
