@@ -106,7 +106,7 @@ config['path_to_figures'] = f"{data_path}LNM2/figures/"
 
 config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
 
-config['d1'], config['d2'] = "2023-09-23", "2024-02-28"
+config['d1'], config['d2'] = "2023-12-01", "2024-02-28"
 
 # config['path_to_data'] = data_path+f"VelocityChanges/data/PSDS/"
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
@@ -403,6 +403,9 @@ fig = __makeplot_image_overview(
                                 labels,
                                 )
 
+print(f" -> save: {config['path_to_figures']}TimeSpectra_ROMY_FFBI_PSD_{config['d1']}_{config['d2']}.png")
 fig.savefig(config['path_to_figures']+f"TimeSpectra_ROMY_FFBI_PSD_{config['d1']}_{config['d2']}.png", format="png", dpi=150, bbox_inches='tight')
+
+print("\nDone")
 
 ## End of File

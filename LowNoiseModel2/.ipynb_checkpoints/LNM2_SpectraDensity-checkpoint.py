@@ -597,11 +597,13 @@ def __makeplot_density(data, name="FUR"):
 if "FUR" in config['sta']:
     fig = __makeplot_density([out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
 
+    print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
     fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
 
 if "ROMY" in config['sta']:
     fig = __makeplot_density([out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
 
+    print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
     fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
 
 
