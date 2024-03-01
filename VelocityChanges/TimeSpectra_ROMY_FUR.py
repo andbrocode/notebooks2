@@ -584,7 +584,7 @@ def __makeplot_image_overview(ff, psds, times, names):
 # In[ ]:
 
 
-labels = [f"{n.split('_')[1]}" for n in names]
+labels = [f"{n.split('_')[0]}" for n in names]
 
 fig = __makeplot_image_overview(
                                 [ff_1, ff_2, ff_3],

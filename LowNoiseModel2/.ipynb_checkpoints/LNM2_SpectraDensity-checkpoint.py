@@ -32,7 +32,7 @@ warnings.filterwarnings('ignore')
 
 from functions.get_hist_loglog import __get_hist_loglog
 from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
-
+from functions.cut_frequencies_array import __cut_frequencies_array
 
 # In[3]:
 
@@ -77,44 +77,8 @@ config['frequency_limits'] = 1e-3, 1e1
 
 # ## Methods
 
-# In[5]:
-
-
-# def __filter_psds(psds, thresholds):
-
-#     from numpy import mean, array
-
-#     psds_filtered = []
-#         ## filter mean psds values
-# #         m_psd = mean(psd)
-# #         if m_psd > thresholds[0] and m_psd < thresholds[1]:
-# #             psds_filtered.append(psd)
-
-#     ## filter for periods larger than 20 seconds
-#     if mean(psd[0:63]) < thresholds[0]:
-#         psds_filtered.append(psd)
-
-#     print(f" -> removed {len(psds)- len(psds_filtered)} of {len(psds)} psds due to thresholds: {thresholds[0]} & {thresholds[1]}")
-#     return array(psds_filtered)
-
 
 # In[6]:
-
-
-def __cut_frequencies_array(arr, freqs, fmin, fmax):
-
-    ind = []
-    for i, f in enumerate(freqs):
-        if f >= fmin and f <= fmax:
-            ind.append(i)
-
-    ff = freqs[ind[0]:ind[-1]]
-    pp = arr[:,ind[0]:ind[-1]]
-
-    return pp, ff
-
-
-# In[7]:
 
 
 def __makeplot_colorlines(config, ff, psds, rejected, day):
@@ -593,6 +557,22 @@ def __makeplot_density(data, name="FUR"):
 
 # In[ ]:
 
+if "FUR" in config['sta']:
+
+    for _data in [out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f]:
+        fig = __makeplot_density([_data], name=config['sta'])
+
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1]}.png", format="png", dpi=200, bbox_inches='tight')
+
+if "ROMY" in config['sta']:
+    for _data in [out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f]:
+
+        fig = __makeplot_density([_data], name=config['sta'])
+
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}__{str(_data)[-1]}.png", format="png", dpi=200, bbox_inches='tight')
+
+
+# In[ ]:
 
 if "FUR" in config['sta']:
     fig = __makeplot_density([out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
@@ -622,8 +602,28 @@ from functions.get_median_psd import __get_median_psd
 from functions.get_percentiles import __get_percentiles
 
 
-
 # In[ ]:
+
+## write data of FFBI.BDO
+out_df = DataFrame()
+
+out_df['frequencies'] = ff_o
+out_df['psds_median'] = __get_median_psd(ffbi_o)
+out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_o, p_low=2.5, p_high=97.5)
+
+out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDO_psd_stats.pkl")
+
+## write data of FFBI.BDF
+out_df = DataFrame()
+
+out_df['frequencies'] = ff_f
+out_df['psds_median'] = __get_median_psd(ffbi_f)
+out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p_high=97.5)
+
+out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
+
+
+In[ ]:
 
 
 if "FUR" in config['sta']:
