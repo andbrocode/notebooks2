@@ -580,6 +580,7 @@ def __makeplot_density_single(data, name="FUR"):
     ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
     ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
 
+    ax.set_title(f"{name}  [ {config['tbeg']} - {config['tend']} ]")
 
     ## add colorbar
     cbar_ax = fig.add_axes([0.91, 0.11, 0.02, 0.77]) #[left, bottom, width, height]
@@ -655,6 +656,7 @@ def main(config):
 
             fig = __makeplot_density_single(_data, name=lbl[_n].split("_")[1].upper())
 
+            print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}__{lbl[_n]}.png")
             fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{lbl[_n]}.png", format="png", dpi=150, bbox_inches='tight')
 
     if "ROMY" in config['sta']:
@@ -665,6 +667,7 @@ def main(config):
 
             fig = __makeplot_density_single(_data, name=lbl[_n].split("_")[1].upper())
 
+            print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}__{lbl[_n]}.png")
             fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{lbl[_n]}.png", format="png", dpi=150, bbox_inches='tight')
 
 
