@@ -392,7 +392,7 @@ def __makeplot_image_overview(ff, psds, times, names):
 
 # In[ ]:
 
-
+## generate labels
 labels = [f"{n.split('_')[1]}" for n in names]
 
 fig = __makeplot_image_overview(
@@ -402,6 +402,7 @@ fig = __makeplot_image_overview(
                                 labels,
                                 )
 
+## store figure as file
 print(f" -> save: {config['path_to_figures']}TimeSpectra_ROMY_FFBI_PSD_{config['d1']}_{config['d2']}.png")
 fig.savefig(config['path_to_figures']+f"TimeSpectra_ROMY_FFBI_PSD_{config['d1']}_{config['d2']}.png", format="png", dpi=150, bbox_inches='tight')
 
