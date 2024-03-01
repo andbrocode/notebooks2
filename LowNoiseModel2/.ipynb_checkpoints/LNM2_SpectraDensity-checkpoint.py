@@ -594,7 +594,7 @@ def __makeplot_density_single(data, name="FUR"):
 
 # In[ ]:
 
-def main():
+def main(config):
 
     ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
     ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
