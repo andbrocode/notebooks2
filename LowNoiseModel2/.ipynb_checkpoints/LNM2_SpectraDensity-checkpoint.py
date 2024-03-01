@@ -594,170 +594,176 @@ def __makeplot_density_single(data, name="FUR"):
 
 # In[ ]:
 
+def main():
 
-ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
-ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
+    ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
+    ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
 
-ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
-ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
+    ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
+    ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
 
-out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
-out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
-
-
-# In[ ]:
+    out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
+    out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
 
 
-if "FUR" in config['sta']:
-
-    fur_z, ff_z = __read_files("GR.FUR..BHZ", config['d1'], config['d2'])
-    fur_n, ff_n = __read_files("GR.FUR..BHN", config['d1'], config['d2'])
-    fur_e, ff_e = __read_files("GR.FUR..BHE", config['d1'], config['d2'])
-
-    fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-10, flim=(0, 0.05))
-    fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-10, flim= (0, 0.05))
-    fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-10, flim=(0, 0.05))
-
-    out_fur_z = __get_hist_loglog(fur_z, ff_z, bins=100, density=False, axis=1, plot=False)
-    out_fur_n = __get_hist_loglog(fur_n, ff_n, bins=100, density=False, axis=1, plot=False)
-    out_fur_e = __get_hist_loglog(fur_e, ff_e, bins=100, density=False, axis=1, plot=False)
-
-if "ROMY" in config['sta']:
-
-    romy_z, ff_z = __read_files("BW.ROMY..BJZ", config['d1'], config['d2'])
-    romy_n, ff_n = __read_files("BW.ROMY..BJN", config['d1'], config['d2'])
-    romy_e, ff_e = __read_files("BW.ROMY..BJE", config['d1'], config['d2'])
-
-    romy_z, _ = __replace_noisy_psds_with_nan(romy_z, ff_z, threshold_mean=1e-19, threshold_min=1e-23,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_n, _ = __replace_noisy_psds_with_nan(romy_n, ff_n, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_e, _ = __replace_noisy_psds_with_nan(romy_e, ff_e, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-
-    out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
-    out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
-    out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
+    # In[ ]:
 
 
-# ## Plotting
+    if "FUR" in config['sta']:
+
+        fur_z, ff_z = __read_files("GR.FUR..BHZ", config['d1'], config['d2'])
+        fur_n, ff_n = __read_files("GR.FUR..BHN", config['d1'], config['d2'])
+        fur_e, ff_e = __read_files("GR.FUR..BHE", config['d1'], config['d2'])
+
+        fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-10, flim=(0, 0.05))
+        fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-10, flim= (0, 0.05))
+        fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-10, flim=(0, 0.05))
+
+        out_fur_z = __get_hist_loglog(fur_z, ff_z, bins=100, density=False, axis=1, plot=False)
+        out_fur_n = __get_hist_loglog(fur_n, ff_n, bins=100, density=False, axis=1, plot=False)
+        out_fur_e = __get_hist_loglog(fur_e, ff_e, bins=100, density=False, axis=1, plot=False)
+
+    if "ROMY" in config['sta']:
+
+        romy_z, ff_z = __read_files("BW.ROMY..BJZ", config['d1'], config['d2'])
+        romy_n, ff_n = __read_files("BW.ROMY..BJN", config['d1'], config['d2'])
+        romy_e, ff_e = __read_files("BW.ROMY..BJE", config['d1'], config['d2'])
+
+        romy_z, _ = __replace_noisy_psds_with_nan(romy_z, ff_z, threshold_mean=1e-19, threshold_min=1e-23,
+                                                  threshold_max=1e-15, flim=[0.5, 0.9],)
+        romy_n, _ = __replace_noisy_psds_with_nan(romy_n, ff_n, threshold_mean=1e-19, threshold_min=1e-22,
+                                                  threshold_max=1e-15, flim=[0.5, 0.9],)
+        romy_e, _ = __replace_noisy_psds_with_nan(romy_e, ff_e, threshold_mean=1e-19, threshold_min=1e-22,
+                                                  threshold_max=1e-15, flim=[0.5, 0.9],)
+
+        out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
+        out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
+        out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
 
 
-
-# In[ ]:
-
-if "FUR" in config['sta']:
-
-    for _data in [out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f]:
-
-        _name = str(_data).split("_")[1].upper()
-
-        fig = __makeplot_density_single(_data, name=_name)
-
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
-
-if "ROMY" in config['sta']:
-    for _data in [out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f]:
-
-        _name = str(_data).split("_")[1].upper()
-
-        fig = __makeplot_density_single(_data, name=_name)
-
-        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
+    # ## Plotting
 
 
 
-# In[ ]:
+    # In[ ]:
 
-if "FUR" in config['sta']:
-    fig = __makeplot_density([out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
+    if "FUR" in config['sta']:
 
-    print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
-    fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
+        for _data in [out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f]:
 
-if "ROMY" in config['sta']:
-    fig = __makeplot_density([out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
+            _name = str(_data).split("_")[1].upper()
 
-    print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
-    fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
+            fig = __makeplot_density_single(_data, name=_name)
 
+            print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png")
+            fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
 
-# In[ ]:
+    if "ROMY" in config['sta']:
+        for _data in [out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f]:
 
+            _name = str(_data).split("_")[1].upper()
 
+            fig = __makeplot_density_single(_data, name=_name)
 
-
-
-# ## Get median and store
-
-# In[ ]:
+            print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png")
+            fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_{str(_data)[-1].upper()}.png", format="png", dpi=150, bbox_inches='tight')
 
 
-from functions.get_median_psd import __get_median_psd
-from functions.get_percentiles import __get_percentiles
+
+    # In[ ]:
+
+    if "FUR" in config['sta']:
+        fig = __makeplot_density([out_fur_z, out_fur_n, out_fur_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
+
+        print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
+
+    if "ROMY" in config['sta']:
+        fig = __makeplot_density([out_romy_z, out_romy_n, out_romy_e, out_ffbi_o, out_ffbi_f], name=config['sta'])
+
+        print(f" -> save: {config['outpath_figures']}SpectraDensity_{config['sta']}_all.png")
+        fig.savefig(config['outpath_figures']+f"SpectraDensity_{config['sta']}_all.png", format="png", dpi=200, bbox_inches='tight')
 
 
-# In[ ]:
-
-## write data of FFBI.BDO
-out_df = DataFrame()
-
-out_df['frequencies'] = ff_o
-out_df['psds_median'] = __get_median_psd(ffbi_o)
-out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_o, p_low=2.5, p_high=97.5)
-
-out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDO_psd_stats.pkl")
-
-## write data of FFBI.BDF
-out_df = DataFrame()
-
-out_df['frequencies'] = ff_f
-out_df['psds_median'] = __get_median_psd(ffbi_f)
-out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p_high=97.5)
-
-out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
+    # In[ ]:
 
 
-# In[ ]:
 
 
-if "FUR" in config['sta']:
 
+    # ## Get median and store
+
+    # In[ ]:
+
+
+    from functions.get_median_psd import __get_median_psd
+    from functions.get_percentiles import __get_percentiles
+
+
+    # In[ ]:
+
+    ## write data of FFBI.BDO
     out_df = DataFrame()
 
-    out_df['frequencies'] = ff_z
-    out_df['psds_median_z'] = __get_median_psd(fur_z)
-    out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(fur_z, p_low=2.5, p_high=97.5)
+    out_df['frequencies'] = ff_o
+    out_df['psds_median'] = __get_median_psd(ffbi_o)
+    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_o, p_low=2.5, p_high=97.5)
 
-    out_df['psds_median_n'] = __get_median_psd(fur_n)
-    out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(fur_n, p_low=2.5, p_high=97.5)
+    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDO_psd_stats.pkl")
 
-    out_df['psds_median_e'] = __get_median_psd(fur_e)
-    out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(fur_e, p_low=2.5, p_high=97.5)
-
-
-    out_df.to_pickle(config['path_to_outdata']+f"FUR_psd_stats.pkl")
-
-
-# In[ ]:
-
-
-if "ROMY" in config['sta']:
-
+    ## write data of FFBI.BDF
     out_df = DataFrame()
 
-    out_df['frequencies'] = ff_z
-    out_df['psds_median_z'] = __get_median_psd(romy_z)
-    out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(romy_z, p_low=2.5, p_high=97.5)
+    out_df['frequencies'] = ff_f
+    out_df['psds_median'] = __get_median_psd(ffbi_f)
+    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p_high=97.5)
 
-    out_df['psds_median_n'] = __get_median_psd(romy_n)
-    out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(romy_n, p_low=2.5, p_high=97.5)
-
-    out_df['psds_median_e'] = __get_median_psd(romy_e)
-    out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
+    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
 
 
-    out_df.to_pickle(config['path_to_outdata']+f"ROMY_psd_stats.pkl")
+    # In[ ]:
 
+
+    if "FUR" in config['sta']:
+
+        out_df = DataFrame()
+
+        out_df['frequencies'] = ff_z
+        out_df['psds_median_z'] = __get_median_psd(fur_z)
+        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(fur_z, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_n'] = __get_median_psd(fur_n)
+        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(fur_n, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_e'] = __get_median_psd(fur_e)
+        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(fur_e, p_low=2.5, p_high=97.5)
+
+
+        out_df.to_pickle(config['path_to_outdata']+f"FUR_psd_stats.pkl")
+
+
+    # In[ ]:
+
+
+    if "ROMY" in config['sta']:
+
+        out_df = DataFrame()
+
+        out_df['frequencies'] = ff_z
+        out_df['psds_median_z'] = __get_median_psd(romy_z)
+        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(romy_z, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_n'] = __get_median_psd(romy_n)
+        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(romy_n, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_e'] = __get_median_psd(romy_e)
+        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
+
+
+        out_df.to_pickle(config['path_to_outdata']+f"ROMY_psd_stats.pkl")
+
+
+if __name__ == "__main__":
+    main(config)
 
 ## End of File
