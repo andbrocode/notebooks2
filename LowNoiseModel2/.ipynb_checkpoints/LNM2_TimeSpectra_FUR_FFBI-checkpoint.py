@@ -265,22 +265,26 @@ def __makeplot_image_overview(ff, psds, times, names):
                             cmap=cmap,
                             norm=colors.LogNorm(2e-20, 2e-10),
                             rasterized=True,
-                            )
+                            shading="auto",
+                          )
     im2 = ax2_1.pcolormesh( times[1]/24, ff[1], psds[1].T,
                             cmap=cmap,
                             norm=colors.LogNorm(2e-20, 2e-10),
                             rasterized=True,
-                            )
+                            shading="auto",
+                          )
     im3 = ax3_1.pcolormesh( times[2]/24, ff[2], psds[2].T,
                             cmap=cmap,
                             norm=colors.LogNorm(2e-20, 2e-10),
                             rasterized=True,
-                            )
+                            shading="auto",
+                           )
     im4 = ax4_1.pcolormesh( times[3]/24, ff[3], psds[3].T,
                             cmap=cmap,
                             norm=colors.LogNorm(1e-6, 1e3),
                             rasterized=True,
-                            )
+                            shading="auto",
+                           )
     set_color = "seagreen"
 
     perc_lower, perc_upper = __get_percentiles(psds[0], p_low=2.5, p_high=97.5)
