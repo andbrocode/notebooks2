@@ -93,7 +93,6 @@ def __load_data_files(path, name, d1, d2):
 
         ## check if file is available, otherwise replace with nan array
         if os.path.isfile(path+filename):
-            print(f" -> no such file: {filename}")
 
             ## read file
             out = read_pickle(path+filename)
@@ -108,6 +107,7 @@ def __load_data_files(path, name, d1, d2):
             if NN == 0:
                 NN = psds_hourly[0, :].size
         else:
+            print(f" -> no such file: {filename}")
             psds_hourly = ones((24, NN)) * nan
 
         for psd in psds_hourly:
@@ -121,6 +121,8 @@ def __load_data_files(path, name, d1, d2):
 
     # psds_all_array = sum([_s for _s in psds_all], [])
     psds_all_array = array(psds_all)
+
+    tt = array(tt)
 
     return ff, tt, psds_all_array
 
@@ -306,6 +308,7 @@ def main(config):
 
     ## Data1 --------------------------
     name = names[0]
+    print("\n Data 1")
 
     ff_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
     tt_1 = np.arange(0, psd_1.shape[0], 1)
@@ -326,6 +329,7 @@ def main(config):
 
     ## Data2 --------------------------
     name = names[1]
+    print("\n Data 2")
 
     ff_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
     tt_2 = np.arange(0, psd_2.shape[0], 1)
@@ -346,6 +350,7 @@ def main(config):
 
     ## Data3 --------------------------
     name = names[2]
+    print("\n Data 3")
 
     ff_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
     tt_3 = np.arange(0, psd_3.shape[0], 1)
@@ -366,6 +371,7 @@ def main(config):
 
     ## Data4 --------------------------
     name = names[3]
+    print("\n Data 4")
 
     ff_4, psd_4 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
     tt_4 = np.arange(0, psd_3.shape[0], 1)

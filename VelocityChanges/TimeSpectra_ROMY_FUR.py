@@ -63,7 +63,6 @@ from functions.get_fband_averages import __get_fband_averages
 
 # In[9]:
 
-
 def __load_data_files(path, name, d1, d2):
 
     from numpy import array, ones, nan
@@ -71,7 +70,9 @@ def __load_data_files(path, name, d1, d2):
 
     sta, cha = name.split("_")
 
-    psds_all = []
+    NN = 0
+    tcount = 0
+    tt, psds_all = [], []
     for _i, day in enumerate(date_range(config['d1'], config['d2'])):
 
         day = str(day).split(" ")[0].replace("-", "")
@@ -81,25 +82,40 @@ def __load_data_files(path, name, d1, d2):
         # filename = f"{name}_3600_{day}_hourly.pkl"
         filename = f"{sta}/{year}_{sta}_{cha}_3600_{day}_hourly.pkl"
 
-        if not os.path.isfile(path+filename):
+        ## check if file is available, otherwise replace with nan array
+        if os.path.isfile(path+filename):
+
+            ## read file
+            out = read_pickle(path+filename)
+
+            ## extract frequencies
+            ff = out['frequencies']
+
+            ## extract psds
+            psds_hourly = out['psd']
+
+            ## set length of psds at first possible time
+            if NN == 0:
+                NN = psds_hourly[0, :].size
+        else:
             print(f" -> no such file: {filename}")
-            continue
+            psds_hourly = ones((24, NN)) * nan
 
-        out = read_pickle(path+filename)
-        ff = out['frequencies']
-
-        psds_hourly = out['psd']
         for psd in psds_hourly:
-            # if psd.size == 36002:
+            ## add psd
             psds_all.append(psd)
-            # else:
-            #     psds_all.append(ones(36002)*nan)
-            #     print(psd.size)
+
+            ## add time (as hour)
+            tt.append(tcount)
+            ## increase time counter
+            tcount += 1
 
     # psds_all_array = sum([_s for _s in psds_all], [])
     psds_all_array = array(psds_all)
 
-    return ff, psds_all_array
+    tt = array(tt)
+
+    return ff, tt, psds_all_array
 
 
 # ## Configurations
@@ -135,8 +151,8 @@ names = ["ROMY_BJZ", "ROMY_BJN", "ROMY_BJE"]
 ## Data1 --------------------------
 name = names[0]
 
-ff_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_1 = np.arange(0, psd_1.shape[0], 1)
+ff_1, tt_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
+# tt_1 = np.arange(0, psd_1.shape[0], 1)
 
 ## cut to specified frequency range
 psd_1, ff_1 = __cut_frequencies_array(psd_1, ff_1, 1e-3, 5e0)
@@ -160,8 +176,8 @@ gc.collect()
 ## Data2 --------------------------
 name = names[1]
 
-ff_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_2 = np.arange(0, psd_2.shape[0], 1)
+ff_2, tt_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
+# tt_2 = np.arange(0, psd_2.shape[0], 1)
 
 ## cut to specified frequency range
 psd_2, ff_2 = __cut_frequencies_array(psd_2, ff_2, 1e-3, 5e0)
@@ -185,8 +201,8 @@ gc.collect()
 ## Data3 --------------------------
 name = names[2]
 
-ff_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_3 = np.arange(0, psd_3.shape[0], 1)
+ff_3, tt_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
+# tt_3 = np.arange(0, psd_3.shape[0], 1)
 
 ## cut to specified frequency range
 psd_3, ff_3 = __cut_frequencies_array(psd_3, ff_3, 1e-3, 5e0)
