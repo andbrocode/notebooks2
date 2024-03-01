@@ -382,7 +382,7 @@ def __makeplot_image_overview(ff, psds, times, names):
     cbar.set_label(r"PSD (rad$^2$/s$^2$/Hz)", fontsize=font-2, labelpad=1)
 
     cbar = fig.colorbar(im4, orientation='vertical', ax=ax4_2, pad=0.05, extend="both")
-    cbar.set_label(r"PSD (rad$^2$/s$^2$/Hz)", fontsize=font-2, labelpad=1)
+    cbar.set_label(r"PSD (Pa$^2$/Hz)", fontsize=font-2, labelpad=1)
 
     gc.collect();
 
