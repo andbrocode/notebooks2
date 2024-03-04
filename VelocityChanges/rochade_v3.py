@@ -1285,10 +1285,9 @@ class rolode_estimator:
                         window = window_estimator(phi_opt,np.abs(cw_opt),err,wght,rotsq,accsq)
                         self.append(window,f_num) 
                 except:
-                    print("", end="", flush=True)
                     if verbose:
                         print("-", end="", flush=True)
-
+                    pass
         self.wineval = True
         tend = datetime.now()
         self.calctime = (tend-tstart).seconds
@@ -1537,8 +1536,9 @@ class rolode_estimator:
                         window = window_estimator(phi_opt,np.abs(cw_opt),err,wght,rotsq,acczsq)
                         self.append(window,f_num)
                 except:
-                    print('-')
-
+                    if verbose:
+                        print('-')
+                    pass
         self.wineval = True
         tend = datetime.now()
         self.calctime = (tend-tstart).seconds

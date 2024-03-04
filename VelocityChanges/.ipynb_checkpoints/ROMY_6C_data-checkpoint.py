@@ -39,8 +39,12 @@ config = {}
 
 config['path_to_outdata'] = input("Enter path for output data: ")
 
-config['tbeg'] = obs.UTCDateTime(input("Enter starttime: "))
-config['tend'] = obs.UTCDateTime(input("Enter endtime:   "))
+config['tbeg'] = obs.UTCDateTime(input("Enter date: "))
+config['tend'] = config['tbeg'] + 86400
+
+# alternative
+# config['tbeg'] = obs.UTCDateTime(input("Enter starttime: "))
+# config['tend'] = obs.UTCDateTime(input("Enter endtime:   "))
 
 config['seis'] = input("Select Seismometer: [FUR] or DROMY") or "FUR"
 
@@ -48,7 +52,7 @@ config['onet'] = input("Enter output network [XX]: ") or "XX"
 config['osta'] = input("Enter output station [VROMY]: ") or "VROMY"
 config['oloc'] = input("Enter output location []: ") or ""
 
-config['tra_type'] = input("Enter translation type [DISP | VEL | ACC]: ") or ""
+config['tra_type'] = input("Enter translation type ( DISP | [VEL] | ACC ): ") or "VEL"
 
 
 config['path_to_sds'] = archive_path+"romy_archive/"
