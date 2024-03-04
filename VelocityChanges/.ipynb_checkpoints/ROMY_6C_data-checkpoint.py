@@ -48,6 +48,9 @@ config['onet'] = input("Enter output network [XX]: ") or "XX"
 config['osta'] = input("Enter output station [VROMY]: ") or "VROMY"
 config['oloc'] = input("Enter output location []: ") or ""
 
+config['tra_type'] = input("Enter translation type [DISP | VEL | ACC]: ") or ""
+
+
 config['path_to_sds'] = archive_path+"romy_archive/"
 
 config['path_to_fur'] = bay_path+"mseed_online/archive/"
@@ -117,7 +120,7 @@ elif "DROMY" in config['seis']:
     acc = __read_sds(config['path_to_sds'], "BW.DROMY..BH*", config['tbeg']-60, config['tend']+60)
 
 # remove seismometer response
-acc.remove_response(seis_inv, output="ACC")
+acc.remove_response(seis_inv, output=config['tra_type'])
 
 ## detrend
 acc.detrend("demean")

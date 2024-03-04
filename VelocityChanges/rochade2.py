@@ -89,7 +89,7 @@ class rolode_estimator:
         main method is window_estimation which does the estimations
         for the time windows
 
-    
+
     @type f_lower: float array
     @param f_lower: array of highpass frequencies for calculations
     @type f_higher: float array
@@ -109,21 +109,29 @@ class rolode_estimator:
               window, window length = periods_per_window/ f
     """
 
-    def __init__(self, f_lower = np.zeros((1,)), f_higher = np.zeros((1,)), 
-                  periods_per_window = 15., v_min=40., v_max= 3000.,phi_0 = 0., cw_0 = 500.,trigger_params=None):
+    def __init__(self,
+                 f_lower=np.zeros((1,)), f_higher=np.zeros((1,)),
+                 periods_per_window=15.,
+                 v_min=40., v_max=3000.,
+                 phi_0=0., cw_0=500.,
+                 trigger_params=None,
+                ):
+
         if len(f_lower) != len(f_higher):
             msg = 'Bandpass frequency arrays must have same length'
             raise ValueError(msg)
+
         if (f_lower > f_higher).any():
             msg = 'Highpass frequencies must be lower than lowpass frequencies'
             raise ValueError(msg)
 
         self.f_lower = f_lower
-        self.f_higher = f_higher 
+        self.f_higher = f_higher
         self.f_n = len(f_lower)
 
-        self.windows =  [[] for i in range(self.f_n)]
+        self.windows = [[] for i in range(self.f_n)]
         self.periods_per_window = periods_per_window
+
         if not trigger_params:
             self.tlta = 10.
             self.tsta = 0.5
@@ -138,14 +146,13 @@ class rolode_estimator:
             self.thres2 = trigger_params["thres_2"]
             self.post = trigger_params["post_t"]
             self.pre = trigger_params["pre_t"]
+
         self.calctime = 0
         self.start = 0
         self.end = 0
         self.phi_0 = phi_0
         self.cw_0 = cw_0
         self.sl_0 = 1/cw_0
-
-
         self.v_max = v_max
         self.v_min = v_min
         self.v_scale = v_min+(v_max-v_min)/2.
@@ -182,51 +189,55 @@ class rolode_estimator:
         self.ykde_wghted_arr_hv =  [[] for i in range(self.f_n)]
 
 
-    def append(self,window,i):
-        """ Append an estimation of backazimuth and phase velocity
-            
+    def append(self, window, i):
+        """
+        Append an estimation of backazimuth and phase velocity
+
         @type window: window_estimator
         @param window: an estimation of a single time window
         @type i: int
         @param i: number of frequency to append the estimation to
         """
-        if not isinstance(window,window_estimator):
+        if not isinstance(window, window_estimator):
             msg = 'Cannot append to rolode_estimator (wrong data type)'
             raise ValueError(msg)
         self.windows[i].append(window)
 
-    def write(self,filename,firstRun=True):
-        """ Write the rolode_estimator class to a file. uses pickle 
-            package
+    def write(self, filename, firstRun=True):
+        """
+        Write the rolode_estimator class to a file. uses pickle
+        package
 
         @type filename: string
         @param filename: filename of the pickle file
         """
 
         if firstRun:
-            winfile = open(filename,"wb")
+            winfile = open(filename, "wb")
             pickle.dump(self,winfile)
             winfile.close()
         else:
-            winfile = open(filename,"ab")
+            winfile = open(filename, "ab")
             pickle.dump(self,winfile)
             winfile.close()
-        
 
-    def read(self,filename):
-        """ Read the rolode_estimator class tfrom a file. uses pickle 
-            package
+
+    def read(self, filename):
+        """
+        Read the rolode_estimator class tfrom a file. uses pickle
+        package
 
         @type filename: string
         @param filename: filename of the pickle file
         """
-        winfile = open(filename,"rb")
+        winfile = open(filename, "rb")
         self = pickle.load(winfile)
         winfile.close()
 
     def printlog(self):
-        """ Print calculations and specifications of 
-            the rolode_estimator class.
+        """
+        Print calculations and specifications of
+        the rolode_estimator class.
         """
         linestring = "--------------------------------------------------------"
         print(linestring)
@@ -235,26 +246,26 @@ class rolode_estimator:
         if self.start != 0 and self.end != 0:
             print("  from: " + self.start.ctime())
             print("  to:   " + self.end.ctime() + "\n")
-        print("  highpass frequencies:" )
-        print("    " + str(self.f_lower) ) 
-        print("  lowpass frequencies:" )
-        print("    " + str(self.f_higher) ) 
+        print("  highpass frequencies:")
+        print("    " + str(self.f_lower))
+        print("  lowpass frequencies:")
+        print("    " + str(self.f_higher))
         print("  periods per window: %0.2f" %self.periods_per_window)
         if self.calctime != 0:
             print("Calculation time: %0.2f seconds" %self.calctime)
-        print(linestring+ "\n")
+        print(linestring+"\n")
 
-    def writelog(self,filename,firstRun):
-        """ Write a logfile of the calculations and specifications of 
+    def writelog(self, filename, firstRun):
+        """ Write a logfile of the calculations and specifications of
             the rolode_estimator class.
 
         @type filename: string
         @param filename: filename of the logfile
         """
         if firstRun:
-            logfile = open(filename,"w")
+            logfile = open(filename, "w")
         else:
-            logfile = open(filename,"a")
+            logfile = open(filename, "a")
         linestring = "--------------------------------------------------------"
         logfile.write(linestring + "\n")
         logfile.write("ROLODE estimator class:\n")
@@ -273,7 +284,7 @@ class rolode_estimator:
         logfile.close()
 
 
-    def writeresults(self,savepath):
+    def writeresults(self, savepath):
         """ Write results for dispersion curve to file. The format is
             Frequency/Mean/Standard Deviation/Mode/Median. Results are
             written to a file called "results.csv" :
@@ -285,16 +296,16 @@ class rolode_estimator:
         if not self.median_eval: self.calc_median()
         if not self.kde_mode_eval: self.calc_kde_mode()
 
-        resultfile = open(savepath+"results.csv","w")
+        resultfile = open(savepath+"results.csv", "w")
         resultfile.write("frequency, mean, std, mode, median\n")
         for f_num,f in enumerate((self.f_lower + self.f_higher)/2):
             resultfile.write("%0.2f, %0.3f, %0.3f, %0.2f, %0.2f\n"\
                               %(f,self.means[f_num],self.stds[f_num],
                                 self.modes[f_num], self.medians[f_num]))
-   
+
         resultfile.close()
 
-    def writeresults2(self,savepath):
+    def writeresults2(self, savepath):
         """ Write results for H/V (ellipticity) curve to file. The format is
             Frequency/Mean/Standard Deviation/Mode/Median. Results are
             written to a file called "results.csv" :
@@ -306,16 +317,16 @@ class rolode_estimator:
         if not self.median_eval: self.calc_median()
         if not self.kde_mode_eval: self.calc_kde_mode()
 
-        resultfile = open(savepath+"results_hov.csv","w")
+        resultfile = open(savepath+"results_hov.csv", "w")
         resultfile.write("frequency, mean, std, mode, median\n")
-        for f_num,f in enumerate((self.f_lower + self.f_higher)/2):
+        for f_num, f in enumerate((self.f_lower + self.f_higher)/2):
             resultfile.write("%0.2f, %0.3f, %0.3f, %0.2f, %0.2f\n"
                               %(f,self.means_hv[f_num],self.stds_hv[f_num],
                                 self.modes_hv[f_num], self.medians_hv[f_num]))
-   
+
         resultfile.close()
 
-    def f_phi_cw (self,phi_sl,acc_ne):
+    def f_phi_cw(self, phi_sl, acc_ne):
         """ Model function for Orthogonal Distance regression:
 
         @type phi_sl: 2 component list or array where 
@@ -338,17 +349,17 @@ class rolode_estimator:
 
         return  acc_t*sl/2.
 
-    def f_phi_cw_ray (self, phi_cw, rotrate_ne):
+    def f_phi_cw_ray(self, phi_cw, rotrate_ne):
         """ Model function for orthogonal distance regression: vertical acceleration,
-            horizontal components of rotation according to relation of 
+            horizontal components of rotation according to relation of
             vertical acceleration - horizontal rotation for rayleigh waves:
-        
-        @type phi_cw: 2 component list or array where 
+
+        @type phi_cw: 2 component list or array where
         @param phi_cw: phi_cw[0] is the backazimuth, phi_cw[1] is the velocity
         @type rot_ne: 2d numpy array of shape (2,n)
         @param rot_ne: rot_ne[0] is the North component of rotation
                       rot_ne[1] is the East component of rotation
-        
+
         """
         phi = phi_cw[0]
         cw = phi_cw[1]
@@ -359,22 +370,22 @@ class rolode_estimator:
         # source - receiver
         # the rotation components are always + 90 to the translation components thus the Transverse 
         # rotation is out of phase with the vertical translation
-        rot_t = rotrate_n * np.sin(phi) - rotrate_e * np.cos( phi) 
+        rot_t = rotrate_n * np.sin(phi) - rotrate_e * np.cos(phi)
         return rot_t * cw
 
 
     def fit_azimuth(self,b, x):
         return b[0] * x + b[1]
 
-    def f_cw_ray (self, cw, rotrate_t):
+    def f_cw_ray(self, cw, rotrate_t):
         """ 
         Very simple relationship between velocity and rotation rate (vector sum)
-        
+
         @type cw: float
         @param cw:  is the velocity
         @type rot_ne: 1d numpy array
         @param rotrate_t: transverse component of rotation rate
-        
+
         """
         return rotrate_t * cw
 
@@ -383,7 +394,7 @@ class rolode_estimator:
     def set_weights(self, method = "normed", exp = 1.): 
         """ Method to set different weights for window estimations
             for statistical analysis
-        
+
         @type method: string
         @param method: Characterizes the weighting method, must be one of 
                        the following: 
@@ -395,9 +406,9 @@ class rolode_estimator:
                     exponent
         """
         if method == "unbounded":
-            for f_num in range(0,self.f_n):
+            for f_num in range(0, self.f_n):
                 win_n = len(self.windows[f_num])
-                for i in range(0,win_n):
+                for i in range(0, win_n):
                     try:
                         self.windows[f_num][i].wght = 1./self.windows[f_num][i].wght
                     except:
@@ -405,9 +416,9 @@ class rolode_estimator:
                         warnings.warn(msg)
                         continue
         elif method == "normed":
-            for f_num in range(0,self.f_n):
+            for f_num in range(0, self.f_n):
                 win_n = len(self.windows[f_num])
-                for i in range(0,win_n):
+                for i in range(0, win_n):
                     try:
                         if self.windows[f_num][i].wght < 1.:
                             self.windows[f_num][i].wght = (1. - self.windows[f_num][i].wght)**exp
@@ -417,21 +428,23 @@ class rolode_estimator:
                         warnings.warn(msg)
                         continue
         elif method == "uniform":
-            for f_num in range(0,self.f_n):
+            for f_num in range(0, self.f_n):
                 win_n = len(self.windows[f_num])
-                for i in range(0,win_n):
+                for i in range(0, win_n):
                     self.windows[f_num][i].wght = 1
 
 
     def calc_mean_std(self,verbose = True,hov=False):
-        """ Calculates weighted mean and weighted standard deviation
- 
-        @type verbose: boolean 
-        @param verbose: if True text is printed to check the progress of 
-                      calculations 
         """
-        if verbose :
+        Calculates weighted mean and weighted standard deviation
+
+        @type verbose: boolean
+        @param verbose: if True text is printed to check the progress of
+                        calculations
+        """
+        if verbose:
                 print("Calculating means and standard deviations...\n")
+
         if self.wineval:
             for f_num in range(0,self.f_n):
                 try:
@@ -462,45 +475,45 @@ class rolode_estimator:
                     warnings.warn(msg)
                     continue
                 self.mean_std_eval = True
-        else: 
+        else:
             msg ="Not able to calculate means: use window_estimation() first!"
             warnings.warn(msg)
 
-    def calc_median(self, verbose = True,hov=False):
+    def calc_median(self, verbose=True,hov=False):
         """ Calculates weighted median of phase velocities
-        
-        @type verbose: boolean 
-        @param verbose: if True text is printed to check the progress of 
-                      calculations 
+
+        @type verbose: boolean
+        @param verbose: if True text is printed to check the progress of
+                        calculations
         """
-        if verbose :
-                print("Calculating medians...\n")
+        if verbose:
+                print("\nCalculating medians...\n")
         if self.wineval:
-            for f_num in range(0,self.f_n):
+            for f_num in range(0, self.f_n):
                 try:
                     win_n = len(self.windows[f_num])
-                    print("  Now at frequency f = %0.2f" 
+                    print("  Now at frequency f = %0.2f"
                            %( (self.f_lower[f_num] + self.f_higher[f_num])/2 ))
-                    phi_arr  = np.zeros((win_n,))
-                    hv_arr  = np.zeros((win_n,))
-                    cw_arr   =  np.zeros((win_n,))
-                    err_arr  =  np.zeros((win_n,))
+                    phi_arr = np.zeros((win_n,))
+                    hv_arr = np.zeros((win_n,))
+                    cw_arr = np.zeros((win_n,))
+                    err_arr = np.zeros((win_n,))
                     wght_arr = np.zeros((win_n,))
 
-                    for i in range(0,win_n):
+                    for i in range(0, win_n):
                         if hov == True:
-                            hv_arr[i]  = self.windows[f_num][i].phi
+                            hv_arr[i] = self.windows[f_num][i].phi
                         else:
-                            phi_arr[i]  = self.windows[f_num][i].phi
-                        cw_arr[i]   = self.windows[f_num][i].cw
-                        err_arr[i]  = self.windows[f_num][i].err
+                            phi_arr[i] = self.windows[f_num][i].phi
+                        cw_arr[i] = self.windows[f_num][i].cw
+                        err_arr[i] = self.windows[f_num][i].err
                         wght_arr[i] = self.windows[f_num][i].wght
 
                     # Calculate histogram for weighted median
                     hist_kde, bins_kde = np.histogram(cw_arr, int((self.v_max - self.v_min)/self.v_min),
-                                                  range = (self.v_min,self.v_max),
+                                                  range = (self.v_min, self.v_max),
                                                   weights = wght_arr,
-                                                  normed = False, 
+                                                  # normed = False,
                                                   density = False)
                     width_kde = 0.9*( bins_kde[1] - bins_kde[0] )
                     center_kde = ( bins_kde[:-1] + bins_kde[1:] ) / 2
@@ -517,7 +530,7 @@ class rolode_estimator:
                         hist_kde, bins_kde = np.histogram(hv_arr, int(h_max - h_min),
                                                   range = (h_min,h_max),
                                                   weights = wght_arr,
-                                                  normed = False, 
+                                                  # normed = False, 
                                                   density = False)
                         width_kde = 0.9*( bins_kde[1] - bins_kde[0] )
                         center_kde = ( bins_kde[:-1] + bins_kde[1:] ) / 2
@@ -528,36 +541,38 @@ class rolode_estimator:
                             kde_count += 1
                         self.medians_hv[f_num] = np.median(hv_kde_wghted)
 
-                except:
+                except Exception as e:
+                    print(e)
                     msg = "Not able to calculate median.... continuing"
                     warnings.warn(msg)
                     continue
-               
+
             self.median_eval = True
-        else: 
-            msg ="Not able to calculate medians: use window_estimation() first!"
+        else:
+            msg = "Not able to calculate medians: use window_estimation() first!"
             warnings.warn(msg)
 
     def calc_kde_mode(self,
                          bin_n = 100, kde_sigma = 0.25,
                          kde_res = 2000.,verbose = True,hov=False):
-        """ Calculates weighted kernel density estimation and weighted mode 
-        
-        @type bin_n: int 
+        """
+        Calculates weighted kernel density estimation and weighted mode
+
+        @type bin_n: int
         @param bin_n: number of bins for histograms
-        @type kde_sigma: float 
+        @type kde_sigma: float
         @param kde_sigma: parameter for width of gaussian filter
         @type kde_res: float
         @param kde_res: resolution of histograms for calculating the
                         weighted mode
-        @type verbose: boolean 
-        @param verbose: if True text is printed to check the progress of 
-                      calculations 
+        @type verbose: boolean
+        @param verbose: if True text is printed to check the progress of
+                      calculations
         """
         if self.wineval:
             kde_step = (self.v_max-self.v_min)/kde_res
             if verbose :
-                print("Calculating KDEs and modes:\n")
+                print("\nCalculating KDEs and modes:\n")
             for f_num in range(0,self.f_n):
                 if verbose:
                     print("  Now at frequency f = %0.2f" 
@@ -589,22 +604,29 @@ class rolode_estimator:
                     mode = xkde[np.argmax(ykde)]
 
                     # Calculate histogram with weights
-                    hist, bins = np.histogram(cw_arr, bin_n, range = (self.v_min,self.v_max), 
-                                        weights = wght_arr, normed = True,
-                                        density = True)
+                    hist, bins = np.histogram(cw_arr,
+                                              bin_n,
+                                              range = (self.v_min,self.v_max),
+                                              weights = wght_arr,
+                                              # normed = True,
+                                              density = True,
+                                             )
                     width = 0.9 * ( bins[1] - bins[0] )
                     center = ( bins[:-1] + bins[1:] ) / 2
 
                     # Calculate histogram with no weights
-                    hist_nw, bins_nw = np.histogram(cw_arr, bin_n, 
-                                                range = (self.v_min,self.v_max), 
-                                                normed = True, density = True)
-             
+                    hist_nw, bins_nw = np.histogram(cw_arr,
+                                                    bin_n,
+                                                    range = (self.v_min,self.v_max),
+                                                    # normed = True,
+                                                    density = True,
+                                                   )
+
                     # Calculate histogram for weighted KDE
                     hist_kde, bins_kde = np.histogram(cw_arr, int(self.v_max - self.v_min),
                                                   range = (self.v_min,self.v_max),
                                                   weights = wght_arr,
-                                                  normed = False, 
+                                                  # normed = False, 
                                                   density = False)
                     center_kde = ( bins_kde[:-1] + bins_kde[1:] ) / 2
                     cw_kde_wghted = []
@@ -621,7 +643,7 @@ class rolode_estimator:
                     xkde_wghted = np.arange(self.v_min,self.v_max,kde_step)
                     ykde_wghted = density_wghted.evaluate(xkde)
 
-                    # Storing data 
+                    # Storing data
                     self.modes[f_num] = xkde_wghted[np.argmax(ykde_wghted)]
                     self.modeheights[f_num] = np.amax(ykde_wghted)
                     self.stds[f_num] = np.sqrt(density_wghted.covariance[0][0])
@@ -649,23 +671,32 @@ class rolode_estimator:
                         mode = xkde[np.argmax(ykde)]
 
                     # Calculate histogram with weights
-                        hist, bins = np.histogram(hv_arr, bin_n, range = (h_min,h_max),
-                                        weights = wght_arr, normed = True,
-                                        density = True)
+                        hist, bins = np.histogram(hv_arr,
+                                                  bin_n,
+                                                  range=(h_min,h_max),
+                                                  weights=wght_arr,
+                                                  # normed=True,
+                                                  density=True,
+                                                 )
                         width = 0.9 * ( bins[1] - bins[0] )
                         center = ( bins[:-1] + bins[1:] ) / 2
 
                     # Calculate histogram with no weights
-                        hist_nw, bins_nw = np.histogram(hv_arr, bin_n,
-                                                range = (h_min,h_max),
-                                                normed = True, density = True)
+                        hist_nw, bins_nw = np.histogram(hv_arr,
+                                                        bin_n,
+                                                        range=(h_min,h_max),
+                                                        # normed=True,
+                                                        density=True,
+                                                       )
 
                     # Calculate histogram for weighted KDE
-                        hist_kde, bins_kde = np.histogram(hv_arr, int(h_max - h_min),
-                                                  range = (h_min,h_max),
-                                                  weights = wght_arr,
-                                                  normed = False,
-                                                  density = False)
+                        hist_kde, bins_kde = np.histogram(hv_arr,
+                                                          int(h_max - h_min),
+                                                          range=(h_min,h_max),
+                                                          weights=wght_arr,
+                                                          # normed=False,
+                                                          density=False,
+                                                         )
                         center_kde = ( bins_kde[:-1] + bins_kde[1:] ) / 2
                         hv_kde_wghted = []
                         kde_count = 0
@@ -678,10 +709,10 @@ class rolode_estimator:
                         density_wghted = stats.gaussian_kde(hv_kde_wghted)
                         density_wghted.covariance_factor = lambda : kde_sigma
                         density_wghted._compute_covariance()
-                        xkde_wghted = np.arange(h_min,h_max,h_step)
+                        xkde_wghted = np.arange(h_min, h_max, h_step)
                         ykde_wghted = density_wghted.evaluate(xkde)
 
-                    # Storing data 
+                    # Storing data
                         self.modes_hv[f_num] = xkde_wghted[np.argmax(ykde_wghted)]
                         self.modeheights_hv[f_num] = np.amax(ykde_wghted)
                         self.stds_hv[f_num] = np.sqrt(density_wghted.covariance[0][0])
@@ -745,7 +776,7 @@ class rolode_estimator:
                     phi_arr[i]  = self.windows[f_num][i].phi
                     cw_arr[i]   = self.windows[f_num][i].cw
                     wght_arr[i] = self.windows[f_num][i].wght
-        
+
                 pi = np.pi
                 baz = phi_arr
                 slow = 1000./cw_arr
@@ -759,9 +790,12 @@ class rolode_estimator:
                 baz[baz > 2*np.pi] -= 2*np.pi
 
                 # sum rel power in bins given by abins and sbins
-                hist, baz_edges, sl_edges = np.histogram2d(baz, slow,
-                    bins=[abins, sbins], weights=wght_arr,
-                    normed= True)
+                hist, baz_edges, sl_edges = np.histogram2d(baz,
+                                                           slow,
+                                                           bins=[abins, sbins],
+                                                           weights=wght_arr,
+                                                           # normed=True,
+                                                          )
 
                 # transform to gradient
                 #baz_edges = baz_edges / 180 * np.pi
@@ -791,8 +825,8 @@ class rolode_estimator:
                 ax.set_ylim(0., slowmax)
 
                 ColorbarBase(cax, cmap=cmap,
-                         norm=Normalize(vmin=hist.min(), vmax=hist.max()))
-                if savefigs: 
+                         norm = Normalize(vmin=hist.min(), vmax=hist.max()))
+                if savefigs:
         #        for postfix in figformat:
         #            plt.savefig(savepath + "polar_f_%0.2f" %f + postfix)
                     plt.savefig(savepath + "polar_f_%0.2f" %f + ".png",dpi=dpi_,transparent=True)
@@ -813,7 +847,7 @@ class rolode_estimator:
                 ax.set_theta_direction(-1)
                 bars = ax.bar(bini[:bins_number], n, width=width, bottom=0.0)
                 for r,bar in zip(n, bars):
-                    bar.set_facecolor( cm.viridis(r/10.))
+                    bar.set_facecolor(cm.viridis(r/10.))
                     bar.set_alpha(0.5)
 
                 plt.savefig('%spolar_%02f_hist.png'%(savepath,f), format="png", dpi=dpi_,transparent=True)
@@ -965,7 +999,7 @@ class rolode_estimator:
         if not self.mean_std_eval: self.calc_mean_std()
         if not self.median_eval: self.calc_median()
         if not self.kde_mode_eval: self.calc_kde_mode()
-        print("Plotting histograms ...")
+        print("\nPlotting histograms ...")
         for f_num in range(0,self.f_n):
             try:
                 f = (self.f_lower[f_num] + self.f_higher[f_num])/2 
@@ -1033,7 +1067,7 @@ class rolode_estimator:
         if not self.mean_std_eval: self.calc_mean_std()
         if not self.median_eval: self.calc_median()
         if not self.kde_mode_eval: self.calc_kde_mode()
-        print("Plotting histograms ...")
+        print("\nPlotting histograms ...")
         for f_num in range(0,self.f_n):
             f = (self.f_lower[f_num] + self.f_higher[f_num])/2
             hist = self.hist_arr[f_num]
@@ -1142,20 +1176,20 @@ class rolode_estimator:
             acc_n_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
             acc_e_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
             acc_e_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
- 
+
 
             if trigger:
                 for trig in on_off:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_trace.stats.npts-1
+                        t2 = rot_trace.stats.npts-1
 
                     rot_trace.data[t1:t2]=mask_value/10.
 
@@ -1164,15 +1198,15 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_trace.stats.npts-1
-                on_off[i,0] = t1
-                on_off[i,1] = t2
+                        t2 = rot_trace.stats.npts-1
+                on_off[i, 0] = t1
+                on_off[i, 1] = t2
                 if i == 0:
                     rot_trace.data[0:t1]=mask_value/10.
                 elif i == len(on_off)-1:
@@ -1195,13 +1229,12 @@ class rolode_estimator:
                 acc_e.trim(win_start,win_end)
                 try:
                     if mask_value > 0.:
-                        condition1 = (np.abs(rotdata[:]) < mask_value) 
+                        condition1 = (np.abs(rotdata[:]) < mask_value)
                         rot_z = np.ma.masked_array(rotdata,mask=condition1)
                         #rot_z=rot_z.compressed()
                         acc_ne = np.empty((2,rot_z.shape[0]))
                         acc_ne[0] = np.ma.masked_array(acc_n.data,mask=condition1)
                         acc_ne[1] = np.ma.masked_array(acc_e.data,mask=condition1)
-                       
                     else:
                         rot_z = rotdata
                         acc_ne = np.empty((2,rot_z.shape[0]))
@@ -1247,22 +1280,24 @@ class rolode_estimator:
                         if np.sign(mcor)<0:
                             phi_opt += np.pi
                             if (phi_opt > 2*np.pi): phi_opt -= 2*np.pi
-                        
+
                         phi_opt = np.degrees(phi_opt)
                         window = window_estimator(phi_opt,np.abs(cw_opt),err,wght,rotsq,accsq)
                         self.append(window,f_num) 
                 except:
-                    print("-", end="",flush=True)
-                
+                    print("", end="", flush=True)
+                    if verbose:
+                        print("-", end="", flush=True)
+
         self.wineval = True
         tend = datetime.now()
         self.calctime = (tend-tstart).seconds
         if verbose:
             print("\nROLODE parameter estimation done.")
-            print("Elapsed time: %0.2f seconds" %(tend-tstart).seconds)
+            print("Elapsed time: %0.2f seconds\n" %(tend-tstart).seconds)
 
 
-    def window_estimation_rayleigh(self,accel_z, rotrate_n, rotrate_e, mask_value=0.,verbose = True,body=False,trigger=False,pro=False):
+    def window_estimation_rayleigh(self, accel_z, rotrate_n, rotrate_e, mask_value=0., verbose=True, body=False, trigger=False, pro=False):
         """ Calculates estimations of the phase velocity, backazimuth of
         signals, for time windows.
 
@@ -1342,13 +1377,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_n_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_n_trace.stats.npts-1
+                        t2 = rot_n_trace.stats.npts-1
 
                     rot_n_trace.data[t1:t2]=mask_value/10.
                     rot_e_trace.data[t1:t2]=mask_value/10.
@@ -1357,13 +1392,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_e_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_e_trace.stats.npts-1
+                        t2 = rot_e_trace.stats.npts-1
 
                     rot_n_trace.data[t1:t2]=mask_value/10.
                     rot_e_trace.data[t1:t2]=mask_value/10.
@@ -1373,13 +1408,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_n_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_n_trace.stats.npts-1
+                        t2 = rot_n_trace.stats.npts-1
                     on_off[i,0] = t1
                     on_off[i,1] = t2
 
@@ -1397,13 +1432,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_e_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_e_trace.stats.npts-1
+                        t2 = rot_e_trace.stats.npts-1
                     on_off2[i,0] = t1
                     on_off2[i,1] = t2
 
@@ -1421,16 +1456,16 @@ class rolode_estimator:
 
             gap = 0
             # Loop over time windows
-            for i in range(0,win_n):
+            for i in range(0, win_n):
                 # trim data for timewindow
                 win_start = self.start + i*win_len
                 win_end = self.start + (i+1)*win_len
                 accz = acc_z_trace.copy()
                 accz.trim(win_start, win_end)
                 rot_n = rot_n_trace.copy()
-                rot_n.trim(win_start,win_end)
+                rot_n.trim(win_start, win_end)
                 rot_e = rot_e_trace.copy()
-                rot_e.trim(win_start,win_end)
+                rot_e.trim(win_start, win_end)
                 vec_rot = np.sqrt(rot_n.data**2 + rot_e.data**2)/2.
                 try:
                     if mask_value > 0.:
@@ -1516,11 +1551,11 @@ class rolode_estimator:
         """ Calculates estimations of the phase velocity, backazimuth of
         signals, for time windows.
 
-        @type acc: obspy Trace 
+        @type acc: obspy Trace
         @param acc: Vertical accelertion in m/s^2
-        @type rotrate_n:  obspy Trace 
+        @type rotrate_n:  obspy Trace
         @param rotrate_n: rotational rate in the North direction in rad/s
-        @type rotrate_e:  obspy Trace 
+        @type rotrate_e:  obspy Trace
         @param rotrate_e: rotation rate in the East direction in rad/s
         @type periods_per_window: float
         @param periods_per_window: Number of periods of the signal per
@@ -1599,13 +1634,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_n_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_n_trace.stats.npts-1
+                        t2 = rot_n_trace.stats.npts-1
 
                     rot_n_trace.data[t1:t2]=mask_value/10.
                     rot_e_trace.data[t1:t2]=mask_value/10.
@@ -1614,13 +1649,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_e_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_e_trace.stats.npts-1
+                        t2 = rot_e_trace.stats.npts-1
 
                     rot_n_trace.data[t1:t2]=mask_value/10.
                     rot_e_trace.data[t1:t2]=mask_value/10.
@@ -1630,13 +1665,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_n_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_n_trace.stats.npts-1
+                        t2 = rot_n_trace.stats.npts-1
                     on_off[i,0] = t1
                     on_off[i,1] = t2
 
@@ -1654,13 +1689,13 @@ class rolode_estimator:
                     t1 = trig[0]
                     t2 = trig[1]
                     if t1-int(self.pre*df) > 0:
-                       t1 -= int(self.pre*df)
+                        t1 -= int(self.pre*df)
                     else:
-                       t1 = 0
+                        t1 = 0
                     if t2+int(self.post*df) < rot_e_trace.stats.npts:
-                       t2+=int(self.post*df)
+                        t2+=int(self.post*df)
                     else:
-                       t2 = rot_e_trace.stats.npts-1
+                        t2 = rot_e_trace.stats.npts-1
                     on_off2[i,0] = t1
                     on_off2[i,1] = t2
 
@@ -1680,7 +1715,7 @@ class rolode_estimator:
                 # trim data for timewindow
                 win_start = self.start + i*win_len
                 win_end = self.start + (i+1)*win_len
-                
+
                 accz = acc_z_trace.copy()
                 accz.trim(win_start, win_end)
                 accn = acc_n_trace.copy()
@@ -1847,18 +1882,19 @@ class rolode_estimator:
                      semb_thres=0.001,vel_thres=-1e9,timestamp='mlabday',
                      stime=self.start,etime=self.end)
 
-            for i in range(0,len(out[:,0])):
-                wght = 1. - out[i,1]
-                baz = out[i,3]
-                apvel = (1./out[i,4])*1000.
-                window = window_estimator(baz,apvel,1.,wght,out[i,2],1.)
-                self.append(window,f_num)
+            for i in range(0, len(out[:, 0])):
+                wght = 1. - out[i, 1]
+                baz = out[i, 3]
+                apvel = (1./out[i, 4])*1000.
+                window = window_estimator(baz, apvel, 1., wght, out[i, 2], 1.)
+                self.append(window, f_num)
 
         self.wineval = True
         tend = datetime.now()
         self.calctime = (tend-tstart).seconds
         if verbose:
-            print("\nROLODE parameter estimation done.")
-            print("Elapsed time: %0.2f seconds" %(tend-tstart).seconds)
+            print("\nROLODE parameter estimation done")
+            print("\nElapsed time: %0.2f seconds\n" %(tend-tstart).seconds)
 
 
+# End of File
