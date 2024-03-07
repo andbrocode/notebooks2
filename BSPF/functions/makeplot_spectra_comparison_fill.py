@@ -44,31 +44,31 @@ def __makeplot_spectra_comparison_fill(st_rot, st_acc, fmin=None, fmax=None, ylo
 
     if fill:
 
-        ax[0].fill_between(f1_Z, psd1_Z, lw=lw, label=f"{st_rot[0].stats.station}.{st_rot[0].stats.channel}", color="darkred", alpha=0.5, zorder=3)
+        ax[0].fill_between(f1_Z, psd1_Z, lw=lw, label=f"{st_rot[0].stats.station}.{st_rot.select(channel='*Z')[0].stats.channel}", color="darkred", alpha=0.5, zorder=3)
         ax00 = ax[0].twinx()
-        ax00.fill_between(f2_Z, psd2_Z, lw=lw, label=f"{st_acc[0].stats.station}.{st_acc[0].stats.channel}", color="black", alpha=0.5, zorder=2)
+        ax00.fill_between(f2_Z, psd2_Z, lw=lw, label=f"{st_acc[0].stats.station}.{st_acc.select(channel='*Z')[0].stats.channel}", color="black", alpha=0.5, zorder=2)
 
-        ax[1].fill_between(f1_U, psd1_U, lw=lw, label=f"{st_rot[1].stats.station}.{st_rot[1].stats.channel}", color="darkred", alpha=0.5, zorder=3)
+        ax[1].fill_between(f1_U, psd1_U, lw=lw, label=f"{st_rot[1].stats.station}.{st_rot.select(channel='*N')[0].stats.channel}", color="darkred", alpha=0.5, zorder=3)
         ax11 = ax[1].twinx()
-        ax11.fill_between(f2_N, psd2_N, lw=lw, label=f"{st_acc[1].stats.station}.{st_acc[1].stats.channel}", color="black", alpha=0.5, zorder=2)
+        ax11.fill_between(f2_N, psd2_N, lw=lw, label=f"{st_acc[1].stats.station}.{st_acc.select(channel='*N')[0].stats.channel}", color="black", alpha=0.5, zorder=2)
 
-        ax[2].fill_between(f1_V, psd1_V, lw=lw, label=f"{st_rot[2].stats.station}.{st_rot[2].stats.channel}", color="darkred", alpha=0.5, zorder=3)
+        ax[2].fill_between(f1_V, psd1_V, lw=lw, label=f"{st_rot[2].stats.station}.{st_rot.select(channel='*E')[0].stats.channel}", color="darkred", alpha=0.5, zorder=3)
         ax22 = ax[2].twinx()
-        ax22.fill_between(f2_E, psd2_E, lw=lw, label=f"{st_acc[2].stats.station}.{st_acc[2].stats.channel}", color="black", alpha=0.5, zorder=2)
+        ax22.fill_between(f2_E, psd2_E, lw=lw, label=f"{st_acc[2].stats.station}.{st_acc.select(channel='*E')[0].stats.channel}", color="black", alpha=0.5, zorder=2)
 
     else:
-        ax[0].plot(f1_Z, psd1_Z, lw=lw, label=f"{st_rot[0].stats.station}.{st_rot[0].stats.channel}", color="darkred", ls="-", zorder=3)
+        ax[0].plot(f1_Z, psd1_Z, lw=lw, label=f"{st_rot[0].stats.station}.{st_rot.select(channel='*Z')[0].stats.channel}", color="darkred", ls="-", zorder=3)
 
         ax00 = ax[0].twinx()
-        ax00.plot(f2_Z, psd2_Z, lw=lw, label=f"{st_acc[0].stats.station}.{st_acc[0].stats.channel}", color="black", zorder=2)
+        ax00.plot(f2_Z, psd2_Z, lw=lw, label=f"{st_acc[0].stats.station}.{st_acc.select(channel='*Z')[0].stats.channel}", color="black", zorder=2)
 
-        ax[1].plot(f1_U, psd1_U, lw=lw, label=f"{st_rot[1].stats.station}.{st_rot[1].stats.channel}", color="darkred", ls="-", zorder=3)
+        ax[1].plot(f1_U, psd1_U, lw=lw, label=f"{st_rot[1].stats.station}.{st_rot.select(channel='*N')[0].stats.channel}", color="darkred", ls="-", zorder=3)
         ax11 = ax[1].twinx()
-        ax11.plot(f2_N, psd2_N, lw=lw, label=f"{st_acc[1].stats.station}.{st_acc[1].stats.channel}", color="black", zorder=2)
+        ax11.plot(f2_N, psd2_N, lw=lw, label=f"{st_acc[1].stats.station}.{st_acc.select(channel='*N')[0].stats.channel}", color="black", zorder=2)
 
-        ax[2].plot(f1_V, psd1_V, lw=lw, label=f"{st_rot[2].stats.station}.{st_rot[2].stats.channel}", color="darkred", ls="-", zorder=3)
+        ax[2].plot(f1_V, psd1_V, lw=lw, label=f"{st_rot[2].stats.station}.{st_rot.select(channel='*E')[0].stats.channel}", color="darkred", ls="-", zorder=3)
         ax22 = ax[2].twinx()
-        ax22.plot(f2_E, psd2_E, lw=lw, label=f"{st_acc[2].stats.station}.{st_acc[2].stats.channel}", color="black", zorder=2)
+        ax22.plot(f2_E, psd2_E, lw=lw, label=f"{st_acc[2].stats.station}.{st_acc.select(channel='*E')[0].stats.channel}", color="black", zorder=2)
 
 
 #     ax[0].set_ylim(0, max(psd1_Z)+0.1*max(psd1_Z))

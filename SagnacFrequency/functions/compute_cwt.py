@@ -1,4 +1,4 @@
-def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', fmax=None, normalize=True, plot=True):
+def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', s0factor=10, fmax=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance, cwt
     from numpy import std, nanmean, nan, nansum, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape, nanpercentile
@@ -36,23 +36,22 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
     ## create mother wavelet
     mother_wavelet = Morlet(6)
-    s0_set = 2 * dt  # Starting scale
+    s0_set = s0factor * dt  # Starting scale
     dj_set = 1 / 12  # Twelve sub-octaves per octaves
     J_set = int(7 / dj_set)  # Seven powers of two with dj sub-octaves
     #print(s0_set, dj_set, J_set)
 
 
     cwt, scales, ff_cwt, cone_p, fft, fftfreqs = cwt(
-                                                        arr1,
-                                                        dt=dt,
-                                                        dj=dj_set, #0.05,
-                                                        s0=s0_set, #-1,
-                                                        J=J_set, #-1,
-                                                        wavelet=mother_wavelet,  # u'morlet',
+                                                    arr1,
+                                                    dt=dt,
+                                                    dj=dj_set, #0.05,
+                                                    s0=s0_set, #-1,
+                                                    J=J_set, #-1,
+                                                    wavelet=mother_wavelet,  # u'morlet',
                                                     )
 
     cone_f = 1/cone_p
-    print(ff_cwt[0])
     pp_cwt = 1/ff_cwt
 
     if tscale == "min":
