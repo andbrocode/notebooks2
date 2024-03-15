@@ -1,8 +1,12 @@
-def __get_event_info(config):
+def __get_event_info(config, min_mag=5.0):
 
     from obspy.geodetics.base import gps2dist_azimuth
 
-    event = config['Client'].get_events(starttime=config['tbeg']-3600, endtime=config['tend'], minmagnitude=4.0)
+    event = config['Client'].get_events(starttime=config['tbeg']-3600, endtime=config['tend'], minmagnitude=min_mag)
+
+    if len(event) > 1:
+        print("-> more than one event\n")
+
     config['event'] = event[0]
 
     ## Eventtime
