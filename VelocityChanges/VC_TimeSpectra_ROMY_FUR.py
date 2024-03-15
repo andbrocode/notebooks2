@@ -129,7 +129,7 @@ config['path_to_figures'] = f"{data_path}VelocityChanges/figures/"
 
 config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
 
-config['d1'], config['d2'] = "2023-09-23", "2024-02-29"
+config['d1'], config['d2'] = "2024-01-01", "2024-03-13"
 
 # config['path_to_data'] = data_path+f"VelocityChanges/data/PSDS/"
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
@@ -399,8 +399,7 @@ names = ["FUR_BHZ", "FUR_BHN", "FUR_BHE"]
 ## Data1 --------------------------
 name = names[0]
 
-ff_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_1 = np.arange(0, psd_1.shape[0], 1)
+ff_1, tt_1, psd_1 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
 ff_1, psd_1 = __get_fband_averages(ff_1, psd_1)
 
@@ -418,8 +417,7 @@ gc.collect();
 ## Data2 --------------------------
 name = names[1]
 
-ff_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_2 = np.arange(0, psd_2.shape[0], 1)
+ff_2, tt_2, psd_2 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
 ff_2, psd_2 = __get_fband_averages(ff_2, psd_2)
 
@@ -437,8 +435,7 @@ gc.collect();
 ## Data3 --------------------------
 name = names[2]
 
-ff_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
-tt_3 = np.arange(0, psd_3.shape[0], 1)
+ff_3, tt_3, psd_3 = __load_data_files(config['path_to_data'], name, config['d1'], config['d2'])
 
 ff_3, psd_3 = __get_fband_averages(ff_3, psd_3)
 

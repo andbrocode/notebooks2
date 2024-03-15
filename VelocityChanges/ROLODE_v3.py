@@ -250,18 +250,18 @@ config = {}
 
 # config['client'] = Client('/home/andbro/kilauea-data/VelocityChanges/data/VROMY/sds/', sds_type='D', format='MSEED',)
 
-config['path_to_sds'] = "/home/andbro/kilauea-data/VelocityChanges/data/VROMY/sds/"
-# config['path_to_sds'] = "/import/kilauea-data/VelocityChanges/data/VROMY/sds/"
+#config['path_to_sds'] = "/home/andbro/kilauea-data/VelocityChanges/data/VROMY/sds/"
+config['path_to_sds'] = "/import/kilauea-data/VelocityChanges/data/VROMY/sds/"
 
 # specify directory for output data files
-config['path_to_outdata'] = "/home/andbro/kilauea-data/VelocityChanges/data/VROMY/"
-# config['path_to_outdata'] = "/import/kilauea-data/VelocityChanges/data/VROMY/"
+#config['path_to_outdata'] = "/home/andbro/kilauea-data/VelocityChanges/data/VROMY/"
+config['path_to_outdata'] = "/import/kilauea-data/VelocityChanges/data/VROMY/"
 
 # specify response information file
-config['path_to_inv_rot'] = '/home/andbro/Documents/ROMY/stationxml_ringlaser/station_GR_FUR.xml' #seismometer
-config['path_to_inv_tra'] = '/home/andbro/Documents/ROMY/stationxml_ringlaser/station_BW_ROMY.xml' #blueSeis
-# config['path_to_inv_rot'] = '/home/brotzer/Documents/ROMY/stationxml_ringlaser/station_GR_FUR.xml' #seismometer
-# config['path_to_inv_tra'] = '/home/brotzer/Documents/ROMY/stationxml_ringlaser/station_BW_ROMY.xml' #blueSeis
+#config['path_to_inv_rot'] = '/home/andbro/Documents/ROMY/stationxml_ringlaser/station_GR_FUR.xml' #seismometer
+#config['path_to_inv_tra'] = '/home/andbro/Documents/ROMY/stationxml_ringlaser/station_BW_ROMY.xml' #blueSeis
+config['path_to_inv_rot'] = '/home/brotzer/Documents/ROMY/stationxml_ringlaser/station_GR_FUR.xml' #seismometer
+config['path_to_inv_tra'] = '/home/brotzer/Documents/ROMY/stationxml_ringlaser/station_BW_ROMY.xml' #blueSeis
 
 # client2 = Client("IRIS")
 config['tra_seed'] = 'XX.VROMY..BH*' # seed of translational data
@@ -294,7 +294,7 @@ config['rayleigh2_waves'] = False
 config['periods_per_window'] = 10. # 8
 
 # Specify frequency bands here
-config['f_min'] = 0.05 # smallest frequency to process
+config['f_min'] = 0.01 # smallest frequency to process
 config['f_max'] = 8.0 # highest frequency to process
 config['f_space'] = 0.1 # frequency steps
 config['bandwidth'] = 0.1  # Bandwidth of bandpass filter
@@ -348,7 +348,7 @@ config['verbose'] = False
 
 from functions.get_octave_bands import __get_octave_bands
 
-f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=2, plot=True)
+f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=2, plot=False)
 
 # cut first and last
 f_lower, f_higher = f_lower[1:-1], f_higher[1:-1]

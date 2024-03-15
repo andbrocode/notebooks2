@@ -70,8 +70,8 @@ else:
 
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-02-28")
-config['date2'] = UTCDateTime(f"{config['year']}-02-29")
+config['date1'] = UTCDateTime(f"{config['year']}-02-25")
+config['date2'] = UTCDateTime(f"{config['year']}-03-13")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
