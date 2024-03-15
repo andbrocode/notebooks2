@@ -493,7 +493,7 @@ def __makeplot_barometer_array():
     ref_station = "BW.PROMY"
 
     frames = df_pressure.shape[0]
-    frames = 200
+    # frames = 200
 
     Ncol, Nrow = 1, 6
 
@@ -531,13 +531,7 @@ def __makeplot_barometer_array():
     def init():
 
         print(f"-> launch animation")
-        # add topography
-        # ax1.contourf((dem['utm_e'] - array_stations[array_stations.codes == ref_station].utm_e.iloc[0] ) / 1000,
-        #              (dem['utm_n'] - array_stations[array_stations.codes == ref_station].utm_n.iloc[0] ) / 1000,
-        #              dem['data'],
-        #              cmap="gray",
-        #              levels=list(range(400, 700, 10))
-        #              )
+
 
     def update(i):
 
