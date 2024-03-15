@@ -1,4 +1,4 @@
-def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', fmax=None, normalize=True, plot=True):
+def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', ymax=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance, cwt
     from numpy import std, nanmean, nan, nansum, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape, nanpercentile
@@ -183,13 +183,14 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
 
 
-        if fmax:
+        if ymax is not None:
+            print(f"set frequency limit: {ymax}")
             if period:
-                ax3.set_xlim(0, 1/(fmax*2))
+                ax3.set_xlim(0, ymax)
+                ax2.set_ylim(0, ymax)
             else:
-                if fmax*2 <= 1/tdelta/2:
-                    ax3.set_xlim(0, fmax*2)
-                    ax2.set_ylim(0, fmax)
+                ax3.set_xlim(0, ymax)
+                ax2.set_ylim(0, ymax)
         else:
             if period:
                 ax2.set_ylim(min(pp_cwt), max(pp_cwt))

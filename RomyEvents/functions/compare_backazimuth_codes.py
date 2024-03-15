@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_acc_z=False, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_rot_z=False, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -36,6 +36,14 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
     ## specify steps for degrees of baz
     config['step'] = 1
 
+    ## change polarization
+    if invert_acc_z:
+        acc.select(channel="*Z")[0].data *= -1
+    if invert_rot_z:
+        rot.select(channel="*Z")[0].data *= -1
+
+    ## avoid double turn of polarization
+    invert_acc_z = not invert_acc_z
 
     out1 = __compute_backazimuth(
                                 acc,
