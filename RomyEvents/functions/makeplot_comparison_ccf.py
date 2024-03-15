@@ -1,4 +1,4 @@
-def __makeplot_comparison_ccf(rot0, acc0, baz, twin_sec=5, twin_overlap=0.5, fmin=None, fmax=None):
+def __makeplot_comparison_ccf(rot0, acc0, baz, dist, twin_sec=5, twin_overlap=0.5, fmin=None, fmax=None):
 
     import matplotlib.pyplot as plt
     from obspy.signal.cross_correlation import correlate

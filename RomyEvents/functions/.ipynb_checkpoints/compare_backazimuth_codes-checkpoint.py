@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=None, invert_acc_z=False, invert_rot_z=False, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -6,8 +6,6 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
     from numpy import ones, linspace, histogram, concatenate, average, argmax, isnan, sqrt, cov, nan, array, arange
     from obspy import UTCDateTime
     from obspy.signal.rotate import rotate_ne_rt
-    from obspy.geodetics.base import gps2dist_azimuth
-    from obspy.clients.fdsn import Client
     from functions.compute_backazimuth import __compute_backazimuth
     from functions.compute_backazimuth_tangent import __compute_backazimuth_tangent
 
@@ -22,38 +20,21 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
     config['tbeg'] = rot[0].stats.starttime
     config['tend'] = rot[0].stats.endtime
 
+    ## Eventtime
+    config['eventtime'] = UTCDateTime(cat_event.origins[0].time)
+
     ## specify coordinates of station
     config['station_longitude'] = 11.275501
     config['station_latitude']  = 48.162941
 
     ## specify window length for baz estimation in seconds
-    config['win_length_sec'] = round(1/fmin, 1)
+    config['win_length_sec'] = Twin
 
     ## define an overlap for the windows in percent (50 -> 50%)
-    config['overlap'] = 90
+    config['overlap'] = Toverlap
 
     ## specify steps for degrees of baz
     config['step'] = 1
-
-    ## get event from catalog
-    try:
-        event = Client("USGS").get_events(starttime=UTCDateTime(event_time)-60, endtime=UTCDateTime(event_time)+60, minmagnitude=4.0)
-    except:
-        print(f" -> failed to obtain event from database")
-
-    event = event[0]
-
-    ## Eventtime
-    config['eventtime'] = UTCDateTime(event.origins[0].time)
-
-
-    dist, az, baz = gps2dist_azimuth(event.origins[0].latitude, event.origins[0].longitude,
-                                     config['station_longitude'], config['station_longitude'],
-                                     )
-
-    config['epicentral_distance_km'] = dist/1000
-    config['azimuth'] = az
-    config['backazimuth'] = baz
 
 
     out1 = __compute_backazimuth(
@@ -61,7 +42,7 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
                                 rot,
                                 config,
                                 wave_type='rayleigh',
-                                event=event,
+                                event=cat_event,
                                 plot=False,
                                 flim=(fmin, fmax),
                                 show_details=False,
@@ -72,10 +53,10 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
                                 rot,
                                 config,
                                 wave_type='love',
-                                event=event,
+                                event=cat_event,
                                 plot=False,
                                 flim=(fmin, fmax),
-                                show_details=True,
+                                show_details=False,
     )
 
     out3 = __compute_backazimuth_tangent(
@@ -86,6 +67,7 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
                                         baz_theo=out2['baz_theo'],
                                         cc_thres=0,
                                         plot=False,
+                                        invert_acc_z=invert_acc_z,
     )
 
     ## filter according to cc-threshold
@@ -102,9 +84,8 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
 
 
 
-
     ## compute statistics
-    deltaa = 5
+    deltaa = 10
     angles = arange(0, 365, deltaa)
     angles2 = arange(0, 365, 1)
 
@@ -155,8 +136,6 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
         print(e)
         pass
 
-
-
     if plot:
 
         import matplotlib.pyplot as plt
@@ -187,61 +166,45 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
         for _ax in [ax0, ax1, ax2, ax3, ax4]:
             _ax.set_xticklabels([])
 
-        rot_scaling, rot_unit = 1e9, r"nrad/s"
-        trans_scaling, trans_unit = 1e6, r"$\mu$m/s$^2$"
+        rot_scaling, rot_unit = 1e6, r"$\mu$rad/s"
+        trans_scaling, trans_unit = 1e3, r"mm/s$^2$"
 
         font = 12
 
-        lw = 1
-
-        hz = acc.select(channel="*HZ")[0].data
+        hz = acc.select(channel="*HZ")[0]
         hn = acc.select(channel="*HN")[0]
         he = acc.select(channel="*HE")[0]
 
-        jz = rot.select(channel="*JZ")[0].data
+        jz = rot.select(channel="*JZ")[0]
         jn = rot.select(channel="*JN")[0]
         je = rot.select(channel="*JE")[0]
 
         hr, ht = rotate_ne_rt(hn.data, he.data, out3['baz_theo'])
         jr, jt = rotate_ne_rt(jn.data, je.data, out3['baz_theo'])
 
+        ## reverse polarity of transverse rotation!!
+        # jt *= -1
 
-        ## invert traces
-        if invert_acc_z:
-            hz = -hz
-            lbl_acc_z = "-1xACC.Z"
-        else:
-            lbl_acc_z = "ACC.Z"
+        t1, t2 = hz.times().min(), hz.times().max()
 
-        if invert_rot_z:
-            jz = -jz
-            lbl_rot_z = "-1xROT.Z"
-        else:
-            lbl_rot_z = "ROT.Z"
-
-        t1, t2 = acc.select(channel="*HZ")[0].times().min(), acc.select(channel="*HZ")[0].times().max()
-
-        j_times = rot.select(channel="*JZ")[0].times()
-        h_times = acc.select(channel="*HZ")[0].times()
-
-        ax0.plot(h_times, ht*trans_scaling, 'black', lw=lw, label=f"ACC.T")
-        ax1.plot(h_times, hz*trans_scaling, 'black', lw=lw, label=f"{lbl_acc_z}")
-        ax2.plot(h_times, -hr*trans_scaling, 'black', lw=lw, label=f"-1xACC.R")
+        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T")
+        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z")
+        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R")
 
         ax0.set_ylim(-max(abs((ht)*trans_scaling)), max(abs((ht)*trans_scaling)))
-        ax1.set_ylim(-max(abs((hz)*trans_scaling)), max(abs((hz)*trans_scaling)))
+        ax1.set_ylim(-max(abs((hz.data)*trans_scaling)), max(abs((hz.data)*trans_scaling)))
         ax2.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
 
         ax00 = ax0.twinx()
-        ax00.plot(j_times, jz*rot_scaling, 'darkred', lw=lw, label=f"{lbl_rot_z}")
+        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.Z")
 
         ax11 = ax1.twinx()
-        ax11.plot(j_times, jt*rot_scaling, 'darkred', lw=lw, label=f"ROT.T")
+        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROMY.T")
 
         ax22 = ax2.twinx()
-        ax22.plot(j_times, jt*rot_scaling, 'darkred', lw=lw, label=f"ROT.T")
+        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROMY.T")
 
-        ax00.set_ylim(-max(abs(jz*rot_scaling)), max(abs(jz*rot_scaling)))
+        ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
         ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
         ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
 
@@ -316,15 +279,15 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
             _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
             _ax.set_xlim(0,  (config['tend']-config['tbeg'])*1.15)
 
-            _ax.plot([t1, t2], ones(2)*out2['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
-            _ax.fill_between([t1, t2], ones(2)*out2['baz_theo']-10, ones(2)*out2['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", zorder=1)
+            _ax.plot([t1, t2], ones(2)*out3['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
+            _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", zorder=1)
 
         for aaxx in [ax00, ax11, ax22]:
             aaxx.tick_params(axis='y', colors="darkred")
             aaxx.set_ylabel(f"$\Omega$ ({rot_unit})", color="darkred", fontsize=font)
             aaxx.legend(loc=4)
 
-        ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | ED = {round(config['epicentral_distance_km'],0)}km | f = {fmin}-{fmax} Hz | T = {config['win_length_sec']} s | {config['overlap']} % overlap")
+        ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {fmin}-{fmax} Hz | T = {config['win_length_sec']} s | {config['overlap']} % overlap")
 
         ax5.set_xlabel("Time (s)", fontsize=font)
 
@@ -345,7 +308,10 @@ def __compare_backazimuth_codes(rot0, acc0, event_time, fmin, fmax, cc_thres=Non
     out['baz_love_mean'] = baz_love_mean
     out['baz_love_std'] = baz_love_std
 
+
     if plot:
-        out['fig'] = fig3
+        # out['fig1'] = fig1
+        # out['fig2'] = fig2
+        out['fig3'] = fig3
 
     return out

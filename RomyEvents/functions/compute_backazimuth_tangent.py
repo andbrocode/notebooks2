@@ -1,4 +1,4 @@
-def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_theo=None, cc_thres=None, plot=False):
+def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_theo=None, cc_thres=None, plot=False, invert_acc_z=False):
 
     from numpy import zeros, nan, ones, nanmean, array, nanmax
     from numpy import arctan, pi, linspace, cov, argsort, corrcoef, correlate
@@ -19,13 +19,18 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     ## extract components
     rot_n = rot0.select(channel="*N")[0].data
     rot_e = rot0.select(channel="*E")[0].data
-    acc_z = acc0.select(channel="*Z")[0].data
+
+    if invert_acc_z:
+        acc_z = -acc0.select(channel="*Z")[0].data
+    else:
+        acc_z = acc0.select(channel="*Z")[0].data
+
 
     ## define windows
     n, windows = 0, []
     while n < npts-n_win:
-        windows.append((n,n+n_win))
-        n+=n_win
+        windows.append((n, n+n_win))
+        n += n_win
 
 
     ## add overlap
@@ -63,6 +68,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         baz0 = -arctan((Q[1, 0]/Q[0, 0]))*180/pi
 
+        ## make sure baz is between 0 - 360
         if baz0 <= 0:
             baz0 += 180
 

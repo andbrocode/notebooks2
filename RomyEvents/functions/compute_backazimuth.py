@@ -1,4 +1,4 @@
-def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, None), event=None, plot=True, show_details=False):
+def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, None), event=None, invert_rot_z=False, plot=True, show_details=False):
 
     """
     This method estimates a backazimuth for either
@@ -69,9 +69,10 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
 
         ## revert polarity for Z
-        # for tr in ROT:
-        #     if "Z" in tr.stats.channel:
-        #         tr.data *= -1
+        if invert_rot_z:
+            for tr in ROT:
+                if "Z" in tr.stats.channel:
+                    tr.data *= -1
 
     elif wave_type == "rayleigh":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
@@ -152,6 +153,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                                     backas[i_deg]
                                    )
 
+                ## reverse polarity for ACC-T
+                # T *= -1
+
                 ## compute correlation for backazimuth
 #                 corrbaz0 = xcorr(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)
                 ccorr = correlate(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
@@ -173,11 +177,9 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                                    )
 
                 ## compute correlation for backazimuth
-                ## vertical acceleration has to be reversed for definition of polarization reasons
-                ccorr = correlate(-1*ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
+                ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
                                   demean=True, normalize='naive', method='fft')
-#                 ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
-#                                   demean=True, normalize='naive', method='fft')
+
 
                 xshift, cc_max = xcorr_max(ccorr)
 
@@ -241,7 +243,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
 
         ## backazimuth estimation plot
-        im = ax[2].pcolormesh(t_win, backas, corrbaz[:-1, :], cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading='auto')
+        im = ax[2].pcolormesh(t_win, backas, corrbaz[:-1,:], cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading='auto')
 
 #         ax[2].set_xlim(time[0], time[-1])
         ax[2].set_xlim(t_win[0], t_win[-1])

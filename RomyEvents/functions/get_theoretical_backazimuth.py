@@ -1,5 +1,3 @@
-#!/bin/python3
-
 def __get_theoretical_backazimuth(station_lat, station_lon, event_time=None, time_offset=20, event_obj=None, fdsn_client="USGS"):
 
     from obspy.clients.fdsn import Client
@@ -8,7 +6,7 @@ def __get_theoretical_backazimuth(station_lat, station_lon, event_time=None, tim
     ## get event if not provided
     if event_obj is None and event_time is None:
         print(" -> provide event_time or event_obj!!!")
-        return 0,0,0
+        return 0, 0, 0
 
     elif event_obj is None and event_time is not None:
         events = Client(fdsn_client).get_events(starttime=event_time-time_offset, endtime=event_time+time_offset)
