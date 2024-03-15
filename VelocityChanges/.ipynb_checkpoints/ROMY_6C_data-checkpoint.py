@@ -105,7 +105,7 @@ rot = rot.detrend("demean")
 # rotate data to ZNE
 rot = __rotate_romy_ZUV_ZNE(rot, romy_inv, keep_z=True)
 
-rot = rot.trim(config['tbeg'], config['tend'])
+rot = rot.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
 for tr in rot:
     tr.stats.network = config['onet']
@@ -124,23 +124,25 @@ elif "DROMY" in config['seis']:
     acc = __read_sds(config['path_to_sds'], "BW.DROMY..BH*", config['tbeg']-60, config['tend']+60)
 
 # remove seismometer response
-acc.remove_response(seis_inv, output=config['tra_type'])
+acc = acc.remove_response(seis_inv, output=config['tra_type'])
 
 ## detrend
-acc.detrend("demean")
+acc = acc.detrend("demean")
 
 if len(acc) > 3:
     print(" -> merging required")
     acc = acc.merge(fill_value="interpolate")
 
-acc = acc.trim(config['tbeg'], config['tend'])
+acc = acc.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
 for tr in acc:
     tr.stats.network = config['onet']
     tr.stats.station = config['osta']
     tr.stats.location = config['oloc']
 
-# print(acc)
+print(rot)
+print(acc)
+
 
 ### Write Data to SDS
 
