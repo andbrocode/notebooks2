@@ -126,10 +126,10 @@ def main():
             # get maximum of 2d fit
             y_max, x_max = np.argwhere(im_fitted == im_fitted.max())[0]
 
-            date_str = file.split('.')[0].split('_')[0]
-            time_str = file.split('.')[0].split('_')[1]
+            _date_str = file.split('.')[0].split('_')[0]
+            _time_str = file.split('.')[0].split('_')[1]
 
-            df_out.loc[_n, 'time'] = str(UTCDateTime(date_str+"T"+time_str))
+            df_out.loc[_n, 'time'] = str(UTCDateTime(_date_str+"T"+_time_str))
 
             df_out.loc[_n, 'y_idx'] = y_max
             df_out.loc[_n, 'x_idx'] = x_max
