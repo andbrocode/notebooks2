@@ -33,12 +33,13 @@ elif os.uname().nodename == 'lin-ffb-01':
 ## configuration
 config = {}
 
-config['path_to_data'] = data_path+"ids/cut/"
+config['path_to_data'] = input("Enter path to images: ")
+# config['path_to_data'] = data_path+"ids/cut/"
 
 config['path_to_outdata'] = data_path+"ids/data/"
 
-config['date1'] = "2024-01-29"
-config['date2'] = "2024-02-05"
+config['date1'] = input("Enter Date1: ")
+
 
 
 def twoD_Gaussian(xy, amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
@@ -56,19 +57,28 @@ def twoD_Gaussian(xy, amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
 
 def main():
 
-    for _date in date_range(config['date1'], config['date2']):
 
-        ## get date as str
+    for _date in date_range(config['date1'], config['date1']):
+
+        # get date as str
         date_str = str(_date)[:10]
 
         path_to_data = f"{config['path_to_data']}{date_str.replace('-','')}/"
 
-        ## read files in directory
+        # read files in directory
         files = os.listdir(path_to_data)
 
-        ## prepare lists
-        times, x_idx, y_idx = [], [], []
+        # dummy data
+        dummy = np.ones(len(files))*np.nan
 
+        # prepare output dataframe
+        df_out = DataFrame()
+
+        for col in ["time", "x", "y", "x_idx", "y_idx", "amp", "x_sig", "y_sig", "theta", "offset", "x_var", "y_var", "amp_var", "y_sig_var", "x_sig_var", "theta_var", "offset_var"]:
+            df_out[col] = dummy
+
+
+        # for _n, file in enumerate(tqdm(files[:1])):
         for _n, file in enumerate(tqdm(files)):
 
 
@@ -88,13 +98,13 @@ def main():
                 continue
 
 
-            ## prepare x-y-mesh
+            # prepare x-y-mesh
             x = np.linspace(0, w, w)
             y = np.linspace(0, h, h)
             x, y = np.meshgrid(x, y)
 
             # initial guess of parameters [ amplitude, xo, yo, sigma_x, sigma_y, theta, offset ]
-            initial_guess = (255, 900, 350, 50, 50, 0, 0)
+            initial_guess = (255, 2000, 1000, 500, 500, 0, 0)
 
             try:
 
@@ -107,20 +117,41 @@ def main():
             except:
                 continue
 
+            # get diagonal values
+            pcov_diag = np.diag(pcov)
+
             # reshape to image dimensions
             im_fitted = data_fitted.reshape(h, w)
 
-            ## get maximum of 2d fit
+            # get maximum of 2d fit
             y_max, x_max = np.argwhere(im_fitted == im_fitted.max())[0]
 
-            # print(UTCDateTime(file[4:12]+"T"+file[13:19]), y_max, x_max)
+            date_str = file.split('.')[0].split('_')[0]
+            time_str = file.split('.')[0].split('_')[1]
 
-            times.append(str(UTCDateTime(file[4:12]+"T"+file[13:19])))
-            y_idx.append(y_max)
-            x_idx.append(x_max)
+            df_out.loc[_n, 'time'] = str(UTCDateTime(date_str+"T"+time_str))
+
+            df_out.loc[_n, 'y_idx'] = y_max
+            df_out.loc[_n, 'x_idx'] = x_max
+
+            df_out.loc[_n, 'amp'] = popt[0]
+            df_out.loc[_n, 'x'] = popt[1]
+            df_out.loc[_n, 'y'] = popt[2]
+            df_out.loc[_n, 'x_sig'] = popt[3]
+            df_out.loc[_n, 'y_sig'] = popt[4]
+            df_out.loc[_n, 'theta'] = popt[5]
+            df_out.loc[_n, 'offset'] = popt[6]
+
+            df_out.loc[_n, 'amp_var'] = pcov_diag[0]
+            df_out.loc[_n, 'x_var'] = pcov_diag[1]
+            df_out.loc[_n, 'y_var'] = pcov_diag[2]
+            df_out.loc[_n, 'x_sig_var'] = pcov_diag[3]
+            df_out.loc[_n, 'y_sig_var'] = pcov_diag[4]
+            df_out.loc[_n, 'theta_var'] = pcov_diag[5]
+            df_out.loc[_n, 'offset_var'] = pcov_diag[6]
 
 
-            if _n % 100 == 0:
+            if _n % 10 == 0:
                 mpl.use('Agg')
 
                 fig = plt.figure();
@@ -133,18 +164,13 @@ def main():
 
             _gc = gc.collect();
 
-        ## prepare output dataframe
-        df_out = DataFrame()
 
-        df_out['time_local'] = times
-        df_out['y_idx'] = y_idx
-        df_out['x_idx'] = x_idx
+        # sort for time column
+        df_out.sort_values(by="time", inplace=True)
 
-        ## sort for time column
-        df_out.sort_values(by="time_local", inplace=True)
-
-        ## write output data frame
+        # write output data frame
         df_out.to_pickle(config['path_to_outdata']+f"{date_str}.pkl")
+
 
 
 if __name__ == "__main__":
