@@ -74,7 +74,7 @@ config = {}
 config['klim'] = 50.
 config['kstep'] = config['klim'] / 100.
 
-config['tbeg'] = obspy.UTCDateTime("2024-03-16 12:30")
+config['tbeg'] = obspy.UTCDateTime("2024-03-16 13:00")
 config['tend'] = obspy.UTCDateTime("2024-03-16 14:00")
 
 
@@ -87,8 +87,8 @@ config['seeds'] = [
                    'BW.ROMY..LDI',
 ]
 
-config['fmin'] = 0.0001
-config['fmax'] = 0.08
+config['fmin'] = 0.001
+config['fmax'] = 0.05
 
 config['path_to_figs'] = data_path+"/LNM2/figures/"
 
