@@ -40,7 +40,7 @@ config['path_to_outdata'] = data_path+"ids/data/"
 
 config['date1'] = input("Enter Date1: ")
 
-config['nth'] = input("Every nth images [1]: ") or 1
+config['nth'] = int(input("Every nth images [1]: ")) or 1
 
 
 def twoD_Gaussian(xy, amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
@@ -70,7 +70,7 @@ def main():
         files = os.listdir(path_to_data)
 
         # dummy data
-        dummy = np.ones(len(files))*np.nan
+        dummy = np.ones(len(files[::config['nth']]))*np.nan
 
         # prepare output dataframe
         df_out = DataFrame()
