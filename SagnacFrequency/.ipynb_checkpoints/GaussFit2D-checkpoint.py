@@ -40,6 +40,7 @@ config['path_to_outdata'] = data_path+"ids/data/"
 
 config['date1'] = input("Enter Date1: ")
 
+config['nth'] = input("Every nth images [1]: ") or 1
 
 
 def twoD_Gaussian(xy, amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
@@ -78,8 +79,7 @@ def main():
             df_out[col] = dummy
 
 
-        # for _n, file in enumerate(tqdm(files[:1])):
-        for _n, file in enumerate(tqdm(files)):
+        for _n, file in enumerate(tqdm(files[::config['nth']])):
 
 
             ## check data type
