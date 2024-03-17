@@ -101,6 +101,31 @@ config['client'] = RoutingClient("eida-routing")
 
 # In[9]:
 
+def __gradient_grid(frame):
+
+    from scipy.interpolate import griddata
+
+    dx, dy = 0.250, 0.250
+
+    xx, yy = array_stations.x_km, array_stations.y_km
+
+    grid_x, grid_y = np.mgrid[min(xx)*1.2:max(xx)*1.2:dx, min(yy)*1.2:max(yy)*1.2:dy]
+
+    points, values = [], []
+    for i, sta in enumerate(df_pressure.keys()):
+        if sta == "time":
+            continue
+
+        _x = array_stations[array_stations.codes == sta].x_km.iloc[0]
+        _y = array_stations[array_stations.codes == sta].y_km.iloc[0]
+
+        points.append([_x, _y])
+        values.append(df_pressure[sta].iloc[frame])
+
+    grid_z = griddata(points, values, (grid_x, grid_y), method='cubic')
+
+    return grid_x, grid_y, grid_z
+
 
 def __get_array_stations(seeds, tbeg, tend):
 
@@ -489,17 +514,20 @@ def __makeplot_barometer_array():
     import matplotlib.pyplot as plt
     import matplotlib.animation as animation
     from matplotlib.gridspec import GridSpec
+    from functions.smoothing import __smooth
+    from functions.interpolate_nan import __interpolate_nan
+
 
     ref_station = "BW.PROMY"
 
     frames = df_pressure.shape[0]
-    # frames = 200
+    # frames = 30
 
     Ncol, Nrow = 1, 6
 
     maker_size = 100
 
-    p_min, p_max = -2, 2
+    p_min, p_max = -3, 3
 
     time_scaling = 1/60
 
@@ -538,6 +566,8 @@ def __makeplot_barometer_array():
         if i%10 == 0:
             print(f"{i} ...")
 
+        gx, gy, gz = __gradient_grid(i)
+
         # clear the axis each frame
         ax1.clear()
 
@@ -551,8 +581,11 @@ def __makeplot_barometer_array():
                      dem['data'],
                      cmap="gray",
                      levels=list(range(400, 700, 2)),
-                     rasterized=True,
+                     # rasterized=True,
                      )
+
+        ax1.pcolormesh(gx, gy, gz, alpha=0.5, cmap=cmap, vmin=p_min, vmax=p_max)
+
 
         # replot data
         for station in df_pressure.keys():
@@ -593,6 +626,7 @@ def __makeplot_barometer_array():
         ax2.plot(df_pressure["time"]*time_scaling,
                  df_pressure[ref_station],
                  color="black",
+                 label=f"{config['fmin']} - {config['fmax']} Hz",
                 )
         # update time indicator
         ax2.axvline(df_pressure["time"][i]*time_scaling,
@@ -601,18 +635,19 @@ def __makeplot_barometer_array():
                    )
 
         ax2.set_ylabel("Pressure (pa)", fontsize=font)
+        ax2.legend(loc=1, fontsize=font-1)
 
         # _____________________________________
         # update time indicator
         ax3.clear()
 
         ax3.plot(furt.select(channel="LAW")[0].times(reftime=config['tbeg'])*time_scaling,
-                 furt.select(channel="LAW")[0].data,
+                 __smooth(__interpolate_nan(furt.select(channel="LAW")[0].data), 60),
                  color="tab:blue",
                 )
 
         ax3_1.plot(furt.select(channel="LAD")[0].times(reftime=config['tbeg'])*time_scaling,
-                   furt.select(channel="LAD")[0].data,
+                   __smooth(__interpolate_nan(furt.select(channel="LAD")[0].data), 60),
                    color="tab:orange",
                   )
         ax3_1.set_ylim(0, 360)
@@ -630,26 +665,28 @@ def __makeplot_barometer_array():
         ax3_1.set_ylabel("Wind Direction (°)", fontsize=font, color="tab:orange")
         ax3_1.xaxis.label.set_color("tab:orange")
 
-        gc.collect()
+        gc.collect();
 
     # interval = wait time in ms | repeat = loop after data end
     ani = animation.FuncAnimation(fig, update, init_func=init, frames=frames,
-                                  interval=1, repeat=False, repeat_delay=0,
-                                  save_count=0,
+                                  interval=10, repeat=False, repeat_delay=0,
+                                  # save_count=0,
+                                  cache_frame_data=False,
                                  )
+    plt.plot();
 
     # store animation as gif
     # ani.save('romy_barometer.mp4', writer='moviewriter', dpi=200)
-    ani.save(config['path_to_figs']+'romy_barometer.mp4',
-             writer=animation.FFMpegWriter(fps=25),
+    ani.save(config['path_to_figs']+'romy_barometer_test.mp4',
+             writer=animation.FFMpegWriter(fps=30),
              dpi=200,
-             savefig_kwargs={'bbox_inches': 'tight'}
+             # savefig_kwargs={'bbox_inches': 'tight'}
             )
 
-    print(f"-> stored video: romy_barometer.mp4")
-
+    print(f"-> stored video: romy_barometer_test.mp4")
 
 __makeplot_barometer_array()
+
 
 
 # In[ ]:
