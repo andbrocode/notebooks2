@@ -195,22 +195,22 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
         t1, t2 = hz.times().min(), hz.times().max()
 
-        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T")
-        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z")
-        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R")
+        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"ACC.T")
+        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"ACC.Z")
+        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"ACC.R")
 
         ax0.set_ylim(-max(abs((ht)*trans_scaling)), max(abs((ht)*trans_scaling)))
         ax1.set_ylim(-max(abs((hz.data)*trans_scaling)), max(abs((hz.data)*trans_scaling)))
         ax2.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
 
         ax00 = ax0.twinx()
-        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.Z")
+        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROT.Z")
 
         ax11 = ax1.twinx()
-        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROMY.T")
+        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROT.T")
 
         ax22 = ax2.twinx()
-        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROMY.T")
+        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"ROT.T")
 
         ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
         ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))

@@ -1,4 +1,4 @@
-def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_acc_z=False, plot=False):
+def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverlap, cc_thres=None, invert_rot_z=False, invert_acc_z=False, plot=False):
 
     import scipy.stats as sts
     import matplotlib.pyplot as plt
@@ -36,6 +36,14 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
     ## specify steps for degrees of baz
     config['step'] = 1
 
+    ## change polarization
+    if invert_acc_z:
+        acc.select(channel="*Z")[0].data *= -1
+    if invert_rot_z:
+        rot.select(channel="*Z")[0].data *= -1
+
+    ## avoid double turn of polarization
+    invert_acc_z = not invert_acc_z
 
     out1 = __compute_backazimuth(
                                 acc,
@@ -169,7 +177,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
         rot_scaling, rot_unit = 1e6, r"$\mu$rad/s"
         trans_scaling, trans_unit = 1e3, r"mm/s$^2$"
 
-        font = 14
+        font = 12
+        lw=1.0
 
         hz = acc.select(channel="*HZ")[0]
         hn = acc.select(channel="*HN")[0]
@@ -187,22 +196,22 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
         t1, t2 = hz.times().min(), hz.times().max()
 
-        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T")
-        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z")
-        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R")
+        ax0.plot(hz.times(), (ht)*trans_scaling, 'black', label=f"PFO.T", lw=lw)
+        ax1.plot(hz.times(), (hz.data)*trans_scaling, 'black', label=f"PFO.Z", lw=lw)
+        ax2.plot(hz.times(), hr*trans_scaling, 'black', label=f"PFO.R", lw=lw)
 
         ax0.set_ylim(-max(abs((ht)*trans_scaling)), max(abs((ht)*trans_scaling)))
         ax1.set_ylim(-max(abs((hz.data)*trans_scaling)), max(abs((hz.data)*trans_scaling)))
         ax2.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
 
         ax00 = ax0.twinx()
-        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"BSPF.Z")
+        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"BSPF.Z", lw=lw)
 
         ax11 = ax1.twinx()
-        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"BSPF.T")
+        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"BSPF.T", lw=lw)
 
         ax22 = ax2.twinx()
-        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"BSPF.T")
+        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"BSPF.T", lw=lw)
 
         ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
         ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))

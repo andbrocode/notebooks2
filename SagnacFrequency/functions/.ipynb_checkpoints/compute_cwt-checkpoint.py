@@ -1,4 +1,4 @@
-def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', s0factor=10, fmax=None, normalize=True, plot=True):
+def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False, tscale='sec', scale_value=2, ymax=None, normalize=True, plot=True):
 
     from pycwt import wct, xwt, Morlet, ar1, significance, cwt
     from numpy import std, nanmean, nan, nansum, nanmax, nanmin, nanvar, ones, nan_to_num, polyfit, polyval, array, reshape, nanpercentile
@@ -36,19 +36,19 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
     ## create mother wavelet
     mother_wavelet = Morlet(6)
-    s0_set = s0factor * dt  # Starting scale
+    s0_set = scale_value * dt  # Starting scale
     dj_set = 1 / 12  # Twelve sub-octaves per octaves
     J_set = int(7 / dj_set)  # Seven powers of two with dj sub-octaves
     #print(s0_set, dj_set, J_set)
 
 
     cwt, scales, ff_cwt, cone_p, fft, fftfreqs = cwt(
-                                                    arr1,
-                                                    dt=dt,
-                                                    dj=dj_set, #0.05,
-                                                    s0=s0_set, #-1,
-                                                    J=J_set, #-1,
-                                                    wavelet=mother_wavelet,  # u'morlet',
+                                                        arr1,
+                                                        dt=dt,
+                                                        dj=dj_set, #0.05,
+                                                        s0=s0_set, #-1,
+                                                        J=J_set, #-1,
+                                                        wavelet=mother_wavelet,  # u'morlet',
                                                     )
 
     cone_f = 1/cone_p
@@ -127,15 +127,25 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
 
         if period:
-            ca2 = ax2.pcolormesh(
-                                times,
-                                pp_cwt,
-                                cwt_power,
-                                # vmin=min(reshape(cwt_power, cwt_power.size)),
-                                # vmax=max(reshape(cwt_power, cwt_power.size)),
-                                vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 2),
-                                vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 98),
-                                )
+            if log:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    pp_cwt,
+                                    cwt_power,
+                                    vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 1),
+                                    vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 99),
+                                    rasterized=True,
+                                    norm="log",
+                                    )
+            else:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    pp_cwt,
+                                    cwt_power,
+                                    vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 1),
+                                    vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 99),
+                                    rasterized=True,
+                                    )
 
             ax3.plot(global_mean_cwt_f, pp_cwt, color="black", label="global mean power")
 
@@ -143,15 +153,25 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
             ax33.plot(global_sum_cwt_f, pp_cwt, color="darkred", label="global sum power")
 
         else:
-            ca2 = ax2.pcolormesh(
-                                times,
-                                ff_cwt,
-                                cwt_power,
-                                # vmin=min(reshape(cwt_power, cwt_power.size)),
-                                # vmax=max(reshape(cwt_power, cwt_power.size)),
-                                vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 2),
-                                vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 98),
-                                )
+            if log:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    ff_cwt,
+                                    cwt_power,
+                                    vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 1),
+                                    vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 99),
+                                    rasterized=True,
+                                    norm="log"
+                                    )
+            else:
+                ca2 = ax2.pcolormesh(
+                                    times,
+                                    ff_cwt,
+                                    cwt_power,
+                                    vmin=nanpercentile(reshape(cwt_power, cwt_power.size), 1),
+                                    vmax=nanpercentile(reshape(cwt_power, cwt_power.size), 99),
+                                    rasterized=True,
+                                    )
 
 
             ax3.plot(global_mean_cwt_f, ff_cwt, color="black", label="global mean power")
@@ -183,13 +203,14 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
 
 
 
-        if fmax:
+        if ymax is not None:
+            print(f"set frequency limit: {ymax}")
             if period:
-                ax3.set_xlim(0, 1/(fmax*2))
+                ax3.set_xlim(0, ymax)
+                ax2.set_ylim(0, ymax)
             else:
-                if fmax*2 <= 1/tdelta/2:
-                    ax3.set_xlim(0, fmax*2)
-                    ax2.set_ylim(0, fmax)
+                ax3.set_xlim(0, ymax)
+                ax2.set_ylim(0, ymax)
         else:
             if period:
                 ax2.set_ylim(min(pp_cwt), max(pp_cwt))
