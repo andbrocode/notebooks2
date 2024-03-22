@@ -26,7 +26,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
     def __get_octave_bands(fmin, fmax, faction_of_octave=1, plot=False):
 
         """
-        Computing octave / one-third-octave bands
+        Computing octave bands
 
         Arguments:
             - fmin:    (float) minimum center frequency

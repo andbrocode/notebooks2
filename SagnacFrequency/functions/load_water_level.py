@@ -19,30 +19,37 @@ def __load_water_level(tbeg, tend):
     for dat in date_range(dd1, dd2):
         file = f"{str(dat)[:4]}/PG"+str(dat)[:10].replace("-", "")+".dat"
         try:
+            # load data
             df0 = read_csv(path_to_data+file, delimiter=" ")
 
-            ## correct seconds
-            df0['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df0['day'], df0['hour'])]
-            df0['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df0['times_utc']]
+            # correct seconds
+            if "hour" in df0.keys():
+                df0['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df0['day'], df0['hour'])]
+                df0['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df0['times_utc']]
+            elif "time" in df0.keys():
+                df0['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df0['day'], df0['time'])]
+                df0['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df0['times_utc']]
 
-            ## merge
+            # merge
             df = concat([df, df0])
 
         except:
+            print(df0)
             print(f"error for {file}")
 
-    ## convert data
+    # convert data
     df['pegel'] = df.pegel*0.75
     df['temperatur'] = df.temperatur*5
 
-    ## correct seconds
-    # df['times_utc'] = [UTCDateTime(f"{_d[-4:]+_d[3:5]+_d[:2]} {_t}")  for _d, _t in zip(df['day'], df['hour'])]
-    # df['times_utc_sec'] = [abs(tbeg - UTCDateTime(_t))  for _t in df['times_utc']]
 
-    ## remove columns hour and day
-    df.drop(columns=["hour", "day"], inplace=True)
+    # remove columns hour and day
+    if "hour" in df0.keys():
+        df.drop(columns=["hour", "day"], inplace=True)
+    elif "time" in df0.keys():
+        df.drop(columns=["time", "day"], inplace=True)
 
-    ## reset index to make it continous
+
+    # reset index to make it continous
     df.reset_index(inplace=True)
 
     if df.empty:
