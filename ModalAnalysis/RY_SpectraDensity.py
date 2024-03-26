@@ -1,5 +1,15 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Spectral Density
+
+# ## Load Libraries
+
+# In[1]:
+
 
 import os
+import sys
 import pickle
 import matplotlib.pyplot as plt
 
@@ -17,6 +27,8 @@ from pathlib import Path
 from functions.get_hist_loglog import __get_hist_loglog
 
 
+# In[2]:
+
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -26,6 +38,9 @@ elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
+
+
+# In[3]:
 
 
 def __get_minimal_psd(psds):
@@ -41,6 +56,9 @@ def __get_minimal_psd(psds):
     return min_psd
 
 
+# In[4]:
+
+
 def __get_median_psd(psds):
 
     from numpy import median, zeros, isnan
@@ -52,6 +70,9 @@ def __get_median_psd(psds):
         med_psd[f] = median(a[~isnan(a)])
 
     return med_psd
+
+
+# In[5]:
 
 
 def __get_minimum_psd(psds, f_tmp):
@@ -68,6 +89,9 @@ def __get_minimum_psd(psds, f_tmp):
             idx = i
 
     return psds[idx]
+
+
+# In[6]:
 
 
 def __get_array_from_dataframe(df):
@@ -87,26 +111,19 @@ def __get_array_from_dataframe(df):
     return array(psds)
 
 
-## ---------------------------------------
+# ## Configurations
 
-# name, comp, app = "PROMY", "", ""
-# name, comp, app = "FFBI", "", "_absolute"
-# name, comp, app  = "ROMY", "Z", ""
-# name, comp, app = "ROMY", "U", ""
-# name, comp, app = "ROMY", "V", ""
-
-name, comp, app = "RY01", "HHE", ""
-
+# In[7]:
 
 
 ## ---------------------------------------
 
-# name = "RY01"
-# cha = "HHZ"
-# inname = f"2023_RY01_{cha[2]}_3600"
-# subdir = "PSDS/"
-# threshold = 1e7
-# f_limits = 0.01, 100.0
+
+name = sys.argv[1]
+comp = sys.argv[2]
+app = ""
+# name, comp, app = "RY01", "HHE", ""
+
 
 
 ## ---------------------------------------
@@ -118,6 +135,8 @@ path = archive_path+f"ModalAnalysis/data/PSDS/{name}/{comp}/"
 
 t1, t2 = "2023-03-10", "2023-03-17"
 
+
+# In[8]:
 
 
 ## ---------------------------------------
@@ -143,6 +162,11 @@ config['startdate'], config['enddate'] = t1, t2
 config['outpath_figures'] = data_path+f"LNM2/figures/"
 
 config['path_to_outdata'] = data_path+f"LNM2/data/"
+
+
+# ## Methods
+
+# In[9]:
 
 
 def __load_psd_files(tbeg, tend, ring, path_to_data):
@@ -177,6 +201,9 @@ def __load_psd_files(tbeg, tend, ring, path_to_data):
     return df
 
 
+# In[10]:
+
+
 def __filter_psds(psds, thresholds):
 
     from numpy import mean, array
@@ -195,6 +222,9 @@ def __filter_psds(psds, thresholds):
     return array(psds_filtered)
 
 
+# In[11]:
+
+
 def __load_data_file(path, file):
 
     from tqdm.notebook import tqdm
@@ -209,6 +239,9 @@ def __load_data_file(path, file):
     return array(psds_all)
 
 
+# In[12]:
+
+
 def __cut_frequencies_array(arr, freqs, fmin, fmax):
 
     ind = []
@@ -220,6 +253,9 @@ def __cut_frequencies_array(arr, freqs, fmin, fmax):
     pp = arr[:,ind[0]:ind[-1]]
 
     return pp, ff
+
+
+# In[13]:
 
 
 def __remove_noisy_psds(arr, threshold_mean=1e-16, ff=None, flim=None):
@@ -267,6 +303,9 @@ def __remove_noisy_psds(arr, threshold_mean=1e-16, ff=None, flim=None):
     print(f" -> {l2} psds remain")
 
     return arr, rejected
+
+
+# In[14]:
 
 
 def __makeplot_colorlines(config, ff, psds, rejected, day):
@@ -324,6 +363,9 @@ def __makeplot_colorlines(config, ff, psds, rejected, day):
 
     plt.show();
     return fig
+
+
+# In[15]:
 
 
 def __makeplot_colorlines_overview(config, ff, psds, rejected, day):
@@ -407,6 +449,11 @@ def __makeplot_colorlines_overview(config, ff, psds, rejected, day):
     return fig
 
 
+# ## RUN for all files 
+
+# In[16]:
+
+
 psds_medians_out, times_out = [], []
 
 ff = pickle.load(open(config['path']+f"{config['filename']}_frequency_axis.pkl", 'rb'))
@@ -443,6 +490,9 @@ for jj, day in enumerate(date_range(config['startdate'], config['enddate'])):
         dates.append(f"{day}_{str(_k).rjust(2, '0')}")
 
 dat = array(dat)
+
+
+# In[17]:
 
 
 def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False):
@@ -566,13 +616,24 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
     return output
 
 
+# In[18]:
+
+
 # from numpy import isnan
 # for d in dat.reshape(dat.size):
 #     if not isnan(d):
 #         print(d)
 
 
-out = __get_hist_loglog(dat, ff, bins=50, density=False, axis=1, plot=True)
+# In[19]:
+
+
+out = __get_hist_loglog(dat, ff, bins=50, density=False, axis=1, plot=False)
+
+
+# ## Plotting
+
+# In[20]:
 
 
 def __makeplot_density(out):
@@ -651,14 +712,25 @@ def __makeplot_density(out):
     cb = plt.colorbar(im, cax=cbar_ax)
     cb.set_label("Propability Density", fontsize=font, labelpad=-48, color="white")
 
-    plt.show();
+    # plt.show();
     return fig
+
+
+# In[21]:
 
 
 fig = __makeplot_density(out)
 
 
+# In[22]:
+
+
 fig.savefig(config['outpath_figures']+f"SpectraDensity_{name}_{comp}_{app}.png", format="png", dpi=200, bbox_inches='tight')
+
+
+# ## Get median and store
+
+# In[23]:
 
 
 psd_median = __get_median_psd(dat)
@@ -667,13 +739,6 @@ out_df = DataFrame()
 out_df['psds_median'] = psd_median
 out_df['frequencies'] = ff
 
+print(f" -> store: {config['path_to_outdata']}{year}_{name}_{comp}_psd_median.pkl")
 out_df.to_pickle(config['path_to_outdata']+f"{year}_{name}_{comp}_psd_median.pkl")
-
-
-df = read_pickle(config['path_to_outdata']+f"{year}_{name}_{comp}_psd_median.pkl")
-
-
-plt.loglog(df.frequencies, df.psds_median)
-
-
 

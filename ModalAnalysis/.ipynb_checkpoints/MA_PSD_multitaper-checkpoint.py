@@ -197,27 +197,51 @@ def main(config):
 
     days = int((config['date2'] - config['date1'])/86400)+1
 
-    if not Path(config['outpath1']).exists():
-        Path(config['outpath1']).mkdir()
+    # check if path to output exists
+    if not os.path.isdir(config['outpath1']):
+        print(f" -> {config['outpath1']} does not exist")
+        return
+
+    # create output path structure
+    if not os.path.isdir(config['outpath1']+"/"+config['sta']):
+        # create new directory
+        os.mkdir(config['outpath1']+"/"+config['sta'])
+        # extend the path to output
+        config['outpath1'] = config['outpath1']+"/"+config['sta']
         print(f" -> created {config['outpath1']}")
+    else:
+        config['outpath1'] = config['outpath1']+"/"+config['sta']
+
+    # create output path structure
+    if not os.path.isdir(config['outpath1']+"/"+config['cha']):
+        # create new directory
+        os.mkdir(config['outpath1']+"/"+config['cha'])
+        # extend the path to output
+        config['outpath1'] = config['outpath1']+"/"+config['cha']
+        print(f" -> created {config['outpath1']}")
+    else:
+        config['outpath1'] = config['outpath1']+"/"+config['cha']
+
 
 
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
-        print(f"\nprocessing  {str(date)[:10]}...")
+        print(f"\nprocessing  {str(date)[:10]} ...")
 
         offset_sec = 10800  ## seconds
 
-        ## load data for the entire day
+        # adjust datetimes
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
+        # load data
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
 
+        # load inventory
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
@@ -251,14 +275,14 @@ def main(config):
             continue
 
 
-        ## Pre-Processing
+        # Pre-Processing
         try:
 
             st1 = st1.remove_response(inv1, output=config['unit'].upper())
 
             st1 = st1.detrend("linear")
 
-            ## interpolate NaN values
+            # interpolate NaN values
             # for tr in st1:
             #     tr.data = __interpolate_nan(tr.data)
 
@@ -270,10 +294,10 @@ def main(config):
             continue
 
 
-        ## prepare time intervals
+        # prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
-        ## prepare psd parameters
+        # prepare psd parameters
         config['nperseg'] = int(st1[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
@@ -281,10 +305,10 @@ def main(config):
         print(st1)
 
 
-        ## run operations for time intervals
+        # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-            ## trim streams for current interval
+            # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
 
             _st1 = _st1.detrend("linear").taper(0.05)
@@ -292,7 +316,7 @@ def main(config):
 
             if n == 0:
 
-                ## prepare lists
+                # prepare lists
                 if config['mode'] == "welch":
                     psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
 
@@ -300,7 +324,7 @@ def main(config):
                     psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
 
 
-            ## compute power spectra
+            # compute power spectra
             if config['mode'] == "welch":
 
                 f1, psd1 = welch(
@@ -333,18 +357,17 @@ def main(config):
             psds1[n] = psd1
 
 
-        ## save psds
+        # save psds
         out1 = {}
         out1['frequencies'] = f1
         out1['psd'] = psds1
 
         __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
-        # __save_to_pickle(psds1, config['outpath1'],f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
 
     print("\nDone\n")
 
-# In[] ___________________________________________________________
+# ___________________________________________________________
 
 if __name__ == "__main__":
 
@@ -352,4 +375,4 @@ if __name__ == "__main__":
 
     gc.collect();
 
-## End of File
+# End of File
