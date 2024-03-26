@@ -62,6 +62,7 @@ if len(sys.argv) > 2:
     config['seed1'] = sys.argv[1]
 else:
     config['seed1'] = "XX.RY01..HHZ"
+print(config['seed1'])
 
 config['net'], config['sta'], config['loc'], config['cha'] = config['seed1'].split(".")
 
