@@ -58,7 +58,7 @@ config = {}
 
 
 # define seed id
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     config['seed1'] = sys.argv[1]
 else:
     config['seed1'] = "XX.RY01..HHZ"
@@ -214,11 +214,11 @@ def main(config):
         config['tend'] = UTCDateTime(date) + 86400
 
         print(config['path_to_data1'])
-        # try:
-        st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
-        # except:
-        #     print(f" -> failed to load data for {config['seed1']}...")
-        #     continue
+        try:
+            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
+        except:
+            print(f" -> failed to load data for {config['seed1']}...")
+            continue
         print(st1)
         try:
             inv1 = read_inventory(config['path_to_inv1'])
