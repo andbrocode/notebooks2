@@ -213,6 +213,7 @@ def main(config):
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
+        print(config['path_to_data1'])
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
         except:
