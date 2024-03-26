@@ -256,9 +256,11 @@ def main(config):
 
             st1 = st1.remove_response(inv1, output=config['unit'].upper())
 
+            st1 = st1.detrend("linear")
+
             ## interpolate NaN values
-            for tr in st1:
-                tr.data = __interpolate_nan(tr.data)
+            # for tr in st1:
+            #     tr.data = __interpolate_nan(tr.data)
 
             st1 = st1.trim(config['tbeg'], config['tend'])
 
