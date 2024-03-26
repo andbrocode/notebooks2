@@ -30,7 +30,7 @@ warnings.filterwarnings('ignore')
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
 
-config= {}
+config = {}
 
 
 config['array'] = "RY"
@@ -170,11 +170,8 @@ def __calculate_spectra(st, config, mode='dB'):
         while dt2 <= st[0].stats.endtime:
 
             tr_tmp = tr.copy()
-            tr_tmp.trim(starttime = UTCDateTime(dt1), endtime=UTCDateTime(dt2))
+            tr_tmp.trim(starttime=UTCDateTime(dt1), endtime=UTCDateTime(dt2))
 
-#             print(n, dt1, dt2, "\n")
-
-#             print(config.get('nperseg'), config.get('noverlap'), len(tr_tmp.data))
 
             f, psd0 = welch(
                         tr_tmp.data,
@@ -201,7 +198,7 @@ def __calculate_spectra(st, config, mode='dB'):
             ff = f[idx1:idx2]
             tmp = zeros([intervals, len(ff)])
             for j in range(intervals):
-                tmp[j] = psd[j,idx1:idx2]
+                tmp[j] = psd[j, idx1:idx2]
             psd = tmp
         else:
             ff=f
@@ -306,30 +303,10 @@ def main(config):
 
         ff, psds = __calculate_spectra(st0, config, mode=None)
 
-        # minimal_psd = __get_minimal_psd(psds)
-        # minimal_collection.append(minimal_psd)
-
-        # minimum_psd = __get_minimum_psd(psds)
-        # minimum_collection.append(minimum_psd)
-
-        ## write out column names
-        # columns.append(str(date)[:10])
 
         __save_to_pickle(psds, f"_{str(date).split(' ')[0].replace('-','')}_hourly")
 
         dd.append(str(date).split(" ")[0].replace("-",""))
-#        medians.append(__get_median_psd(psds))
-#        minimals.append(__get_minimal_psd(psds))
-
-#    daily_medians = DataFrame()
-#    for d, med in zip(dd, medians):
-#        daily_medians[d] = med
-
-    # if not Path(config['outpath']+config['outname']).exists():
-    # (config['outpath']+config['outname']).mkdir()    Path
-
-#    daily_medians.to_pickle(config['outpath']+config['outname']+"_daily_medians.pkl")
-#    print(f"\n -> created: {config['outpath']}{config['outname']}_daily_medians.pkl")
 
     __save_to_pickle(config, "_config")
     __save_to_pickle(ff, "_frequency_axis")
