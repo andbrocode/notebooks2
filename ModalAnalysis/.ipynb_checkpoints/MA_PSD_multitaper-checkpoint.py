@@ -218,13 +218,13 @@ def main(config):
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
-
+        print(st1)
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
             print(f" -> failed to load inventory for {config['seed1']}...")
             continue
-
+        print(inv1)
 #         try:
 #             st1, inv1 = __querrySeismoData(
 #                                         seed_id=config['seed1'],
