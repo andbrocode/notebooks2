@@ -2,13 +2,12 @@
 
 
 __author__ = 'AndreasBrotzer'
-__year__   = '2024'
+__year__ = '2024'
 
 
 # In[] ___________________________________________________________
 '''---- import libraries ----'''
 
-import matplotlib.pyplot as plt
 import pickle
 import os
 import sys
@@ -27,7 +26,7 @@ from scipy.fftpack import diff
 from andbro__read_sds import __read_sds
 from andbro__readYaml import __readYaml
 from andbro__querrySeismoData import __querrySeismoData
-from andbro__load_FURT_stream import __load_furt_stream
+
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -67,7 +66,7 @@ config['net'], config['sta'], config['loc'], config['cha'] = config['seed1'].spl
 
 # define time period
 config['date1'] = UTCDateTime("2023-03-10")
-config['date2'] = UTCDateTime("2023-03-11")
+config['date2'] = UTCDateTime("2023-03-17")
 
 # specify path to data
 config['path_to_data1'] = archive_path+f"ModalAnalysis/data/SDS/"
