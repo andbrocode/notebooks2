@@ -43,14 +43,12 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
-elif os.uname().nodename == 'lin-ffb-01':
+elif os.uname().nodename in ['lin-ffb-01', 'ambrym']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
 
-
-# In[5]:
 
 
 # import elevation
@@ -74,8 +72,11 @@ config = {}
 config['klim'] = 50.
 config['kstep'] = config['klim'] / 100.
 
-config['tbeg'] = obspy.UTCDateTime("2024-03-16 13:00")
-config['tend'] = obspy.UTCDateTime("2024-03-16 14:00")
+# config['tbeg'] = obspy.UTCDateTime("2024-03-16 12:30")
+# config['tend'] = obspy.UTCDateTime("2024-03-16 14:30")
+
+config['tbeg'] = obspy.UTCDateTime("2024-03-23 10:00")
+config['tend'] = obspy.UTCDateTime("2024-03-23 15:00")
 
 
 config['seeds'] = [
@@ -87,8 +88,8 @@ config['seeds'] = [
                    'BW.ROMY..LDI',
 ]
 
-config['fmin'] = 0.001
-config['fmax'] = 0.05
+config['fmin'] = 0.3e-3
+config['fmax'] = 10e-3
 
 config['path_to_figs'] = data_path+"/LNM2/figures/"
 
@@ -521,7 +522,7 @@ def __makeplot_barometer_array():
     ref_station = "BW.PROMY"
 
     frames = df_pressure.shape[0]
-    # frames = 30
+    # frames = 50
 
     Ncol, Nrow = 1, 6
 
@@ -671,19 +672,19 @@ def __makeplot_barometer_array():
     ani = animation.FuncAnimation(fig, update, init_func=init, frames=frames,
                                   interval=10, repeat=False, repeat_delay=0,
                                   # save_count=0,
-                                  cache_frame_data=False,
+                                  # cache_frame_data=False,
                                  )
     plt.plot();
 
     # store animation as gif
     # ani.save('romy_barometer.mp4', writer='moviewriter', dpi=200)
-    ani.save(config['path_to_figs']+'romy_barometer_test.mp4',
-             writer=animation.FFMpegWriter(fps=30),
+    ani.save(config['path_to_figs']+'romy_barometer.mp4',
+             writer=animation.FFMpegWriter(fps=5),
              dpi=200,
              # savefig_kwargs={'bbox_inches': 'tight'}
             )
 
-    print(f"-> stored video: romy_barometer_test.mp4")
+    print(f"-> stored video: romy_barometer.mp4")
 
 __makeplot_barometer_array()
 

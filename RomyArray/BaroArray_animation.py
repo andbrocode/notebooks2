@@ -72,8 +72,11 @@ config = {}
 config['klim'] = 50.
 config['kstep'] = config['klim'] / 100.
 
-config['tbeg'] = obspy.UTCDateTime("2024-03-16 12:30")
-config['tend'] = obspy.UTCDateTime("2024-03-16 14:30")
+# config['tbeg'] = obspy.UTCDateTime("2024-03-16 12:30")
+# config['tend'] = obspy.UTCDateTime("2024-03-16 14:30")
+
+config['tbeg'] = obspy.UTCDateTime("2024-03-23 10:00")
+config['tend'] = obspy.UTCDateTime("2024-03-23 15:00")
 
 
 config['seeds'] = [
