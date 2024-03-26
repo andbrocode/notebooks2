@@ -180,15 +180,14 @@ def __compute_beamforming_ROMY(tbeg, tend, submask="all", fmin=None, fmax=None, 
 
 
     ## select stations to consider:
-    if submask is not None:
-        if submask == "inner":
-            config['subarray_mask'] = [0,1,2,3]
-            # config['freq1'] = 0.4
-            # config['freq2'] = 3.7
-        elif submask == "outer":
-            config['subarray_mask'] = [0,4,5,6,7,8]
-            # config['freq1'] = 0.04
-            # config['freq2'] = 0.3
+    if submask == "inner":
+        config['subarray_mask'] = [0,1,2,3]
+        # config['freq1'] = 0.4
+        # config['freq2'] = 3.7
+    elif submask == "outer":
+        config['subarray_mask'] = [0,4,5,6,7,8]
+        # config['freq1'] = 0.04
+        # config['freq2'] = 0.3
     else:
         config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
 
