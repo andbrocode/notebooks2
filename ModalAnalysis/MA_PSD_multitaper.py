@@ -58,17 +58,16 @@ config = {}
 
 
 # define seed id
-if len(sys.argv) > 2:
+if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
 else:
     config['seed1'] = "XX.RY01..HHZ"
-print(config['seed1'])
 
 config['net'], config['sta'], config['loc'], config['cha'] = config['seed1'].split(".")
 
 # define time period
-config['date1'] = UTCDateTime("2024-03-23")
-config['date2'] = UTCDateTime("2024-03-24")
+config['date1'] = UTCDateTime("2023-03-10")
+config['date2'] = UTCDateTime("2023-03-11")
 
 # specify path to data
 config['path_to_data1'] = archive_path+f"ModalAnalysis/data/SDS/"
@@ -214,19 +213,18 @@ def main(config):
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
-        print(config['path_to_data1'])
         try:
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
-        print(st1)
+
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
             print(f" -> failed to load inventory for {config['seed1']}...")
             continue
-        print(inv1)
+
 #         try:
 #             st1, inv1 = __querrySeismoData(
 #                                         seed_id=config['seed1'],
@@ -257,8 +255,8 @@ def main(config):
         ## Pre-Processing
         try:
 
-            st1 = st1.remove_response(inv1, type=config['unit'])
-            
+            st1 = st1.remove_response(inv1, output=config['unit'].upper())
+
             ## interpolate NaN values
             for tr in st1:
                 tr.data = __interpolate_nan(tr.data)
