@@ -3,9 +3,8 @@
 
 # # RomyEvents - Automatic Eventplots
 
-# Creates automatic event plots based on catalog 
+# Creates automatic event plots based on catalog
 
-# In[44]:
 
 
 import os
@@ -18,15 +17,13 @@ import pandas as pd
 from tqdm import tqdm
 from pprint import pprint
 
-# from functions.request_data import __request_data
 from functions.add_distances_and_backazimuth import __add_distances_and_backazimuth
 
 from andbro__querrySeismoData import __querrySeismoData
 from andbro__read_sds import __read_sds
 
-
-# In[45]:
-
+import warnings
+warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -37,8 +34,6 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
 
-
-# In[46]:
 
 
 def __makeplot(config, st):
@@ -75,7 +70,6 @@ def __makeplot(config, st):
     return fig
 
 
-# In[47]:
 
 
 def __makeplotStreamSpectra2(st, config, fscale=None):
@@ -102,10 +96,6 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
 
     for i, tr in enumerate(tqdm(st_in)):
 
-#         comp_fft = abs(fftpack.fft(tr.data))
-#         ff       = fftpack.fftfreq(comp_fft.size, d=1/tr.stats.sampling_rate)
-#         comp_fft = fftpack.fftshift(comp_fft)
-#         ff, spec = ff[1:len(ff)//2], abs(fftpack.fft(tr.data)[1:len(ff)//2])
 
         if tr.stats.channel[-2] == "J":
             scaling = rot_scaling
@@ -168,9 +158,6 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
     return fig
 
 
-# In[48]:
-
-
 def __empty_stream(reference_stream):
 
     from numpy import ones
@@ -192,8 +179,6 @@ def __empty_stream(reference_stream):
 
 
 # ## Configurations
-
-# In[49]:
 
 
 config = {}
@@ -263,7 +248,7 @@ errors = []
 adr_status = []
 
 
-for jj in range(events.shape[0]):
+for jj in tqdm(range(events.shape[0])):
 
     num = str(jj).rjust(3, "0")
 
@@ -382,6 +367,8 @@ for jj in range(events.shape[0]):
     # store data
     st0.write(config['outpath_data']+config['tra_output']+"/"+waveform_filename, format="MSEED");
 
+    print(f"  -> stored: {waveform_filename}")
+
 
     # ______________________________________________________________
     # plotting figures
@@ -393,7 +380,10 @@ for jj in range(events.shape[0]):
 
     # saving figures
     fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+    print(f"  -> stored: {num}_{event_name}_raw.png",")
+
     fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+    print(f"  -> stored: {num}_{event_name}_filtered.png"")
 
     gc.collect()
 
