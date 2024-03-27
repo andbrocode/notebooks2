@@ -248,7 +248,7 @@ errors = []
 adr_status = []
 
 
-for jj in tqdm(range(events.shape[0])):
+for jj in range(events.shape[0]):
 
     num = str(jj).rjust(3, "0")
 
@@ -280,7 +280,7 @@ for jj in tqdm(range(events.shape[0])):
     st0 = obs.Stream()
 
 
-    for seed in config['seeds']:
+    for seed in tqdm(config['seeds']):
 
         if "FUR" in seed:
             repo = "jane"
