@@ -380,10 +380,10 @@ for jj in tqdm(range(events.shape[0])):
 
     # saving figures
     fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-    print(f"  -> stored: {num}_{event_name}_raw.png",")
+    print(f"  -> stored: {num}_{event_name}_raw.png")
 
     fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-    print(f"  -> stored: {num}_{event_name}_filtered.png"")
+    print(f"  -> stored: {num}_{event_name}_filtered.png")
 
     gc.collect()
 
