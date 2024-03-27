@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from pprint import pprint
 
 # from functions.request_data import __request_data
@@ -100,7 +100,7 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
 
     st.sort(keys=['channel'], reverse=True)
 
-    for i, tr in enumerate(st_in):
+    for i, tr in enumerate(tqdm(st_in)):
 
 #         comp_fft = abs(fftpack.fft(tr.data))
 #         ff       = fftpack.fftfreq(comp_fft.size, d=1/tr.stats.sampling_rate)
@@ -202,8 +202,7 @@ config = {}
 config['ROMY_lon'] = 11.275501
 config['ROMY_lat'] = 48.162941
 
-
-config['duration'] = 3600*2
+config['duration'] = 3600*2 # in seconds
 
 config['fmin'] = 0.01
 config['fmax'] = 0.1
@@ -254,13 +253,8 @@ events = events[events.magnitude > 6]
 events
 
 
-# In[ ]:
-
-
-
 
 ## RUN LOOP
-# In[ ]:
 
 
 global errors
@@ -269,8 +263,7 @@ errors = []
 adr_status = []
 
 
-# for jj in range(events.shape[0]):
-for jj in np.arange(248, 428):
+for jj in range(events.shape[0]):
 
     num = str(jj).rjust(3, "0")
 
@@ -289,25 +282,18 @@ for jj in np.arange(248, 428):
 #         print(f" -> file alread exits for {event_name}")
 #         continue
 
-    ## configuration adjustments
+
+    # configuration adjustments
     config['title'] = f"{num}_{events.origin.iloc[jj]} UTC | M{events.magnitude.iloc[jj]}"
     config['tbeg'] = obs.UTCDateTime(str(events.origin.iloc[jj]))
 
 
-    # ## select appropriate seismometer
-    # if config['tbeg'].date < obs.UTCDateTime("2023-04-01"):
-    #     config['seed_seismometer'] = config['seed_seismometer1']
-    #     config['fmin'], config['fmax'] = 0.01, 18.0
-    # else:
-    #     config['seed_seismometer'] = config['seed_seismometer2']
-    #     config['fmin'], config['fmax'] = 0.01, 80.0
-
-
-    ## same endtime for all
+    # same endtime for all
     config['tend'] = obs.UTCDateTime(events.origin.iloc[jj]) + config['duration']
 
-
+    # prepare stream object
     st0 = obs.Stream()
+
 
     for seed in config['seeds']:
 
@@ -320,7 +306,8 @@ for jj in np.arange(248, 428):
 
         try:
             try:
-                stx, invx = __querrySeismoData( seed_id=seed,
+                stx, invx = __querrySeismoData(
+                                                seed_id=seed,
                                                 starttime=config['tbeg'],
                                                 endtime=config['tend'],
                                                 repository=repo,
@@ -329,10 +316,13 @@ for jj in np.arange(248, 428):
                                                 detail=None,
                                                 fill_value=None,
                                             )
-
-                stx = stx.remove_response(invx, output=config['tra_output'].upper())
+                if "FUR" in seed:
+                    stx = stx.remove_response(invx, output=config['tra_output'].upper())
+                else:
+                    stx = stx.remove_sensitivity(invx)
 
                 st0 += stx
+
             except:
                 print(f"  -> {repo} failed")
 
@@ -355,14 +345,14 @@ for jj in np.arange(248, 428):
             errors.append(f" -> failed to request {seed} for event: {events.origin.iloc[jj]}")
             continue
 
-
+    # ______________________________________________________________
+    # processing data stream
 
     st0 = st0.sort()
 
-    ## processing data stream
     st1 = st0.copy();
     st1 = st1.detrend("linear");
-    st1 = st1.taper(0.1);
+    st1 = st1.taper(0.05);
     st1 = st1.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
     st0 = st0.merge();
@@ -374,9 +364,10 @@ for jj in np.arange(248, 428):
     st0.sort();
     st1.sort();
 
-    #st.plot(equal_scale=False);
+    # st.plot(equal_scale=False);
 
-    ## store waveform data
+    # ______________________________________________________________
+    # store waveform data
 
     # specify event number
     num = str(jj).rjust(3, "0")
@@ -392,27 +383,25 @@ for jj in np.arange(248, 428):
     st0.write(config['outpath_data']+config['tra_output']+"/"+waveform_filename, format="MSEED");
 
 
+    # ______________________________________________________________
+    # plotting figures
 
-    ## plotting figures
     fig1 = st0.plot(equal_scale=False, show=False);
     fig2 = st1.plot(equal_scale=False, show=False);
 
     fig2 = __makeplot(config, st1)
 
-    ## saving figures
+    # saving figures
     fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
     fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
 
     gc.collect()
 
-# In[ ]:
-
 
 pprint(errors)
 
-# In[ ]:
-
-# ## Make StatusPlot
+# ______________________________________________________________
+# Make StatusPlot
 
 import matplotlib.colors
 
@@ -427,3 +416,5 @@ ax.set_yticks(np.arange(0, len(config['seeds']))+0.5, labels=config['seeds'])
 ax.set_xlabel("Event No.", fontsize=12)
 
 fig3.savefig(config['outpath_figs']+f"status.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+
+# End of File
