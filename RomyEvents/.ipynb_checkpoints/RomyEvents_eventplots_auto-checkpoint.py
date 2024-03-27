@@ -22,6 +22,7 @@ from pprint import pprint
 from functions.add_distances_and_backazimuth import __add_distances_and_backazimuth
 
 from andbro__querrySeismoData import __querrySeismoData
+from andbro__read_sds import __read_sds
 
 
 # In[45]:
@@ -51,7 +52,7 @@ def __makeplot(config, st):
         acc_min, acc_max = -1e-6, 1e-6
 
     try:
-        rot_min, rot_max = -max(abs(st_in.select(station="RLAS")[0].data)), max(abs(st_in.select(station="RLAS")[0].data))
+        rot_min, rot_max = -3*max(abs(st_in.select(station="RLAS")[0].data)), 3*max(abs(st_in.select(station="RLAS")[0].data))
     except:
         rot_min, rot_max = -1e-9, 1e-9
 
@@ -223,6 +224,8 @@ config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
 
 config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
 
+# specify output unit of translation
+config['tra_output'] = "ACC"
 
 # ## Load Events
 
@@ -246,7 +249,7 @@ events
 
 # In[53]:
 
-
+## select events for minmal magnitude
 events = events[events.magnitude > 6]
 events
 
@@ -266,8 +269,8 @@ errors = []
 adr_status = []
 
 
-for jj in range(events.shape[0]):
-# for jj, ev in enumerate(events[:1]):
+# for jj in range(events.shape[0]):
+for jj in np.arange(248, 428):
 
     num = str(jj).rjust(3, "0")
 
@@ -313,17 +316,38 @@ for jj in range(events.shape[0]):
         else:
             repo = "george"
 
+        net, sta, loc, cha = seed.split(".")
+
         try:
-            stx, invx = __querrySeismoData( seed_id=seed,
-                                            starttime=config['tbeg'],
-                                            endtime=config['tend'],
-                                            repository=repo,
-                                            path=None,
-                                            restitute=True,
-                                            detail=None,
-                                            fill_value=None,
-                                          )
-            st0 += stx
+            try:
+                stx, invx = __querrySeismoData( seed_id=seed,
+                                                starttime=config['tbeg'],
+                                                endtime=config['tend'],
+                                                repository=repo,
+                                                path=None,
+                                                restitute=False,
+                                                detail=None,
+                                                fill_value=None,
+                                            )
+
+                stx = stx.remove_response(invx, output=config['tra_output'].upper())
+
+                st0 += stx
+            except:
+                print(f"  -> {repo} failed")
+
+            try:
+                stx = __read_sds(archive_path+"romy_archive/", seed, config['tbeg'], config['tend'])
+
+                # invx = obs.read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}.xml", format="STATIONXML")
+                invx = obs.read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.{net}_{sta}", format="SEED")
+
+                if "J" in cha:
+                    stx = stx.remove_sensitivity(invx)
+
+                st0 += stx
+            except:
+                print(f"  -> archive failed")
 
         except Exception as e:
             print(e)
@@ -347,19 +371,25 @@ for jj in range(events.shape[0]):
     st0 = st0.trim(config['tbeg'], config['tend']);
     st1 = st1.trim(config['tbeg'], config['tend']);
 
+    st0.sort();
+    st1.sort();
 
     #st.plot(equal_scale=False);
 
     ## store waveform data
-#     num = str(jj).rjust(3, "0")
-#     waveform_filename = f"ACC/{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-#     st0.write(config['outpath_data']+waveform_filename, format="MSEED");
 
-#     ## store waveform data as vel / rad
-#     waveform_filename = f"VEL/{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-#     st00 = st0.copy()
-#     st00.integrate(method='spline')
-#     st00.write(config['outpath_data']+waveform_filename, format="MSEED");
+    # specify event number
+    num = str(jj).rjust(3, "0")
+
+    # create subdir
+    if not os.path.isdir(config['outpath_data']+config['tra_output']):
+        os.mkdir(config['outpath_data']+config['tra_output'])
+
+    # prepare filename
+    waveform_filename = f"{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+
+    # store data
+    st0.write(config['outpath_data']+config['tra_output']+"/"+waveform_filename, format="MSEED");
 
 
 
