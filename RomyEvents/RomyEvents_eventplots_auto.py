@@ -377,8 +377,8 @@ for jj in range(events.shape[0]):
         os.mkdir(config['outpath_data']+config['tra_output'])
 
     # prepare filename
-    print(events.origin[jj])
-    waveform_filename = f"{num}_{str(events.origin[jj]).split('.').replace('-','').replace(':','').replace(' ','_')}.mseed"
+    print(events.origin.iloc[jj])
+    waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.').replace('-','').replace(':','').replace(' ','_')}.mseed"
 
     # store data
     st0.write(config['outpath_data']+config['tra_output']+"/"+waveform_filename, format="MSEED");
