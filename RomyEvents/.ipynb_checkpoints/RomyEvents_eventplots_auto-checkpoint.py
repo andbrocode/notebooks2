@@ -13,6 +13,7 @@ import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import numpy.ma as ma
 
 from tqdm import tqdm
 from pprint import pprint
@@ -131,7 +132,7 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
         elif fscale == "linlog":
             axes[i,1].semilogy(ff, spec, color='black', lw=1.0)
         else:
-            axes[i,1].plot(ff, spec, color='black', lw=1.0)         
+            axes[i,1].plot(ff, spec, color='black', lw=1.0)
 
 
         if tr.stats.channel[1] == "J":
@@ -141,8 +142,8 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
         else:
             unit = "Amplitude", "a.u."
 
-        axes[i,0].set_ylabel(f'{sym} ({unit})',fontsize=font)    
-        axes[i,1].set_ylabel(f'ASD \n({unit}/Hz)',fontsize=font)        
+        axes[i,0].set_ylabel(f'{sym} ({unit})',fontsize=font)
+        axes[i,1].set_ylabel(f'ASD \n({unit}/Hz)',fontsize=font)
         axes[i,0].legend(loc='upper left',bbox_to_anchor=(0.8, 1.10), framealpha=1.0)
 
 #         axes[i,0].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
@@ -187,7 +188,7 @@ config = {}
 config['ROMY_lon'] = 11.275501
 config['ROMY_lat'] = 48.162941
 
-config['duration'] = 3600*2 # in seconds
+config['duration'] = 3600*3 # in seconds
 
 config['fmin'] = 0.01
 config['fmax'] = 0.1
@@ -250,6 +251,7 @@ adr_status = []
 
 for jj in range(events.shape[0]):
 
+    # specify event number
     num = str(jj).rjust(3, "0")
 
     print(f"\n -> {num} {events.origin.iloc[jj]} ")
@@ -261,11 +263,16 @@ for jj in range(events.shape[0]):
         continue
 
 
-#     ## check if file already exists
-#     filename = config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
-#     if os.path.isfile(filename):
-#         print(f" -> file alread exits for {event_name}")
-#         continue
+    # check if file already exists
+    # filename = config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
+    # if os.path.isfile(filename):
+    #     print(f" -> file alread exits for {event_name}")
+    #     continue
+
+    waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    if os.path.isfile(config['outpath_data']+config['tra_output']+"/"+waveform_filename):
+        print(f" -> mseed file alread exits!")
+        continue
 
 
     # configuration adjustments
@@ -335,13 +342,19 @@ for jj in range(events.shape[0]):
 
     st0 = st0.sort()
 
+    st0 = st0.merge();
+
+    # check for masked arrays
+    for tr in st0:
+        arr = tr.data
+        if ma.is_masked(arr):
+            print(f"  -> masked array: {tr.stats.station}.{tr.stats.channel}")
+            tr.data = arr.filled(fill_value=0)
+
     st1 = st0.copy();
     st1 = st1.detrend("linear");
     st1 = st1.taper(0.05);
     st1 = st1.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
-
-    st0 = st0.merge();
-    st1 = st1.merge();
 
     st0 = st0.trim(config['tbeg'], config['tend']);
     st1 = st1.trim(config['tbeg'], config['tend']);
@@ -354,8 +367,6 @@ for jj in range(events.shape[0]):
     # ______________________________________________________________
     # store waveform data
     try:
-        # specify event number
-        num = str(jj).rjust(3, "0")
 
         # create subdir
         if not os.path.isdir(config['outpath_data']+config['tra_output']):
@@ -369,8 +380,9 @@ for jj in range(events.shape[0]):
 
         print(f"  -> stored: {waveform_filename}")
 
-    except:
+    except Exception as e:
         print(f"  -> failed to store waveforms!")
+        print(e)
 
     # ______________________________________________________________
     # plotting figures

@@ -14,11 +14,11 @@ def __get_event_info(config, min_mag=5.0):
     config['event'] = event[num]
 
     ## Eventtime
-    config['eventtime'] = event[0].origins[0].time
+    config['eventtime'] = event[num].origins[0].time
 
-    print(event[0])
+    print(event[num])
 
-    dist, az, baz = gps2dist_azimuth(event[0].origins[0].latitude, event[0].origins[0].longitude,
+    dist, az, baz = gps2dist_azimuth(event[num].origins[0].latitude, event[num].origins[0].longitude,
                                      config['sta_lat'], config['sta_lon'],
                                      )
     # to km
