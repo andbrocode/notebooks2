@@ -293,7 +293,7 @@ for jj in range(events.shape[0]):
         if "FUR" in seed:
             repo = "IRIS"
         elif "WET" in seed:
-            repo = "online":
+            repo = "online"
         else:
             repo = "george"
 
