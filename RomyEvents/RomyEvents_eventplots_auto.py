@@ -202,7 +202,8 @@ config['outpath_data'] = data_path+"romy_events/data/waveforms/"
 
 config['seeds'] = ["BW.ROMY.10.BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJW",
                    "BW.RLAS..BJZ",
-                   "GR.FUR..BHZ", "GR.FUR..BHN", "GR.FUR..BHE"
+                   "GR.FUR..BHZ", "GR.FUR..BHN", "GR.FUR..BHE",
+                   "GR.WET..BHZ", "GR.WET..BHN", "GR.WET..BHE",
                   ]
 
 config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
@@ -290,7 +291,9 @@ for jj in range(events.shape[0]):
     for seed in tqdm(config['seeds']):
 
         if "FUR" in seed:
-            repo = "jane"
+            repo = "IRIS"
+        elif "WET" in seed:
+            repo = "online":
         else:
             repo = "george"
 
@@ -308,7 +311,7 @@ for jj in range(events.shape[0]):
                                                 detail=None,
                                                 fill_value=None,
                                             )
-                if "FUR" in seed:
+                if "FUR" in seed or "WET" in seed:
                     stx = stx.remove_response(invx, output=config['tra_output'].upper())
                 else:
                     stx = stx.remove_sensitivity(invx)

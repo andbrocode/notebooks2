@@ -227,6 +227,7 @@ def __compute_cwt(times, arr1, tdelta, datalabel="dat1", log=False, period=False
     out['frequencies'] = ff_cwt
     out['cwt_power'] = cwt_power
     out['cone_mask'] = mask_cone
+    out['cone'] = cone_f
     out['global_mean_cwt'] = global_mean_cwt_f
     out['global_sum_cwt'] = global_sum_cwt_f
 
