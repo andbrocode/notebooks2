@@ -291,7 +291,7 @@ for jj in range(events.shape[0]):
     for seed in tqdm(config['seeds']):
 
         if "FUR" in seed:
-            repo = "IRIS"
+            repo = "jane"
         elif "WET" in seed:
             repo = "online"
         else:
@@ -391,20 +391,20 @@ for jj in range(events.shape[0]):
 
     # ______________________________________________________________
     # plotting figures
-#     try:
-#         fig1 = st0.plot(equal_scale=False, show=False);
-#         fig2 = st1.plot(equal_scale=False, show=False);
+    try:
+        fig1 = st0.plot(equal_scale=False, show=False);
+        fig2 = st1.plot(equal_scale=False, show=False);
 
-#         fig2 = __makeplot(config, st1)
+        fig2 = __makeplot(config, st1)
 
-#         # saving figures
-#         fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-#         print(f"  -> stored: {num}_{event_name}_raw.png")
+        # saving figures
+        fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_raw.png")
 
-#         fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-#         print(f"  -> stored: {num}_{event_name}_filtered.png")
-#     except:
-#         print(f"  -> failed to store figures!")
+        fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_filtered.png")
+    except:
+        print(f"  -> failed to store figures!")
 
     gc.collect()
 
