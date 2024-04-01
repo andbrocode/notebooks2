@@ -63,7 +63,7 @@ def __makeplot(config, st):
 
         ax[i].legend(loc=1)
 
-        if "FUR" in tr.stats.station:
+        if "FUR" in tr.stats.station or "WET" in tr.stats.stat:
             ax[i].set_ylim(acc_min*1.2, acc_max*1.2)
         else:
             ax[i].set_ylim(rot_min*1.2, rot_max*1.2)
@@ -291,7 +291,7 @@ for jj in range(events.shape[0]):
     for seed in tqdm(config['seeds']):
 
         if "FUR" in seed:
-            repo = "jane"
+            repo = "online"
         elif "WET" in seed:
             repo = "online"
         else:
