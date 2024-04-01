@@ -270,10 +270,10 @@ for jj in range(events.shape[0]):
     #     print(f" -> file alread exits for {event_name}")
     #     continue
 
-    waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-    if os.path.isfile(config['outpath_data']+config['tra_output']+"/"+waveform_filename):
-        print(f" -> mseed file alread exits!")
-        continue
+    # waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    # if os.path.isfile(config['outpath_data']+config['tra_output']+"/"+waveform_filename):
+    #     print(f" -> mseed file alread exits!")
+    #     continue
 
 
     # configuration adjustments
