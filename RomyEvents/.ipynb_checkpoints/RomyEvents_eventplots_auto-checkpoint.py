@@ -347,6 +347,8 @@ for jj in range(events.shape[0]):
 
     st0 = st0.merge();
 
+    print(st0)
+
     # check for masked arrays
     for tr in st0:
         arr = tr.data
