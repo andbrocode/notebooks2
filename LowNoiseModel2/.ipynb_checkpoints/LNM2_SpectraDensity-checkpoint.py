@@ -24,15 +24,16 @@ from pandas import DataFrame, concat, Series, date_range, read_csv, read_pickle
 from tqdm import tqdm_notebook
 from pathlib import Path
 
-import warnings
-warnings.filterwarnings('ignore')
-
-# In[2]:
-
-
 from functions.get_hist_loglog import __get_hist_loglog
 from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
 from functions.cut_frequencies_array import __cut_frequencies_array
+
+import warnings
+warnings.filterwarnings('ignore')
+
+import matplotlib
+matplotlib.use('TkAgg')
+
 
 # In[3]:
 
@@ -47,7 +48,7 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
-elif os.uname().nodename == 'lin-ffb-01':
+elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
@@ -64,7 +65,7 @@ config = {}
 # config['sta'] = "FUR"
 config['sta'] = "ROMY"
 
-config['d1'], config['d2'] = "2023-09-23", "2024-02-29"
+config['d1'], config['d2'] = "2024-01-01", "2024-03-31"
 
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
 
@@ -580,7 +581,7 @@ def __makeplot_density_single(data, name="FUR"):
     ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
     ax.set_ylabel(r"PSD ($Pa^2 /Hz$)", fontsize=font)
 
-    ax.set_title(f"{name}  [ {config['tbeg']} - {config['tend']} ]")
+    ax.set_title(f"{name}  [ {config['d1']} - {config['d2']} ]")
 
     ## add colorbar
     cbar_ax = fig.add_axes([0.91, 0.11, 0.02, 0.77]) #[left, bottom, width, height]

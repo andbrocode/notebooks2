@@ -23,6 +23,8 @@ from pandas import date_range
 import warnings
 warnings.filterwarnings('ignore')
 
+import matplotlib
+matplotlib.use('TkAgg')
 
 from functions.get_median_psd import __get_median_psd
 from functions.get_percentiles import __get_percentiles
@@ -44,7 +46,7 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
-elif os.uname().nodename == 'lin-ffb-01':
+elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
@@ -62,7 +64,7 @@ config['path_to_figures'] = f"{data_path}LNM2/figures/"
 
 config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
 
-config['d1'], config['d2'] = "2024-01-01", "2024-02-29"
+config['d1'], config['d2'] = "2024-01-01", "2024-03-31"
 
 # config['path_to_data'] = data_path+f"VelocityChanges/data/PSDS/"
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
