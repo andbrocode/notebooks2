@@ -225,7 +225,7 @@ def __makeplot_colorlines_overview(config, ff, psds, rejected, day):
     return fig
 
 
-# ## RUN for all files 
+# ## RUN for all files
 
 # In[9]:
 
@@ -355,6 +355,50 @@ def __get_hist_loglog(psd_array, ff, bins=20, density=False, axis=1, plot=False)
 # In[10]:
 
 
+# def __read_files(seed, tbeg, tend):
+
+#     net, sta, loc, cha = seed.split('.')
+
+#     psds_medians_out, times_out = [], []
+
+#     dat, dates = [], []
+#     for jj, day in enumerate(date_range(tbeg, tend)):
+
+#         # if jj > 2:
+#         #     continue
+
+#         day = str(day).split(" ")[0].replace("-", "")
+
+#         filename = f"{sta}/{day[:4]}_{sta}_{cha}_3600_{day}_hourly.pkl"
+
+#         ## skip if file does not exist
+#         if not os.path.isfile(config['path_to_data']+filename):
+#             print(f" -> skipping {filename} ...")
+#             continue
+
+#         try:
+#             out = read_pickle(config['path_to_data']+filename)
+#             ff1, dat1 = out['frequencies'], out['psd']
+
+#         except Exception as e:
+#             print(e)
+#             print(f" -> {day}: no data found")
+#             continue
+
+#         for _k, _psd in enumerate(dat1):
+#             if jj == 0 and _k == 0:
+#                 NN = len(_psd)
+#             if len(_psd) == NN:
+#                 dat.append(_psd)
+#                 dates.append(f"{day}_{str(_k).rjust(2, '0')}")
+#             else:
+#                 print(day, len(_psd), NN)
+#                 break
+
+#     dat = array(dat)
+
+#     return dat, ff1
+
 def __read_files(seed, tbeg, tend):
 
     net, sta, loc, cha = seed.split('.')
@@ -398,7 +442,6 @@ def __read_files(seed, tbeg, tend):
     dat = array(dat)
 
     return dat, ff1
-
 
 
 def __makeplot_density(data, name="FUR"):
@@ -602,6 +645,7 @@ def main(config):
 
     ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
     ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
+    print(shape(ff_f), shape(ffbi_f))
 
     # ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
     # ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
@@ -650,6 +694,7 @@ def main(config):
 
 
     # In[ ]:
+    print(shape(ff_f), shape(ffbi_f))
 
     ## write data of FFBI.BDO
     out_df = DataFrame()
