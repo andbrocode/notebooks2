@@ -44,7 +44,7 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
-elif os.uname().nodename == 'lin-ffb-01':
+elif os.uname().nodename in ['lin-ffb-01', 'hochfelln', 'ambrym']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
@@ -374,7 +374,7 @@ def main(config):
             continue
 
 
-        if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
+        if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2']:
             try:
                 _stU = __read_sds(config['path_to_data2'], "BW.ROMY..BJU", config['tbeg']-offset_sec, config['tend']+offset_sec)
                 _stV = __read_sds(config['path_to_data2'], "BW.ROMY..BJV", config['tbeg']-offset_sec, config['tend']+offset_sec)
@@ -473,7 +473,7 @@ def main(config):
             st2 = st2.split()
 
 
-            if "BW.DROMY" in config['seed2']:
+            if "BW.DROMY" in config['seed2'] or "BW.ROMYT" in config['seed2']:
 
                 ## remove mean, trend and taper trace
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
@@ -493,7 +493,11 @@ def main(config):
                 st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-                st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+                if "BW.DROMY" in config['seed2']:
+                    st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+                elif "BW.ROMYT" in config['seed2']:
+                    st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
+                    st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
 #                 st1 = st1.resample(0.1, no_filter=False)
 #                 st2 = st2.resample(0.1, no_filter=False)
@@ -682,7 +686,7 @@ def main(config):
             ## check data quality
             max_num_of_bad_quality = 10
 
-            if "BW.ROMY" in config['seed2'] and "Z" not in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2']:
                 try:
                     statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
                     statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
@@ -702,7 +706,7 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-            if "BW.ROMY" in config['seed2'] and "Z" in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" in config['seed2']:
                 try:
                     statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
                 except:

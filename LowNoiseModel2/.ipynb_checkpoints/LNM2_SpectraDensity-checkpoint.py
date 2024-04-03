@@ -27,6 +27,8 @@ from pathlib import Path
 from functions.get_hist_loglog import __get_hist_loglog
 from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
 from functions.cut_frequencies_array import __cut_frequencies_array
+from functions.get_median_psd import __get_median_psd
+from functions.get_percentiles import __get_percentiles
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -601,8 +603,8 @@ def main(config):
     ffbi_f, ff_f = __read_files("BW.FFBI..BDF", config['d1'], config['d2'])
     ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
 
-    ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
-    ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_min=1e-5, flim=[0.001, 1.0])
+    # ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
+    # ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
 
     out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
     out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
@@ -617,9 +619,9 @@ def main(config):
         fur_n, ff_n = __read_files("GR.FUR..BHN", config['d1'], config['d2'])
         fur_e, ff_e = __read_files("GR.FUR..BHE", config['d1'], config['d2'])
 
-        fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-10, flim=(0, 0.05))
-        fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-10, flim= (0, 0.05))
-        fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-10, flim=(0, 0.05))
+        fur_z, _ = __replace_noisy_psds_with_nan(fur_z, ff_z, threshold_mean=1e-12, threshold_min=5e-20, flim=[0.001, 0.005])
+        fur_n, _ = __replace_noisy_psds_with_nan(fur_n, ff_n, threshold_mean=1e-12, threshold_min=5e-20, flim=[0.001, 0.005])
+        fur_e, _ = __replace_noisy_psds_with_nan(fur_e, ff_e, threshold_mean=1e-12, threshold_min=5e-20, flim=[0.001, 0.005])
 
         out_fur_z = __get_hist_loglog(fur_z, ff_z, bins=100, density=False, axis=1, plot=False)
         out_fur_n = __get_hist_loglog(fur_n, ff_n, bins=100, density=False, axis=1, plot=False)
@@ -641,6 +643,76 @@ def main(config):
         out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
         out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
         out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
+
+
+
+    # ## Get median and store
+
+
+    # In[ ]:
+
+    ## write data of FFBI.BDO
+    out_df = DataFrame()
+
+    out_df['frequencies'] = ff_o
+    out_df['psds_median'] = __get_median_psd(ffbi_o)
+    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_o, p_low=2.5, p_high=97.5)
+
+    print(f" -> store: FFBI_BDO_psd_stats.pkl")
+    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDO_psd_stats.pkl")
+
+    ## write data of FFBI.BDF
+    out_df = DataFrame()
+
+    out_df['frequencies'] = ff_f
+    out_df['psds_median'] = __get_median_psd(ffbi_f)
+    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p_high=97.5)
+
+    print(f" -> store: FFBI_BDF_psd_stats.pkl")
+    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
+
+
+    # In[ ]:
+
+
+    if "FUR" in config['sta']:
+
+        out_df = DataFrame()
+
+        out_df['frequencies'] = ff_z
+        out_df['psds_median_z'] = __get_median_psd(fur_z)
+        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(fur_z, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_n'] = __get_median_psd(fur_n)
+        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(fur_n, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_e'] = __get_median_psd(fur_e)
+        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(fur_e, p_low=2.5, p_high=97.5)
+
+        print(f" -> store: FUR_psd_stats.pkl")
+        out_df.to_pickle(config['path_to_outdata']+f"FUR_psd_stats.pkl")
+
+
+    # In[ ]:
+
+
+    if "ROMY" in config['sta']:
+
+        out_df = DataFrame()
+
+        out_df['frequencies'] = ff_z
+        out_df['psds_median_z'] = __get_median_psd(romy_z)
+        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(romy_z, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_n'] = __get_median_psd(romy_n)
+        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(romy_n, p_low=2.5, p_high=97.5)
+
+        out_df['psds_median_e'] = __get_median_psd(romy_e)
+        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
+
+        print(f" -> store: ROMY_psd_stats.pkl")
+        out_df.to_pickle(config['path_to_outdata']+f"ROMY_psd_stats.pkl")
+
 
 
     # ## Plotting
@@ -673,7 +745,6 @@ def main(config):
 
 
 
-
     # In[ ]:
 
     if "FUR" in config['sta']:
@@ -693,78 +764,6 @@ def main(config):
 
 
 
-
-
-    # ## Get median and store
-
-    # In[ ]:
-
-
-    from functions.get_median_psd import __get_median_psd
-    from functions.get_percentiles import __get_percentiles
-
-
-    # In[ ]:
-
-    ## write data of FFBI.BDO
-    out_df = DataFrame()
-
-    out_df['frequencies'] = ff_o
-    out_df['psds_median'] = __get_median_psd(ffbi_o)
-    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_o, p_low=2.5, p_high=97.5)
-
-    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDO_psd_stats.pkl")
-
-    ## write data of FFBI.BDF
-    out_df = DataFrame()
-
-    out_df['frequencies'] = ff_f
-    out_df['psds_median'] = __get_median_psd(ffbi_f)
-    out_df['perc_low'], out_df['perc_high'] = __get_percentiles(ffbi_f, p_low=2.5, p_high=97.5)
-
-    out_df.to_pickle(config['path_to_outdata']+f"FFBI_BDF_psd_stats.pkl")
-
-
-    # In[ ]:
-
-
-    if "FUR" in config['sta']:
-
-        out_df = DataFrame()
-
-        out_df['frequencies'] = ff_z
-        out_df['psds_median_z'] = __get_median_psd(fur_z)
-        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(fur_z, p_low=2.5, p_high=97.5)
-
-        out_df['psds_median_n'] = __get_median_psd(fur_n)
-        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(fur_n, p_low=2.5, p_high=97.5)
-
-        out_df['psds_median_e'] = __get_median_psd(fur_e)
-        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(fur_e, p_low=2.5, p_high=97.5)
-
-
-        out_df.to_pickle(config['path_to_outdata']+f"FUR_psd_stats.pkl")
-
-
-    # In[ ]:
-
-
-    if "ROMY" in config['sta']:
-
-        out_df = DataFrame()
-
-        out_df['frequencies'] = ff_z
-        out_df['psds_median_z'] = __get_median_psd(romy_z)
-        out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(romy_z, p_low=2.5, p_high=97.5)
-
-        out_df['psds_median_n'] = __get_median_psd(romy_n)
-        out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(romy_n, p_low=2.5, p_high=97.5)
-
-        out_df['psds_median_e'] = __get_median_psd(romy_e)
-        out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
-
-
-        out_df.to_pickle(config['path_to_outdata']+f"ROMY_psd_stats.pkl")
 
 
 if __name__ == "__main__":
