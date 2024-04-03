@@ -50,7 +50,7 @@ t1, t2 = "2024-02-01", "2024-03-31"
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
 else:
-    names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA"]
+    names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA", "ROMYT"]
 
 ## define dates to ignore
 filter_dates = {"FUR": ["20231106", "20231115"],
@@ -172,6 +172,9 @@ for name in names:
 
     elif name == "DROMY":
         comps = ["LAT", "LAN", "LAE"]
+
+    elif name == "ROMYT":
+        comps = ["MAT", "MAN", "MAE"]
 
     elif name == "ROMY":
         # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
