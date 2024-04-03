@@ -647,8 +647,8 @@ def main(config):
     ffbi_o, ff_o = __read_files("BW.FFBI..BDO", config['d1'], config['d2'])
     print(shape(ff_f), shape(ffbi_f))
 
-    # ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
-    # ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
+    ffbi_f, _ = __replace_noisy_psds_with_nan(ffbi_f, ff_f, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
+    ffbi_o, _ = __replace_noisy_psds_with_nan(ffbi_o, ff_o, threshold_mean=1e7, threshold_max=1e5, flim=[0.001, 1.0])
 
     out_ffbi_f = __get_hist_loglog(ffbi_f, ff_f, bins=100, density=False, axis=1, plot=False)
     out_ffbi_o = __get_hist_loglog(ffbi_o, ff_o, bins=100, density=False, axis=1, plot=False)
