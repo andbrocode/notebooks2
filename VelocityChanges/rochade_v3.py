@@ -37,7 +37,7 @@ from scipy import stats
 import math
 import scipy.odr as odr
 from obspy.core import UTCDateTime, read, Trace, Stream, Stats
-from obspy.signal.cross_correlation import correlate,xcorr_max
+from obspy.signal.cross_correlation import correlate, xcorr_max
 import matplotlib
 matplotlib.rcParams['font.size'] = 12
 import matplotlib.pyplot as plt
@@ -1547,7 +1547,7 @@ class rolode_estimator:
             print("Elapsed time: %0.2f seconds" %(tend-tstart).seconds)
 
 
-    def window_estimation_rayleigh2(self,acc, rotrate_n, rotrate_e, verbose = True,mask_value=0,body=False,trigger=False,pro=False,rad=False,flinn=False):
+    def window_estimation_rayleigh2(self, acc, rotrate_n, rotrate_e, verbose=True, mask_value=0, body=False, trigger=False, pro=False, rad=False, flinn=False):
         """ Calculates estimations of the phase velocity, backazimuth of
         signals, for time windows.
 
@@ -1576,7 +1576,7 @@ class rolode_estimator:
 
         df = acc[0].stats.sampling_rate
 
-        # we trigger in the (broad)band in which we do the anlysis 
+        # we trigger in the (broad)band in which we do the anlysis
         tdata1 = rotrate_n.copy()
         tdata2 = rotrate_e.copy()
         tdata1.filter("bandpass",freqmin=self.f_higher[-1],freqmax=self.f_lower[0],zerophase=True)
@@ -1638,12 +1638,12 @@ class rolode_estimator:
                     else:
                         t1 = 0
                     if t2+int(self.post*df) < rot_n_trace.stats.npts:
-                        t2+=int(self.post*df)
+                        t2 += int(self.post*df)
                     else:
                         t2 = rot_n_trace.stats.npts-1
 
-                    rot_n_trace.data[t1:t2]=mask_value/10.
-                    rot_e_trace.data[t1:t2]=mask_value/10.
+                    rot_n_trace.data[t1:t2] = mask_value/10.
+                    rot_e_trace.data[t1:t2] = mask_value/10.
 
                 for trig in on_off2:
                     t1 = trig[0]
@@ -1711,7 +1711,7 @@ class rolode_estimator:
 
 
             # Loop over time windows
-            for i in range(0,win_n):
+            for i in range(0, win_n):
                 # trim data for timewindow
                 win_start = self.start + i*win_len
                 win_end = self.start + (i+1)*win_len
@@ -1723,35 +1723,42 @@ class rolode_estimator:
                 acce = acc_e_trace.copy()
                 acce.trim(win_start, win_end)
                 rote = rot_e_trace.copy()
-                rote.trim(win_start,win_end)
+                rote.trim(win_start, win_end)
                 rotn = rot_n_trace.copy()
-                rotn.trim(win_start,win_end)
+                rotn.trim(win_start, win_end)
 
                 if mask_value > 0.:
                     condition1 = (np.abs(rotn.data[:]) < mask_value) & (np.abs(rote.data[:]) < mask_value)
-                    rot_n = np.ma.masked_array(rotn.data,mask=condition1)
-                    rot_e = np.ma.masked_array(rote.data,mask=condition1)
-                    rot_n=rot_n.compressed()
-                    rot_e=rot_e.compressed()
-                    acc_z=np.ma.masked_array(accz.data,mask=condition1)
-                    acc_n=np.ma.masked_array(accn.data,mask=condition1)
-                    acc_e=np.ma.masked_array(acce.data,mask=condition1)
-                    acc_z=acc_z.compressed()
-                    acc_n=acc_n.compressed()
-                    acc_e=acc_e.compressed()
+                    rot_n = np.ma.masked_array(rotn.data, mask=condition1)
+                    rot_e = np.ma.masked_array(rote.data, mask=condition1)
+                    rot_n = rot_n.compressed()
+                    rot_e = rot_e.compressed()
+                    acc_z = np.ma.masked_array(accz.data, mask=condition1)
+                    acc_n = np.ma.masked_array(accn.data, mask=condition1)
+                    acc_e = np.ma.masked_array(acce.data, mask=condition1)
+                    acc_z = acc_z.compressed()
+                    acc_n = acc_n.compressed()
+                    acc_e = acc_e.compressed()
                 else:
                     rot_n = rotn.data
                     rot_e = rote.data
                     acc_z = accz.data
                     acc_n = accn.data
                     acc_e = acce.data
+
+                    if not (len(acc_z) == len(rot_n) == len(rot_e)):
+                        if verbose:
+                            print(f"  -> size inconsitent: window {i}: {len(acc_z)} != {len(rot_n)} != {len(rot_e)}")
+                        continue
+
                 #movement of rotation rotN = -cos(baz) * rot; rotE = sin(baz) * rot
                 # baz = -arctan(rotN/rotE)
-                if len(rot_n) and len(rot_e)>2:
+                if len(rot_n) and len(rot_e) > 2:
+
                     if flinn == False:
-                        odr_data = odr.Data(rot_e,rot_n) 
+                        odr_data = odr.Data(rot_e, rot_n)
                         odr_azi = odr.Model(fcn=self.fit_azimuth)
-                        odr_opti = odr.ODR(odr_data,odr_azi, beta0=np.array([0,0]))
+                        odr_opti = odr.ODR(odr_data, odr_azi, beta0=np.array([0,0]))
                         odr_output = odr_opti.run()
 
 
@@ -1762,10 +1769,10 @@ class rolode_estimator:
                     else:
                         #movement of rotation rotN = sin(az) * rot; rotE = -cos(az) * rot
                         data = np.zeros((2, len(rot_n)), dtype=np.float64)
-                        # East
-                        data[0, :] = rot_e
-                        # North
-                        data[1, :] = rot_n
+
+                        data[0, :] = rot_e # East
+                        data[1, :] = rot_n # North
+
                         covmat = np.cov(data)
                         eigvec, eigenval, v = np.linalg.svd(covmat)
                         bazimuth = -(np.arctan(eigvec[1][0]/eigvec[0][0]))
@@ -1778,15 +1785,15 @@ class rolode_estimator:
                     t_rot = rot_n*np.sin(bazimuth) - rot_e*np.cos(bazimuth)
                     if rad:
                         acc_r = -acc_n*np.cos(bazimuth) - acc_e*np.sin(bazimuth)
-                        cc = correlate(acc_r,t_rot,shift=0)
 
-                        shift,mcor = xcorr_max(cc)
-                        if np.sign(mcor)<0:
+                        cc = correlate(acc_r, t_rot, shift=0)
+                        shift, mcor = xcorr_max(cc)
+                        if np.sign(mcor) < 0:
                             bazimuth += np.pi
                     else:
-                        cc = correlate(acc_z,t_rot,shift=0)
-                        shift,mcor = xcorr_max(cc)
-                        if np.sign(mcor)>0:
+                        cc = correlate(acc_z, t_rot, shift=0)
+                        shift, mcor = xcorr_max(cc)
+                        if np.sign(mcor) > 0:
                             bazimuth += np.pi
 
                     if bazimuth > 2*np.pi:
@@ -1799,8 +1806,7 @@ class rolode_estimator:
                         cw_0 = np.random.random_sample() *self.cw_0
                         odr_data = odr.Data(t_rot,acc_z)
                         odr_model = odr.Model(fcn = self.f_cw_ray)
-                        odr_opti = odr.ODR(odr_data,odr_model,\
-                                beta0=[cw_0])
+                        odr_opti = odr.ODR(odr_data,odr_model, beta0=[cw_0])
                         odr_opti.set_job(fit_type = 0, deriv = 1, var_calc = 2)
                         odr_output = odr_opti.run()
                         if body == True:
@@ -1820,7 +1826,7 @@ class rolode_estimator:
                         phi_opt = np.degrees(bazimuth)
 
                         window = window_estimator(phi_opt,cw_opt,err,wght,rotsq,acczsq)
-                        self.append(window,f_num)
+                        self.append(window, f_num)
                     except:
                         msg + "something went wrong here"
                         warnings.warn(msg)

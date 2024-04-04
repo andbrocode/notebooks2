@@ -47,6 +47,7 @@ from obspy import read, read_inventory, UTCDateTime
 from obspy.clients.filesystem.sds import Client
 from obspy.core import AttribDict
 from obspy.signal.rotate import rotate2zne
+from tqdm import tqdm
 
 #from obspy.clients.fdsn import Client
 #import gaussianfilt
@@ -267,20 +268,21 @@ config['path_to_inv_tra'] = '/home/brotzer/Documents/ROMY/stationxml_ringlaser/s
 config['tra_seed'] = 'XX.VROMY..BH*' # seed of translational data
 config['rot_seed'] = 'XX.VROMY..BJ*' # seed of rotational data
 
+
 # specify velocity limits
 config['vmin'] = 50
 config['vmax'] = 4000
 
 # define start and end time of your data
-config['tbeg'] = UTCDateTime("2024-02-25T00:00:00")
-config['tend'] = UTCDateTime("2024-02-28T00:00:00")
+config['tbeg'] = UTCDateTime("2024-03-22T00:00:00")
+config['tend'] = UTCDateTime("2024-03-24T00:00:00")
 
 # config['tbeg'] = UTCDateTime("2023-12-25T12:00:00")
 # config['tend'] = UTCDateTime("2023-12-26T00:00:00")
 
 
-config['interval_seconds'] = 10800 # seconds
-config['interval_overlap'] = 0 # seconds
+config['interval_seconds'] = 60 # seconds
+config['interval_overlap'] = 0.5 # seconds
 
 
 # specify translational output
@@ -288,13 +290,13 @@ config['tra_output'] = "VEL"
 
 # select methods to compute
 config['love_waves'] = True
-config['rayleigh1_waves'] = True
-config['rayleigh2_waves'] = False
+config['rayleigh1_waves'] = False
+config['rayleigh2_waves'] = True
 
-config['periods_per_window'] = 10. # 8
+config['periods_per_window'] = 1. # 8
 
 # Specify frequency bands here
-config['f_min'] = 0.01 # smallest frequency to process
+config['f_min'] = 0.1 # smallest frequency to process
 config['f_max'] = 8.0 # highest frequency to process
 config['f_space'] = 0.1 # frequency steps
 config['bandwidth'] = 0.1  # Bandwidth of bandpass filter
@@ -307,7 +309,7 @@ config['bandwidth'] = 0.1  # Bandwidth of bandpass filter
 config['wghtmethod'] = "normed"
 
 # specify mask value
-config['mvalue'] = 3e-10 # mvalue=-1
+config['mvalue'] = -1 # mvalue=-1
 
 # exponent of normed weights
 config['exponent'] = 0.3
@@ -348,7 +350,7 @@ config['verbose'] = False
 
 from functions.get_octave_bands import __get_octave_bands
 
-f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=2, plot=False)
+f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=3, plot=False)
 
 # cut first and last
 f_lower, f_higher = f_lower[1:-1], f_higher[1:-1]
@@ -365,7 +367,6 @@ f_lower, f_higher = f_lower[::-1], f_higher[::-1]
 # pre-calculate time intervals for loop based on starttime, endtime and specified time intervals
 times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
-from tqdm.notebook import tqdm
 
 # get the relevant information
 for t1, t2 in tqdm(times):
@@ -461,7 +462,6 @@ for t1, t2 in tqdm(times):
 
 
 
-
     rot = rot.sort()
     rot = rot.reverse()
 
@@ -489,6 +489,16 @@ for t1, t2 in tqdm(times):
 
     # rot.plot(equal_scale=False);
 
+    # check size of streams
+    if len(tra) != 3:
+        print(tra)
+        print(f"-> wrong size!")
+        continue
+
+    if len(rot) != 3:
+        print(rot)
+        print(f"-> wrong size!")
+        continue
 
 ###############################
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!

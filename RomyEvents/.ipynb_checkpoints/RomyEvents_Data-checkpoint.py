@@ -61,7 +61,7 @@ config['catalogfile'] = "catalogs/ROMY_global_catalog_20200101_20231231.pkl"
 config['sta_lon'] = 11.275501
 config['sta_lat'] = 48.162941
 
-config['amp_type'] = "perc95" # maxima mean perc95
+config['amp_type'] = "maxima" # maxima mean perc95
 
 # ### Load Catalog
 
@@ -196,10 +196,18 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
 
         stx = st_amp.copy()
 
-        stx = stx.detrend("simple")
+        stx = stx.detrend("linear")
+
         stx = stx.taper(0.05, type="cosine")
+
+        # zero padding to avoid filter shift effect
+        df = stx[0].stats.sampling_rate
+        for tr in stx:
+            tr.data = np.pad(tr.data, (int(4*3600*df), int(4*3600*df)), 'constant', constant_values=(0, 0))
+
         stx = stx.filter("bandpass", freqmin=fl, freqmax=fu, corners=4, zerophase=True)
-        stx = stx.detrend("demean")
+
+        # stx = stx.detrend("demean")
 
         # stx.plot(equal_scale=False);
 
