@@ -39,7 +39,7 @@ import os
 import yaml
 import numpy as np
 import scipy as sp
-import rochade_v3 as rochade
+import rochade_v2 as rochade
 import pickle
 
 from obspy.signal import array_analysis as AA
@@ -49,11 +49,14 @@ from obspy.core import AttribDict
 from obspy.signal.rotate import rotate2zne
 from tqdm import tqdm
 
+import warnings
+warnings.filterwarnings('ignore')
+
 #from obspy.clients.fdsn import Client
 #import gaussianfilt
 #import tilt
-# import matplotlib
 
+# import matplotlib
 #matplotlib.use('agg')
 
 
@@ -692,6 +695,7 @@ for t1, t2 in tqdm(times):
                                                    mask_value=config['mvalue'],
                                                    trigger=config['detrigger'],
                                                    verbose=config['verbose'],
+                                                   flinn=True,
                                                   )
 
         else:
@@ -757,7 +761,7 @@ with open(config['path_to_sds']+f"{config['filename']}_config.yml", "w") as outf
 
 if config['love_waves']:
     print(f" -> stored in: {config['save_path_love']}")
-if config['rayleigh_waves']:
+if config['rayleigh1_waves']:
     print(f" -> stored in: {config['save_path_rayleigh1']}")
 if config['rayleigh2_waves']:
     print(f" -> stored in: {config['save_path_rayleigh2']}")

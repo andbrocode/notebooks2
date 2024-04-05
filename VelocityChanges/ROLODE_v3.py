@@ -49,11 +49,14 @@ from obspy.core import AttribDict
 from obspy.signal.rotate import rotate2zne
 from tqdm import tqdm
 
+import warnings
+warnings.filterwarnings('ignore')
+
 #from obspy.clients.fdsn import Client
 #import gaussianfilt
 #import tilt
-# import matplotlib
 
+# import matplotlib
 #matplotlib.use('agg')
 
 
