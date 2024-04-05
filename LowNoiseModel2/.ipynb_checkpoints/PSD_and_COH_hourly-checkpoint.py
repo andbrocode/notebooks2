@@ -465,7 +465,12 @@ def main(config):
             st2 = st2.remove_response(inv2, output="ACC", water_level=60)
 
         elif "A" in st2[0].stats.channel:
-            st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
+            if st2[0].stats.station == "DROMY":
+                st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
+            elif st2[0].stats.station == "ROMYT":
+                st2 = __conversion_to_tilt(st2, confTilt["ROMYT"])
+            else:
+                print(" -> not defined")
 
         ## Pre-Processing
         try:
@@ -501,7 +506,7 @@ def main(config):
 
 #                 st1 = st1.resample(0.1, no_filter=False)
 #                 st2 = st2.resample(0.1, no_filter=False)
-                                                                    
+
                 ## convert tilt to acceleration
                 for tr in st2:
                     tr.data = tr.data*9.81
