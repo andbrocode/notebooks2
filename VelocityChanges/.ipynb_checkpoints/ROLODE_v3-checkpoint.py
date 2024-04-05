@@ -757,8 +757,8 @@ with open(config['path_to_sds']+f"{config['filename']}_config.yml", "w") as outf
 
 if config['love_waves']:
     print(f" -> stored in: {config['save_path_love']}")
-if config['rayleigh_waves']:
-    print(f" -> stored in: {config['save_path_rayleigh']}")
+if config['rayleigh1_waves']:
+    print(f" -> stored in: {config['save_path_rayleigh1']}")
 if config['rayleigh2_waves']:
     print(f" -> stored in: {config['save_path_rayleigh2']}")
 

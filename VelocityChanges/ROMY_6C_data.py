@@ -143,6 +143,8 @@ for tr in acc:
 print(rot)
 print(acc)
 
+acc.plot(equal_scale=False)
+rot.plot(equal_scale=False)
 
 ### Write Data to SDS
 
