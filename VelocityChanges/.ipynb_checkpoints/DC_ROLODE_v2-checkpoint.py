@@ -277,15 +277,15 @@ config['vmin'] = 50
 config['vmax'] = 4000
 
 # define start and end time of your data
-config['tbeg'] = UTCDateTime("2024-03-25T00:00:00")
-config['tend'] = UTCDateTime("2024-03-25T06:00:00")
+config['tbeg'] = UTCDateTime("2024-03-29T00:00:00")
+config['tend'] = UTCDateTime("2024-03-29T06:00:00")
 
 # config['tbeg'] = UTCDateTime("2023-12-25T12:00:00")
 # config['tend'] = UTCDateTime("2023-12-26T00:00:00")
 
 
-config['interval_seconds'] = 120 # seconds
-config['interval_overlap'] = 0.2 # seconds
+config['interval_seconds'] = 30 # seconds
+config['interval_overlap'] = 0.1 # seconds
 
 
 # specify translational output
