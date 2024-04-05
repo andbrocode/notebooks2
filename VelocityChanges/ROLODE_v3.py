@@ -290,13 +290,13 @@ config['tra_output'] = "VEL"
 
 # select methods to compute
 config['love_waves'] = True
-config['rayleigh1_waves'] = False
-config['rayleigh2_waves'] = True
+config['rayleigh1_waves'] = False # not a good method
+config['rayleigh2_waves'] = True # best available method
 
-config['periods_per_window'] = 1. # 8
+config['periods_per_window'] = 2. # 8
 
 # Specify frequency bands here
-config['f_min'] = 0.1 # smallest frequency to process
+config['f_min'] = 0.05 # smallest frequency to process
 config['f_max'] = 8.0 # highest frequency to process
 config['f_space'] = 0.1 # frequency steps
 config['bandwidth'] = 0.1  # Bandwidth of bandpass filter
@@ -318,7 +318,10 @@ config['exponent'] = 0.3
 # common sampling rate to resample the data
 config['sampling_rate'] = 20.
 
+# define fraction of ocatave bands
+config['faction_of_octave'] = 3
 
+# for body waves. not ripe yet
 config['body'] = False
 
 # set trigger
@@ -350,7 +353,7 @@ config['verbose'] = False
 
 from functions.get_octave_bands import __get_octave_bands
 
-f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=3, plot=False)
+f_lower, f_higher, f_center = __get_octave_bands(config['f_min'], config['f_max'], faction_of_octave=config['faction_of_octave'], plot=False)
 
 # cut first and last
 f_lower, f_higher = f_lower[1:-1], f_higher[1:-1]
@@ -752,8 +755,12 @@ with open(config['path_to_sds']+f"{config['filename']}_config.yml", "w") as outf
     yaml.dump(config, outfile, default_flow_style=False, sort_keys=True)
 
 
-# In[ ]:
+if config['love_waves']:
+    print(f" -> stored in: {config['save_path_love']}")
+if config['rayleigh_waves']:
+    print(f" -> stored in: {config['save_path_rayleigh']}")
+if config['rayleigh2_waves']:
+    print(f" -> stored in: {config['save_path_rayleigh2']}")
 
 
-
-
+# End of File
