@@ -285,7 +285,7 @@ config['tend'] = UTCDateTime("2024-03-30T00:00:00")
 
 
 config['interval_seconds'] = 60 # seconds
-config['interval_overlap'] = 0.1 # seconds
+config['interval_overlap'] = int(0.5*config['interval_seconds']) # seconds
 
 
 # specify translational output
