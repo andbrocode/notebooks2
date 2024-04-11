@@ -222,6 +222,8 @@ def main(config):
     else:
         config['outpath1'] = config['outpath1']+"/"+config['cha']
 
+    if config['outpath1'][-1] != "/":
+        config['outpath1'] = config['outpath1']+"/"
 
 
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
