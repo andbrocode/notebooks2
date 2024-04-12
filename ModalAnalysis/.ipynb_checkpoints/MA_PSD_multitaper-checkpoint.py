@@ -238,7 +238,7 @@ def main(config):
 
         # load data
         try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'][:-1]+"*", config['tbeg'], config['tend'])
+            st1 = __read_sds(config['path_to_data1'], config['seed1'][:-1]+"*", config['tbeg']-60, config['tend']+60)
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
@@ -295,7 +295,7 @@ def main(config):
             # for tr in st1:
             #     tr.data = __interpolate_nan(tr.data)
 
-            st1 = st1.trim(config['tbeg'], config['tend'])
+            st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
         except Exception as e:
             print(f" -> pre-processing failed!")
@@ -330,7 +330,8 @@ def main(config):
                     psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts+1)])
+                    NNN = int(_st1[0].stats.npts+1)
+                    psds1 = zeros([len(times), NNN])
 
 
             # compute power spectra
@@ -363,7 +364,10 @@ def main(config):
                 f1, psd1 = _f1.reshape(_f1.size), _psd1.reshape(_psd1.size)
 
 
-            psds1[n] = psd1[:len(psds1[n])]
+            if len(f1) == len(psd1) == NNN:
+                psds1[n] = psd1
+            else:
+                print(f" -> missmatch size: {len(f1)} != {len(psd1)}")
 
 
         # save psds
