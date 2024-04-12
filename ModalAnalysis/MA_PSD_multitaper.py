@@ -238,7 +238,7 @@ def main(config):
 
         # load data
         try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg'], config['tend'])
+            st1 = __read_sds(config['path_to_data1'], config['seed1'][:-1]+"*", config['tbeg'], config['tend'])
         except:
             print(f" -> failed to load data for {config['seed1']}...")
             continue
@@ -284,6 +284,13 @@ def main(config):
 
             st1 = st1.detrend("linear")
 
+            # rotate to ZNE
+            if "FFB" in config['seed1']:
+                st1 = st1.rotate("->ZNE", inventory=inv1, components="Z12")
+
+            # select component
+            st1 = st1.select(component=(config['seed1'][-1]))
+
             # interpolate NaN values
             # for tr in st1:
             #     tr.data = __interpolate_nan(tr.data)
@@ -323,7 +330,7 @@ def main(config):
                     psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
+                    psds1 = zeros([len(times), int(_st1[0].stats.npts+1)])
 
 
             # compute power spectra
@@ -356,7 +363,7 @@ def main(config):
                 f1, psd1 = _f1.reshape(_f1.size), _psd1.reshape(_psd1.size)
 
 
-            psds1[n] = psd1
+            psds1[n] = psd1[:len(psds1[n])]
 
 
         # save psds

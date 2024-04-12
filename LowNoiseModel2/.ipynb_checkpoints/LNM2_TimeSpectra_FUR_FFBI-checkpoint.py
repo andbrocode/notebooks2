@@ -159,7 +159,7 @@ def __makeplot_image_overview(ff, psds, times, names):
 
     N = int(24*365)
 
-    font = 12
+    font = 16
 
     fig = plt.figure(constrained_layout=False, figsize=(15, 10))
     widths = [8, 1]
