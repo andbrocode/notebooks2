@@ -61,7 +61,7 @@ config['catalogfile'] = "catalogs/ROMY_global_catalog_20200101_20231231.pkl"
 config['sta_lon'] = 11.275501
 config['sta_lat'] = 48.162941
 
-config['amp_type'] = "maxima" # maxima mean perc95
+# config['amp_type'] = "maxima" # maxima mean perc95  -> is set as loop
 
 # ### Load Catalog
 
@@ -359,57 +359,60 @@ def main(config):
 
     fails = []
 
-    for _k, (_i, ev) in enumerate(select_z.iterrows()):
+    for atype in ["maxima", "perc95", "mean"]:
+        config['amp_type'] = atype
 
-        # if _k > 2:
-        #     continue
+        for _k, (_i, ev) in enumerate(select_z.iterrows()):
 
-        print(_k, "  ", ev.Event.replace("_filtered.png", ".mseed"))
+            # if _k > 2:
+            #     continue
 
-        # specify waveform file name
-        wavformfile = ev.Event.replace("_filtered.png", ".mseed")
+            print(_k, "  ", ev.Event.replace("_filtered.png", ".mseed"))
 
-        # load waveform data
-        try:
-            st0 = obs.read(config['path_to_mseed']+wavformfile)
-        except:
-            print(f" -> failed to load data")
-            continue
+            # specify waveform file name
+            wavformfile = ev.Event.replace("_filtered.png", ".mseed")
 
-        st0 = st0.detrend("demean")
+            # load waveform data
+            try:
+                st0 = obs.read(config['path_to_mseed']+wavformfile)
+            except:
+                print(f" -> failed to load data")
+                continue
 
-        try:
-            # specify event number
-            ev_num = str(int(ev['# Event'])).rjust(3, "0")
+            st0 = st0.detrend("demean")
 
-            # get window of event
-            t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
+            try:
+                # specify event number
+                ev_num = str(int(ev['# Event'])).rjust(3, "0")
 
-            # get maxima for fbands
-            out = __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp=config['amp_type'], plot=False)
+                # get window of event
+                t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
 
-            # store check up plot
-            __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=False);
+                # get maxima for fbands
+                out = __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp=config['amp_type'], plot=False)
 
-            # add maxima to dict
-            amp[ev_num] = out
+                # store check up plot
+                __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=False);
 
-        except Exception as e:
-            print(f" -> processing failed!")
-            print(e)
-            fails.append(ev_num)
-            continue
+                # add maxima to dict
+                amp[ev_num] = out
 
-        gc.collect();
+            except Exception as e:
+                print(f" -> processing failed!")
+                print(e)
+                fails.append(ev_num)
+                continue
 
-    # report
-    print(f" -> failed:")
-    for fail in fails:
-        print(f"  -> {fail}")
+            gc.collect();
 
-    # store data
-    print(f" -> stored data: {config['path_to_data']}amplitudes_{config['amp_type']}.pkl")
-    __store_as_pickle(amp, config['path_to_data']+f"amplitudes_{config['amp_type']}.pkl")
+        # report
+        print(f" -> failed:")
+        for fail in fails:
+            print(f"  -> {fail}")
+
+        # store data
+        print(f" -> stored data: {config['path_to_data']}amplitudes_{config['amp_type']}.pkl")
+        __store_as_pickle(amp, config['path_to_data']+f"amplitudes_{config['amp_type']}.pkl")
 
 
 
