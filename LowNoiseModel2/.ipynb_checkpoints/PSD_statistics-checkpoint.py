@@ -334,7 +334,7 @@ def main(config):
             psds, _ = __replace_noisy_psds_with_nan(psds, ff,
                                                     threshold_mean=None,
                                                     threshold_min=1e-24,
-                                                    threshold_max=1e-15,
+                                                    threshold_max=1e-17,
                                                     flim=[None, None],
                                                    )
         elif "FUR" in sta:
