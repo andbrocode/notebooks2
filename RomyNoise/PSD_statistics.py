@@ -64,9 +64,7 @@ elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
 
 config = {}
 
-config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJN", "BW.ROMY..BJE",
-                   "BW.RLAS..BJZ"
-                  ]
+config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJN", "BW.ROMY..BJE"]
 
 # config['sta'] = "ROMY"
 # config['cha'] = ["Z", "U", "V"]

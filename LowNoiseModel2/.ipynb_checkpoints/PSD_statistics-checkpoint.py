@@ -64,7 +64,9 @@ elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
 
 config = {}
 
-config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJN", "BW.ROMY..BJE"]
+config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJN", "BW.ROMY..BJE",
+                   "BW.RLAS..BJZ"
+                  ]
 
 # config['sta'] = "ROMY"
 # config['cha'] = ["Z", "U", "V"]
@@ -323,14 +325,27 @@ def main(config):
 
     for seed in config['seeds']:
 
+        net, sta, loc, cha = seed.split(".")
+
         psds, ff = __read_files(seed, config['d1'], config['d2'])
 
-        psds, _ = __replace_noisy_psds_with_nan(psds, ff,
-                                                threshold_mean=None,
-                                                threshold_min=1e-24,
-                                                threshold_max=1e-15,
-                                                flim=[None, None],
-                                               )
+        if "ROMY" in sta:
+
+            psds, _ = __replace_noisy_psds_with_nan(psds, ff,
+                                                    threshold_mean=None,
+                                                    threshold_min=1e-24,
+                                                    threshold_max=1e-15,
+                                                    flim=[None, None],
+                                                   )
+        elif "FUR" in sta:
+
+            psds, _ = __replace_noisy_psds_with_nan(psds, ff,
+                                                    threshold_mean=None,
+                                                    threshold_min=5e-20,
+                                                    threshold_max=1e-5,
+                                                    flim=[None, None],
+                                                   )
+
 
     #     out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
 
@@ -340,7 +355,6 @@ def main(config):
         out_df['psds_median'] = __get_median_psd(psds)
         out_df['perc_low'], out_df['perc_high'] = __get_percentiles(psds, p_low=2.5, p_high=97.5)
 
-        net, sta, loc, cha = seed.split(".")
         outname = f"PSD_statistics_{sta}_{cha}_{config['d1']}_{config['d2']}.pkl"
         print(f" -> store: {config['path_to_outdata']}{outname}")
         out_df.to_pickle(config['path_to_outdata']+outname)
