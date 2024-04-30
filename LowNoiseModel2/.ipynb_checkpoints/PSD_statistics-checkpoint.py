@@ -323,18 +323,22 @@ def main(config):
 
     for seed in config['seeds']:
 
-        romy, ff = __read_files(seed, config['d1'], config['d2'])
+        psds, ff = __read_files(seed, config['d1'], config['d2'])
 
-        romy, _ = __replace_noisy_psds_with_nan(romy, ff, threshold_mean=1e-19, threshold_min=1e-23,
-                                                threshold_max=1e-15, flim=[0.5, 0.9],)
+        psds, _ = __replace_noisy_psds_with_nan(psds, ff,
+                                                threshold_mean=None,
+                                                threshold_min=1e-24,
+                                                threshold_max=1e-15,
+                                                flim=[None, None],
+                                               )
 
     #     out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
 
         out_df = DataFrame()
 
         out_df['frequencies'] = ff
-        out_df['psds_median'] = __get_median_psd(romy)
-        out_df['perc_low'], out_df['perc_high'] = __get_percentiles(romy, p_low=2.5, p_high=97.5)
+        out_df['psds_median'] = __get_median_psd(psds)
+        out_df['perc_low'], out_df['perc_high'] = __get_percentiles(psds, p_low=2.5, p_high=97.5)
 
         net, sta, loc, cha = seed.split(".")
         outname = f"PSD_statistics_{sta}_{cha}_{config['d1']}_{config['d2']}.pkl"
