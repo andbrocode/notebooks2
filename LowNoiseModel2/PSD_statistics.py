@@ -431,8 +431,10 @@ def main(config):
     out_df['psds_median_e'] = __get_median_psd(romy_e)
     out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
 
-    print(f" -> store: ROMY_psd_stats.pkl")
-    out_df.to_pickle(config['path_to_outdata']+f"ROMY_ZUV_psd_stats.pkl")
+    chs = [c[-1] for c in config['seeds']]
+    outname = f"PSD_statistics_{chs[0]}{chs[1]}{chs[2]}_{config['d1']}_{config['d2']}.pkl"
+    print(f" -> store: {outname}")
+    out_df.to_pickle(config['path_to_outdata']+outname)
 
 
 
