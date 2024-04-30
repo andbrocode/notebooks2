@@ -68,7 +68,7 @@ config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV"]
 # config['sta'] = "ROMY"
 # config['cha'] = ["Z", "U", "V"]
 
-config['d1'], config['d2'] = "2024-03-01", "2024-03-31"
+config['d1'], config['d2'] = "2024-01-01", "2024-03-31"
 
 config['path_to_data'] = data_path+f"LNM2/PSDS/"
 
