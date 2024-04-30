@@ -208,7 +208,8 @@ config['seeds'] = ["BW.ROMY.10.BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..B
 
 config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
 
-config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
+# config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
+config['catalog'] = "ROMY_global_catalog_20200101_20240430.pkl"
 
 # specify output unit of translation
 config['tra_output'] = "ACC"

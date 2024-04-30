@@ -457,8 +457,8 @@ def main(config):
 
                 # st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
 
-                st1 = st1.resample(10.0, no_filter=True)
-                st2 = st2.resample(10.0, no_filter=True)
+                st1 = st1.resample(1.0, no_filter=True)
+                st2 = st2.resample(1.0, no_filter=True)
 
 
             st1 = st1.merge()
