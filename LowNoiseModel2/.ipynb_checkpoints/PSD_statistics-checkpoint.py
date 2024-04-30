@@ -346,6 +346,15 @@ def main(config):
                                                     flim=[None, None],
                                                    )
 
+        elif "RLAS" in sta:
+
+            psds, _ = __replace_noisy_psds_with_nan(psds, ff,
+                                                    threshold_mean=None,
+                                                    threshold_min=1e-25,
+                                                    threshold_max=1e-15,
+                                                    flim=[None, None],
+                                                   )
+
 
     #     out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
 
