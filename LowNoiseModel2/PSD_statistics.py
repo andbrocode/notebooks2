@@ -64,7 +64,8 @@ elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
 
 config = {}
 
-config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV"]
+config['seeds'] = ["BW.ROMY..BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJN", "BW.ROMY..BJE"]
+
 # config['sta'] = "ROMY"
 # config['cha'] = ["Z", "U", "V"]
 
@@ -301,7 +302,7 @@ def __read_files(seed, tbeg, tend):
             continue
 
         for _k, _psd in enumerate(dat1):
-            print(_k, jj)
+
             if _k == 0:
                 NN = len(_psd)
 
@@ -320,40 +321,25 @@ def __read_files(seed, tbeg, tend):
 
 def main(config):
 
+    for seed in config['seeds']:
 
-    romy_z, ff_z = __read_files(config['seeds'][0], config['d1'], config['d2'])
-    romy_n, ff_n = __read_files(config['seeds'][1], config['d1'], config['d2'])
-    romy_e, ff_e = __read_files(config['seeds'][2], config['d1'], config['d2'])
+        romy, ff = __read_files(seed, config['d1'], config['d2'])
 
-    romy_z, _ = __replace_noisy_psds_with_nan(romy_z, ff_z, threshold_mean=1e-19, threshold_min=1e-23,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_n, _ = __replace_noisy_psds_with_nan(romy_n, ff_n, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
-    romy_e, _ = __replace_noisy_psds_with_nan(romy_e, ff_e, threshold_mean=1e-19, threshold_min=1e-22,
-                                              threshold_max=1e-15, flim=[0.5, 0.9],)
+        romy, _ = __replace_noisy_psds_with_nan(romy, ff, threshold_mean=1e-19, threshold_min=1e-23,
+                                                threshold_max=1e-15, flim=[0.5, 0.9],)
 
-#     out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
-#     out_romy_n = __get_hist_loglog(romy_n, ff_n, bins=100, density=False, axis=1, plot=False)
-#     out_romy_e = __get_hist_loglog(romy_e, ff_e, bins=100, density=False, axis=1, plot=False)
+    #     out_romy_z = __get_hist_loglog(romy_z, ff_z, bins=100, density=False, axis=1, plot=False)
 
+        out_df = DataFrame()
 
+        out_df['frequencies'] = ff
+        out_df['psds_median'] = __get_median_psd(romy)
+        out_df['perc_low'], out_df['perc_high'] = __get_percentiles(romy, p_low=2.5, p_high=97.5)
 
-    out_df = DataFrame()
-
-    out_df['frequencies'] = ff_z
-    out_df['psds_median_z'] = __get_median_psd(romy_z)
-    out_df['perc_low_z'], out_df['perc_high_z'] = __get_percentiles(romy_z, p_low=2.5, p_high=97.5)
-
-    out_df['psds_median_n'] = __get_median_psd(romy_n)
-    out_df['perc_low_n'], out_df['perc_high_n'] = __get_percentiles(romy_n, p_low=2.5, p_high=97.5)
-
-    out_df['psds_median_e'] = __get_median_psd(romy_e)
-    out_df['perc_low_e'], out_df['perc_high_e'] = __get_percentiles(romy_e, p_low=2.5, p_high=97.5)
-
-    chs = [c[-1] for c in config['seeds']]
-    outname = f"PSD_statistics_{chs[0]}{chs[1]}{chs[2]}_{config['d1']}_{config['d2']}.pkl"
-    print(f" -> store: {outname}")
-    out_df.to_pickle(config['path_to_outdata']+outname)
+        net, sta, loc, cha = seed.split(".")
+        outname = f"PSD_statistics_{sta}_{cha}_{config['d1']}_{config['d2']}.pkl"
+        print(f" -> store: {config['path_to_outdata']}{outname}")
+        out_df.to_pickle(config['path_to_outdata']+outname)
 
 
 
