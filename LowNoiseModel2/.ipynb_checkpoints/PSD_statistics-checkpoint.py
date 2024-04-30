@@ -302,7 +302,7 @@ def __read_files(seed, tbeg, tend):
 
         for _k, _psd in enumerate(dat1):
             print(_k, jj)
-            if jj == 0 and _k == 0:
+            if _k == 0:
                 NN = len(_psd)
 
             if len(_psd) == NN:
