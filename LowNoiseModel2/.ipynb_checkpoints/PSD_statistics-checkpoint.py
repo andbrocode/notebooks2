@@ -301,8 +301,10 @@ def __read_files(seed, tbeg, tend):
             continue
 
         for _k, _psd in enumerate(dat1):
+            print(_k, jj)
             if jj == 0 and _k == 0:
                 NN = len(_psd)
+
             if len(_psd) == NN:
                 dat.append(_psd)
                 dates.append(f"{day}_{str(_k).rjust(2, '0')}")
