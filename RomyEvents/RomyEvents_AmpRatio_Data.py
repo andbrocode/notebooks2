@@ -36,8 +36,8 @@ elif os.uname().nodename in ['lin-ffb-01', 'hochfelln', 'ambrym']:
     bay_path = '/bay200/'
 
 
-import matplotlib
-matplotlib.use('TkAgg')
+#import matplotlib
+#matplotlib.use('TkAgg')
 
 # ### Configurations
 
