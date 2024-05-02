@@ -17,7 +17,7 @@ from pandas import DataFrame
 from andbro__save_to_pickle import __save_to_pickle
 
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 
 # In[2]:
 

@@ -1,4 +1,4 @@
-def __rotate_romy_ZUV_ZNE(st, inv, keep_z=False):
+def __rotate_romy_ZUV_ZNE(st, inv, keep_z=True):
 
     from obspy.signal.rotate import rotate2zne
 
