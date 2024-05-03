@@ -4,7 +4,8 @@ def __calculate_distance_of_stations(array_stations, output="km", ref_station=No
 
     '''
 
-    from numpy import round
+    from numpy import round, zeros
+    from obspy.geodetics import locations2degrees
 
     N = len(array_stations)
 
@@ -30,7 +31,7 @@ def __calculate_distance_of_stations(array_stations, output="km", ref_station=No
                 dist_in_deg[name] = round(_dist[0], decimals=2)
 
     else:
-        dist_in_deg = np.zeros((N, N))
+        dist_in_deg = zeros((N, N))
         for i, station1 in array_stations.iterrows():
             for j, station2 in array_stations.iterrows():
                  _dist = locations2degrees(lat1  = station1[2],
