@@ -1,20 +1,12 @@
-#!/usr/bin/env python
-
-######################
-"""
-1. demonstration of Array-derived-rotation
-2. Data source from IRIS PFO array (http://www.fdsn.org/networks/detail/PY/)
-3. more detail refer to https://doi.org/10.1785/0220160216
-4. relationship between rotation and gradient
-
-rotation_X = -u_nz
-rotation_Y =  u_ez
-rotation_Z = 0.5*(u_ne-u_en)
-"""
-######################
-
-
 def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations=[]):
+
+    ######################
+    """
+    rotation_X = -u_nz
+    rotation_Y =  u_ez
+    rotation_Z = 0.5*(u_ne-u_en)
+    """
+    ######################
 
     import os
     import numpy as np
@@ -71,24 +63,34 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     ## define output seed
     config['out_seed'] = "BW.ADR"
 
+    ## add submask
+    config['submask'] = submask
+
+    if config['submask'] == "inner":
+        config['location'] = "01"
+    elif config['submask'] == "outer":
+        config['location'] = "02"
+    elif config['submask'] == "all":
+        config['location'] = "03"
+
 
     ## select stations to consider: 
     if submask is not None:
 
         if submask == "inner":
             config['subarray_mask'] = [0, 1, 2, 3]
-            config['freq1'] = 1.0  ## 0.00238*3700/100
-            config['freq2'] = 6.0 ## 0.25*3700/100 
+            config['freq1'] = 0.2
+            config['freq2'] = 1.0
 
         elif submask == "outer":
-            config['subarray_mask'] = [0,4,5,6,7,8]
-            config['freq1'] = 0.1   ## 0.00238*3700/700
-            config['freq2'] = 0.5    ## 0.25*3700/700
+            config['subarray_mask'] = [0, 4, 5, 6, 7, 8]
+            config['freq1'] = 0.01
+            config['freq2'] = 0.1
 
         elif submask == "all":
-            config['subarray_mask'] = [0,1,2,3,4,5,6,7,8]
-            config['freq1'] = 0.1   ## 0.00238*3700/700
-            config['freq2'] = 0.5    ## 0.25*3700/700
+            config['subarray_mask'] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            config['freq1'] = 0.01
+            config['freq2'] = 0.1
 
 
 
@@ -126,9 +128,9 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
 
     # adr parameters
-    config['vp'] = 4000 #6264. #1700
-    config['vs'] = 3000 #3751. #1000
-    config['sigmau'] = 1e-7 # 0.0001
+    config['vp'] = 4800 #6264. #1700
+    config['vs'] = 3800 #3751. #1000
+    config['sigmau'] = 1e-4 # 0.0001
 
 
     ## _____________________________________________________
@@ -176,9 +178,13 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
     def __check_samples_in_stream(st, config):
 
+        Rnet, Rsta = config['reference_station'].split(".")
+
+        Rsamples = st.select(network=Rnet, station=Rsta)[0].stats.npts
+
         for tr in st:
-            if tr.stats.npts != config['samples']:
-                print(f" -> removing {tr.stats.station} due to improper number of samples ({tr.stats.npts} not {config['samples']})")
+            if tr.stats.npts != Rsamples:
+                print(f" -> removing {tr.stats.station} due to improper number of samples ({tr.stats.npts} not {Rsamples})")
                 st.remove(tr)
 
         return st
@@ -204,7 +210,9 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             try:
                 try:
                     ## load local version
-                    inventory = read_inventory(data_path+f"BSPF/data/stationxml/{net}.{sta}.xml")
+                    inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/{net}.{sta}.xml")
+                    print(f" -> load local inventory")
+
                 except:
                     inventory = config['fdsn_client'][net].get_stations(
                                                                         network=net,
@@ -215,10 +223,11 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
                                                                         endtime=config['tend']+30,
                                                                         level="response"
                                                                         )
+                    print(f" -> load jane inventory")
+
             except:
                 print(f" -> {sta} Failed to load inventory!")
                 inventory = None
-
 
             ## try to get waveform data
             try:
@@ -237,7 +246,6 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
                 config['stations_loaded'][k] = 0
                 continue
 
-
             ## merge if masked
             if len(stats) > 3:
                 print(f" -> merging stream. Length: {len(stats)} -> 3") if config['print_details'] else None
@@ -246,6 +254,7 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             ## successfully obtained
             if len(stats) == 3:
                 print(f" -> obtained: {net}.{sta}")
+
 
             ## remove response [VEL -> rad/s | DISP -> rad]
             # stats = stats.remove_sensitivity(inventory)
@@ -269,14 +278,12 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             ## resampling using decitmate
             # stats = stats.detrend("linear");
             # stats = stats.taper(0.01);
-            # stats = stats.filter("lowpass", freq=18, corners=4, zerophase=True);
-            # if station == "PY.PFOIX":
-            #     stats = stats.decimate(5, no_filter=True); ## 200 Hz -> 40 Hz
-            # else:
-            #     stats = stats.decimate(2, no_filter=True); ## 40 Hz -> 20 Hz
+            # stats = stats.filter("lowpass", freq=8, corners=4, zerophase=True);
 
-            ## resample all to 40 Hz
-            # stats = stats.resample(40, no_filter=False)
+            ## resample to same frequency (required for FFB* stations with 40Hz)
+            if submask == "inner":
+                stats = stats.resample(20.0, no_filter=False)
+
 
             if station == config['reference_station']:
                 # ref_station = stats.copy().resample(40, no_filter=False)
@@ -285,12 +292,13 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             st += stats
             config['subarray'].append(f"{stats[0].stats.network}.{stats[0].stats.station}")
 
+            print(stats)
+
         ## trim to interval
         # stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
         st = st.sort()
 
-        # print(st)
         # st.plot(equal_scale=False);
 
         config['subarray_stations'] = config['subarray']
@@ -345,6 +353,10 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
         rotsa[1].stats.network=config['out_seed'].split(".")[0]
         rotsa[2].stats.network=config['out_seed'].split(".")[0]
 
+        rotsa[0].stats.location=config['location']
+        rotsa[1].stats.location=config['location']
+        rotsa[2].stats.location=config['location']
+
         rotsa = rotsa.detrend('linear')
 
     #     gradient_ZNE = result['ts_ptilde'] #u1,1 u1,2 u1,3 u2,1 u2,2 u2,3
@@ -376,6 +388,24 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
         return rotsa
 
+
+    def __adjust_time_line(st0, reference="GR.FUR"):
+
+        Rnet, Rsta = reference.split(".")
+
+        ref_start = st0.select(network=Rnet, station=Rsta)[0].stats.starttime
+        ref_times = st0.select(network=Rnet, station=Rsta)[0].times()
+
+        dt = st0.select(network=Rnet, station=Rsta)[0].stats.delta
+
+        for tr in st0:
+            times = tr.times(reftime=ref_start)
+
+            tr.data = np.interp(ref_times, times, tr.data)
+            tr.stats.starttime = ref_start
+
+        return st0
+
     ## __________________________________________________________
     ## MAIN ##
 
@@ -389,6 +419,30 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     st, ref_station, config = __get_data(config)
 
 
+
+
+    ## get inventory and coordinates/distances
+    inv, config['coo'] = __get_inventory_and_distances(config)
+
+    ## processing
+    st = st.detrend("linear")
+    st = st.detrend("demean")
+
+    ## bandpass filter
+    if config['apply_bandpass']:
+        st = st.taper(0.02)
+        st = st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
+        print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
+
+
+    ## plot station coordinates for check up
+    import matplotlib.pyplot as plt
+    plt.figure()
+    for c in config['coo']:
+        print(c)
+        plt.scatter(c[0], c[1])
+
+
     ## check if enough stations for ADR are available otherwise continue
     if len(st) < 9:
         print(" -> not enough stations (< 3) for ADR computation!")
@@ -396,25 +450,16 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     else:
         print(f" -> continue computing ADR for {int(len(st)/3)} of {len(config['subarray_mask'])} stations ...")
 
-    ## get inventory and coordinates/distances
-    inv, config['coo'] = __get_inventory_and_distances(config)
+    ## homogenize the time line
+    st = __adjust_time_line(st, reference=config['reference_station'])
 
-    ## processing
-    st = st.detrend("demean")
+    st.plot(equal_scale=False);
 
-    if config['apply_bandpass']:
-        st = st.taper(0.01)
-        st = st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
-        print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
+    ## trim to requested interval
+    st = st.trim(config['tbeg'], config['tend'])
 
-
-    ## plot station coordinates for check up
-    # import matplotlib.pyplot as plt
-    # plt.figure()
-    # for c in config['coo']:
-    #     print(c)
-    #     plt.scatter(c[0], c[1])
-
+    ## check for same amount of samples
+    __check_samples_in_stream(st, config)
 
     ## prepare data arrays
     tsz, tsn, tse = [], [], []
@@ -469,5 +514,3 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
         return rot, config['stations_loaded']
     else:
         return rot
-
-## End of File

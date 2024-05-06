@@ -63,7 +63,7 @@ def __makeplot(config, st):
 
         ax[i].legend(loc=1)
 
-        if "FUR" in tr.stats.station or "WET" in tr.stats.stat:
+        if "FUR" in tr.stats.station or "WET" in tr.stats.station:
             ax[i].set_ylim(acc_min*1.2, acc_max*1.2)
         else:
             ax[i].set_ylim(rot_min*1.2, rot_max*1.2)
@@ -209,7 +209,7 @@ config['seeds'] = ["BW.ROMY.10.BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..B
 config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
 
 # config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
-config['catalog'] = "ROMY_global_catalog_20200101_20240430.pkl"
+config['catalog'] = "ROMY_global_catalog_20190101_20240430.pkl"
 
 # specify output unit of translation
 config['tra_output'] = "ACC"
@@ -266,10 +266,10 @@ for jj in range(events.shape[0]):
 
 
     # check if file already exists
-    # filename = config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
-    # if os.path.isfile(filename):
-    #     print(f" -> file alread exits for {event_name}")
-    #     continue
+    filename = config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png"
+    if os.path.isfile(filename):
+        print(f" -> file alread exits for {event_name}")
+        continue
 
     # waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
     # if os.path.isfile(config['outpath_data']+config['tra_output']+"/"+waveform_filename):
@@ -392,20 +392,20 @@ for jj in range(events.shape[0]):
 
     # ______________________________________________________________
     # plotting figures
-#     try:
-#         fig1 = st0.plot(equal_scale=False, show=False);
-#         fig2 = st1.plot(equal_scale=False, show=False);
+    try:
+        fig1 = st0.plot(equal_scale=False, show=False);
+        fig2 = st1.plot(equal_scale=False, show=False);
 
-#         fig2 = __makeplot(config, st1)
+        fig2 = __makeplot(config, st1)
 
-#         # saving figures
-#         fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-#         print(f"  -> stored: {num}_{event_name}_raw.png")
+        # saving figures
+        fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_raw.png")
 
-#         fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-#         print(f"  -> stored: {num}_{event_name}_filtered.png")
-#     except:
-#         print(f"  -> failed to store figures!")
+        fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_filtered.png")
+    except:
+        print(f"  -> failed to store figures!")
 
     gc.collect()
 
