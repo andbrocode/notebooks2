@@ -404,7 +404,7 @@ def main(config):
                 out = __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp=config['amp_type'], plot=False)
 
                 # store check up plot
-                __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=True);
+                __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=False);
 
                 # add maxima to dict
                 amp[ev_num] = out
