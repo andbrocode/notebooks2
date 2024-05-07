@@ -9,7 +9,7 @@ def __get_fft(signal_in, dt, window=None):
 
     TEST:
 
-    >>> spectrum, frequencies, phase = __fft(signal_in, dt ,window=None,normalize=None)
+    >>> frequencies, spectrum, phase = __fft(signal_in, dt ,window=None,normalize=None)
     '''
 
     from scipy.fft import fft, fftfreq, fftshift

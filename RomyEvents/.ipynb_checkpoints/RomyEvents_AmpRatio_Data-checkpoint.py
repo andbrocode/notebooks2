@@ -36,8 +36,8 @@ elif os.uname().nodename in ['lin-ffb-01', 'hochfelln', 'ambrym']:
     bay_path = '/bay200/'
 
 
-import matplotlib
-matplotlib.use('TkAgg')
+#import matplotlib
+#matplotlib.use('TkAgg')
 
 # ### Configurations
 
@@ -167,10 +167,11 @@ def __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False):
     return t1, t2
 
 
-# In[13]:
-
 
 def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
+
+    from functions.get_octave_bands import __get_octave_bands
+    from scipy.signal import hilbert
 
     st_amp = obs.Stream()
     st_amp += st0.select(station="FUR", channel="*Z").copy()
@@ -185,7 +186,6 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
     st_amp = st_amp.trim(t1, t2)
     st_amp = st_amp.detrend("demean")
 
-    from functions.get_octave_bands import __get_octave_bands
 
     flower, fupper, fcenter = __get_octave_bands(fmin, fmax, faction_of_octave=6, plot=False)
 
@@ -196,20 +196,31 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
 
         stx = st_amp.copy()
 
+        df = stx[0].stats.sampling_rate
+
         stx = stx.detrend("linear")
 
         stx = stx.taper(0.05, type="cosine")
 
+        # stx.plot(equal_scale=False);
+
         # zero padding to avoid filter shift effect
-        df = stx[0].stats.sampling_rate
+        Tpadding = 4*3600 # seconds
+        Npadding = int(Tpadding*df)
+
+
         for tr in stx:
-            tr.data = np.pad(tr.data, (int(4*3600*df), int(4*3600*df)), 'constant', constant_values=(0, 0))
+            # tr.data = np.pad(tr.data, (Npadding, Npadding), 'constant', constant_values=(tr.data[0], tr.data[-1]))
+            tr.data = np.pad(tr.data, (Npadding, Npadding), 'constant', constant_values=(0, 0))
+            tr.stats.npts = tr.stats.npts + 2*Npadding
+
+        stx.plot(equal_scale=False);
 
         stx = stx.filter("bandpass", freqmin=fl, freqmax=fu, corners=4, zerophase=True)
 
-        # stx = stx.detrend("demean")
+        stx.plot(equal_scale=False);
 
-        # stx.plot(equal_scale=False);
+        stx = stx.taper(0.01, type="cosine")
 
         for tr in stx:
             name = f"{tr.stats.station}.{tr.stats.channel}"
@@ -219,6 +230,8 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
                 out[fc][name] = np.nanmean(abs(tr.data))
             elif amp == "perc95":
                 out[fc][name] = np.nanpercentile(abs(tr.data), 95)
+            elif amp == "envelope":
+                out[fc][name] = np.nanmax(abs(hilbert(tr.data)))
 
     if plot:
 
@@ -243,7 +256,30 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
     return out
 
 
-# In[14]:
+def __get_ffts(st):
+
+    from functions.get_fft import __get_fft
+    from functions.get_fband_average import __get_fband_average
+
+    stx = st.copy()
+
+    stx = stx.detrend("linear")
+    stx = stx.detrend("demean")
+    stx = stx.taper(0.01)
+
+    ffts = {}
+    for tr in stx:
+
+        ff, px, pha = __get_fft(tr.data, tr.stats.delta, window=None)
+
+        out = __get_fband_average(ff, px, faction_of_octave=12, average="median")
+
+        code = f"{tr.stats.station}_{tr.stats.channel}"
+        ffts[code] = out['psd_means']
+
+    ffts['freq'] = out['fcenter']
+
+    return ffts
 
 
 def __make_control_plot(ev_num, st0, out, t1, t2, path_to_figs, plot=False):
@@ -356,6 +392,7 @@ def main(config):
     fmin, fmax = 0.001, 8.0
 
     amp = {}
+    spec = {}
 
     fails = []
 
@@ -397,6 +434,12 @@ def main(config):
                 # add maxima to dict
                 amp[ev_num] = out
 
+                # compute spectra
+                ffts = __get_ffts(st0)
+
+                # add spec to dict
+                spec[ev_num] = ffts
+
             except Exception as e:
                 print(f" -> processing failed!")
                 print(e)
@@ -414,6 +457,8 @@ def main(config):
         print(f" -> stored data: {config['path_to_data']}amplitudes_{config['amp_type']}.pkl")
         __store_as_pickle(amp, config['path_to_data']+f"amplitudes_{config['amp_type']}.pkl")
 
+        print(f" -> stored data: {config['path_to_data']}spectra.pkl")
+        __store_as_pickle(spec, config['path_to_data']+f"spectra.pkl")
 
 
 if __name__ == "__main__":
