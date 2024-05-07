@@ -178,11 +178,8 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
             tr.data = np.pad(tr.data, (Npadding, Npadding), 'constant', constant_values=(0, 0))
             tr.stats.npts = tr.stats.npts + 2*Npadding
 
-        stx.plot(equal_scale=False);
 
         stx = stx.filter("bandpass", freqmin=fl, freqmax=fu, corners=4, zerophase=True)
-
-        stx.plot(equal_scale=False);
 
         stx = stx.taper(0.01, type="cosine")
 
@@ -391,9 +388,9 @@ def main(config):
                 # t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
                 tbeg = st0[0].stats.starttime
                 tend = st0[0].stats.endtime
-                
+
                 t1 = tbeg + ev.T1
-                
+
                 if ev.T2 == 0:
                     t2 = tend
                 else:
