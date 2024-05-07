@@ -341,7 +341,7 @@ def __make_control_plot(ev_num, st0, out, t1, t2, path_to_figs, plot=False):
     ax81.set_yscale("log")
 
     # save image
-    fig.savefig(path_to_figs+"auto_plots/"+f"{ev_num}.png", format="png", dpi=150, bbox_inches='tight')
+    fig.savefig(path_to_figs+"auto_plots2/"+f"{ev_num}.png", format="png", dpi=150, bbox_inches='tight')
 
     gc.collect();
 
