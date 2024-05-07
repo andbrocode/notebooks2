@@ -52,10 +52,7 @@ config['path_to_figs'] = data_path+"romy_events/figures/"
 config['path_to_mseed'] = data_path+"romy_events/data/waveforms/ACC/"
 
 # specify event file
-config['eventfile'] = "ROMYevents_2020_2023_status.csv"
-
-# specify catalog
-config['catalogfile'] = "catalogs/ROMY_global_catalog_20200101_20231231.pkl"
+config['eventfile'] = "ROMYevents_2019_2024_status_select_z.pkl"
 
 # ROMY coordinates
 config['sta_lon'] = 11.275501
@@ -65,40 +62,7 @@ config['sta_lat'] = 48.162941
 
 # ### Load Catalog
 
-cat = pd.read_pickle(config['path_to_data']+config['catalogfile'])
-
-# add row with UTC times
-cat['time_utc'] = [str(obs.UTCDateTime(str(_e).split('.')[0], precision=0)) for _e in cat.timestamp]
-
-cat['depth_km'] = cat.depth / 1000
-
-
-# ### Load Event Data
-
-
-# load data base
-events = pd.read_csv(config['path_to_data']+config['eventfile'], header=0, skiprows=4)
-
-# prepare dataframe
-events.dropna(subset="Event", inplace=True)
-events.sort_values(by="# Event")
-events.reset_index(drop=True, inplace=True)
-
-# add row with UTC times
-events['time_utc'] = [str(obs.UTCDateTime(f"{_e.split('_')[1]}T{_e.split('_')[2]}", precision=0)) for _e in events.Event]
-
-# ### Merge Dataframes
-
-
-df = pd.merge(left=cat, right=events, on="time_utc")
-
-
-# ### Select events with RLAS and ROMY-Z
-
-
-select_z_idx = list(np.where((df.RLAS == True) & (df['ROMY-Z'] == True) & (df.ZQ == False))[0])
-
-select_z = df[df.index.isin(select_z_idx)]
+events_z = pd.read_pickle(config['path_to_data']+config['eventfile'])
 
 
 
@@ -396,10 +360,11 @@ def main(config):
 
     fails = []
 
-    for atype in ["maxima", "perc95", "mean"]:
+    for atype in ["maxima", "perc95", "mean", "envelope"]:
+
         config['amp_type'] = atype
 
-        for _k, (_i, ev) in enumerate(select_z.iterrows()):
+        for _k, (_i, ev) in enumerate(events_z.iterrows()):
 
             # if _k > 2:
             #     continue
@@ -423,13 +388,19 @@ def main(config):
                 ev_num = str(int(ev['# Event'])).rjust(3, "0")
 
                 # get window of event
-                t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
+                # t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
+                t1 = ev.T1
+                
+                if ev.T2 == 0:
+                    t2 = st0[0].stats.endtime
+                else:
+                    t2 = ev.T2
 
                 # get maxima for fbands
                 out = __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp=config['amp_type'], plot=False)
 
                 # store check up plot
-                __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=False);
+                __make_control_plot(ev_num, st0, out, t1, t2, config['path_to_figs'], plot=True);
 
                 # add maxima to dict
                 amp[ev_num] = out
