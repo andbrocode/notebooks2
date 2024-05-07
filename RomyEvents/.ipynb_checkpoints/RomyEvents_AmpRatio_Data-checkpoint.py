@@ -194,6 +194,8 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
             elif amp == "envelope":
                 out[fc][name] = np.nanmax(abs(hilbert(tr.data)))
 
+        del stx
+
     if plot:
 
         plt.figure(figsize=(15, 5))
@@ -239,6 +241,8 @@ def __get_ffts(st):
         ffts[code] = out['psd_means']
 
     ffts['freq'] = out['fcenter']
+
+    del stx
 
     return ffts
 
@@ -418,6 +422,8 @@ def main(config):
                 continue
 
             gc.collect();
+
+            del st0
 
         # report
         print(f" -> failed:")
