@@ -389,12 +389,15 @@ def main(config):
 
                 # get window of event
                 # t1, t2 = __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False)
-                t1 = ev.T1
+                tbeg = st0[0].stats.starttime
+                tend = st0[0].stats.endtime
+                
+                t1 = tbeg + ev.T1
                 
                 if ev.T2 == 0:
-                    t2 = st0[0].stats.endtime
+                    t2 = tend
                 else:
-                    t2 = ev.T2
+                    t2 = tbeg + ev.T2
 
                 # get maxima for fbands
                 out = __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp=config['amp_type'], plot=False)
