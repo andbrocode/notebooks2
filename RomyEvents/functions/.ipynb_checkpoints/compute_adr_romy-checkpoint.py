@@ -1,4 +1,4 @@
-def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations=[]):
+def __compute_adr_romy(tbeg, tend, submask='all', status=False, excluded_stations=[]):
 
     ######################
     """
@@ -124,13 +124,13 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     ## parameter for array-derivation
 
     #config['prefilt'] = (0.001, 0.01, 5, 10)
-    config['apply_bandpass'] = True
+    config['apply_bandpass'] = False
 
 
     # adr parameters
-    config['vp'] = 4800 #6264. #1700
-    config['vs'] = 3800 #3751. #1000
-    config['sigmau'] = 1e-4 # 0.0001
+    config['vp'] = 1 # 5000 #6264. #1700
+    config['vs'] = 1 # 3500 #3751. #1000
+    config['sigmau'] = 1e-7 # 0.0001
 
 
     ## _____________________________________________________
@@ -148,7 +148,7 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
             try:
                 ## load local version
-                inven = read_inventory(data_path+f"BSPF/data/stationxml/{net}.{sta}.xml")
+                inven = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}.xml")
 
             except:
                 inven = config['fdsn_client'][net].get_stations(
@@ -166,7 +166,7 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             height = float(inven.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
 
 
-            if sta == "FUR":
+            if sta == config['reference_station'].split(".")[1]:
                 o_lon, o_lat, o_height = l_lon, l_lat, height
 
             lon, lat = util_geo_km(o_lon, o_lat, l_lon, l_lat)
@@ -197,6 +197,8 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
         st = Stream()
 
+        coo = []
+
         for k, station in enumerate(config['subarray_stations']):
 
             net, sta = station.split(".")
@@ -210,24 +212,40 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             try:
                 try:
                     ## load local version
-                    inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/{net}.{sta}.xml")
+                    inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}.{sta}.xml")
                     print(f" -> load local inventory")
 
                 except:
-                    inventory = config['fdsn_client'][net].get_stations(
-                                                                        network=net,
-                                                                        station=sta,
-                                                                        location=loc,
-                                                                        channel=cha,
-                                                                        starttime=config['tbeg']-30,
-                                                                        endtime=config['tend']+30,
-                                                                        level="response"
-                                                                        )
+                    if sta == "FUR":
+                            inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}.xml")
+                    else:
+                        inventory = config['fdsn_client'][net].get_stations(
+                                                                            network=net,
+                                                                            station=sta,
+                                                                            location=loc,
+                                                                            channel=cha,
+                                                                            starttime=config['tbeg']-3600,
+                                                                            endtime=config['tend']+3600,
+                                                                            level="response"
+                                                                            )
                     print(f" -> load jane inventory")
 
             except:
                 print(f" -> {sta} Failed to load inventory!")
                 inventory = None
+
+            ## add coordinates
+            l_lon =  float(inventory.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['longitude'])
+            l_lat =  float(inventory.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['latitude'])
+            height = float(inventory.get_coordinates('%s.%s.%s.%sZ'%(net,sta,loc,cha[:2]))['elevation'])
+
+            if sta == config['reference_station'].split(".")[1]:
+                o_lon, o_lat, o_height = l_lon, l_lat, height
+
+            lon, lat = util_geo_km(o_lon, o_lat, l_lon, l_lat)
+
+            coo.append([lon*1000, lat*1000, height-o_height])  ## convert unit from km to m
+
 
             ## try to get waveform data
             try:
@@ -236,8 +254,8 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
                                                                 station=sta,
                                                                 location=loc,
                                                                 channel=cha,
-                                                                starttime=config['tbeg']-30,
-                                                                endtime=config['tend']+30,
+                                                                starttime=config['tbeg']-3600,
+                                                                endtime=config['tend']+3600,
                                                                 attach_response=False,
                                                                 )
             except Exception as E:
@@ -257,32 +275,29 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
 
             ## remove response [VEL -> rad/s | DISP -> rad]
-            # stats = stats.remove_sensitivity(inventory)
-            stats.remove_response(inventory, output="VEL", water_level=60)
-
-
-            #correct mis-alignment
-            # stats[0].data, stats[1].data, stats[2].data = rotate2zne(stats[0],0,-90,
-            #                                                          stats[1],config['subarray_misorientation'][config['subarray_stations'].index(station)],0, 
-            #                                                          stats[2],90+config['subarray_misorientation'][config['subarray_stations'].index(station)],0)
-
+            stats = stats.remove_sensitivity(inventory)
+            # stats = stats.remove_response(inventory, output="VEL", water_level=None, pre_filt=[0.005, 0.008, 8, 10])
+            # stats = stats.remove_response(inventory, output="VEL", water_level=1)
 
 
             ## rotate to ZNE
             try:
-                stats = stats.rotate(method="->ZNE", inventory=inventory)
+                if len(stats.select(component="2")) > 0:
+                    stats = stats.rotate(method='->ZNE', inventory=inventory, components=['Z23'])
+                else:
+                    stats = stats.rotate(method='->ZNE', inventory=inventory, components=['ZNE'])
             except:
                 print(f" -> {sta} failed to rotate to ZNE")
                 continue
 
             ## resampling using decitmate
-            # stats = stats.detrend("linear");
-            # stats = stats.taper(0.01);
-            # stats = stats.filter("lowpass", freq=8, corners=4, zerophase=True);
+            stats = stats.detrend("linear");
+            stats = stats.detrend("simple");
 
-            ## resample to same frequency (required for FFB* stations with 40Hz)
-            if submask == "inner":
-                stats = stats.resample(20.0, no_filter=False)
+            # stats = stats.taper(0.01);
+            stats = stats.filter("highpass", freq=0.001, corners=4, zerophase=True);
+            # stats = stats.filter("highpass", freq=0.001);
+
 
 
             if station == config['reference_station']:
@@ -297,7 +312,7 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
         ## trim to interval
         # stats.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
-        st = st.sort()
+        config['coo'] = np.array(coo)
 
         # st.plot(equal_scale=False);
 
@@ -311,7 +326,21 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
             return st, ref_station, config
 
 
-    def __compute_ADR(tse, tsn, tsz, config, ref_station):
+    def __compute_ADR(st, config, ref_station):
+
+        ## prepare data arrays
+        tsz, tsn, tse = [], [], []
+        for tr in st:
+            try:
+                if "Z" in tr.stats.channel:
+                    tsz.append(tr.data)
+                elif "N" in tr.stats.channel:
+                    tsn.append(tr.data)
+                elif "E" in tr.stats.channel:
+                    tse.append(tr.data)
+            except:
+                print(" -> stream data could not be appended!")
+
 
         ## make sure input is array type
         tse, tsn, tsz = np.array(tse), np.array(tsn), np.array(tsz)
@@ -406,6 +435,7 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
         return st0
 
+
     ## __________________________________________________________
     ## MAIN ##
 
@@ -419,10 +449,8 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     st, ref_station, config = __get_data(config)
 
 
-
-
     ## get inventory and coordinates/distances
-    inv, config['coo'] = __get_inventory_and_distances(config)
+    # inv, config['coo'] = __get_inventory_and_distances(config)
 
     ## processing
     st = st.detrend("linear")
@@ -436,11 +464,16 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
 
 
     ## plot station coordinates for check up
-    import matplotlib.pyplot as plt
-    plt.figure()
-    for c in config['coo']:
-        print(c)
-        plt.scatter(c[0], c[1])
+    # import matplotlib.pyplot as plt
+    # stas = []
+    # for tr in st:
+    #     if tr.stats.station not in stas:
+    #         stas.append(tr.stats.station)
+    # plt.figure()
+    # for c, s in zip(config['coo'], stas):
+    #     print(s, c)
+    #     plt.scatter(c[0], c[1], label=s)
+    #     plt.legend()
 
 
     ## check if enough stations for ADR are available otherwise continue
@@ -453,30 +486,19 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     ## homogenize the time line
     st = __adjust_time_line(st, reference=config['reference_station'])
 
-    st.plot(equal_scale=False);
 
     ## trim to requested interval
-    st = st.trim(config['tbeg'], config['tend'])
+    # st = st.trim(config['tbeg'], config['tend'])
 
     ## check for same amount of samples
     __check_samples_in_stream(st, config)
 
-    ## prepare data arrays
-    tsz, tsn, tse = [], [], []
-    for tr in st:
-        try:
-            if "Z" in tr.stats.channel:
-                tsz.append(tr.data)
-            elif "N" in tr.stats.channel:
-                tsn.append(tr.data)
-            elif "E" in tr.stats.channel:
-                tse.append(tr.data)
-        except:
-            print(" -> stream data could not be appended!")
-
     ## compute array derived rotation (ADR)
-    rot = __compute_ADR(tse, tsn, tsz, config, ref_station)
-
+    try:
+        rot = __compute_ADR(st, config, ref_station)
+    except Exception as e:
+        print(e)
+        return None, None
 
     ## get mean starttime
     # tstart = [tr.stats.starttime - tbeg for tr in st]
@@ -513,4 +535,4 @@ def __compute_adr_pfo(tbeg, tend, submask='all', status=False, excluded_stations
     if status:
         return rot, config['stations_loaded']
     else:
-        return rot
+        return rot, []
