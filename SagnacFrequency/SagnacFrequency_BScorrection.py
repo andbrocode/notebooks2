@@ -52,7 +52,7 @@ else:
 
 print(config['tbeg'], config['tend'])
 
-config['ring_sagnac'] = {"U":303.05, "V":447, "W":447, "Z":553.5}
+config['ring_sagnac'] = {"U":303.05, "V":447.5, "W":447.5, "Z":553.5}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 ## path to Sagnac data
@@ -132,7 +132,7 @@ def __get_fft(signal_in, dt, window=None):
     else:
         spectrum = fft(signal_in)
 
-    ## calculate frequency array 
+    ## calculate frequency array
     frequencies = fftfreq(n, d=dt)
 
 
