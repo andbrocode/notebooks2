@@ -168,7 +168,7 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
     return times
 
 
-def __hilbert_frequency_estimator(st, nominal_sagnac, fband, cut=0):
+def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
 
     from scipy.signal import hilbert
     import numpy as np
@@ -348,7 +348,7 @@ def main(config):
             fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, config['nominal_sagnac'])
 
             # estimate instantaneous frequency average via hilbert
-            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=config['fband'], config['ddt'])
+            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, config['nominal_sagnac'], fband=config['fband'], cut=config['ddt'])
 
             # estimate DC and AC based on time series (time domain)
             # dc[_n] = np.mean(_dat)
