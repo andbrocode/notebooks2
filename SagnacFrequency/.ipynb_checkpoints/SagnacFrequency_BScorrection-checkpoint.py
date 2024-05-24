@@ -3,7 +3,8 @@
 
 """
 
-import os, sys
+import os
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -42,6 +43,12 @@ config['ring'] = "U"
 config['seeds'] = ["BW.DROMY..FJU", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 
 config['interval'] = 60
+
+# interval buffer (before and after) in seconds
+config['ddt'] = 30
+
+# frequency band (minus and plus)
+config['fband'] = 5 # 10
 
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
@@ -161,7 +168,7 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
     return times
 
 
-def __hilbert_frequency_estimator(st, nominal_sagnac, fband):
+def __hilbert_frequency_estimator(st, nominal_sagnac, fband, cut=0):
 
     from scipy.signal import hilbert
     import numpy as np
@@ -190,7 +197,8 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband):
     instantaneous_frequency = (np.diff(instantaneous_phase) / (2.0*np.pi) * df)
 
     ## cut first and last 5% (corrupted data)
-    dd = int(0.05*len(instantaneous_frequency))
+    # dd = int(0.05*len(instantaneous_frequency))
+    dd = int(cut*df)
     insta_f_cut = instantaneous_frequency[dd:-dd]
 
     ## get times
@@ -231,8 +239,10 @@ def __backscatter_correction(m01, m02, phase0, w_obs, fs0, cm_filter_factor=1.03
 
     ## backscatter correction
     correction = -1 * ( term -1 ) * fs0
+    # w_corrected = np.array(w_obs) + correction
 
-    w_corrected = np.array(w_obs) + correction
+    # apply backscatter correction
+    w_corrected = np.array(w_obs) * term
 
     return w_corrected, correction, term
 
@@ -267,7 +277,6 @@ def __get_fft_values(signal_in, dt, f_sagn, window=None):
 
     ## phase spectrum
     phase = angle(spectrum, deg=False)
-
 
     freq = frequencies[0:n//2]
     spec = magnitude[0:n//2]
@@ -326,16 +335,22 @@ def main(config):
 
             # print(t1,t2)
 
-            _dat = _st.copy().trim(t1, t2)
+            # _dat = _st.copy().trim(t1, t2)
+            _dat = _st.copy().trim(t1-config['ddt'], t2+config['ddt'])
 
+            # compute spectrum
 #             f, psd, pha = __get_fft(_dat[0].data, _dat[0].stats.delta, window=None)
 
+            # estimate AC and DC values from spectrum
 #             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
+            # estimate AC and DC values in frequency domain
             fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, config['nominal_sagnac'])
 
-            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=10)
+            # estimate instantaneous frequency average via hilbert
+            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, nominal_sagnac=config['nominal_sagnac'], fband=config['fband'], config['ddt'])
 
+            # estimate DC and AC based on time series (time domain)
             # dc[_n] = np.mean(_dat)
             # ac[_n] = np.percentile(_dat[0].data, 99.9) - np.percentile(_dat[0].data, 100-99.9)
 
