@@ -70,8 +70,9 @@ config['fmin'], config['fmax'] = 1/10, 1/7
 config['cc_threshold'] = 0.5
 
 config['interval_seconds'] = 1800
+config['interval_overlap'] = 0
 
-config['window_overlap'] = 50
+config['window_overlap'] = 90
 
 config['window_length_sec'] = 2/config['fmin']
 
@@ -122,7 +123,7 @@ def main(config):
     times = __get_time_intervals(config['tbeg'],
                                  config['tend'],
                                  interval_seconds=config['interval_seconds'],
-                                 interval_overlap=config['window_overlap']
+                                 interval_overlap=config['interval_overlap']
                                 )
     print(times)
 
