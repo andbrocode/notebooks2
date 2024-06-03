@@ -75,6 +75,8 @@ config['window_overlap'] = 90
 
 config['window_length_sec'] = 2/config['fmin']
 
+print(config)
+
 ## ---------------------------------------
 
 def __load_mlti(tbeg, tend, ring, path_to_archive):
