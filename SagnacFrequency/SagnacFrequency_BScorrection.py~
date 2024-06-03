@@ -377,8 +377,8 @@ def main(config):
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"
     time_str = f"{str(config['tbeg'].time).split('.')[0]}"
-    out_df.to_pickle(config['path_to_data']+f"FJ{config['ring']}_{date_str}_{time_str}_backscatter.pkl")
-    print(f" -> writing: {config['path_to_data']}FJ{config['ring']}_{date_str}_{time_str}_backscatter.pkl")
+    out_df.to_pickle(config['path_to_data']+f"FJU_{date_str}_{time_str}_backscatter.pkl")
+    print(f" -> writing: {config['path_to_data']}FJU_{date_str}_{time_str}_backscatter.pkl")
 
 
 ## ________ MAIN  ________
