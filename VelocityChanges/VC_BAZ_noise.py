@@ -98,7 +98,7 @@ def __load_mlti(tbeg, tend, ring, path_to_archive):
 
     return mlti
 
-def main():
+def main(config):
 
     ## ---------------------------------------
 
