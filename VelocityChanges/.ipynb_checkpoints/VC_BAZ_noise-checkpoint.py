@@ -147,6 +147,8 @@ nan_dummy = np.ones(90)*np.nan
 
 for _n, (t1, t2) in enumerate(tqdm(times)):
 
+    print(_n, t1, t2)
+
     ## load MLTI logs
     mltiU = __load_mlti(t1, t2, "U", archive_path)
     mltiV = __load_mlti(t1, t2, "V", archive_path)
