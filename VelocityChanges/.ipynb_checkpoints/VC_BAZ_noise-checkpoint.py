@@ -100,7 +100,6 @@ def __load_mlti(tbeg, tend, ring, path_to_archive):
 
 def main(config):
 
-    print(test)
     times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval_seconds'], interval_overlap=0)
     print(times)
 
