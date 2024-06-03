@@ -147,7 +147,8 @@ def main(config):
 
     nan_dummy = np.ones(90)*np.nan
 
-    for _n, (t1, t2) in enumerate(tqdm(times)):
+    # for _n, (t1, t2) in enumerate(tqdm(times)):
+    for _n, (t1, t2) in enumerate(times):
 
         print(_n, t1, t2)
 
