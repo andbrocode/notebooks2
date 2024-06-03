@@ -76,7 +76,6 @@ config['window_overlap'] = 90
 
 config['window_length_sec'] = 2/config['fmin']
 
-print(config)
 
 ## ---------------------------------------
 
@@ -124,7 +123,6 @@ def main(config):
                                  interval_seconds=config['interval_seconds'],
                                  interval_overlap=config['interval_overlap']
                                 )
-    print(times)
 
     baz_tangent = []
     baz_rayleigh = []
