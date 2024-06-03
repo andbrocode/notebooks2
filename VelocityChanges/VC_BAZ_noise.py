@@ -108,6 +108,7 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
     times = []
     t1, t2 = tbeg, tbeg + interval_seconds
+
     while t2 <= tend:
         times.append((t1, t2))
         t1 = t1 + interval_seconds - interval_overlap
