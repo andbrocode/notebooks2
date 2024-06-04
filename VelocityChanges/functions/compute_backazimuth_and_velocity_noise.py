@@ -151,6 +151,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             baz_tangent_max = nan
 
     except Exception as e:
+        baz_tangent_max = nan
         print(e)
         pass
 

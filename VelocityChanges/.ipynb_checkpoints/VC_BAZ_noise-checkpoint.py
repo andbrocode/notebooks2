@@ -231,6 +231,23 @@ def main(config):
             print(f" -> processing failed !")
             pass
 
+    # check if merging is necessary
+    if len(rot) > 3:
+        print(f" -> merging required: rot")
+        rot = rot.merge()
+    if len(acc) > 3:
+        print(f" -> merging required: acc")
+        acc = acc.merge()
+
+    # check if data is all zero
+    for tr in rot:
+        if np.count_nonzero(tr.data) == 0:
+            print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+    for tr in acc:
+        if np.count_nonzero(tr.data) == 0:
+            print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+
+
     ## ---------------------------------------
 
         conf = {}
