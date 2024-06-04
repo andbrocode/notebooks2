@@ -215,12 +215,12 @@ def main(config):
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
                     tr.data = tr.data[:Nexpected]
-                    print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+                    # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
             for tr in st2:
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
                     tr.data = tr.data[:Nexpected]
-                    print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+                    # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
 
             # get amplitude levels
