@@ -238,10 +238,10 @@ def main(config):
     # check if merging is necessary
     if len(rot) > 3:
         print(f" -> merging required: rot")
-        rot = rot.merge()
+        rot = rot.merge("interpolate")
     if len(acc) > 3:
         print(f" -> merging required: acc")
-        acc = acc.merge()
+        acc = acc.merge("interpolate")
 
     # check if data is all zero
     for tr in rot:
