@@ -251,6 +251,19 @@ def main(config):
         if np.count_nonzero(tr.data) == 0:
             print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
+    # check if data has same length
+    Nexpected = int(( t2-t1 )*20)
+    for tr in rot:
+        Nreal = len(tr.data)
+        if Nreal != Nexpected:
+            tr.data = tr.data[:Nexpected]
+            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+    for tr in acc:
+        Nreal = len(tr.data)
+        if Nreal != Nexpected:
+            tr.data = tr.data[:Nexpected]
+            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+
 
     # ---------------------------------------
 
