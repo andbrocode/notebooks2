@@ -167,17 +167,17 @@ def main(config):
 
     nan_dummy = np.ones(90)*np.nan
 
-    # for _n, (t1, t2) in enumerate(tqdm(times)):
-    for _n, (t1, t2) in enumerate(times):
+    for _n, (t1, t2) in enumerate(tqdm(times)):
+    # for _n, (t1, t2) in enumerate(times):
 
-        print(_n, t1, t2)
+        # print(_n, t1, t2)
 
-        ## load MLTI logs
+        # load MLTI logs
         mltiU = __load_mlti(t1, t2, "U", archive_path)
         mltiV = __load_mlti(t1, t2, "V", archive_path)
         mltiZ = __load_mlti(t1, t2, "Z", archive_path)
 
-        ## load maintenance file
+        # load maintenance file
         lxx = __load_lxx(t1, t2, archive_path)
 
         try:
@@ -187,30 +187,34 @@ def main(config):
             inv1 = read_inventory(config['path_to_inv']+"station_BW_ROMY.xml")
             inv2 = read_inventory(config['path_to_inv']+"station_GR_FUR.xml")
 
-            st1 =  __read_sds(config['path_to_sds1'], "BW.ROMY.10.BJZ", t1, t2);
+            st1 = __read_sds(config['path_to_sds1'], "BW.ROMY.10.BJZ", t1, t2);
             st1 += __read_sds(config['path_to_sds1'], "BW.ROMY..BJU", t1, t2);
             st1 += __read_sds(config['path_to_sds1'], "BW.ROMY..BJV", t1, t2);
 
-
-            st2 =  __read_sds(config['path_to_sds2'], "GR.FUR..BHZ", t1, t2);
+            st2 = __read_sds(config['path_to_sds2'], "GR.FUR..BHZ", t1, t2);
             st2 += __read_sds(config['path_to_sds2'], "GR.FUR..BHN", t1, t2);
             st2 += __read_sds(config['path_to_sds2'], "GR.FUR..BHE", t1, t2);
 
+            # remove sensitivity for ROMY
             st1.remove_sensitivity(inv1);
-            st2.remove_response(inv2, output="ACC", water_level=60);
+
+            # remove response for FUR
+            st2.remove_response(inv2, output="ACC", water_level=10);
 
             levels = {}
             for tr in st1:
                 ring = tr.stats.channel[-1]
                 levels[ring] = np.percentile(abs(tr.data), 90)
 
+            # rotate UVZ to ZNE
             st1 = __rotate_romy_ZUV_ZNE(st1, inv1, keep_z=True);
 
-        except:
-            print(f" -> data loading failed !")
+        except Exception as e:
+            print(f" -> data loading failed!")
+            print(e)
             pass
 
-    ## ---------------------------------------
+    # ---------------------------------------
 
         try:
             st1.detrend("linear");
@@ -248,7 +252,7 @@ def main(config):
             print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
 
-    ## ---------------------------------------
+    # ---------------------------------------
 
         conf = {}
 
@@ -258,15 +262,15 @@ def main(config):
         conf['tend'] = t2
 
         conf['station_longitude'] = 11.275501
-        conf['station_latitude']  = 48.162941
+        conf['station_latitude'] = 48.162941
 
-        ## specify window length for baz estimation in seconds
+        # specify window length for baz estimation in seconds
         conf['win_length_sec'] = config['window_length_sec']
 
-        ## define an overlap for the windows in percent (50 -> 50%)
+        # define an overlap for the windows in percent (50 -> 50%)
         conf['overlap'] = config['window_overlap']
 
-        ## specify steps for degrees of baz
+        # specify steps for degrees of baz
         conf['step'] = 1
 
         conf['path_to_figs'] = config['path_to_figures']
@@ -274,11 +278,11 @@ def main(config):
         conf['cc_thres'] = config['cc_threshold']
 
         try:
-            print(f" computing backazimuth estimation")
+            print(f" compute backazimuth estimation")
             out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=False, save=True);
 
 
-            ## check maintenance periods
+            # check maintenance periods
             maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
 
             if mltiU.size > config['num_mlti'] or mltiV.size > config['num_mlti'] or levels["U"] > 1e-6 or levels["V"] > 1e-6 or maintenance:
@@ -335,17 +339,17 @@ def main(config):
 
             ttime.append(t1)
 
-            ## store plot
+            # store plot
             t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
             out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png", format="png", dpi=150, bbox_inches='tight')
             print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
 
-            ## change status to success
+            # change status to success
             status[0, _n] = 1
 
         except Exception as e:
-            print(e)
             print(f" -> baz computation failed!")
+            print(e)
 
             baz_tangent.append(np.nan)
             baz_rayleigh.append(np.nan)
@@ -377,7 +381,7 @@ def main(config):
             ttime.append(np.nan)
 
         try:
-            print(f" computing beamforming")
+            print(f" compute beamforming")
             out_bf = __compute_beamforming_ROMY(
                                                 conf['tbeg'],
                                                 conf['tend'],
@@ -403,8 +407,8 @@ def main(config):
             status[1, _n] = 1
 
         except Exception as e:
-            print(e)
             print(f" -> beamforming computation failed!")
+            print(e)
 
             baz_bf.append(np.nan)
             baz_bf_std.append(np.nan)
@@ -413,7 +417,7 @@ def main(config):
             baz_bf_all.append(np.nan)
 
 
-    ## ---------------------------------------
+    # ---------------------------------------
     def __to_array(arr_in):
         arr_out = []
         for _t in arr_in:
@@ -428,7 +432,7 @@ def main(config):
         return np.array(arr_out)
 
 
-    ## prepare output dictionary
+    # prepare output dictionary
     output = {}
 
     output['time'] = np.array(ttime)
@@ -451,12 +455,12 @@ def main(config):
     output['num_stations_used'] = num_stations_used
 
 
-    ## store output to file
+    # store output to file
     print(f"-> store: {config['path_to_data_out']}statistics/VC_BAZ_{config['tbeg'].date}.pkl")
     __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{config['tbeg'].date}")
 
 
-    ## prepare output dictionary
+    # prepare output dictionary
     output1 = {}
 
     output1['time'] = __to_array(times_all)
@@ -477,12 +481,12 @@ def main(config):
 
 
 
-    ## store output to file
+    # store output to file
     print(f"-> store: {config['path_to_data_out']}all/VC_BAZ_{config['tbeg'].date}_all.pkl")
     __save_to_pickle(output1, config['path_to_data_out']+"all/", f"VC_BAZ_{config['tbeg'].date}_all")
 
 
-    ## status plot
+    # status plot
     import matplotlib.colors
     cmap = matplotlib.colors.ListedColormap(['red', 'green'])
 
@@ -500,4 +504,4 @@ def main(config):
 if __name__ == "__main__":
     main(config)
 
-## End of File
+# End of File
