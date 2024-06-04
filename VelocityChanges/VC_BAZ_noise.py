@@ -201,6 +201,14 @@ def main(config):
             # remove response for FUR
             st2.remove_response(inv2, output="ACC", water_level=10);
 
+            # check if merging is necessary
+            if len(st1) > 3:
+                print(f" -> merging required: rot")
+                st1 = st1.merge("interpolate")
+            if len(st2) > 3:
+                print(f" -> merging required: acc")
+                st2 = st2.merge("interpolate")
+
             # check if data has same length
             Nexpected = int(( t2-t1 )*20)
             for tr in st1:
@@ -213,6 +221,7 @@ def main(config):
                 if Nreal != Nexpected:
                     tr.data = tr.data[:Nexpected]
                     print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+
 
             # get amplitude levels
             levels = {}
@@ -249,13 +258,6 @@ def main(config):
             print(f" -> processing failed !")
             pass
 
-    # check if merging is necessary
-    if len(rot) > 3:
-        print(f" -> merging required: rot")
-        rot = rot.merge("interpolate")
-    if len(acc) > 3:
-        print(f" -> merging required: acc")
-        acc = acc.merge("interpolate")
 
     # check if data is all zero
     for tr in rot:
