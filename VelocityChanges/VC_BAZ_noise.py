@@ -201,6 +201,20 @@ def main(config):
             # remove response for FUR
             st2.remove_response(inv2, output="ACC", water_level=10);
 
+            # check if data has same length
+            Nexpected = int(( t2-t1 )*20)
+            for tr in st1:
+                Nreal = len(tr.data)
+                if Nreal != Nexpected:
+                    tr.data = tr.data[:Nexpected]
+                    print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+            for tr in st2:
+                Nreal = len(tr.data)
+                if Nreal != Nexpected:
+                    tr.data = tr.data[:Nexpected]
+                    print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+
+            # get amplitude levels
             levels = {}
             for tr in st1:
                 ring = tr.stats.channel[-1]
@@ -251,18 +265,6 @@ def main(config):
         if np.count_nonzero(tr.data) == 0:
             print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
-    # check if data has same length
-    Nexpected = int(( t2-t1 )*20)
-    for tr in rot:
-        Nreal = len(tr.data)
-        if Nreal != Nexpected:
-            tr.data = tr.data[:Nexpected]
-            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
-    for tr in acc:
-        Nreal = len(tr.data)
-        if Nreal != Nexpected:
-            tr.data = tr.data[:Nexpected]
-            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
 
     # ---------------------------------------
