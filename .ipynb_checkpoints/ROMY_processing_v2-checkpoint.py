@@ -356,7 +356,7 @@ def main(config):
     outZ.select(component="Z")[0].stats.location = "30"
 
     # create masked array
-    data = outz.select(component="Z")[0].dat
+    data = outZ.select(component="Z")[0].dat
     mask = tr_mltiZ.data
 
     if len(data) != len(mask):
