@@ -1,5 +1,15 @@
 #!/bin/python3
 
+'''
+ROMY Processing
+
+- load ROMY ZUV data
+- remove sensitivity and rotate to ZNE
+- mask with MLTI log to exclude MLTI boosts
+- store as masked streams
+
+'''
+
 import os
 import sys
 import obspy as obs

@@ -210,7 +210,7 @@ def main(config):
                 st2 = st2.merge("interpolate")
 
             # check if data has same length
-            Nexpected = int(( t2-t1 )*20)
+            Nexpected = int((t2 - t1)*20)
             for tr in st1:
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
