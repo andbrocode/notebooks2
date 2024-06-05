@@ -52,8 +52,8 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 config['path_to_out_data'] = data_path+"romy_baro/data/"
 
 # data
-config['tbeg'] = obs.UTCDateTime("2024-04-01 00:00")
-config['tend'] = obs.UTCDateTime("2024-04-30 00:00")
+config['tbeg'] = obs.UTCDateTime("2024-04-20 00:00")
+config['tend'] = obs.UTCDateTime("2024-05-15 00:00")
 
 config['tbuffer'] = 7200 # seconds
 
@@ -198,6 +198,8 @@ def main(config):
             stt = stt.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
             stt = stt.trim(t1, t2)
+
+            stt = stt.taper(0.05, type="cosine")
 
             # check if all data for this period is there
             if len(stt) !=5:
