@@ -355,12 +355,17 @@ def main(config):
     outZ += st0.select(component="Z").copy()
     outZ.select(component="Z")[0].stats.location = "30"
 
-    outZ.select(component="Z")[0].data = ma.masked_array(outZ.select(component="Z")[0].data,
-                                                         mask=tr_mltiZ.data,
-                                                         )
+    # create masked array
+    data = outz.select(component="Z")[0].dat
+    mask = tr_mltiZ.data
+
+    if len(data) != len(mask):
+        mask = mask[:len(data)]
+    outZ.select(component="Z")[0].data = ma.masked_array(data, mask=mask)
 
     outZ = outZ.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
+    # split into several traces since masked array cannot be stored as mseed
     outZ = outZ.split()
 
     __write_stream_to_sds(outZ, "BJZ", config['path_to_sds_out'])
@@ -371,12 +376,17 @@ def main(config):
     outN += st0.select(component="N")
     outN.select(component="N")[0].stats.location = "30"
 
-    outN.select(component="N")[0].data = ma.masked_array(outN.select(component="N")[0].data,
-                                                         mask=tr_mltiH.data,
-                                                         )
+    # create masked array
+    data = outN.select(component="N")[0].dat
+    mask = tr_mltiH.data
+
+    if len(data) != len(mask):
+        mask = mask[:len(data)]
+    outN.select(component="N")[0].data = ma.masked_array(data, mask=mask)
 
     outN = outN.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
+    # split into several traces since masked array cannot be stored as mseed
     outN = outN.split()
 
     __write_stream_to_sds(outN, "BJN", config['path_to_sds_out'])
@@ -387,12 +397,18 @@ def main(config):
     outE += st0.select(component="E")
     outE.select(component="E")[0].stats.location = "30"
 
-    outE.select(component="E")[0].data = ma.masked_array(outE.select(component="E")[0].data,
-                                                         mask=tr_mltiH.data,
-                                                         )
+    # create masked array
+    data = outE.select(component="E")[0].dat
+    mask = tr_mltiH.data
+
+    if len(data) != len(mask):
+        mask = mask[:len(data)]
+    outE.select(component="E")[0].data = ma.masked_array(data, mask=mask)
+
 
     outE = outE.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
+    # split into several traces since masked array cannot be stored as mseed
     outE = outE.split()
 
     __write_stream_to_sds(outE, "BJE", config['path_to_sds_out'])
