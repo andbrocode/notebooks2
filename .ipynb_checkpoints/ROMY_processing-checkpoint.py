@@ -8,8 +8,6 @@ from numpy import where
 from andbro__read_sds import __read_sds
 
 
-from functions.get_mlti_intervals import __get_mlti_intervals
-
 import warnings
 warnings.filterwarnings('ignore')
 
