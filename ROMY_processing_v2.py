@@ -69,7 +69,7 @@ def __get_mlti_intervals(mlti_times, time_delta=60):
             _tlast = _t
             t1.append(UTCDateTime(str(_t)[:16]))
 
-        if _t -_tlast > time_delta:
+        if _t - _tlast > time_delta:
             t2.append(UTCDateTime(str(_tlast)[:16])+60)
             t1.append(UTCDateTime(str(_t)[:16]))
 
@@ -154,12 +154,12 @@ def __rotate_romy_ZUV_ZNE(st, inv, keep_z=True):
     romy_v = st.select(channel="*V")[0].data
 
 
-    romy_z, romy_n, romy_e =rotate2zne(
-                                       romy_z, ori_z['azimuth'], ori_z['dip'],
-                                       romy_u, ori_u['azimuth'], ori_u['dip'],
-                                       romy_v, ori_v['azimuth'], ori_v['dip'],
-                                       inverse=False
-                                      )
+    romy_z, romy_n, romy_e = rotate2zne(
+                                        romy_z, ori_z['azimuth'], ori_z['dip'],
+                                        romy_u, ori_u['azimuth'], ori_u['dip'],
+                                        romy_v, ori_v['azimuth'], ori_v['dip'],
+                                        inverse=False
+                                       )
 
     st_new = st.copy()
 
@@ -268,7 +268,7 @@ def main(config):
     mltiZ_t1, mltiZ_t2 = __get_mlti_intervals(mltiZ.time_utc)
 
     # load maintenance file
-    lxx = __load_lxx(config['t1'], config['t2'], archive_path)
+    # lxx = __load_lxx(config['t1'], config['t2'], archive_path)
 
     # load inventory
     romy_inv = obs.read_inventory(config['path_to_inventory']+"dataless.seed.BW_ROMY")
@@ -282,12 +282,10 @@ def main(config):
     # remove sensitivity
     st0 = st0.remove_sensitivity(romy_inv)
 
-
     # check if merging is required
     if len(st0) > 3:
         print(f" -> merging required!")
         st0.merge(fill_value="interpolate")
-
 
     # remove trend
     st0 = st0.detrend("linear")
@@ -301,7 +299,6 @@ def main(config):
 
     # rotate streams
     st0 = __rotate_romy_ZUV_ZNE(st0, romy_inv, keep_z=True)
-
 
     # prepare MLTI masks
     tr_mltiU = __get_trace("BW.ROMY.30.MLT")
@@ -340,7 +337,6 @@ def main(config):
     # remove periods with value 2 due to summation
     tr_mltiH.data = where(tr_mltiH.data > 1, 1, tr_mltiH.data)
 
-
     # prepare maintenance mask
 #     lxx_t1, lxx_t2 = __get_mlti_intervals(lxx.datetime)
 
@@ -353,7 +349,7 @@ def main(config):
 #                                            t_offset_sec=60
 #                                            )
 
-    # write output
+    # write output Z
     outZ = obs.Stream()
 
     outZ += st0.select(component="Z").copy()
@@ -365,9 +361,11 @@ def main(config):
 
     outZ = outZ.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
+    outZ = outZ.split()
+
     __write_stream_to_sds(outZ, "BJZ", config['path_to_sds_out'])
 
-
+    # write output N
     outN = obs.Stream()
 
     outN += st0.select(component="N")
@@ -379,9 +377,11 @@ def main(config):
 
     outN = outN.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
+    outN = outN.split()
+
     __write_stream_to_sds(outN, "BJN", config['path_to_sds_out'])
 
-
+    # write output E
     outE = obs.Stream()
 
     outE += st0.select(component="E")
@@ -392,6 +392,8 @@ def main(config):
                                                          )
 
     outE = outE.trim(config['tbeg'], config['tend'], nearest_sample=False)
+
+    outE = outE.split()
 
     __write_stream_to_sds(outE, "BJE", config['path_to_sds_out'])
 
