@@ -332,7 +332,7 @@ def main(config):
     tr_mltiH = tr_mltiU.copy()
 
     # combine mlti periods
-    tr_mltiH.data += tr_mltiV.data
+    tr_mltiH.data = tr_mltiU.data + tr_mltiV.data
 
     # remove periods with value 2 due to summation
     tr_mltiH.data = where(tr_mltiH.data > 1, 1, tr_mltiH.data)
@@ -363,6 +363,7 @@ def main(config):
         mask = mask[:len(data)]
     outZ.select(component="Z")[0].data = ma.masked_array(data, mask=mask)
 
+    # adjust time period
     outZ = outZ.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     # split into several traces since masked array cannot be stored as mseed
@@ -373,7 +374,7 @@ def main(config):
     # write output N
     outN = obs.Stream()
 
-    outN += st0.select(component="N")
+    outN += st0.select(component="N").copy()
     outN.select(component="N")[0].stats.location = "30"
 
     # create masked array
@@ -384,6 +385,7 @@ def main(config):
         mask = mask[:len(data)]
     outN.select(component="N")[0].data = ma.masked_array(data, mask=mask)
 
+    # adjust time period
     outN = outN.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     # split into several traces since masked array cannot be stored as mseed
@@ -394,7 +396,7 @@ def main(config):
     # write output E
     outE = obs.Stream()
 
-    outE += st0.select(component="E")
+    outE += st0.select(component="E").copy()
     outE.select(component="E")[0].stats.location = "30"
 
     # create masked array
@@ -405,7 +407,7 @@ def main(config):
         mask = mask[:len(data)]
     outE.select(component="E")[0].data = ma.masked_array(data, mask=mask)
 
-
+    # adjust time period
     outE = outE.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     # split into several traces since masked array cannot be stored as mseed
