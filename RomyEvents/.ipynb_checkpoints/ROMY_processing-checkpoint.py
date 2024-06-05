@@ -2,7 +2,6 @@
 
 import os
 import obspy as obs
-import matplotlib.pyplot as plt
 
 from numpy import where
 from andbro__read_sds import __read_sds
@@ -66,9 +65,23 @@ def __write_stream_to_sds(st, cha, path_to_sds):
     nn, ss, ll, cc = tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel
     yy, jj = tr.stats.starttime.year, str(tr.stats.starttime.julday).rjust(3,"0")
 
+    if not os.path.exists(path_to_sds+f"{yy}/"):
+        os.mkdir(path_to_sds+f"{yy}/")
+        print(f"creating: {path_to_sds}{yy}/")
+    if not os.path.exists(path_to_sds+f"{yy}/{nn}/"):
+        os.mkdir(path_to_sds+f"{yy}/{nn}/")
+        print(f"creating: {path_to_sds}{yy}/{nn}/")
+    if not os.path.exists(path_to_sds+f"{yy}/{nn}/{ss}/"):
+        os.mkdir(path_to_sds+f"{yy}/{nn}/{ss}/")
+        print(f"creating: {path_to_sds}{yy}/{nn}/{ss}/")
+    if not os.path.exists(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D"):
+        os.mkdir(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D")
+        print(f"creating: {path_to_sds}{yy}/{nn}/{ss}/{cc}.D")
+
     st.write(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}", format="MSEED")
 
     print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
+
 
 def __mlti_intervals_to_zero(dat, times, mlti_t1, mlti_t2, t_offset_sec=120):
 
@@ -94,6 +107,7 @@ def __mlti_intervals_to_zero(dat, times, mlti_t1, mlti_t2, t_offset_sec=120):
     dat = where(mask == 1, 1, dat)
 
     return dat
+
 
 def __get_trace(seed):
 
@@ -130,9 +144,9 @@ def main(config):
 
     # load inventory
     romy_inv = obs.read_inventory(config['path_to_inventory']+"dataless.seed.BW_ROMY")
-    
-    st0 = obs.Stream()
 
+    # load ROMY data
+    st0 = obs.Stream()
     st0 += __read_sds(config['path_to_sds'], "BW.ROMY.10.BJZ", config['t1'], config['t2'])
     st0 += __read_sds(config['path_to_sds'], "BW.ROMY..BJU", config['t1'], config['t2'])
     st0 += __read_sds(config['path_to_sds'], "BW.ROMY..BJV", config['t1'], config['t2'])
@@ -140,14 +154,12 @@ def main(config):
     # remove sensitivity
     st0 = st0.remove_sensitivity(romy_inv)
 
-    print(st0)
 
     # check if merging is required
     if len(st0) > 3:
         print(f" -> merging required!")
         st0.merge(fill_value="interpolate")
 
-    print(st0)
 
     # remove trend
     st0 = st0.detrend("linear")
@@ -159,9 +171,11 @@ def main(config):
             tr.data = tr.data[:config['Nexpected']]
             # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
 
+    # rotate streams
     st0 = __rotate_romy_ZUV_ZNE(st0, romy_inv, keep_z=True)
 
 
+    # prepare MLTI masks
     tr_mltiU = __get_trace("BW.ROMY.30.MLT")
 
     tr_mltiU.data = __mlti_intervals_to_zero(tr_mltiU.data,
@@ -199,6 +213,7 @@ def main(config):
     tr_mltiH.data = where(tr_mltiH.data > 1, 1, tr_mltiH.data)
 
 
+    # prepare maintenance mask
     lxx_t1, lxx_t2 = __get_mlti_intervals(lxx.datetime)
 
     tr_lxx = __get_trace("BW.ROMY.30.LXX")
@@ -210,6 +225,7 @@ def main(config):
                                            t_offset_sec=60
                                            )
 
+    # write output
     outZ = obs.Stream()
 
     outZ += st0.select(component="Z")
