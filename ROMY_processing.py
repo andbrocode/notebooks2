@@ -7,9 +7,7 @@ import obspy as obs
 from numpy import where
 from andbro__read_sds import __read_sds
 
-from functions.rotate_romy_ZUV_ZNE import __rotate_romy_ZUV_ZNE
-from functions.load_lxx import __load_lxx
-from functions.load_mlti import __load_mlti
+
 from functions.get_mlti_intervals import __get_mlti_intervals
 
 import warnings
@@ -53,6 +51,133 @@ config['t2'] = config['tend']+config['time_offset']
 
 config['Nexpected'] = int((config['t2'] - config['t1']) * config['sampling_rate'])
 
+
+
+def __get_mlti_intervals(mlti_times, time_delta=60):
+
+    from obspy import UTCDateTime
+    from numpy import array
+
+    if len(mlti_times) == 0:
+        return array([]), array([])
+
+    t1, t2 = [], []
+    for k, _t in enumerate(mlti_times):
+
+        _t = UTCDateTime(_t)
+
+        if k == 0:
+            _tlast = _t
+            t1.append(UTCDateTime(str(_t)[:16]))
+
+        if _t -_tlast > time_delta:
+            t2.append(UTCDateTime(str(_tlast)[:16])+60)
+            t1.append(UTCDateTime(str(_t)[:16]))
+
+        _tlast = _t
+
+    t2.append(UTCDateTime(str(_t)[:16])+60)
+    # t2.append(mlti_times[-1])
+
+    return array(t1), array(t2)
+
+
+def __load_mlti(tbeg, tend, ring, path_to_archive):
+
+    from obspy import UTCDateTime
+    from pandas import read_csv, concat
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    rings = {"U":"03", "Z":"01", "V":"02", "W":"04"}
+
+    if tbeg.year == tend.year:
+        year = tbeg.year
+
+        path_to_mlti = path_to_archive+f"romy_archive/{year}/BW/CROMY/{year}_romy_{rings[ring]}_mlti.log"
+
+        mlti = read_csv(path_to_mlti, names=["time_utc","Action","ERROR"])
+
+    else:
+
+        path_to_mlti1 = path_to_archive+f"romy_archive/{tbeg.year}/BW/CROMY/{tbeg.year}_romy_{rings[ring]}_mlti.log"
+        mlti1 = read_csv(path_to_mlti1, names=["time_utc","Action","ERROR"])
+
+        path_to_mlti2 = path_to_archive+f"romy_archive/{tend.year}/BW/CROMY/{tend.year}_romy_{rings[ring]}_mlti.log"
+        mlti2 = read_csv(path_to_mlti2, names=["time_utc","Action","ERROR"])
+
+        mlti = concat([mlti1, mlti2])
+
+    mlti = mlti[(mlti.time_utc > tbeg) & (mlti.time_utc < tend)]
+
+    return mlti
+
+
+def __load_lxx(tbeg, tend, path_to_archive):
+
+    from obspy import UTCDateTime
+    from pandas import read_csv, concat
+
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
+
+    if tbeg.year == tend.year:
+        year = tbeg.year
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{year}/logfiles/LXX_maintenance.log"
+
+        lxx = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+    else:
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{tbeg.year}/logfiles/LXX_maintenance.log"
+        lxx1 = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+        path_to_lx_maintenance = path_to_archive+f"romy_autodata/{tend.year}/logfiles/LXX_maintenance.log"
+        lxx2 = read_csv(path_to_lx_maintenance, names=["datetime","WS1","WS4","WS5","WS6","WS7","WS8","WS9","sum_all"])
+
+        lxx = concat([lxx1, lxx2])
+
+    lxx = lxx[(lxx.datetime > tbeg) & (lxx.datetime < tend)]
+
+    return lxx
+
+
+def __rotate_romy_ZUV_ZNE(st, inv, keep_z=True):
+
+    from obspy.signal.rotate import rotate2zne
+
+    ori_z = inv.get_orientation("BW.ROMY.10.BJZ")
+    ori_u = inv.get_orientation("BW.ROMY..BJU")
+    ori_v = inv.get_orientation("BW.ROMY..BJV")
+
+    romy_z = st.select(channel="*Z")[0].data
+    romy_u = st.select(channel="*U")[0].data
+    romy_v = st.select(channel="*V")[0].data
+
+
+    romy_z, romy_n, romy_e =rotate2zne(
+                                       romy_z, ori_z['azimuth'], ori_z['dip'],
+                                       romy_u, ori_u['azimuth'], ori_u['dip'],
+                                       romy_v, ori_v['azimuth'], ori_v['dip'],
+                                       inverse=False
+                                      )
+
+    st_new = st.copy()
+
+    if keep_z:
+        st_new.select(channel="*Z")[0].data = st.select(channel="*Z")[0].data
+    else:
+        st_new.select(channel="*Z")[0].data = romy_z
+
+    st_new.select(channel="*U")[0].data = romy_n
+    st_new.select(channel="*V")[0].data = romy_e
+
+    ch = st_new.select(channel="*U")[0].stats.channel[:2]
+
+    st_new.select(channel="*U")[0].stats.channel = f"{ch}N"
+    st_new.select(channel="*V")[0].stats.channel = f"{ch}E"
+
+    return st_new
 
 
 def __write_stream_to_sds(st, cha, path_to_sds):
