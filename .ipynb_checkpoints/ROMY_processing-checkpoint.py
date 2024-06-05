@@ -237,7 +237,7 @@ def main(config):
     outZ += tr_mltiZ
     outZ += tr_lxx
 
-    outZ = outZ.trim(config['tbeg'], config['tend'])
+    outZ = outZ.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     __write_stream_to_sds(outZ, "BJZ", config['path_to_sds_out'])
 
@@ -249,7 +249,7 @@ def main(config):
     outN += tr_mltiH
     outN += tr_lxx
 
-    outN = outN.trim(config['tbeg'], config['tend'])
+    outN = outN.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     __write_stream_to_sds(outN, "BJN", config['path_to_sds_out'])
 
@@ -261,7 +261,7 @@ def main(config):
     outE += tr_mltiH
     outE += tr_lxx
 
-    outE = outE.trim(config['tbeg'], config['tend'])
+    outE = outE.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     __write_stream_to_sds(outE, "BJE", config['path_to_sds_out'])
 
