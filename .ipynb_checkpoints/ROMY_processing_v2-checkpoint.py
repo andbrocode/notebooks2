@@ -356,7 +356,7 @@ def main(config):
     outZ.select(component="Z")[0].stats.location = "30"
 
     # create masked array
-    data = outZ.select(component="Z")[0].dat
+    data = outZ.select(component="Z")[0].data
     mask = tr_mltiZ.data
 
     if len(data) != len(mask):
@@ -377,7 +377,7 @@ def main(config):
     outN.select(component="N")[0].stats.location = "30"
 
     # create masked array
-    data = outN.select(component="N")[0].dat
+    data = outN.select(component="N")[0].data
     mask = tr_mltiH.data
 
     if len(data) != len(mask):
@@ -398,7 +398,7 @@ def main(config):
     outE.select(component="E")[0].stats.location = "30"
 
     # create masked array
-    data = outE.select(component="E")[0].dat
+    data = outE.select(component="E")[0].data
     mask = tr_mltiH.data
 
     if len(data) != len(mask):
