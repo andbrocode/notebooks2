@@ -12,6 +12,8 @@ from functions.load_lxx import __load_lxx
 from functions.load_mlti import __load_mlti
 from functions.get_mlti_intervals import __get_mlti_intervals
 
+import warnings
+warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
