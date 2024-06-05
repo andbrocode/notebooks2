@@ -217,7 +217,7 @@ def __mlti_intervals_to_zero(dat, times, mlti_t1, mlti_t2, t_offset_sec=120):
 
     dat = array(dat)
 
-    mask = full((len(times)), 0, dtype=int)
+    _mask = full((len(times)), 0, dtype=int)
 
     idx = 0
     for nn, tt in enumerate(times):
@@ -228,11 +228,11 @@ def __mlti_intervals_to_zero(dat, times, mlti_t1, mlti_t2, t_offset_sec=120):
             t1, t2 = (mlti_t1[idx]-t_offset_sec), (mlti_t2[idx]+t_offset_sec)
 
         if tt >= t1:
-            mask[nn] = 1
+            _mask[nn] = 1
         if tt > t2:
             idx += 1
 
-    dat = where(mask == 1, 1, dat)
+    dat = where(_mask == 1, 1, dat)
 
     return dat
 
