@@ -52,8 +52,8 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 config['path_to_out_data'] = data_path+"romy_baro/data/"
 
 # data
-config['tbeg'] = obs.UTCDateTime("2024-04-05 00:00")
-config['tend'] = obs.UTCDateTime("2024-04-10 00:00")
+config['tbeg'] = obs.UTCDateTime("2024-04-01 00:00")
+config['tend'] = obs.UTCDateTime("2024-04-30 00:00")
 
 config['tbuffer'] = 7200 # seconds
 
