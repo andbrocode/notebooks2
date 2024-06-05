@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import os
+import sys
 import obspy as obs
 
 from numpy import where
@@ -37,7 +38,8 @@ config['path_to_sds_out'] = archive_path+"temp_archive/"
 
 config['path_to_inventory'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/"
 
-config['tbeg'] = obs.UTCDateTime("2024-05-23")
+if len(sys.argv) > 1:
+    config['tbeg'] = obs.UTCDateTime(sys.argv[1])
 config['tend'] = config['tbeg'] + 86400
 
 config['sampling_rate'] = 20 # Hz
@@ -247,7 +249,7 @@ def main(config):
 
     outN = outN.trim(config['tbeg'], config['tend'])
 
-    __write_stream_to_sds(outZ, "BJN", config['path_to_sds_out'])
+    __write_stream_to_sds(outN, "BJN", config['path_to_sds_out'])
 
 
     outE = obs.Stream()
@@ -259,7 +261,7 @@ def main(config):
 
     outE = outE.trim(config['tbeg'], config['tend'])
 
-    __write_stream_to_sds(outZ, "BJE", config['path_to_sds_out'])
+    __write_stream_to_sds(outE, "BJE", config['path_to_sds_out'])
 
 
 
