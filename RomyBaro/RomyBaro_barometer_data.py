@@ -350,7 +350,8 @@ def main(config):
 
             ax[Nrow-1].set_xlabel(f"Time ({tunit})", fontsize=font)
 
-            ax[0].set_title(f" {t1.date}  |  {config['fmin']*1e3} - {config['fmax']*1e3} mHz", fontsize=font)
+            ax[0].set_title(f" {t1.date} {str(t1.time).split('.')[0]} - {str(t2.time).split('.')[0]} UTC  |  f = {config['fmin']*1e3} - {config['fmax']*1e3} mHz", fontsize=font)
+
 
             for i in range(Nrow):
                 ax[i].legend(loc=1, ncol=2)
