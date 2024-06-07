@@ -89,7 +89,7 @@ def main(config):
 
     fur_inv = obspy.read_inventory(root_path+"/Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR")
 
-    fur = fur.remove_response(inventory=fur_inv, output="ACC", waterlevel=10)
+    fur = fur.remove_response(inventory=fur_inv, output="ACC", water_level=10)
 
     fur = fur.merge(fill_value="interpolate")
 
