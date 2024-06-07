@@ -44,9 +44,6 @@ config = {}
 ## decide to store figures
 config['save'] = True
 
-## set time period
-# config['tbeg'] = UTCDateTime("2024-02-23 12:00")
-# config['tend'] = UTCDateTime("2024-03-07 12:00")
 
 # in southern shaft
 # config['tbeg'] = UTCDateTime("2024-03-08 12:00")
@@ -64,15 +61,7 @@ config['path_to_figs'] = data_path+"tiltmeter/figures/"
 ## tiltmeter configurations
 confTilt = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/", "tiltmeter.conf")
 
-## correction of offset (e.g. reset mass)
-# offset_correction = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/", "tiltmeter_steps.yml")
-offset_correction = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/", "tiltmeter_offsets.yml")
 
-## correction for temperature trends
-## based on MAT
-temperature_correction = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/","tiltmeter_temperature_correction.yml")
-## based on WSX
-# temperature_correction = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/","temperature_correction_new.yml")
 
 def main(config):
 
@@ -88,7 +77,7 @@ def main(config):
     del ROMYT0
 
     print(f" -> load FUR data ...")
-    fur = __read_sds(bay_path+"mseed_online/archive/", "GR.FUR..BH*", config['tbeg'], config['tend'])
+    fur = __read_sds(bay_path+"mseed_online/archive/", "GR.FUR..LH*", config['tbeg'], config['tend'])
 
     fur_inv = obspy.read_inventory(root_path+"/Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR")
 
