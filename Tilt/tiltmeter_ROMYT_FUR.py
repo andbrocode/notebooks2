@@ -49,7 +49,8 @@ config['save'] = True
 # config['tend'] = UTCDateTime("2024-03-07 12:00")
 
 # in southern shaft
-config['tbeg'] = UTCDateTime("2024-03-08 12:00")
+# config['tbeg'] = UTCDateTime("2024-03-08 12:00")
+config['tbeg'] = UTCDateTime("2024-04-08 00:00")
 config['tend'] = UTCDateTime("2024-05-08 00:00")
 
 ## specify paths
@@ -249,7 +250,9 @@ def main(config):
         ax[2].set_xscale("log")
         ax[2].set_yscale("log")
         ax[2].legend(loc=1, ncol=4)
-        ax[2].set_ylabel(f"PSD (m$^2$/s$^4$/Hz)", fontsize=font)
+        # ax[2].set_ylabel(f"PSD (m$^2$/s$^4$/Hz)", fontsize=font)
+        sqrt=r"\sqrt{Hz}"
+        ax[2].set_ylabel(f"Spec. Ampltiude\nm/s$^2$/{sqrt})", fontsize=font)
 
         # _______________________________________________________________________
         #
