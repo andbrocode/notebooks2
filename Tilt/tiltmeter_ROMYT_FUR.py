@@ -47,8 +47,8 @@ config['save'] = True
 
 # in southern shaft
 # config['tbeg'] = UTCDateTime("2024-03-08 12:00")
-config['tbeg'] = UTCDateTime("2024-04-08 00:00")
-config['tend'] = UTCDateTime("2024-05-08 00:00")
+config['tbeg'] = UTCDateTime("2024-03-09 00:00")
+config['tend'] = UTCDateTime("2024-04-09 00:00")
 
 ## specify paths
 config['path_to_sds'] = archive_path+"romy_archive/"
@@ -81,7 +81,7 @@ def main(config):
 
     fur_inv = obspy.read_inventory(root_path+"/Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR")
 
-    fur = fur.remove_response(inventory=fur_inv, output="ACC", water_level=10)
+    fur = fur.remove_response(inventory=fur_inv, output="ACC")
 
     fur = fur.merge(fill_value="interpolate")
 
