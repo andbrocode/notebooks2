@@ -110,7 +110,7 @@ def main(config):
     # stt = stt.filter("bandpass", freqmin=1/(100*3600), freqmax=0.25, corners=4, zerophase=True);
     # stt = stt.resample(1, no_filter=True);
 
-    stt.plot(equal_scale=False);
+    # stt.plot(equal_scale=False);
 
 
     def __makeplot(st0):
@@ -281,8 +281,8 @@ def main(config):
             ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
 
         # set axis limits
-        ax[0].set_ylim(-12, 12)
-        ax[1].set_ylim(-12, 12)
+        # ax[0].set_ylim(-12, 12)
+        # ax[1].set_ylim(-12, 12)
 
         gc.collect()
 
