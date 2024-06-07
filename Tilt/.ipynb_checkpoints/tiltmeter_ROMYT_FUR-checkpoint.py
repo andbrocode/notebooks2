@@ -75,6 +75,7 @@ temperature_correction = __readYaml(f"{root_path}Documents/ROMY/tiltmeter/","til
 
 def main(config):
 
+    print(f" -> load ROMYT data ...")
     ROMYT0 = __read_sds(config['path_to_sds'], "BW.ROMYT..MA*", config['tbeg'], config['tend'])
 
     ROMYT0 = ROMYT0.sort()
@@ -85,6 +86,7 @@ def main(config):
 
     del ROMYT0
 
+    print(f" -> load FUR data ...")
     fur = __read_sds(bay_path+"mseed_online/archive/", "GR.FUR..BH*", config['tbeg'], config['tend'])
 
     fur_inv = obspy.read_inventory(root_path+"/Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR")
@@ -109,7 +111,7 @@ def main(config):
     stt = stt.detrend("linear");
     # stt = stt.detrend("simple");
 
-    stt = stt.taper(0.05);
+    stt = stt.taper(0.05, type="cosine");
 
     ff = 0.25
     stt = stt.filter("lowpass", freq=ff, corners=4, zerophase=True);
