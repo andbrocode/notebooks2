@@ -308,7 +308,7 @@ def __make_control_plot(ev_num, st0, out, t1, t2, path_to_figs, plot=False):
                         alpha=0.3
                         )
 
-    ax7.set_xlabel("Time (min)")
+    ax7.set_xlabel(f"Time (min) from {st0[0].stats.starttime.date} {str(st0[0].stats.starttime.time).split('.')[0]} UTC")
 
     ax81 = ax8.twinx()
     for _i, fc in enumerate(out.keys()):
