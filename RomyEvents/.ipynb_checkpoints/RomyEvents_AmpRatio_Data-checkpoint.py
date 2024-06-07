@@ -77,8 +77,8 @@ def __get_event_window(st0, deltaT1=60, deltaT2=2, plot=False):
 
     st_trig = obs.Stream()
     st_trig += st0.select(station="FUR", channel="*Z").copy()
-    st_trig += st0.select(station="FUR", channel="*N").copy()
-    st_trig += st0.select(station="FUR", channel="*E").copy()
+    st_trig += st0.select(station="FUR", channel="*R").copy()
+    st_trig += st0.select(station="FUR", channel="*T").copy()
     st_trig += st0.select(station="ROMY", channel="*Z").copy()
 
     st_trig = st_trig.detrend("demean")
@@ -139,11 +139,11 @@ def __get_fband_amplitude(st0, fmin, fmax, t1, t2, amp="maxima", plot=False):
 
     st_amp = obs.Stream()
     st_amp += st0.select(station="FUR", channel="*Z").copy()
-    st_amp += st0.select(station="FUR", channel="*N").copy()
-    st_amp += st0.select(station="FUR", channel="*E").copy()
+    st_amp += st0.select(station="FUR", channel="*R").copy()
+    st_amp += st0.select(station="FUR", channel="*T").copy()
     st_amp += st0.select(station="WET", channel="*Z").copy()
-    st_amp += st0.select(station="WET", channel="*N").copy()
-    st_amp += st0.select(station="WET", channel="*E").copy()
+    st_amp += st0.select(station="WET", channel="*R").copy()
+    st_amp += st0.select(station="WET", channel="*T").copy()
     st_amp += st0.select(station="ROMY",channel="*Z").copy()
     st_amp += st0.select(station="RLAS",channel="*Z").copy()
 
@@ -255,11 +255,11 @@ def __make_control_plot(ev_num, st0, out, t1, t2, path_to_figs, plot=False):
 
     st1 = obs.Stream()
     st1 += st0.select(station="FUR", channel="*Z").copy()
-    st1 += st0.select(station="FUR", channel="*N").copy()
-    st1 += st0.select(station="FUR", channel="*E").copy()
+    st1 += st0.select(station="FUR", channel="*R").copy()
+    st1 += st0.select(station="FUR", channel="*T").copy()
     st1 += st0.select(station="WET", channel="*Z").copy()
-    st1 += st0.select(station="WET", channel="*N").copy()
-    st1 += st0.select(station="WET", channel="*E").copy()
+    st1 += st0.select(station="WET", channel="*R").copy()
+    st1 += st0.select(station="WET", channel="*T").copy()
     st1 += st0.select(station="ROMY", channel="*Z").copy()
     st1 += st0.select(station="RLAS", channel="*Z").copy()
 
@@ -322,11 +322,11 @@ def __make_control_plot(ev_num, st0, out, t1, t2, path_to_figs, plot=False):
 
 
         if _i == 0:
-            ax81.scatter(fc, out[fc]["FUR.BHZ"], color="tab:blue", edgecolor="k", marker="d", label="FUR", zorder=2)
-            ax81.scatter(fc, out[fc]["WET.BHZ"], color="tab:orange", edgecolor="k", marker="d", label="WET", zorder=2)
+            ax81.scatter(fc, out[fc]["FUR.BHT"], color="tab:blue", edgecolor="k", marker="d", label="FUR", zorder=2)
+            ax81.scatter(fc, out[fc]["WET.BHT"], color="tab:orange", edgecolor="k", marker="d", label="WET", zorder=2)
         else:
-            ax81.scatter(fc, out[fc]["FUR.BHZ"], color="tab:blue", edgecolor="k", marker="d", zorder=2)
-            ax81.scatter(fc, out[fc]["WET.BHZ"], color="tab:orange", edgecolor="k", marker="d", zorder=2)
+            ax81.scatter(fc, out[fc]["FUR.BHT"], color="tab:blue", edgecolor="k", marker="d", zorder=2)
+            ax81.scatter(fc, out[fc]["WET.BHT"], color="tab:orange", edgecolor="k", marker="d", zorder=2)
 
     ax8.set_xscale("log")
     ax8.set_yscale("log")
@@ -383,6 +383,10 @@ def main(config):
                 continue
 
             st0 = st0.detrend("demean")
+
+            # add transverse component
+            st0.select(station="FUR").rotate("NE->RT", back_azimuth=ev.backazimuth)
+            st0.select(station="WET").rotate("NE->RT", back_azimuth=ev.backazimuth)
 
             try:
                 # specify event number
