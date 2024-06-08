@@ -95,13 +95,15 @@ def __get_mean_rmy_pressure(stations, t1, t2, path_to_data, plot=False):
 
     # checkup plot
     if plot:
+        times = ps0[0].times()/3600
         plt.figure(figsize=(15, 5))
         for i, x in enumerate(shifted):
-            plt.plot(x, label=stations[i])
-        plt.plot(mean.data, "k")
+            plt.plot(times, x, label=stations[i], zorder=2)
+        plt.plot(times, mean.data, "k", zorder=2)
         plt.legend()
-        plt.ylabel("Pressure (Pa)")
-        plt.xlabel("Samples")
+        plt.grid(ls="--", color="grey", alpha=0.4)
+        plt.ylabel("Pressure (Pa)", fontsize=12)
+        plt.xlabel("Time (hour)", fontsize=12)
         plt.show();
 
     return mean
