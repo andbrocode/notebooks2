@@ -48,7 +48,7 @@ config['interval'] = 60
 config['ddt'] = 30
 
 # frequency band (minus and plus)
-config['fband'] = 5 # 10
+config['fband'] = 10 # 10
 
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
