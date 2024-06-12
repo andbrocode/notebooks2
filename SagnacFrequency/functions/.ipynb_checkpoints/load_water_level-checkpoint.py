@@ -1,10 +1,10 @@
-def __load_water_level(tbeg, tend):
+def __load_water_level(tbeg, tend, path_to_data="/lamont/Pegel/"):
 
     from datetime import date
     from pandas import read_csv, concat, DataFrame, date_range
     from obspy import UTCDateTime
 
-    path_to_data = "/lamont/Pegel/"
+    # path_to_data = "/lamont/Pegel/"
 
     tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
 
