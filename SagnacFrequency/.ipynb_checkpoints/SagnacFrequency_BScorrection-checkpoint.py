@@ -206,10 +206,13 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
     t_mid = t[int((len(t))/2)]
 
     ## averaging of frequencies
-    insta_f_cut_mean = np.mean(insta_f_cut)
-    # insta_f_cut_mean = np.median(insta_f_cut)
+    insta_f_cut_avg = np.mean(insta_f_cut)
+    # insta_f_cut_avg = np.median(insta_f_cut)
 
-    return t_mid, insta_f_cut_mean, np.mean(amplitude_envelope), np.std(insta_f_cut)
+    ## standard error
+    insta_f_cut_std = np.std(insta_f_cut)
+
+    return t_mid, insta_f_cut_avg, np.mean(amplitude_envelope), insta_f_cut_std
 
 
 def __backscatter_correction(m01, m02, phase0, w_obs, fs0, cm_filter_factor=1.033):
@@ -319,7 +322,7 @@ def main(config):
     times = __get_time_intervals(config['tbeg'], config['tend'], interval_seconds=config['interval'], interval_overlap=0)
 
     ## prepare output arrays
-    fs, ac, dc, ph = np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan
+    fs, ac, dc, ph, st = np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan
 
     ## prepare output dataframe
     out_df = DataFrame()
@@ -351,11 +354,11 @@ def main(config):
                                                              )
 
             # estimate instantaneous frequency average via hilbert
-            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat,
-                                                            config['nominal_sagnac'],
-                                                            fband=config['fband'],
-                                                            cut=config['ddt']
-                                                           )
+            t, fs[_n], _, st[_n] = __hilbert_frequency_estimator(_dat,
+                                                                 config['nominal_sagnac'],
+                                                                 fband=config['fband'],
+                                                                 cut=config['ddt']
+                                                                 )
 
             # estimate DC and AC based on time series (time domain)
             # dc[_n] = np.mean(_dat)
@@ -365,11 +368,11 @@ def main(config):
 
         ## fill output dataframe
         if _k == 0:
-            out_df['fj_fs'], out_df['fj_ac'], out_df['fj_dc'], out_df['fj_ph'] = fs, ac, dc, ph
+            out_df['fj_fs'], out_df['fj_ac'], out_df['fj_dc'], out_df['fj_ph'], out_df['fj_st'] = fs, ac, dc, ph, st
         elif _k == 1:
-            out_df['f1_fs'], out_df['f1_ac'], out_df['f1_dc'], out_df['f1_ph'] = fs, ac, dc, ph
+            out_df['f1_fs'], out_df['f1_ac'], out_df['f1_dc'], out_df['f1_ph'], out_df['f1_st'] = fs, ac, dc, ph, st
         elif _k == 2:
-            out_df['f2_fs'], out_df['f2_ac'], out_df['f2_dc'], out_df['f2_ph'] = fs, ac, dc, ph
+            out_df['f2_fs'], out_df['f2_ac'], out_df['f2_dc'], out_df['f2_ph'], out_df['f2_st'] = fs, ac, dc, ph, st
 
 
     ## prepare values for backscatter correction
@@ -378,7 +381,12 @@ def main(config):
     phase0 = out_df.f1_ph - out_df.f2_ph
     w_obs = out_df.fj_fs
 
-    out_df['w_s'], out_df['bscorrection'], out_df['term'] = __backscatter_correction(m01, m02, phase0, w_obs, config['nominal_sagnac'], cm_filter_factor=1.033)
+    out_df['w_s'], out_df['bscorrection'], out_df['term'] = __backscatter_correction(m01, m02,
+                                                                                     phase0,
+                                                                                     w_obs,
+                                                                                     config['nominal_sagnac'],
+                                                                                     cm_filter_factor=1.033
+                                                                                    )
 
 
     ## store data
