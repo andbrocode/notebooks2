@@ -48,7 +48,7 @@ config['interval'] = 60
 config['ddt'] = 30
 
 # frequency band (minus and plus)
-config['fband'] = 10 # 10
+config['fband'] = 5 # 10
 
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
@@ -206,8 +206,8 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
     t_mid = t[int((len(t))/2)]
 
     ## averaging of frequencies
-    # insta_f_cut_mean = np.mean(insta_f_cut)
-    insta_f_cut_mean = np.median(insta_f_cut)
+    insta_f_cut_mean = np.mean(insta_f_cut)
+    # insta_f_cut_mean = np.median(insta_f_cut)
 
     return t_mid, insta_f_cut_mean, np.mean(amplitude_envelope), np.std(insta_f_cut)
 
@@ -345,10 +345,17 @@ def main(config):
 #             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
             # estimate AC and DC values in frequency domain
-            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, config['nominal_sagnac'])
+            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data,
+                                                              _dat[0].stats.delta,
+                                                              config['nominal_sagnac']
+                                                             )
 
             # estimate instantaneous frequency average via hilbert
-            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, config['nominal_sagnac'], fband=config['fband'], cut=config['ddt'])
+            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat,
+                                                            config['nominal_sagnac'],
+                                                            fband=config['fband'],
+                                                            cut=config['ddt']
+                                                           )
 
             # estimate DC and AC based on time series (time domain)
             # dc[_n] = np.mean(_dat)

@@ -38,9 +38,9 @@ elif os.uname().nodename == 'ambrym':
 
 config = {}
 
-config['ring'] = "U"
+config['ring'] = "V"
 
-config['seeds'] = ["BW.DROMY..FJU", "BW.DROMY..F1V", "BW.DROMY..F2V"]
+config['seeds'] = [f"BW.DROMY..FJ{config['ring']}", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 
 config['interval'] = 60
 
@@ -206,8 +206,8 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
     t_mid = t[int((len(t))/2)]
 
     ## averaging of frequencies
-    # insta_f_cut_mean = np.mean(insta_f_cut)
-    insta_f_cut_mean = np.median(insta_f_cut)
+    insta_f_cut_mean = np.mean(insta_f_cut)
+    # insta_f_cut_mean = np.median(insta_f_cut)
 
     return t_mid, insta_f_cut_mean, np.mean(amplitude_envelope), np.std(insta_f_cut)
 
@@ -345,10 +345,17 @@ def main(config):
 #             fs[_n], ac[_n], dc[_n], ph[_n] = __get_values(f, psd, pha, config['nominal_sagnac'])
 
             # estimate AC and DC values in frequency domain
-            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data, _dat[0].stats.delta, config['nominal_sagnac'])
+            fs[_n], ac[_n], dc[_n], ph[_n] = __get_fft_values(_dat[0].data,
+                                                              _dat[0].stats.delta,
+                                                              config['nominal_sagnac']
+                                                             )
 
             # estimate instantaneous frequency average via hilbert
-            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat, config['nominal_sagnac'], fband=config['fband'], cut=config['ddt'])
+            t, fs[_n], _, _ = __hilbert_frequency_estimator(_dat,
+                                                            config['nominal_sagnac'],
+                                                            fband=config['fband'],
+                                                            cut=config['ddt']
+                                                           )
 
             # estimate DC and AC based on time series (time domain)
             # dc[_n] = np.mean(_dat)
@@ -377,8 +384,8 @@ def main(config):
     ## store data
     date_str = f"{config['tbeg'].year}{str(config['tbeg'].month).rjust(2,'0')}{str(config['tbeg'].day).rjust(2,'0')}"
     time_str = f"{str(config['tbeg'].time).split('.')[0]}"
-    out_df.to_pickle(config['path_to_data']+f"FJU_{date_str}_{time_str}_backscatter.pkl")
-    print(f" -> writing: {config['path_to_data']}FJU_{date_str}_{time_str}_backscatter.pkl")
+    out_df.to_pickle(config['path_to_data']+f"FJ{config['ring']}_{date_str}_{time_str}_backscatter.pkl")
+    print(f" -> writing: {config['path_to_data']}FJ{config['ring']}_{date_str}_{time_str}_backscatter.pkl")
 
 
 ## ________ MAIN  ________
