@@ -263,9 +263,12 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"FUR.BHR")
         ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
 
-        ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
-        ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
-        ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+        try:
+            ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
+            ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+            ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+        except:
+            print(f" -> y axes limits failed!")
 
         ax00 = ax0.twinx()
         ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
@@ -276,9 +279,12 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax22 = ax2.twinx()
         ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
 
-        ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
-        ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
-        ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+        try:
+            ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
+            ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+            ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+        except:
+            print(f" -> y axes limits failed!")
 
         cmap = plt.get_cmap("viridis", 10)
 
