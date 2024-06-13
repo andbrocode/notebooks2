@@ -354,7 +354,16 @@ def main(config):
             print(f" -> chekup failed!")
             print(e)
 
-
+        out_bf = __compute_beamforming_ROMY(
+                                            conf['tbeg'],
+                                            conf['tend'],
+                                            submask=None,
+                                            fmin=config['fmin'],
+                                            fmax=config['fmax'],
+                                            component="Z",
+                                            bandpass=True,
+                                            plot=False
+                                           )
         # compute beamforming for array
         try:
             print(f"\ncompute beamforming ...")
@@ -476,13 +485,14 @@ def main(config):
 
             t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
             out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
-                                format="png", dpi=150, bbox_inches='tight')
+                                format="png", dpi=100, bbox_inches='tight')
             print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
 
         except Exception as e:
             print(f" -> plotting failed!")
             print(e)
 
+        print("\n_______________________________________________\n")
 
 
     # convert to array
@@ -548,7 +558,6 @@ def main(config):
     output1['vel_bf_all'] = __to_array(vel_bf_all)
 
 
-
     # store output to file
     print(f"-> store: {config['path_to_data_out']}all/VC_BAZ_{config['tbeg'].date}_all.pkl")
     __save_to_pickle(output1, config['path_to_data_out']+"all/", f"VC_BAZ_{config['tbeg'].date}_all")
@@ -560,7 +569,6 @@ def main(config):
 
     fig = plt.figure()
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
-
 
     fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png",
                 format="png", dpi=100, bbox_inches='tight')

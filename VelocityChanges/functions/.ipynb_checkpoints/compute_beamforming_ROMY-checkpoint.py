@@ -33,9 +33,8 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
         bay_path = "/bay200/"
     elif username == "andbro":
         bay_path = "/home/andbro/bay200/"
-        
-        
-    ## _____________________________________________________
+
+    # _____________________________________________________
 
     def __get_data(config):
 
@@ -50,7 +49,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
             # print(f"-> requesting {net}.{sta}.{loc}.{cha}")
 
 
-            ## querry inventory data
+            # querry inventory data
             try:
                 try:
                     # print(" -> loading inventory via archive")
@@ -95,7 +94,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
                 continue
 
 
-            ## merge if masked
+            # merge if masked
             if len(stats) > 1:
                 print(f" -> merging stream. Length: {len(stats)}")
                 stats.merge(method=1, fill_value="interpolate")
@@ -105,7 +104,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
                 stats.filter("lowpass", freq=18, corners=4, zerophase=True)
                 stats.decimate(2, no_filter=True)
 
-            ## remove response [ACC -> m/s/s | VEL -> m/s | DISP -> m]
+            # remove response [ACC -> m/s/s | VEL -> m/s | DISP -> m]
             try:
                 stats.remove_response(inventory=inventory, output="VEL", water_level=10)
             except:
@@ -113,7 +112,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
                 continue
 
 
-            ## rotate to ZNE
+            # rotate to ZNE
             try:
                 stats.rotate(method="->ZNE", inventory=inventory)
             except:
@@ -136,11 +135,11 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
             if station == config['reference_station']:
                 ref_station = stats.copy()
 
-            # print(stats)
+            print(stats)
 
             st += stats
 
-        ## make sure all have same sampling rate for HH* only
+        # make sure all have same sampling rate for HH* only
         if cha[0] == "H":
             st = st.resample(20, no_filter=False)
 
@@ -148,7 +147,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
         print(f" -> obtained: {int(len(st)/1)} of {len(config['subarray_stations'])} stations!")
 
-        ## update subarray stations if data could not be requested for all stations
+        # update subarray stations if data could not be requested for all stations
         if len(st) < 1*len(config['subarray_stations']):
             config['subarray_stations'] = [f"{tr.stats.network}.{tr.stats.station}" for tr in st]
             config['subarray_stations'] = list(set(config['subarray_stations']))
@@ -160,48 +159,49 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
 
 
-    ## _____________________________________________________
+    # _____________________________________________________
 
-    ## start timer for runtime
+    # start timer for runtime
     start_timer = timeit.default_timer()
 
 
-    ## generate configuration object
+    # generate configuration object
     config = {}
 
-    ## time period of event
+    # time period of event
     config['tbeg'] = UTCDateTime(tbeg)
     config['tend'] = UTCDateTime(tend)
 
-    ## add component
+    # add component
     config['component'] = component
 
-    ## select the fdsn client for the stations
+    # select the fdsn client for the stations
 
 
-    ## select stations to consider:
+    # select stations to consider:
     if submask is not None:
         if submask == "inner":
-            config['subarray_mask'] = [0,1,2,3]
+            config['subarray_mask'] = [0, 1, 2, 3]
             config['freq1'] = 0.4
-            config['freq2'] = 3.7
+            config['freq2'] = 2.0
         elif submask == "outer":
-            config['subarray_mask'] = [0,4,5,6,8]
-            config['freq1'] = 0.04
-            config['freq2'] = 0.3
+            config['subarray_mask'] = [0, 4, 5, 6, 8]
+            config['freq1'] = 0.01
+            config['freq2'] = 0.2
     else:
-        config['subarray_mask'] = [0,1,2,3,4,5,6,8]
+        config['subarray_mask'] = [0, 1, 2, 3, 4, 5, 6, 8]
+        config['freq1'] = 0.01
+        config['freq2'] = 0.2
 
-
-    ## decide if information is printed while running the code
+    # decide if information is printed while running the code
     config['print_details'] = False
 
-    ## apply bandpass to data
+    # apply bandpass to data
     config['apply_bandpass'] = bandpass
 
 
-    ## _____________________
-    ## PFO array information
+    # _____________________
+    # PFO array information
 
     config['reference_station'] = 'GR.FUR' ## 'BPH01'  ## reference station
 
@@ -212,9 +212,9 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     config['fdsn_clients'] = [config['fdsn_clients'][i] for i in config['subarray_mask']]
 
 
-    ## ______________________________
+    # ______________________________
 
-    ## beamforming parameters
+    # beamforming parameters
     config['slow_xmin'] = -0.5
     config['slow_xmax'] = 0.5
     config['slow_ymin'] = -0.5
@@ -227,28 +227,29 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
     config['freq_lower'] = fmin
     config['freq_upper'] = fmax
-    config['prewhitening'] = 0  ## 0 or 1
+    config['prewhitening'] = 0  # 0 or 1
 
 
-    ## loading data
+    # loading data
     st, config = __get_data(config)
 
-    ## pre-pprocessing data
+    # pre-pprocessing data
     st = st.detrend("demean")
 
     if config['apply_bandpass']:
-        st = st.taper(0.1)
-        st = st.filter("bandpass", freqmin=config['freq_lower'], freqmax=config['freq_upper'], corners=8, zerophase=True)
+        st = st.taper(0.05, type="cosine")
+        st = st.filter("bandpass", freqmin=config['freq_lower'], freqmax=config['freq_upper'],
+                       corners=4, zerophase=True)
 
-    ## add coordinates from inventories
+    # add coordinates from inventories
     # st = __add_coordinates(st, config)
 
-    ## select only one component
+    # select only one component
     st = st.select(channel=f"*{component}")
 
     st = st.trim(config['tbeg']-0.1, config['tend']+0.1)
 
-    ## define parameters for beamforming
+    # define parameters for beamforming
     kwargs = dict(
 
         # slowness grid: X min, X max, Y min, Y max, Slow Step
@@ -265,56 +266,56 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
         # restrict output
         semb_thres=-1e9, vel_thres=-1e9, timestamp='mlabday',
 
-        ## time period
+        # time period
         stime=config['tbeg'], etime=config['tend'],
         # stime=st[0].stats.starttime, etime=st[0].stats.endtime,
     )
 
-    ## perform beamforming
+    # perform beamforming
     out = array_processing(st, **kwargs)
 
     st = st.trim(config['tbeg'], config['tend'])
 
 
-    ## stop times
+    # stop times
     stop_timer = timeit.default_timer()
     print(f"\n -> Runtime: {round((stop_timer - start_timer)/60,2)} minutes")
 
-    ## ______________________________
-    ## Plotting
+    # ______________________________
+    # Plotting
 
     if plot:
+        try:
+            # PLOT 1 -----------------------------------
 
-        ## PLOT 1 -----------------------------------
-        labels = ['rel.power', 'abs.power', 'baz', 'slow']
+            labels = ['rel.power', 'abs.power', 'baz', 'slow']
 
-        out[:, 3][out[:, 3] < 0.0] += 360
+            out[:, 3][out[:, 3] < 0.0] += 360
 
-        xlocator = mdates.AutoDateLocator()
+            xlocator = mdates.AutoDateLocator()
 
-        fig1, ax = plt.subplots(5,1, figsize=(15,10))
+            fig1, ax = plt.subplots(5,1, figsize=(15,10))
 
-        Tsec = config['tend']-config['tbeg']
-        times = (out[:, 0]-out[:, 0][0]) / max(out[:, 0]-out[:, 0][0]) * Tsec
+            Tsec = config['tend']-config['tbeg']
+            times = (out[:, 0]-out[:, 0][0]) / max(out[:, 0]-out[:, 0][0]) * Tsec
 
-        for i, lab in enumerate(labels):
-            # ax[i].scatter(out[:, 0], out[:, i + 1], c=out[:, 1], alpha=0.6, edgecolors='none', cmap=obspy_sequential)
-            # ax[i].scatter(times, out[:, i + 1], c=out[:, 1], alpha=0.6, edgecolors='none', cmap=obspy_sequential)
-            ax[i].scatter(times, out[:, i + 1], c=out[:, 2], alpha=0.6, cmap=obspy_sequential)
-            ax[i].set_ylabel(lab)
-            # ax[i].set_xlim(out[0, 0], out[-1, 0])
-            ax[i].set_ylim(out[:, i + 1].min(), out[:, i + 1].max())
-            ax[i].xaxis.set_major_locator(xlocator)
-            ax[i].xaxis.set_major_formatter(mdates.AutoDateFormatter(xlocator))
+            for i, lab in enumerate(labels):
+                ax[i].scatter(times, out[:, i + 1], c=out[:, 2], alpha=0.6, cmap=obspy_sequential)
+                ax[i].set_ylabel(lab)
+                ax[i].set_ylim(out[:, i + 1].min(), out[:, i + 1].max())
+                ax[i].xaxis.set_major_locator(xlocator)
+                ax[i].xaxis.set_major_formatter(mdates.AutoDateFormatter(xlocator))
 
-        ax[4].plot(st[0].times()/st[0].times()[-1]*out[:, 0][-1], st[0].data)
-        ax[2].set_ylim(0, 360)
-        ax[0].set_ylim(0, 1)
+            ax[4].plot(st[0].times()/st[0].times()[-1]*out[:, 0][-1], st[0].data)
+            ax[2].set_ylim(0, 360)
+            ax[0].set_ylim(0, 1)
 
-        fig1.autofmt_xdate()
+            fig1.autofmt_xdate()
 
-        plt.show();
+            plt.show();
 
+        except:
+            print(f" -> plotting failed!")
 
 
     ## PLOT 2 -----------------------------------
@@ -339,34 +340,39 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     baz_edges = np.radians(baz_edges)
 
     if plot:
+        try:
+            # PLOT 2 -----------------------------------
 
-        # add polar and colorbar axes
-        fig2 = plt.figure(figsize=(8, 8))
+            # add polar and colorbar axes
+            fig2 = plt.figure(figsize=(8, 8))
 
-        cax = fig2.add_axes([0.85, 0.2, 0.05, 0.5])
-        ax = fig2.add_axes([0.10, 0.1, 0.70, 0.7], polar=True)
-        ax.set_theta_direction(-1)
-        ax.set_theta_zero_location("N")
+            cax = fig2.add_axes([0.85, 0.2, 0.05, 0.5])
+            ax = fig2.add_axes([0.10, 0.1, 0.70, 0.7], polar=True)
+            ax.set_theta_direction(-1)
+            ax.set_theta_zero_location("N")
 
-        dh = abs(sl_edges[1] - sl_edges[0])
-        dw = abs(baz_edges[1] - baz_edges[0])
+            dh = abs(sl_edges[1] - sl_edges[0])
+            dw = abs(baz_edges[1] - baz_edges[0])
 
-        # circle through backazimuth
-        for i, row in enumerate(hist2d):
-            bars = ax.bar((i * dw) * np.ones(N2),
-                          height=dh * np.ones(N2),
-                          width=dw, bottom=dh * np.arange(N2),
-                          color=cmap(row / hist2d.max()))
+            # circle through backazimuth
+            for i, row in enumerate(hist2d):
+                bars = ax.bar((i * dw) * np.ones(N2),
+                              height=dh * np.ones(N2),
+                              width=dw, bottom=dh * np.arange(N2),
+                              color=cmap(row / hist2d.max()))
 
-        ax.set_xticks(np.linspace(0, 2 * np.pi, 4, endpoint=False))
-        ax.set_xticklabels(['N', 'E', 'S', 'W'])
+            ax.set_xticks(np.linspace(0, 2 * np.pi, 4, endpoint=False))
+            ax.set_xticklabels(['N', 'E', 'S', 'W'])
 
-        # set slowness limits
-        ax.set_ylim(0, config['slow_xmax'])
-        [i.set_color('grey') for i in ax.get_yticklabels()]
-        ColorbarBase(cax, cmap=cmap, norm=Normalize(vmin=hist2d.min(), vmax=hist2d.max()))
+            # set slowness limits
+            ax.set_ylim(0, config['slow_xmax'])
+            [i.set_color('grey') for i in ax.get_yticklabels()]
+            ColorbarBase(cax, cmap=cmap, norm=Normalize(vmin=hist2d.min(), vmax=hist2d.max()))
 
-        plt.show();
+            plt.show();
+
+        except:
+            print(f" -> plotting failed!")
 
     max_val = 0
     for i in range(hist2d.shape[0]):
