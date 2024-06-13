@@ -102,6 +102,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
     # ______________________________________
     # Rayleigh
+    baz_rayleigh_max, baz_rayleigh_mean, baz_rayleigh_std = nan, nan, nan
     try:
         baz_rayleigh_no_nan = out1['cc_max_y'][~isnan(out1['cc_max_y'])]
         cc_rayleigh_no_nan = out1['cc_max'][~isnan(out1['cc_max'])]
@@ -124,11 +125,15 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         # find maximum of KDE if computation successful and more than X values are used
         if len(baz_rayleigh_no_nan) > min_num_of_datapoints and kde1_success:
             baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
-        else:
-            baz_rayleigh_max = nan
 
-        # ______________________________________
-        # Love
+    except Exception as e:
+        print(e)
+        pass
+
+    # ______________________________________
+    # baz love
+    baz_love_max, baz_love_mean, baz_love_std = nan, nan, nan
+    try:
         baz_love_no_nan = out2['cc_max_y'][~isnan(out2['cc_max_y'])]
         cc_love_no_nan = out2['cc_max'][~isnan(out2['cc_max'])]
 
@@ -151,11 +156,15 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         # find maximum of KDE if computation successful and more than X values are used
         if len(baz_love_no_nan) > min_num_of_datapoints and kde2_success:
             baz_love_max = angles2[argmax(kde2.pdf(angles2))]
-        else:
-            baz_love_max = nan
 
-        # ______________________________________
-        # tangent
+    except Exception as e:
+        print(e)
+        pass
+
+    # ______________________________________
+    # baz tangent
+    baz_tangent_max, baz_tangent_mean, baz_tangent_std = nan, nan, nan
+    try:
         baz_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
         cc_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
 
@@ -177,11 +186,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         # find maximum of KDE if computation successful and more than X values are used
         if len(baz_tangent_no_nan) > min_num_of_datapoints and kde3_success:
             baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
-        else:
-            baz_tangent_max = nan
 
     except Exception as e:
-        baz_tangent_max = nan
         print(e)
         pass
 
