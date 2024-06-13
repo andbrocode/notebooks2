@@ -303,7 +303,7 @@ def main(config):
         if Nreal != config['Nexpected']:
             tr.data = tr.data[:config['Nexpected']]
             print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
-
+            print(st0)
     # remove trend
     st0 = st0.detrend("linear")
 
