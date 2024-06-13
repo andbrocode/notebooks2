@@ -244,7 +244,7 @@ def __makeplot_image_overview(ff, psds, times, names):
     # pp[0] = 0
 
     ## define colormap
-    cmap = plt.colormaps.get_cmap('viridis')
+    cmap = plt.get_cmap('viridis')
     cmap.set_bad(color='lightgrey')
 #     cmap.set_under(color='black')
 #     cmap.set_over(color='white')
@@ -468,7 +468,7 @@ def __makeplot_image_overview(ff, psds, times, names):
     # pp[0] = 0
 
     ## define colormap
-    cmap = plt.colormaps.get_cmap('viridis')
+    cmap = plt.get_cmap('viridis')
     cmap.set_bad(color='lightgrey')
 #     cmap.set_under(color='black')
 #     cmap.set_over(color='white')
