@@ -57,6 +57,7 @@ config['path_to_sds1'] = archive_path+"temp_archive/"
 config['path_to_sds2'] = bay_path+f"mseed_online/archive/"
 
 config['path_to_figures'] = data_path+f"VelocityChanges/figures/autoplots/"
+config['path_to_figures2'] = data_path+f"VelocityChanges/figures/autoplots_status/"
 
 config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
@@ -570,9 +571,9 @@ def main(config):
     fig = plt.figure()
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
-    fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png",
+    fig.savefig(config['path_to_figures2']+f"VC_BAZ_{config['tbeg'].date}_status.png",
                 format="png", dpi=100, bbox_inches='tight')
-    print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{config['tbeg'].date}.png")
+    print(f" -> stored: {config['path_to_figures2']}VC_BAZ_{config['tbeg'].date}.png")
 
     del fig
 
