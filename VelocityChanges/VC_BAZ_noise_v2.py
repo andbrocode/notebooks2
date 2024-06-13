@@ -202,11 +202,12 @@ def main(config):
                 NZ = len(st1.select(component="Z"))
                 NN = len(st1.select(component="N"))
                 NE = len(st1.select(component="E"))
-                st1 = st1.merge("interpolate")
+                st1 = st1.merge(fill_value="interpolate")
+                print(st1)
 
             if len(st2) > 3:
                 print(f" -> merging required: acc")
-                st2 = st2.merge("interpolate")
+                st2 = st2.merge(fill_value="interpolate")
 
             # check if data has same length
             Nexpected = int((t2 - t1)*20)
