@@ -203,11 +203,12 @@ def main(config):
                 NN = len(st1.select(component="N"))
                 NE = len(st1.select(component="E"))
                 st1 = st1.merge(fill_value="interpolate")
-                print(st1)
 
             if len(st2) > 3:
                 print(f" -> merging required: acc")
                 st2 = st2.merge(fill_value="interpolate")
+
+            print(st1, st2)
 
             # check if data has same length
             Nexpected = int((t2 - t1)*20)
@@ -259,17 +260,17 @@ def main(config):
             pass
 
 
-    # check if data is all zero
-    for tr in rot:
-        if np.count_nonzero(tr.data) == 0:
-            print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
-    for tr in acc:
-        if np.count_nonzero(tr.data) == 0:
-            print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+        # check if data is all zero
+        for tr in rot:
+            if np.count_nonzero(tr.data) == 0:
+                print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+        for tr in acc:
+            if np.count_nonzero(tr.data) == 0:
+                print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
 
 
-    # ---------------------------------------
+        # ---------------------------------------
 
         conf = {}
 
