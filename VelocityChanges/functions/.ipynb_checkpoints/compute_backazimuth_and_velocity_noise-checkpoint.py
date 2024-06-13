@@ -193,6 +193,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
     # ______________________________________
     # Rayleigh velocity
+    vel_rayleigh_mean, vel_rayleigh_std, vel_rayleigh_max = nan, nan, nan
     try:
         vel_rayleigh_no_nan, cc_vel_rayleigh_no_nan = zeros(len(out1['vel'])), zeros(len(out1['cc_max']))
         for _k, (_v, _c) in enumerate(zip(out1['vel'], out1['cc_max'])):
@@ -229,6 +230,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
     # ______________________________________
     # Love velocity
+    vel_love_mean, vel_love_std, vel_love_max = nan, nan, nan
     try:
 
         vel_love_no_nan, cc_vel_love_no_nan = zeros(len(out2['vel'])), zeros(len(out2['cc_max']))
@@ -254,8 +256,6 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         # find maximum of KDE if computation successful and more than X values are used
         if len(vel_love_no_nan) > min_num_of_datapoints and vel_kde2_success:
             vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
-        else:
-            vel_love_max = nan
 
     except Exception as e:
         print(" -> no Love velocities")
@@ -294,152 +294,156 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax7.set_axis_off()
         ax8.set_axis_off()
 
-        for _ax in [ax0, ax1, ax2, ax3, ax4, ax5]:
-            _ax.set_xticklabels([])
-
-        rot_scaling, rot_unit = 1e9, r"nrad/s"
-        trans_scaling, trans_unit = 1e6, r"$\mu$m/s$^2$"
-
-        font = 12
-
-        hz = acc.select(channel="*HZ")[0]
-        hn = acc.select(channel="*HN")[0]
-        he = acc.select(channel="*HE")[0]
-
-        jz = rot.select(channel="*JZ")[0]
-        jn = rot.select(channel="*JN")[0]
-        je = rot.select(channel="*JE")[0]
-
-        hr, ht = rotate_ne_rt(hn.data, he.data, baz_tangent_max)
-        jr, jt = rotate_ne_rt(jn.data, je.data, baz_tangent_max)
-
-        ## reverse polarity of transverse rotation!!
-        jt *= -1
-
-        ax0.plot(hz.times(), ht*trans_scaling, 'black', label=f"FUR.BHT")
-        ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"FUR.BHR")
-        ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
-
         try:
-            ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
-            ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
-            ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+            for _ax in [ax0, ax1, ax2, ax3, ax4, ax5]:
+                _ax.set_xticklabels([])
+
+            rot_scaling, rot_unit = 1e9, r"nrad/s"
+            trans_scaling, trans_unit = 1e6, r"$\mu$m/s$^2$"
+
+            font = 12
+
+            hz = acc.select(channel="*HZ")[0]
+            hn = acc.select(channel="*HN")[0]
+            he = acc.select(channel="*HE")[0]
+
+            jz = rot.select(channel="*JZ")[0]
+            jn = rot.select(channel="*JN")[0]
+            je = rot.select(channel="*JE")[0]
+
+            hr, ht = rotate_ne_rt(hn.data, he.data, baz_tangent_max)
+            jr, jt = rotate_ne_rt(jn.data, je.data, baz_tangent_max)
+
+            ## reverse polarity of transverse rotation!!
+            jt *= -1
+
+            ax0.plot(hz.times(), ht*trans_scaling, 'black', label=f"FUR.BHT")
+            ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"FUR.BHR")
+            ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
+
+            try:
+                ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
+                ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+                ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+            except:
+                print(f" -> y axes limits failed!")
+
+            ax00 = ax0.twinx()
+            ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
+
+            ax11 = ax1.twinx()
+            ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
+
+            ax22 = ax2.twinx()
+            ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
+
+            try:
+                ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
+                ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+                ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+            except:
+                print(f" -> y axes limits failed!")
+
+            cmap = plt.get_cmap("viridis", 10)
+
+            ca3 = ax3.scatter(out1['cc_max_t'], out1['cc_max_y'], c=out1['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+
+            ca4 = ax4.scatter(out2['cc_max_t'], out2['cc_max_y'], c=out2['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+
+            ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+
+            ca9 = ax9.scatter(out1['cc_max_t'], out1['vel'], c=out1['cc_max'], marker='s', label="Rayleigh",
+                              s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca9 = ax9.scatter(out2['cc_max_t'], out2['vel'], c=out2['cc_max'], marker='^', label="Love",
+                              s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+
+            cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
+            cb3 = plt.colorbar(ca3, ax=ax3, cax=cax3)
+            cb3.set_label("CC-Coeff.", fontsize=font)
+
+            cax4 = ax4.inset_axes([1.01, 0., 0.02, 1])
+            cb4 = plt.colorbar(ca4, ax=ax4, cax=cax4)
+            cb4.set_label("CC-Coeff.", fontsize=font)
+
+            cax5 = ax5.inset_axes([1.01, 0., 0.02, 1])
+            cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
+            cb5.set_label("CC-Coeff.", fontsize=font)
+
+            cax9 = ax9.inset_axes([1.01, 0., 0.02, 1])
+            cb9 = plt.colorbar(ca9, ax=ax9, cax=cax9)
+            cb9.set_label("CC-Coeff.", fontsize=font)
+
+            ax3.set_ylabel(f"Rayleigh Baz. (°)")
+            ax4.set_ylabel(f"Love Baz. (°)")
+            ax5.set_ylabel(f"CoVar. Baz. (°)")
+            ax9.set_ylabel(f"Phase Velocity (m/s)")
+
+            ax66 = ax6.twinx()
+            ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
+            if kde1_success:
+                ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax66.axhline(baz_rayleigh_max, color="k", ls="--")
+            ax66.set_axis_off()
+            ax66.yaxis.tick_right()
+            ax66.invert_xaxis()
+
+            ax77 = ax7.twinx()
+            ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
+            if kde2_success:
+                ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax77.axhline(baz_love_max, color="k", ls="--")
+            ax77.set_axis_off()
+            ax77.yaxis.tick_right()
+            ax77.invert_xaxis()
+
+            ax88 = ax8.twinx()
+            ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
+            if kde3_success:
+                ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax88.axhline(baz_tangent_max, color="k", ls="--")
+            ax88.set_axis_off()
+            ax88.yaxis.tick_right()
+            ax88.invert_xaxis()
+
+
+            ax0.set_yticks(linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax0.get_yticks())))
+            ax00.set_yticks(linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax0.get_yticks())))
+
+            ax1.set_yticks(linspace(ax1.get_yticks()[0], ax1.get_yticks()[-1], len(ax1.get_yticks())))
+            ax11.set_yticks(linspace(ax11.get_yticks()[0], ax11.get_yticks()[-1], len(ax1.get_yticks())))
+
+            ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax2.get_yticks())))
+            ax22.set_yticks(linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax2.get_yticks())))
+
+            for _ax in [ax0, ax1, ax2]:
+                _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+                _ax.legend(loc=1)
+                _ax.set_ylabel(f"a ({trans_unit})")
+                _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+
+            for _ax in [ax3, ax4, ax5]:
+                _ax.set_ylim(-5, 365)
+                _ax.set_yticks(range(0, 360+60, 60))
+                _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+                _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+
+            for aaxx in [ax00, ax11, ax22]:
+                aaxx.tick_params(axis='y', colors="darkred")
+                aaxx.set_ylabel(f"$\omega$ ({rot_unit})", color="darkred")
+                aaxx.legend(loc=4)
+
+            ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {round(fmin ,3)}-{round(fmax,3)} Hz | T = {config['win_length_sec']} s | CC > {config['cc_thres']} | {config['overlap']} % overlap")
+
+            ax9.set_xlabel("Time (s)")
+            ax9.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+            ax9.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+            ax9.legend(loc=1, fontsize=font-1)
+
         except:
-            print(f" -> y axes limits failed!")
-
-        ax00 = ax0.twinx()
-        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
-
-        ax11 = ax1.twinx()
-        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
-
-        ax22 = ax2.twinx()
-        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
-
-        try:
-            ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
-            ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
-            ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
-        except:
-            print(f" -> y axes limits failed!")
-
-        cmap = plt.get_cmap("viridis", 10)
-
-        ca3 = ax3.scatter(out1['cc_max_t'], out1['cc_max_y'], c=out1['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
-        ca4 = ax4.scatter(out2['cc_max_t'], out2['cc_max_y'], c=out2['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
-        ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
-        ca9 = ax9.scatter(out1['cc_max_t'], out1['vel'], c=out1['cc_max'], marker='s', label="Rayleigh",
-                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-        ca9 = ax9.scatter(out2['cc_max_t'], out2['vel'], c=out2['cc_max'], marker='^', label="Love",
-                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-
-        cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
-        cb3 = plt.colorbar(ca3, ax=ax3, cax=cax3)
-        cb3.set_label("CC-Coeff.", fontsize=font)
-
-        cax4 = ax4.inset_axes([1.01, 0., 0.02, 1])
-        cb4 = plt.colorbar(ca4, ax=ax4, cax=cax4)
-        cb4.set_label("CC-Coeff.", fontsize=font)
-
-        cax5 = ax5.inset_axes([1.01, 0., 0.02, 1])
-        cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
-        cb5.set_label("CC-Coeff.", fontsize=font)
-
-        cax9 = ax9.inset_axes([1.01, 0., 0.02, 1])
-        cb9 = plt.colorbar(ca9, ax=ax9, cax=cax9)
-        cb9.set_label("CC-Coeff.", fontsize=font)
-
-        ax3.set_ylabel(f"Rayleigh Baz. (°)")
-        ax4.set_ylabel(f"Love Baz. (°)")
-        ax5.set_ylabel(f"CoVar. Baz. (°)")
-        ax9.set_ylabel(f"Phase Velocity (m/s)")
-
-        ax66 = ax6.twinx()
-        ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
-        if kde1_success:
-            ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax66.axhline(baz_rayleigh_max, color="k", ls="--")
-        ax66.set_axis_off()
-        ax66.yaxis.tick_right()
-        ax66.invert_xaxis()
-
-        ax77 = ax7.twinx()
-        ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
-        if kde2_success:
-            ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax77.axhline(baz_love_max, color="k", ls="--")
-        ax77.set_axis_off()
-        ax77.yaxis.tick_right()
-        ax77.invert_xaxis()
-
-        ax88 = ax8.twinx()
-        ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
-        if kde3_success:
-            ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax88.axhline(baz_tangent_max, color="k", ls="--")
-        ax88.set_axis_off()
-        ax88.yaxis.tick_right()
-        ax88.invert_xaxis()
-
-
-        ax0.set_yticks(linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax0.get_yticks())))
-        ax00.set_yticks(linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax0.get_yticks())))
-
-        ax1.set_yticks(linspace(ax1.get_yticks()[0], ax1.get_yticks()[-1], len(ax1.get_yticks())))
-        ax11.set_yticks(linspace(ax11.get_yticks()[0], ax11.get_yticks()[-1], len(ax1.get_yticks())))
-
-        ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax2.get_yticks())))
-        ax22.set_yticks(linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax2.get_yticks())))
-
-        for _ax in [ax0, ax1, ax2]:
-            _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-            _ax.legend(loc=1)
-            _ax.set_ylabel(f"a ({trans_unit})")
-            _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
-
-        for _ax in [ax3, ax4, ax5]:
-            _ax.set_ylim(-5, 365)
-            _ax.set_yticks(range(0, 360+60, 60))
-            _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-            _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
-
-        for aaxx in [ax00, ax11, ax22]:
-            aaxx.tick_params(axis='y', colors="darkred")
-            aaxx.set_ylabel(f"$\omega$ ({rot_unit})", color="darkred")
-            aaxx.legend(loc=4)
-
-        ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {round(fmin ,3)}-{round(fmax,3)} Hz | T = {config['win_length_sec']} s | CC > {config['cc_thres']} | {config['overlap']} % overlap")
-
-        ax9.set_xlabel("Time (s)")
-        ax9.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-        ax9.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
-        ax9.legend(loc=1, fontsize=font-1)
+            pass
 
         if plot:
             plt.show();
