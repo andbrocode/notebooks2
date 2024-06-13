@@ -22,7 +22,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
     config = conf
 
-    kde1_success, kde2_success, kde3_succes = False, False, False
+    kde1_success, kde2_success, kde3_success = False, False, False
     vel_kde1_success, vel_kde2_success = False, False
 
 #     config['tbeg'] = rot[0].stats.starttime
