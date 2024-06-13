@@ -44,7 +44,8 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
         for k, station in enumerate(config['subarray_stations']):
 
-            net, sta, loc, cha = station.split(".")[0], station.split(".")[1], "", f"HH{config['component']}"
+            net, sta, loc = station.split(".")[0], station.split(".")[1], ""
+            cha = f"{config['sample_code']}H{config['component']}"
 
             # print(f"-> requesting {net}.{sta}.{loc}.{cha}")
 
@@ -174,6 +175,8 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
 
     # add component
     config['component'] = component
+
+    config['sample_code'] = "B"
 
     # select the fdsn client for the stations
 
