@@ -72,7 +72,7 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
                     # print(" -> loading inventory via archive")
                     # file = f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}"
                     # inventory = read_inventory(file, format="STATIONXML")
-                    file = f"{data_path}/stationxml_ringlaser/station_{net}_{sta}"
+                    file = f"{data_path}/stationxml_ringlaser/station_{net}_{sta}.xml"
                     inventory = read_inventory(file, format="STATIONXML")
                 except:
                     # print(" -> loading inventory via Client")
