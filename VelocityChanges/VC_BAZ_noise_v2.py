@@ -468,7 +468,7 @@ def main(config):
 
             num_stations_used.append(np.nan)
 
-            print(len(ttime), len(baz_bf))
+        # print(len(ttime), len(baz_bf))
 
 
         # store plot

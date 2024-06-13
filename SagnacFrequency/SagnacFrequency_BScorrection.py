@@ -324,6 +324,8 @@ def main(config):
     ## prepare output arrays
     fs, ac, dc, ph, st = np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan, np.ones(len(times))*np.nan
 
+    ph_wrap = np.ones(len(times))*np.nan
+
     ## prepare output dataframe
     out_df = DataFrame()
     out_df['time1'] = list(zip(*times))[0]
@@ -364,15 +366,19 @@ def main(config):
             # dc[_n] = np.mean(_dat)
             # ac[_n] = np.percentile(_dat[0].data, 99.9) - np.percentile(_dat[0].data, 100-99.9)
 
+        ph_wrap = ph
         ph = np.unwrap(ph)
 
         ## fill output dataframe
         if _k == 0:
             out_df['fj_fs'], out_df['fj_ac'], out_df['fj_dc'], out_df['fj_ph'], out_df['fj_st'] = fs, ac, dc, ph, st
+            out_df['fj_phw'] = ph_wrap
         elif _k == 1:
             out_df['f1_fs'], out_df['f1_ac'], out_df['f1_dc'], out_df['f1_ph'], out_df['f1_st'] = fs, ac, dc, ph, st
+            out_df['f1_phw'] = ph_wrap
         elif _k == 2:
             out_df['f2_fs'], out_df['f2_ac'], out_df['f2_dc'], out_df['f2_ph'], out_df['f2_st'] = fs, ac, dc, ph, st
+            out_df['f2_phw'] = ph_wrap
 
 
     ## prepare values for backscatter correction

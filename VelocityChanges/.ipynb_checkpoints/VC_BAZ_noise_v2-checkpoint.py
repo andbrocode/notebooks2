@@ -355,16 +355,7 @@ def main(config):
             print(f" -> chekup failed!")
             print(e)
 
-        out_bf = __compute_beamforming_ROMY(
-                                            conf['tbeg'],
-                                            conf['tend'],
-                                            submask=None,
-                                            fmin=config['fmin'],
-                                            fmax=config['fmax'],
-                                            component="Z",
-                                            bandpass=True,
-                                            plot=False
-                                           )
+
         # compute beamforming for array
         try:
             print(f"\ncompute beamforming ...")
@@ -372,7 +363,7 @@ def main(config):
             out_bf = __compute_beamforming_ROMY(
                                                 conf['tbeg'],
                                                 conf['tend'],
-                                                submask=None,
+                                                submask="outer",
                                                 fmin=config['fmin'],
                                                 fmax=config['fmax'],
                                                 component="Z",
@@ -477,7 +468,7 @@ def main(config):
 
             num_stations_used.append(np.nan)
 
-            print(len(ttime), len(baz_bf))
+        # print(len(ttime), len(baz_bf))
 
 
         # store plot
