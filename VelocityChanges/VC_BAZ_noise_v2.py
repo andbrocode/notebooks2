@@ -424,7 +424,16 @@ def main(config):
         # change status to success
         status[0, _n] = 1
 
-
+        out_bf = __compute_beamforming_ROMY(
+                                            conf['tbeg'],
+                                            conf['tend'],
+                                            submask=None,
+                                            fmin=config['fmin'],
+                                            fmax=config['fmax'],
+                                            component="Z",
+                                            bandpass=True,
+                                            plot=False
+                                           )
         try:
             print(f"\ncompute beamforming ...")
             out_bf = __compute_beamforming_ROMY(

@@ -177,6 +177,7 @@ def main(config):
         lxx = __load_lxx(t1, t2, archive_path)
 
         try:
+            print(f"\nloading data ...")
             # inv1 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.BW_ROMY")
             # inv2 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.GR_FUR")
 
@@ -300,7 +301,7 @@ def main(config):
         conf['cc_thres'] = config['cc_threshold']
 
         try:
-            print(f"compute backazimuth estimation ...")
+            print(f"\ncompute backazimuth estimation ...")
             out = __compute_backazimuth_and_velocity_noise(conf, rot, acc,
                                                            config['fmin'], config['fmax'],
                                                            plot=False,
@@ -314,7 +315,7 @@ def main(config):
             continue
 
         try:
-            print(f"checkup for MLTI ...")
+            print(f"\ncheckup for MLTI ...")
 
             # check maintenance periods
             maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
@@ -423,9 +424,18 @@ def main(config):
         # change status to success
         status[0, _n] = 1
 
-
+        out_bf = __compute_beamforming_ROMY(
+                                            conf['tbeg'],
+                                            conf['tend'],
+                                            submask=None,
+                                            fmin=config['fmin'],
+                                            fmax=config['fmax'],
+                                            component="Z",
+                                            bandpass=True,
+                                            plot=False
+                                           )
         try:
-            print(f"compute beamforming ...")
+            print(f"\ncompute beamforming ...")
             out_bf = __compute_beamforming_ROMY(
                                                 conf['tbeg'],
                                                 conf['tend'],

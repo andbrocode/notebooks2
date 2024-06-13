@@ -108,7 +108,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         baz_rayleigh_mean = round(average(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan), 0)
         baz_rayleigh_std = sqrt(cov(baz_rayleigh_no_nan, aweights=cc_rayleigh_no_nan))
 
-        kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan)
+        try:
+            kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan)
+            kde1_success = True
+        except:
+            kde1_success = False
 
         if len(baz_rayleigh_no_nan) > min_num_of_datapoints:
             baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
@@ -126,7 +130,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         baz_love_std = sqrt(cov(baz_love_no_nan, aweights=cc_love_no_nan))
 
         # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
-        kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
+        try:
+            kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
+            kde2_success = True
+        except:
+            kde2_success = False
 
         if len(baz_love_no_nan) > min_num_of_datapoints:
             baz_love_max = angles2[argmax(kde2.pdf(angles2))]
@@ -143,7 +151,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
         baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
 
-        kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
+        try:
+            kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
+            kde3_success = True
+        except:
+            kde3_success = False
 
         if len(baz_tangent_no_nan) > min_num_of_datapoints:
             baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
@@ -174,7 +186,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         vel_rayleigh_mean = round(average(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan), 0)
         vel_rayleigh_std = sqrt(cov(vel_rayleigh_no_nan, aweights=cc_vel_rayleigh_no_nan))
 
-        vel_kde1 = sts.gaussian_kde(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan)
+        try:
+            vel_kde1 = sts.gaussian_kde(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan)
+            vel_kde1_success = True
+        except:
+            vel_kde1_success = False
 
         if len(vel_rayleigh_no_nan) > min_num_of_datapoints:
             vel_rayleigh_max = velocities_fine[argmax(vel_kde1.pdf(velocities_fine))]
@@ -192,8 +208,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
         vel_love_mean = round(average(vel_love_no_nan, weights=cc_vel_love_no_nan), 0)
         vel_love_std = sqrt(cov(vel_love_no_nan, aweights=cc_vel_love_no_nan))
-
-        vel_kde2 = sts.gaussian_kde(vel_love_no_nan, weights=cc_vel_love_no_nan)
+        try:
+            vel_kde2 = sts.gaussian_kde(vel_love_no_nan, weights=cc_vel_love_no_nan)
+            vel_kde2_success = True
+        except:
+            vel_kde2_success = False
 
         if len(vel_love_no_nan) > min_num_of_datapoints:
             vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
@@ -323,7 +342,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax66 = ax6.twinx()
         ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
+        if kde1_success:
+            ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
         ax66.axhline(baz_rayleigh_max, color="k", ls="--")
         ax66.set_axis_off()
         ax66.yaxis.tick_right()
@@ -332,7 +352,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax77 = ax7.twinx()
         ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
+        if kde2_success:
+            ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
         ax77.axhline(baz_love_max, color="k", ls="--")
         ax77.set_axis_off()
         ax77.yaxis.tick_right()
@@ -341,7 +362,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax88 = ax8.twinx()
         ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
                   weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
-        ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
+        if kde3_success:
+            ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
         ax88.axhline(baz_tangent_max, color="k", ls="--")
         ax88.set_axis_off()
         ax88.yaxis.tick_right()
