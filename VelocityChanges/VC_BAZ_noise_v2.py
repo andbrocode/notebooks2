@@ -295,14 +295,23 @@ def main(config):
         conf['cc_thres'] = config['cc_threshold']
 
         try:
-            print(f" compute backazimuth estimation")
-            out = __compute_backazimuth_and_velocity_noise(conf, rot, acc, config['fmin'], config['fmax'], plot=False, save=True);
+            print(f"compute backazimuth estimation ...")
+            out = __compute_backazimuth_and_velocity_noise(conf, rot, acc,
+                                                           config['fmin'], config['fmax'],
+                                                           plot=False,
+                                                           save=True
+                                                          );
+        except Exception as e:
+            print(f" -> baz computation failed!")
+            print(e)
 
+        try:
+            print(f"checkup for MLTI ...")
 
             # check maintenance periods
             maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
 
-            if NN > 1 or NE > 1 or levels["U"] > 1e-6 or levels["V"] > 1e-6 or maintenance:
+            if NN > 1 or NE > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (horizontal)")
 
                 out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, nan_dummy
@@ -313,7 +322,7 @@ def main(config):
 
                 out['cc_rayleigh_all'], out['cc_tangent_all'] = nan_dummy, nan_dummy
 
-            if NZ > 1 or mltiZ.size > config['num_mlti'] or levels["Z"] > 1e-6 or maintenance:
+            if NZ > 1 or levels["Z"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (vertical)")
 
                 out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, nan_dummy
@@ -323,82 +332,87 @@ def main(config):
                 out['cc_love_all'] = nan_dummy
 
 
-
-            baz_tangent.append(out['baz_tangent_max'])
-            baz_tangent_std.append(out['baz_tangent_std'])
-            baz_tangent_all.append(out['baz_tangent_all'])
-
-            baz_rayleigh.append(out['baz_rayleigh_max'])
-            baz_rayleigh_std.append(out['baz_rayleigh_std'])
-            baz_rayleigh_all.append(out['baz_rayleigh_all'])
-
-            vel_rayleigh_max.append(out['vel_rayleigh_max'])
-            vel_rayleigh_std.append(out['vel_rayleigh_std'])
-            vel_rayleigh_all.append(out['vel_rayleigh_all'])
-
-            cc_rayleigh_all.append(out['cc_rayleigh_all'])
-            cc_tangent_all.append(out['cc_tangent_all'])
-
-            baz_love.append(out['baz_love_max'])
-            baz_love_std.append(out['baz_love_std'])
-
-            baz_love_all.append(out['baz_love_all'])
-
-            vel_love_max.append(out['vel_love_max'])
-            vel_love_std.append(out['vel_love_std'])
-            vel_love_all.append(out['vel_love_all'])
-
-            cc_love_all.append(out['cc_love_all'])
-
-            times_relative.append(out['times_relative'])
-            times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-            times_all.append(times_absolute)
-
-            ttime.append(t1)
-
-            # store plot
-            t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
-            out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png", format="png", dpi=150, bbox_inches='tight')
-            print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
-
-            # change status to success
-            status[0, _n] = 1
-
         except Exception as e:
-            print(f" -> baz computation failed!")
+            print(f" -> chekup failed!")
             print(e)
 
-            baz_tangent.append(np.nan)
-            baz_rayleigh.append(np.nan)
-            baz_love.append(np.nan)
 
-            baz_tangent_std.append(np.nan)
-            baz_rayleigh_std.append(np.nan)
-            baz_love_std.append(np.nan)
+        baz_tangent.append(out['baz_tangent_max'])
+        baz_tangent_std.append(out['baz_tangent_std'])
+        baz_tangent_all.append(out['baz_tangent_all'])
 
-            vel_love_max.append(np.nan)
-            vel_love_std.append(np.nan)
-            vel_rayleigh_max.append(np.nan)
-            vel_rayleigh_std.append(np.nan)
+        baz_rayleigh.append(out['baz_rayleigh_max'])
+        baz_rayleigh_std.append(out['baz_rayleigh_std'])
+        baz_rayleigh_all.append(out['baz_rayleigh_all'])
 
-            baz_tangent_all.append(nan_dummy)
-            baz_rayleigh_all.append(nan_dummy)
-            baz_love_all.append(nan_dummy)
+        vel_rayleigh_max.append(out['vel_rayleigh_max'])
+        vel_rayleigh_std.append(out['vel_rayleigh_std'])
+        vel_rayleigh_all.append(out['vel_rayleigh_all'])
 
-            cc_tangent_all.append(nan_dummy)
-            cc_rayleigh_all.append(nan_dummy)
-            cc_love_all.append(nan_dummy)
+        cc_rayleigh_all.append(out['cc_rayleigh_all'])
+        cc_tangent_all.append(out['cc_tangent_all'])
 
-            vel_rayleigh_all.append(nan_dummy)
-            vel_love_all.append(nan_dummy)
+        baz_love.append(out['baz_love_max'])
+        baz_love_std.append(out['baz_love_std'])
 
-            times_relative.append(nan_dummy)
-            times_all.append(nan_dummy)
+        baz_love_all.append(out['baz_love_all'])
 
-            ttime.append(np.nan)
+        vel_love_max.append(out['vel_love_max'])
+        vel_love_std.append(out['vel_love_std'])
+        vel_love_all.append(out['vel_love_all'])
+
+        cc_love_all.append(out['cc_love_all'])
+
+        times_relative.append(out['times_relative'])
+        times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+        times_all.append(times_absolute)
+
+        ttime.append(t1)
+
+
+        # store plot
+        try:
+            t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
+            out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
+                                format="png", dpi=150, bbox_inches='tight')
+            print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
+        except Exception as e:
+            print(e)
+
+        # change status to success
+        status[0, _n] = 1
+
+#         baz_tangent.append(np.nan)
+#         baz_rayleigh.append(np.nan)
+#         baz_love.append(np.nan)
+
+#         baz_tangent_std.append(np.nan)
+#         baz_rayleigh_std.append(np.nan)
+#         baz_love_std.append(np.nan)
+
+#         vel_love_max.append(np.nan)
+#         vel_love_std.append(np.nan)
+#         vel_rayleigh_max.append(np.nan)
+#         vel_rayleigh_std.append(np.nan)
+
+#         baz_tangent_all.append(nan_dummy)
+#         baz_rayleigh_all.append(nan_dummy)
+#         baz_love_all.append(nan_dummy)
+
+#         cc_tangent_all.append(nan_dummy)
+#         cc_rayleigh_all.append(nan_dummy)
+#         cc_love_all.append(nan_dummy)
+
+#         vel_rayleigh_all.append(nan_dummy)
+#         vel_love_all.append(nan_dummy)
+
+#         times_relative.append(nan_dummy)
+#         times_all.append(nan_dummy)
+
+#         ttime.append(np.nan)
 
         try:
-            print(f" compute beamforming")
+            print(f"compute beamforming ...")
             out_bf = __compute_beamforming_ROMY(
                                                 conf['tbeg'],
                                                 conf['tend'],
