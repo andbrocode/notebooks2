@@ -198,9 +198,9 @@ def main(config):
             st2.remove_response(inv2, output="ACC", water_level=10);
 
             # get length of streams
-            N_Z = len(st1.select(component="Z"))
-            N_N = len(st1.select(component="N"))
-            N_E = len(st1.select(component="E"))
+            N_Z = len(st1.select(channel="*Z"))
+            N_N = len(st1.select(channel="*N"))
+            N_E = len(st1.select(channel="*E"))
 
             # check if merging is necessary
             if len(st1) > 3:
