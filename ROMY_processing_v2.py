@@ -295,7 +295,9 @@ def main(config):
     # check if merging is required
     if len(st0) > 3:
         print(f" -> merging required!")
-        st0.merge(fill_value="interpolate")
+        st0 = st0.merge(fill_value="interpolate")
+
+    st0 = st0.trim(config['tbeg'], config['tend'])
 
     # check if data has same length
     for tr in st0:
