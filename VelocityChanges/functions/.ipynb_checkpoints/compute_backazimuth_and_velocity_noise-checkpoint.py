@@ -97,13 +97,17 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     angles = arange(0, 365, deltaa)
     angles2 = arange(0, 365, 1)
 
-    ## ______________________________________
-    ## Rayleigh
+    # ______________________________________
+    # Rayleigh
     try:
         baz_rayleigh_no_nan = out1['cc_max_y'][~isnan(out1['cc_max_y'])]
         cc_rayleigh_no_nan = out1['cc_max'][~isnan(out1['cc_max'])]
 
-        hist = histogram(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out1['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out1['cc_max_y'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out1['cc_max'], density=True
+                        )
 
         baz_rayleigh_mean = round(average(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan), 0)
         baz_rayleigh_std = sqrt(cov(baz_rayleigh_no_nan, aweights=cc_rayleigh_no_nan))
@@ -114,17 +118,22 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         except:
             kde1_success = False
 
-        if len(baz_rayleigh_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_rayleigh_no_nan) > min_num_of_datapoints and kde1_success:
             baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
         else:
             baz_rayleigh_max = nan
 
-        ## ______________________________________
-        ## Love
+        # ______________________________________
+        # Love
         baz_love_no_nan = out2['cc_max_y'][~isnan(out2['cc_max_y'])]
         cc_love_no_nan = out2['cc_max'][~isnan(out2['cc_max'])]
 
-        hist = histogram(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out2['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out2['cc_max_y'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out2['cc_max'], density=True
+                        )
 
         baz_love_mean = round(average(baz_love_no_nan, weights=cc_love_no_nan), 0)
         baz_love_std = sqrt(cov(baz_love_no_nan, aweights=cc_love_no_nan))
@@ -136,17 +145,22 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         except:
             kde2_success = False
 
-        if len(baz_love_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_love_no_nan) > min_num_of_datapoints and kde2_success:
             baz_love_max = angles2[argmax(kde2.pdf(angles2))]
         else:
             baz_love_max = nan
 
-        ## ______________________________________
-        ## Tangent
+        # ______________________________________
+        # tangent
         baz_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
         cc_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
 
-        hist = histogram(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out3['ccoef'], density=True)
+        # compute histogram
+        hist = histogram(out3['baz_est'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out3['ccoef'], density=True
+                        )
 
         baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
         baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
@@ -157,7 +171,8 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         except:
             kde3_success = False
 
-        if len(baz_tangent_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_tangent_no_nan) > min_num_of_datapoints and kde3_success:
             baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
         else:
             baz_tangent_max = nan
@@ -167,21 +182,26 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         print(e)
         pass
 
-    ## statistics of velocities
+    # statistics of velocities
     delta_vel = 200
     velocities = arange(0, 4000, delta_vel)
     velocities_fine = arange(0, 400, 50)
 
 
+    # ______________________________________
+    # Rayleigh velocity
     try:
-        ## Rayleigh
         vel_rayleigh_no_nan, cc_vel_rayleigh_no_nan = zeros(len(out1['vel'])), zeros(len(out1['cc_max']))
         for _k, (_v, _c) in enumerate(zip(out1['vel'], out1['cc_max'])):
             if not isnan(_v) and not isnan(_c):
                 vel_rayleigh_no_nan[_k] = _v
                 cc_vel_rayleigh_no_nan[_k] = _c
 
-        hist = histogram(out1['vel'], bins=len(velocities)-1, range=[min(velocities), max(velocities)], weights=out1['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out1['vel'], bins=len(velocities)-1,
+                         range=[min(velocities), max(velocities)],
+                         weights=out1['cc_max'], density=True
+                        )
 
         vel_rayleigh_mean = round(average(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan), 0)
         vel_rayleigh_std = sqrt(cov(vel_rayleigh_no_nan, aweights=cc_vel_rayleigh_no_nan))
@@ -192,19 +212,33 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         except:
             vel_kde1_success = False
 
-        if len(vel_rayleigh_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(vel_rayleigh_no_nan) > min_num_of_datapoints and vel_kde1_success:
             vel_rayleigh_max = velocities_fine[argmax(vel_kde1.pdf(velocities_fine))]
         else:
             vel_rayleigh_max = nan
 
-        ## Love
+    except Exception as e:
+        print(" -> no Rayleigh velocities")
+        print(e)
+        pass
+
+
+    # ______________________________________
+    # Love velocity
+    try:
+
         vel_love_no_nan, cc_vel_love_no_nan = zeros(len(out2['vel'])), zeros(len(out2['cc_max']))
         for _k, (_v, _c) in enumerate(zip(out2['vel'], out2['cc_max'])):
             if not isnan(_v) and not isnan(_c):
                 vel_love_no_nan[_k] = _v
                 cc_vel_love_no_nan[_k] = _c
 
-        hist = histogram(out2['vel'], bins=len(velocities)-1, range=[min(velocities), max(velocities)], weights=out2['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out2['vel'], bins=len(velocities)-1,
+                         range=[min(velocities), max(velocities)],
+                         weights=out2['cc_max'], density=True
+                        )
 
         vel_love_mean = round(average(vel_love_no_nan, weights=cc_vel_love_no_nan), 0)
         vel_love_std = sqrt(cov(vel_love_no_nan, aweights=cc_vel_love_no_nan))
@@ -214,13 +248,14 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         except:
             vel_kde2_success = False
 
-        if len(vel_love_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(vel_love_no_nan) > min_num_of_datapoints and vel_kde2_success:
             vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
         else:
             vel_love_max = nan
 
     except Exception as e:
-        print("no velocities")
+        print(" -> no Love velocities")
         print(e)
         pass
 
@@ -385,15 +420,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             _ax.set_ylabel(f"a ({trans_unit})")
             _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
 
-        for _ax in [ax3 ,ax4, ax5]:
+        for _ax in [ax3, ax4, ax5]:
             _ax.set_ylim(-5, 365)
             _ax.set_yticks(range(0, 360+60, 60))
             _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
             _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
-
-            # _ax.set_ylabel(f"Baz.(°)")
-            # _ax.plot([t1, t2], ones(2)*out3['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
-            # _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", ls="--", zorder=1)
 
         for aaxx in [ax00, ax11, ax22]:
             aaxx.tick_params(axis='y', colors="darkred")
@@ -444,8 +475,6 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     out['times_relative'] = out1['cc_max_t']
 
     if plot or save:
-        # out['fig1'] = fig1
-        # out['fig2'] = fig2
         out['fig3'] = fig3
 
     return out

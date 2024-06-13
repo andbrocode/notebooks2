@@ -76,6 +76,8 @@ config['window_overlap'] = 90
 
 config['window_length_sec'] = 2/config['fmin']
 
+config['sps'] = 20 # Hz
+
 
 ## ---------------------------------------
 
@@ -163,8 +165,10 @@ def main(config):
 
     num_stations_used = []
 
+    # prepare status variable
     status = np.zeros((2, len(times)))
 
+    # prepare dummy trace
     nan_dummy = np.ones(90)*np.nan
 
 
@@ -178,6 +182,7 @@ def main(config):
 
         try:
             print(f"\nloading data ...")
+
             # inv1 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.BW_ROMY")
             # inv2 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.GR_FUR")
 
@@ -216,7 +221,7 @@ def main(config):
             print(st2)
 
             # check if data has same length
-            Nexpected = int((t2 - t1)*20)
+            Nexpected = int((t2 - t1)*config['sps'])
             for tr in st1:
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
@@ -246,18 +251,18 @@ def main(config):
     # ---------------------------------------
 
         try:
-            st1.detrend("linear");
-            st2.detrend("linear");
+            st1 = st1.detrend("linear");
+            st2 = st2.detrend("linear");
 
             acc = st2.copy();
             rot = st1.copy();
 
             acc = acc.detrend("linear");
-            acc = acc.taper(0.01);
+            acc = acc.taper(0.01, type="cosine");
             acc = acc.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=8, zerophase=True);
 
             rot = rot.detrend("linear");
-            rot = rot.taper(0.01);
+            rot = rot.taper(0.01, type="cosine");
             rot = rot.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=8, zerophase=True);
 
         except:
@@ -319,8 +324,6 @@ def main(config):
 
             # check maintenance periods
             maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
-
-            print(N_N, N_E, N_Z, maintenance, levels)
 
             if N_N > 1 or N_E > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (horizontal)")
@@ -412,6 +415,8 @@ def main(config):
 
         # store plot
         try:
+            print(f"\ncreate plot ...")
+
             t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
             out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
                                 format="png", dpi=150, bbox_inches='tight')
@@ -424,18 +429,9 @@ def main(config):
         # change status to success
         status[0, _n] = 1
 
-        out_bf = __compute_beamforming_ROMY(
-                                            conf['tbeg'],
-                                            conf['tend'],
-                                            submask=None,
-                                            fmin=config['fmin'],
-                                            fmax=config['fmax'],
-                                            component="Z",
-                                            bandpass=True,
-                                            plot=False
-                                           )
         try:
             print(f"\ncompute beamforming ...")
+
             out_bf = __compute_beamforming_ROMY(
                                                 conf['tbeg'],
                                                 conf['tend'],
@@ -471,6 +467,9 @@ def main(config):
             baz_bf_all.append(np.nan)
 
 
+            print(out)
+
+
     # ---------------------------------------
     def __to_array(arr_in):
         arr_out = []
@@ -486,7 +485,7 @@ def main(config):
         return np.array(arr_out)
 
 
-    # prepare output dictionary
+    # prepare output dictionary 0
     output = {}
 
     output['time'] = np.array(ttime)
@@ -514,7 +513,7 @@ def main(config):
     __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{config['tbeg'].date}")
 
 
-    # prepare output dictionary
+    # prepare output dictionary 1
     output1 = {}
 
     output1['time'] = __to_array(times_all)
@@ -548,7 +547,8 @@ def main(config):
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
 
-    fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
+    fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png",
+                format="png", dpi=100, bbox_inches='tight')
     print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{config['tbeg'].date}.png")
 
     del fig
