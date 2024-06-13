@@ -267,6 +267,8 @@ def __get_trace(seed):
 
 def main(config):
 
+    print(f" processing: {config['tbeg'].date}")
+
     # load MLTI logs
     mltiU = __load_mlti(config['t1'], config['t2'], "U", archive_path)
     mltiV = __load_mlti(config['t1'], config['t2'], "V", archive_path)
@@ -304,8 +306,8 @@ def main(config):
         Nreal = len(tr.data)
         if Nreal != config['Nexpected']:
             tr.data = tr.data[:config['Nexpected']]
-            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
-            print(st0)
+            # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
+
     # remove trend
     st0 = st0.detrend("linear")
 
