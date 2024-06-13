@@ -211,7 +211,8 @@ def main(config):
                 print(f" -> merging required: acc")
                 st2 = st2.merge(fill_value="interpolate")
 
-            print(st1, st2)
+            print(st1)
+            print(st2)
 
             # check if data has same length
             Nexpected = int((t2 - t1)*20)
@@ -305,9 +306,12 @@ def main(config):
                                                            plot=False,
                                                            save=True
                                                           );
+            baz_computed = True
         except Exception as e:
             print(f" -> baz computation failed!")
+            baz_computed = False
             print(e)
+            continue
 
         try:
             print(f"checkup for MLTI ...")
@@ -342,38 +346,67 @@ def main(config):
             print(f" -> chekup failed!")
             print(e)
 
-
-        baz_tangent.append(out['baz_tangent_max'])
-        baz_tangent_std.append(out['baz_tangent_std'])
-        baz_tangent_all.append(out['baz_tangent_all'])
-
-        baz_rayleigh.append(out['baz_rayleigh_max'])
-        baz_rayleigh_std.append(out['baz_rayleigh_std'])
-        baz_rayleigh_all.append(out['baz_rayleigh_all'])
-
-        vel_rayleigh_max.append(out['vel_rayleigh_max'])
-        vel_rayleigh_std.append(out['vel_rayleigh_std'])
-        vel_rayleigh_all.append(out['vel_rayleigh_all'])
-
-        cc_rayleigh_all.append(out['cc_rayleigh_all'])
-        cc_tangent_all.append(out['cc_tangent_all'])
-
-        baz_love.append(out['baz_love_max'])
-        baz_love_std.append(out['baz_love_std'])
-
-        baz_love_all.append(out['baz_love_all'])
-
-        vel_love_max.append(out['vel_love_max'])
-        vel_love_std.append(out['vel_love_std'])
-        vel_love_all.append(out['vel_love_all'])
-
-        cc_love_all.append(out['cc_love_all'])
-
-        times_relative.append(out['times_relative'])
-        times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-        times_all.append(times_absolute)
-
+        # assign values
         ttime.append(t1)
+
+        if baz_computed:
+            baz_tangent.append(out['baz_tangent_max'])
+            baz_tangent_std.append(out['baz_tangent_std'])
+            baz_tangent_all.append(out['baz_tangent_all'])
+
+            baz_rayleigh.append(out['baz_rayleigh_max'])
+            baz_rayleigh_std.append(out['baz_rayleigh_std'])
+            baz_rayleigh_all.append(out['baz_rayleigh_all'])
+
+            vel_rayleigh_max.append(out['vel_rayleigh_max'])
+            vel_rayleigh_std.append(out['vel_rayleigh_std'])
+            vel_rayleigh_all.append(out['vel_rayleigh_all'])
+
+            cc_rayleigh_all.append(out['cc_rayleigh_all'])
+            cc_tangent_all.append(out['cc_tangent_all'])
+
+            baz_love.append(out['baz_love_max'])
+            baz_love_std.append(out['baz_love_std'])
+
+            baz_love_all.append(out['baz_love_all'])
+
+            vel_love_max.append(out['vel_love_max'])
+            vel_love_std.append(out['vel_love_std'])
+            vel_love_all.append(out['vel_love_all'])
+
+            cc_love_all.append(out['cc_love_all'])
+
+            times_relative.append(out['times_relative'])
+            times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+            times_all.append(times_absolute)
+
+        else:
+            baz_tangent.append(np.nan)
+            baz_rayleigh.append(np.nan)
+            baz_love.append(np.nan)
+
+            baz_tangent_std.append(np.nan)
+            baz_rayleigh_std.append(np.nan)
+            baz_love_std.append(np.nan)
+
+            vel_love_max.append(np.nan)
+            vel_love_std.append(np.nan)
+            vel_rayleigh_max.append(np.nan)
+            vel_rayleigh_std.append(np.nan)
+
+            baz_tangent_all.append(nan_dummy)
+            baz_rayleigh_all.append(nan_dummy)
+            baz_love_all.append(nan_dummy)
+
+            cc_tangent_all.append(nan_dummy)
+            cc_rayleigh_all.append(nan_dummy)
+            cc_love_all.append(nan_dummy)
+
+            vel_rayleigh_all.append(nan_dummy)
+            vel_love_all.append(nan_dummy)
+
+            times_relative.append(nan_dummy)
+            times_all.append(nan_dummy)
 
 
         # store plot
@@ -390,34 +423,6 @@ def main(config):
         # change status to success
         status[0, _n] = 1
 
-#         baz_tangent.append(np.nan)
-#         baz_rayleigh.append(np.nan)
-#         baz_love.append(np.nan)
-
-#         baz_tangent_std.append(np.nan)
-#         baz_rayleigh_std.append(np.nan)
-#         baz_love_std.append(np.nan)
-
-#         vel_love_max.append(np.nan)
-#         vel_love_std.append(np.nan)
-#         vel_rayleigh_max.append(np.nan)
-#         vel_rayleigh_std.append(np.nan)
-
-#         baz_tangent_all.append(nan_dummy)
-#         baz_rayleigh_all.append(nan_dummy)
-#         baz_love_all.append(nan_dummy)
-
-#         cc_tangent_all.append(nan_dummy)
-#         cc_rayleigh_all.append(nan_dummy)
-#         cc_love_all.append(nan_dummy)
-
-#         vel_rayleigh_all.append(nan_dummy)
-#         vel_love_all.append(nan_dummy)
-
-#         times_relative.append(nan_dummy)
-#         times_all.append(nan_dummy)
-
-#         ttime.append(np.nan)
 
         try:
             print(f"compute beamforming ...")
