@@ -48,7 +48,7 @@ config['interval'] = 60
 config['ddt'] = 30
 
 # frequency band (minus and plus)
-config['fband'] = 10 # 10
+config['fband'] = 2 # 10
 
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
@@ -206,8 +206,8 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
     t_mid = t[int((len(t))/2)]
 
     ## averaging of frequencies
-    insta_f_cut_avg = np.mean(insta_f_cut)
-    # insta_f_cut_avg = np.median(insta_f_cut)
+    # insta_f_cut_avg = np.mean(insta_f_cut)
+    insta_f_cut_avg = np.median(insta_f_cut)
 
     ## standard error
     insta_f_cut_std = np.std(insta_f_cut)
