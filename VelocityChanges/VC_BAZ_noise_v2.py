@@ -162,6 +162,7 @@ def main(config):
     time_bf = []
 
     ttime = []
+    ttime_bf = []
 
     num_stations_used = []
 
@@ -320,7 +321,6 @@ def main(config):
             print(f" -> baz computation failed!")
             baz_computed = False
             print(e)
-            continue
 
 
         try:
@@ -444,8 +444,7 @@ def main(config):
             times_relative.append(nan_dummy)
             times_all.append(nan_dummy)
 
-
-        time_bf.append(times_abs)
+        ttime_bf.append(t1)
 
         if bf_computed:
 
@@ -454,7 +453,8 @@ def main(config):
             vel_bf_all.append(out_bf['slow'])
             baz_bf_all.append(out_bf['baz'])
 
-            # times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
+            times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
+            time_bf.append(times_abs)
 
             num_stations_used.append(out_bf['num_stations_used'])
 
