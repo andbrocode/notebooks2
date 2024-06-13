@@ -167,6 +167,7 @@ def main(config):
 
     nan_dummy = np.ones(90)*np.nan
 
+
     for _n, (t1, t2) in enumerate(tqdm(times)):
     # for _n, (t1, t2) in enumerate(times):
 
@@ -196,12 +197,14 @@ def main(config):
             # remove response for FUR
             st2.remove_response(inv2, output="ACC", water_level=10);
 
+            # get length of streams
+            N_Z = len(st1.select(component="Z"))
+            N_N = len(st1.select(component="N"))
+            N_E = len(st1.select(component="E"))
+
             # check if merging is necessary
             if len(st1) > 3:
                 print(f" -> merging required: rot")
-                NZ = len(st1.select(component="Z"))
-                NN = len(st1.select(component="N"))
-                NE = len(st1.select(component="E"))
                 st1 = st1.merge(fill_value="interpolate")
 
             if len(st2) > 3:
@@ -312,7 +315,9 @@ def main(config):
             # check maintenance periods
             maintenance = lxx[lxx.sum_all.eq(1)].sum_all.size > 0
 
-            if NN > 1 or NE > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
+            print(N_N, N_E, N_Z, maintenance, levels)
+
+            if N_N > 1 or N_E > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (horizontal)")
 
                 out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, nan_dummy
@@ -323,7 +328,7 @@ def main(config):
 
                 out['cc_rayleigh_all'], out['cc_tangent_all'] = nan_dummy, nan_dummy
 
-            if NZ > 1 or levels["Z"] > 1e-6 or maintenance:
+            if N_Z > 1 or levels["Z"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (vertical)")
 
                 out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, nan_dummy
@@ -377,7 +382,9 @@ def main(config):
             out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
                                 format="png", dpi=150, bbox_inches='tight')
             print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
+
         except Exception as e:
+            print(f" -> plotting failed!")
             print(e)
 
         # change status to success
@@ -523,12 +530,13 @@ def main(config):
     cmap = matplotlib.colors.ListedColormap(['red', 'green'])
 
     fig = plt.figure()
-
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
 
     fig.savefig(config['path_to_figures']+f"status/VC_BAZ_{config['tbeg'].date}_status.png", format="png", dpi=100, bbox_inches='tight')
     print(f" -> stored: {config['path_to_figures']}status/VC_BAZ_{config['tbeg'].date}.png")
+
+    del fig
 
     print("\n")
 
