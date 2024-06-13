@@ -267,7 +267,7 @@ def __get_trace(seed):
 
 def main(config):
 
-    print(f" processing: {config['tbeg'].date}")
+    print(f"processing: {config['tbeg'].date} ...")
 
     # load MLTI logs
     mltiU = __load_mlti(config['t1'], config['t2'], "U", archive_path)

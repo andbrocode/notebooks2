@@ -54,9 +54,13 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
             try:
                 try:
                     # print(" -> loading inventory via archive")
-                    # inventory = read_inventory(f"/home/{username}/Documents/ROMY/stationxml_ringlaser/dataless.seed.{net}_{sta}", format="SEED")
-                    inventory = read_inventory(f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}", format="STATIONXML")
 
+                    try:
+                        file = f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}"
+                        inventory = read_inventory(file, format="STATIONXML")
+                    except:
+                        file = f"/import/kilauea/stationxml_ringlaser/station_{net}_{sta}"
+                        inventory = read_inventory(file, format="STATIONXML")
                 except:
                     # print(" -> loading inventory via Client")
                     inventory = Client(config['fdsn_clients'][k]).get_stations(
