@@ -297,15 +297,15 @@ def main(config):
         print(f" -> merging required!")
         st0.merge(fill_value="interpolate")
 
-    # remove trend
-    st0 = st0.detrend("linear")
-
     # check if data has same length
     for tr in st0:
         Nreal = len(tr.data)
         if Nreal != config['Nexpected']:
             tr.data = tr.data[:config['Nexpected']]
-            # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
+            print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {config['Nexpected']}")
+
+    # remove trend
+    st0 = st0.detrend("linear")
 
     # rotate streams
     st0 = __rotate_romy_ZUV_ZNE(st0, romy_inv, keep_z=True)
