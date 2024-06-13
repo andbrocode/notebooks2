@@ -34,6 +34,22 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
     elif username == "andbro":
         bay_path = "/home/andbro/bay200/"
 
+    if os.uname().nodename == 'lighthouse':
+        root_path = '/home/andbro/'
+        data_path = '/home/andbro/kilauea-data/'
+        archive_path = '/home/andbro/freenas/'
+        bay_path = '/home/andbro/bay200/'
+    elif os.uname().nodename == 'kilauea':
+        root_path = '/home/brotzer/'
+        data_path = '/import/kilauea-data/'
+        archive_path = '/import/freenas-ffb-01-data/'
+        bay_path = '/bay200/'
+    elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
+        root_path = '/home/brotzer/'
+        data_path = '/import/kilauea-data/'
+        archive_path = '/import/freenas-ffb-01-data/'
+        bay_path = '/bay200/'
+
     # _____________________________________________________
 
     def __get_data(config):
@@ -54,13 +70,10 @@ def __compute_beamforming_ROMY(tbeg, tend, submask=None, fmin=None, fmax=None, c
             try:
                 try:
                     # print(" -> loading inventory via archive")
-
-                    try:
-                        file = f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}"
-                        inventory = read_inventory(file, format="STATIONXML")
-                    except:
-                        file = f"/import/kilauea/stationxml_ringlaser/station_{net}_{sta}"
-                        inventory = read_inventory(file, format="STATIONXML")
+                    # file = f"/home/{username}/Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}"
+                    # inventory = read_inventory(file, format="STATIONXML")
+                    file = f"{data_path}/stationxml_ringlaser/station_{net}_{sta}"
+                    inventory = read_inventory(file, format="STATIONXML")
                 except:
                     # print(" -> loading inventory via Client")
                     inventory = Client(config['fdsn_clients'][k]).get_stations(
