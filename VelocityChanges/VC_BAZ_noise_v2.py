@@ -312,12 +312,16 @@ def main(config):
                                                            plot=False,
                                                            save=True
                                                           );
+            # change status to success
+            status[0, _n] = 1
             baz_computed = True
+
         except Exception as e:
             print(f" -> baz computation failed!")
             baz_computed = False
             print(e)
             continue
+
 
         try:
             print(f"\ncheckup for MLTI ...")
@@ -349,6 +353,34 @@ def main(config):
         except Exception as e:
             print(f" -> chekup failed!")
             print(e)
+
+
+        # compute beamforming for array
+        try:
+            print(f"\ncompute beamforming ...")
+
+            out_bf = __compute_beamforming_ROMY(
+                                                conf['tbeg'],
+                                                conf['tend'],
+                                                submask=None,
+                                                fmin=config['fmin'],
+                                                fmax=config['fmax'],
+                                                component="Z",
+                                                bandpass=True,
+                                                plot=False
+                                               )
+
+
+
+            ## change status to success
+            status[1, _n] = 1
+            bf_computed = True
+
+        except Exception as e:
+            print(f" -> beamforming computation failed!")
+            bf_computed = False
+            print(e)
+
 
         # assign values
         ttime.append(t1)
@@ -413,6 +445,31 @@ def main(config):
             times_all.append(nan_dummy)
 
 
+        time_bf.append(times_abs)
+
+        if bf_computed:
+
+            baz_bf.append(out_bf['baz_bf_max'])
+            baz_bf_std.append(out_bf['baz_bf_std'])
+            vel_bf_all.append(out_bf['slow'])
+            baz_bf_all.append(out_bf['baz'])
+
+            # times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
+
+            num_stations_used.append(out_bf['num_stations_used'])
+
+        else:
+            baz_bf.append(np.nan)
+            baz_bf_std.append(np.nan)
+            vel_bf_all.append(np.nan)
+            time_bf.append(np.nan)
+            baz_bf_all.append(np.nan)
+
+            num_stations_used.append(np.nan)
+
+            print(len(ttime), len(baz_bf))
+
+
         # store plot
         try:
             print(f"\ncreate plot ...")
@@ -426,51 +483,9 @@ def main(config):
             print(f" -> plotting failed!")
             print(e)
 
-        # change status to success
-        status[0, _n] = 1
-
-        try:
-            print(f"\ncompute beamforming ...")
-
-            out_bf = __compute_beamforming_ROMY(
-                                                conf['tbeg'],
-                                                conf['tend'],
-                                                submask=None,
-                                                fmin=config['fmin'],
-                                                fmax=config['fmax'],
-                                                component="Z",
-                                                bandpass=True,
-                                                plot=False
-                                               )
-
-            baz_bf.append(out_bf['baz_bf_max'])
-            baz_bf_std.append(out_bf['baz_bf_std'])
-            vel_bf_all.append(out_bf['slow'])
-            baz_bf_all.append(out_bf['baz'])
-
-            num_stations_used.append(out_bf['num_stations_used'])
-
-            times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
-            time_bf.append(times_abs)
-
-            ## change status to success
-            status[1, _n] = 1
-
-        except Exception as e:
-            print(f" -> beamforming computation failed!")
-            print(e)
-
-            baz_bf.append(np.nan)
-            baz_bf_std.append(np.nan)
-            vel_bf_all.append(np.nan)
-            time_bf.append(np.nan)
-            baz_bf_all.append(np.nan)
 
 
-            print(out)
-
-
-    # ---------------------------------------
+    # convert to array
     def __to_array(arr_in):
         arr_out = []
         for _t in arr_in:
