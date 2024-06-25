@@ -38,15 +38,17 @@ def __load_water_level(tbeg, tend, path_to_data="/lamont/Pegel/"):
             print(f"error for {file}")
 
     # convert data
+    # to meter
     df['pegel'] = df.pegel*0.75
+    # to degree celcius
     df['temperatur'] = df.temperatur*5
 
 
     # remove columns hour and day
-    if "hour" in df0.keys():
-        df.drop(columns=["hour", "day"], inplace=True)
-    elif "time" in df0.keys():
-        df.drop(columns=["time", "day"], inplace=True)
+    # if "hour" in df0.keys():
+    #     df.drop(columns=["hour", "day"], inplace=True)
+    # elif "time" in df0.keys():
+    #     df.drop(columns=["time", "day"], inplace=True)
 
 
     # reset index to make it continous
