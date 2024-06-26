@@ -53,7 +53,7 @@ config['tend'] = config['tbeg'] + 86400
 
 config['sampling_rate'] = 20 # Hz
 
-config['time_offset'] = 3600*6 # seconds
+config['time_offset'] = 60 # seconds
 
 config['t1'] = config['tbeg']-config['time_offset']
 config['t2'] = config['tend']+config['time_offset']
