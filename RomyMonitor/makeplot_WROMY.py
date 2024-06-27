@@ -3,7 +3,7 @@
 
 # # Plot Data of Environmental Network within ROMY
 
-# In[9]:
+# In[1]:
 
 
 import os
@@ -14,13 +14,13 @@ import numpy as np
 from obspy import UTCDateTime, Stream
 
 
-# In[10]:
+# In[2]:
 
 
 # sys.path.append('..')
 
 
-# In[11]:
+# In[3]:
 
 
 from functions.load_lxx import __load_lxx
@@ -29,7 +29,7 @@ from functions.read_sds import __read_sds
 from functions.load_furt_stream import __load_furt_stream
 
 
-# In[12]:
+# In[4]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -49,14 +49,14 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     bay_path = '/bay200/'
 
 
-# In[13]:
+# In[5]:
 
 
 import warnings
 warnings.filterwarnings('ignore')
 
 
-# In[14]:
+# In[6]:
 
 
 def __find_min_max_stream(_st, _cha):
@@ -71,7 +71,7 @@ def __find_min_max_stream(_st, _cha):
     return nanpercentile(arr, 0.05), nanpercentile(arr, 99.95)
 
 
-# In[15]:
+# In[7]:
 
 
 def __find_min_max(_df, _cha):
@@ -85,7 +85,7 @@ def __find_min_max(_df, _cha):
     return nanpercentile(arr, 0.05), nanpercentile(arr, 99.95)
 
 
-# In[16]:
+# In[8]:
 
 
 def __read_data(t1, t2, cha, path_to_data):
@@ -137,7 +137,7 @@ def __read_data(t1, t2, cha, path_to_data):
     return df
 
 
-# In[17]:
+# In[9]:
 
 
 config = {}
@@ -175,7 +175,7 @@ config['colors'] = {  1:'darkgreen',
 
 # ### Load Maintenance Log
 
-# In[18]:
+# In[10]:
 
 
 try:
@@ -192,7 +192,7 @@ except Exception as e:
 
 # ### Load WROMY data
 
-# In[19]:
+# In[11]:
 
 
 # ws = Stream()
@@ -208,7 +208,7 @@ except Exception as e:
 # ws
 
 
-# In[20]:
+# In[12]:
 
 
 ws = {}
@@ -231,7 +231,7 @@ for _s in config['wromy_stations']:
 
 # ### Load PROMY data
 
-# In[21]:
+# In[13]:
 
 
 ps = Stream()
@@ -250,7 +250,7 @@ ps
 
 # ### Load FURT data
 
-# In[22]:
+# In[14]:
 
 
 try:
@@ -262,7 +262,7 @@ except Exception as e:
 
 # ### Load Radon Data
 
-# In[24]:
+# In[15]:
 
 
 try:
@@ -278,13 +278,7 @@ except Exception as e:
 
 # ### Plotting
 
-# In[23]:
-
-
-furt
-
-
-# In[35]:
+# In[31]:
 
 
 def __makeplot():
@@ -293,7 +287,7 @@ def __makeplot():
 
     font = 12
 
-    fig, ax = plt.subplots(Nrow, Ncol, figsize=(10, 8), sharex=True)
+    fig, ax = plt.subplots(Nrow, Ncol, figsize=(8, 8), sharex=True)
 
     plt.subplots_adjust(hspace=0.1)
 
@@ -351,7 +345,7 @@ def __makeplot():
         ax[_n].grid(ls=":", zorder=0)
         ax[_n].set_xlim(left=0)
 
-    ax[1].legend(ncol=11, bbox_to_anchor=(1.0, 2.4))
+    ax[1].legend(ncol=4, bbox_to_anchor=(0.8, 2.55), fontsize=font-2)
 
     ## add maintenance
     for lx1, lx2 in zip(lxx_t1, lxx_t2):
@@ -365,23 +359,23 @@ def __makeplot():
     tcklbls = [f"{UTCDateTime(config['tbeg']+t).date} \n {str(UTCDateTime(config['tbeg']+t).time).split('.')[0]}" for t in tcks]
     ax[Nrow-1].set_xticklabels(tcklbls)
 
-    plt.show();
+    # plt.show();
     return fig
 
 
-# In[36]:
+# In[32]:
 
 
 fig = __makeplot();
 
 
-# In[37]:
+# In[33]:
 
 
 fig.savefig(config['path_to_figs']+f"html2_wromy.png", format="png", dpi=150, bbox_inches='tight')
 
 
-# In[38]:
+# In[34]:
 
 
 del fig

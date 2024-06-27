@@ -26,7 +26,8 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
     mlti_cumsum = np.cumsum(_mlti)
 
     # to percent
-    mlti_cumsum = mlti_cumsum / max(mlti_cumsum) * 100
+    mlti_cumsum = mlti_cumsum 
+    mlti_cumsum_percent = mlti_cumsum  / max(mlti_cumsum) * 100
 
     # inter mlti times
     mlti_times_sec_shift = np.roll(mlti_times_sec, 1)
@@ -37,7 +38,7 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
     if plot:
         fig, ax = plt.subplots(1, 2, figsize=(15, 5))
 
-        ax[0].plot(np.arange(0, len(mlti_cumsum))/86400, mlti_cumsum)
+        ax[0].plot(np.arange(0, len(mlti_cumsum_percent))/86400, mlti_cumsum_percent)
         ax[1].hist(mlti_inter_sec/60, bins=int(1440/10), range=(0, 1440))
 
         if ylog:
@@ -54,4 +55,4 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
 
         plt.show();
 
-    return mlti_cumsum, mlti_inter_sec
+    return mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec
