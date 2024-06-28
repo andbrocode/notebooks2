@@ -26,7 +26,7 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
     mlti_cumsum = np.cumsum(_mlti)
 
     # to percent
-    mlti_cumsum = mlti_cumsum 
+    mlti_cumsum = mlti_cumsum
     mlti_cumsum_percent = mlti_cumsum  / max(mlti_cumsum) * 100
 
     # inter mlti times
@@ -55,4 +55,4 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
 
         plt.show();
 
-    return mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec
+    return _mlti, mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec
