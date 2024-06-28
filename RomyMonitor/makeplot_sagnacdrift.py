@@ -79,7 +79,7 @@ config['path_to_sds'] = archive_path+"romy_archive/"
 config['path_to_autodata'] = archive_path+f"romy_autodata/"
 
 # path to figure output
-config['path_to_figs'] = root_path+f"Documents/ROMY/HTML_Monitor/figures/"
+config['path_to_figs'] = data_path+f"HTML_Monitor/figures/"
 
 
 # ### Load beat data
