@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Plot of Sagnac Drift of Rings
+
+# 
+
+# ## Imports
+
+# In[1]:
+
+
 import os
 import gc
 import matplotlib.pyplot as plt
@@ -7,6 +19,8 @@ from datetime import datetime, date
 from pandas import DataFrame, read_pickle, date_range, concat, read_csv
 from obspy import UTCDateTime, read, Trace, Stream, read_inventory
 
+
+# In[2]:
 
 
 from functions.load_sagnac_beat_data import __load_sagnac_beat_data
@@ -19,6 +33,8 @@ from functions.get_mlti_statistics import __get_mlti_statistics
 from functions.get_lxx_intervals import __get_lxx_intervals
 from functions.load_lxx import __load_lxx
 
+
+# In[3]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -36,6 +52,11 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
+
+
+# ## Configurations
+
+# In[4]:
 
 
 config = {}
@@ -61,10 +82,17 @@ config['path_to_autodata'] = archive_path+f"romy_autodata/"
 config['path_to_figs'] = root_path+f"Documents/ROMY/HTML_Monitor/figures/"
 
 
+# ### Load beat data
+
+# In[5]:
+
 
 beatU = __load_sagnac_beat_data(config['tbeg'], config['tend'], "U", config['path_to_autodata'])
 beatZ = __load_sagnac_beat_data(config['tbeg'], config['tend'], "Z", config['path_to_autodata'])
 beatV = __load_sagnac_beat_data(config['tbeg'], config['tend'], "V", config['path_to_autodata'])
+
+
+# In[6]:
 
 
 def __makeplot():
@@ -112,7 +140,15 @@ def __makeplot():
     return fig
 
 
+# In[7]:
+
+
 # fig = __makeplot();
+
+
+# ### Exclude Outliers
+
+# In[8]:
 
 
 beatZ['fj'] = np.where((beatZ.fj > Zupper), np.nan, beatZ.fj)
@@ -123,6 +159,11 @@ beatU['fj'] = np.where((beatU.fj < Ulower), np.nan, beatU.fj)
 
 beatV['fj'] = np.where((beatV.fj > Vupper), np.nan, beatV.fj)
 beatV['fj'] = np.where((beatV.fj < Vlower), np.nan, beatV.fj)
+
+
+# ### Load Maintenance LXX log
+
+# In[9]:
 
 
 try:
@@ -136,6 +177,10 @@ except Exception as e:
     print(e)
     print(f" -> failed to load maintenance log")
 
+
+# ### Remove MLTI times
+
+# In[10]:
 
 
 try:
@@ -155,6 +200,9 @@ except:
     print(f" -> failed to load mlti log for RU")
 
 
+# In[11]:
+
+
 try:
     # load mlti log
     mltiZ = __load_mlti(config['tbeg'], config['tend'], "Z", archive_path)
@@ -172,6 +220,9 @@ except:
     print(f" -> failed to load mlti log for RZ")
 
 
+# In[12]:
+
+
 try:
     # load mlti log
     mltiV = __load_mlti(config['tbeg'], config['tend'], "V", archive_path)
@@ -187,6 +238,11 @@ try:
 
 except:
     print(f" -> failed to load mlti log for RV")
+
+
+# ### Get MLTI statistics
+
+# In[16]:
 
 
 try:
@@ -207,6 +263,10 @@ except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RZ")
 
+
+# ## Smoothing
+
+# In[14]:
 
 
 n_minutes = 24*60
@@ -241,6 +301,10 @@ try:
 except:
     pass
 
+
+# ## Plotting
+
+# In[20]:
 
 
 def __makeplot():
@@ -337,7 +401,13 @@ fig = __makeplot();
 fig.savefig(config['path_to_figs']+f"html2_beatdrift.png", format="png", dpi=150, bbox_inches='tight')
 
 
+# In[ ]:
 
+
+
+
+
+# In[ ]:
 
 
 
