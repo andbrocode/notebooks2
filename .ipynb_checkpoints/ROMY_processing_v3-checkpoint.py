@@ -15,6 +15,7 @@ import sys
 import obspy as obs
 import numpy as np
 import numpy.ma as ma
+import matplotlib.pyplot as plt
 
 from numpy import where
 from andbro__read_sds import __read_sds
@@ -47,6 +48,8 @@ config['path_to_sds'] = archive_path+"romy_archive/"
 config['path_to_sds_out'] = archive_path+"temp_archive/"
 
 config['path_to_inventory'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/"
+
+config['path_to_figs'] = root_path+"Downloads/tmp/testfigs/"
 
 if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
@@ -305,6 +308,29 @@ def despike_sta_lta(arr, df, t_lta=50, t_sta=1, threshold_upper=40, plot=False):
 
     return spikes, mask1, mask2
 
+def __checkup_plot(_st, _masks, _spikes):
+
+    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(15, 12))
+
+    plt.subplots_adjust(hspace=0.15)
+
+    for i, tr in enumerate(_st):
+
+        cha = tr.stats.channel[-1]
+
+        data_before = tr.copy().data
+        data_after = data_before*_masks[cha]
+
+        ax[i].plot(_spikes[tr.stats.channel[-1]], color="grey", alpha=0.6, zorder=1, label="spikes")
+        ax[i].plot(data_before, label=f"{cha} before")
+        ax[i].plot(data_after, label=f" {cha} after")
+
+        ax[i].set_ylim(-np.nanmax(abs(data_after))*1.1, np.nanmax(abs(data_after))*1.1)
+
+        ax[i].legend(loc=1)
+
+    plt.show();
+    return fig
 
 def main(config):
 
@@ -406,6 +432,7 @@ def main(config):
 
     # despiking using LTA - STA triggers
     spikes = {}
+    masks = {}
 
     for tr in st0:
 
@@ -413,31 +440,43 @@ def main(config):
 
         cha = tr.stats.channel[-1]
 
+        data = tr.copy().data
+
         _data = tr.copy().data
 
         spikes[cha] = np.zeros(_data.size)
+        masks[cha] = np.ones(_data.size)
 
-        # iterate (in order to find spikes next to one another)
         for i in range(50):
 
-            # detect spikes using STA/LTA
+            # detect spikes
             _spikes, mask1, mask2 = despike_sta_lta(_data, df, t_lta=50, t_sta=1, threshold_upper=30, plot=False)
 
             # stop if no more spikes are detected
             if any(_sp >= 1 for _sp in _spikes):
                 # apply mask
+                # _data *= mask1
                 _data *= mask1
 
                 # add detected spikes
                 spikes[cha] += _spikes
+
+                # add detected spikes
+                masks[cha] *= mask1
+
             else:
-                print(f" -> stopped despiking!\ {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
+                print(f" -> stopped despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
                 break
 
-        print(f" -> {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
+        print(f" -> finished despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
 
         # normalize to one (avoid accumulation)
         spikes[cha] = np.where(spikes[cha] > 1, 1, spikes[cha])
+
+    # checkup plot
+    fig = __checkup_plot(st0, masks, spikes)
+    fig.savefig(config['path_to_figs']+f"{config['tbeg'].date}.png", format="png", dpi=150, bbox_inches='tight')
+    del fig
 
     # write output Z
     outZ = obs.Stream()
