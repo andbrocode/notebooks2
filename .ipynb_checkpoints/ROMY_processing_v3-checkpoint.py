@@ -329,7 +329,7 @@ def __checkup_plot(_st, _masks, _spikes):
 
         ax[i].legend(loc=1)
 
-    plt.show();
+    # plt.show();
     return fig
 
 def main(config):
@@ -468,7 +468,7 @@ def main(config):
                 print(f" -> stopped despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
                 break
 
-        print(f" -> finished despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
+        print(f" -> finished despiking!\n    {cha}: iteration=49  spikes={int(sum(spikes[cha]))}")
 
         # normalize to one (avoid accumulation)
         spikes[cha] = np.where(spikes[cha] > 1, 1, spikes[cha])
