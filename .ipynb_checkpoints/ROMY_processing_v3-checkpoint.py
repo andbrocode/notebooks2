@@ -413,14 +413,12 @@ def main(config):
 
         cha = tr.stats.channel[-1]
 
-        data = tr.copy().data
-
         _data = tr.copy().data
 
         spikes[cha] = np.zeros(_data.size)
 
         # iterate (in order to find spikes next to one another)
-        for i in range(20):
+        for i in range(50):
 
             # detect spikes using STA/LTA
             _spikes, mask1, mask2 = despike_sta_lta(_data, df, t_lta=50, t_sta=1, threshold_upper=30, plot=False)
@@ -433,8 +431,10 @@ def main(config):
                 # add detected spikes
                 spikes[cha] += _spikes
             else:
-                print(f" -> stopped despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
+                print(f" -> stopped despiking!\ {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
                 break
+
+        print(f" -> {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
 
         # normalize to one (avoid accumulation)
         spikes[cha] = np.where(spikes[cha] > 1, 1, spikes[cha])
