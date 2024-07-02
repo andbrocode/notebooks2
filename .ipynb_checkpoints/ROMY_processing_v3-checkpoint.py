@@ -476,6 +476,7 @@ def main(config):
     # checkup plot
     fig = __checkup_plot(st0, masks, spikes)
     fig.savefig(config['path_to_figs']+f"{config['tbeg'].date}.png", format="png", dpi=150, bbox_inches='tight')
+    print(f"-> store figure: ",config['path_to_figs']+f"{config['tbeg'].date}.png")
     del fig
 
     # write output Z
