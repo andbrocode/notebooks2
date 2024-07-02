@@ -49,7 +49,7 @@ config['path_to_sds_out'] = archive_path+"temp_archive/"
 
 config['path_to_inventory'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/"
 
-config['path_to_figs'] = root_path+"Downloads/tmp/testfigs/"
+config['path_to_figs'] = data_path+"2delete/testfigs/"
 
 if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
