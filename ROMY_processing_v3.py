@@ -368,7 +368,7 @@ def main(config):
         print(f" -> merging required!")
         st0 = st0.merge(fill_value="interpolate")
 
-    st0 = st0.trim(config['tbeg'], config['tend'])
+    st0 = st0.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
     # check if data has same length
     for tr in st0:
@@ -381,7 +381,12 @@ def main(config):
     st0 = st0.detrend("linear")
 
     # rotate streams
-    st0 = __rotate_romy_ZUV_ZNE(st0, romy_inv, keep_z=True)
+    try:
+        st0 = __rotate_romy_ZUV_ZNE(st0, romy_inv, keep_z=True)
+    except Exception as e:
+        print(st0)
+        print(e)
+        continue
 
     # prepare MLTI masks
     tr_mltiU = __get_trace("BW.ROMY.30.MLT")
@@ -449,7 +454,10 @@ def main(config):
         spikes[cha] = np.zeros(_data.size)
         masks[cha] = np.ones(_data.size)
 
+        it = 0
         for i in range(50):
+
+            it = i
 
             # detect spikes
             _spikes, mask1, mask2 = despike_sta_lta(_data, df, t_lta=50, t_sta=1, threshold_upper=30, plot=False)
@@ -467,10 +475,10 @@ def main(config):
                 masks[cha] *= mask1
 
             else:
-                print(f" -> stopped despiking!\n    {cha}: iteration={i}  spikes={int(sum(spikes[cha]))}")
+                print(f" -> stopped despiking!\n    {cha}: iteration={it}  spikes={int(sum(spikes[cha]))}")
                 break
-
-        print(f" -> finished despiking!\n    {cha}: iteration=49  spikes={int(sum(spikes[cha]))}")
+        if it == 49:
+            print(f" -> finished despiking!\n    {cha}: iteration={it}  spikes={int(sum(spikes[cha]))}")
 
         # normalize to one (avoid accumulation)
         spikes[cha] = np.where(spikes[cha] > 1, 1, spikes[cha])

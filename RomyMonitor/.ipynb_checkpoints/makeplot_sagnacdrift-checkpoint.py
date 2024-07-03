@@ -84,21 +84,12 @@ config['path_to_figs'] = data_path+f"HTML_Monitor/figures/"
 
 # ### Load beat data
 
-# In[16]:
+# In[5]:
 
 
-try:
-    beatU = __load_sagnac_beat_data(config['tbeg'], config['tend'], "U", config['path_to_autodata'])
-except:
-    beatU = DataFrame()
-try:
-    beatZ = __load_sagnac_beat_data(config['tbeg'], config['tend'], "Z", config['path_to_autodata'])
-except:
-    beatZ = DataFrame()
-try:
-    beatV = __load_sagnac_beat_data(config['tbeg'], config['tend'], "V", config['path_to_autodata'])
-except:
-    beatV = DataFrame()
+beatU = __load_sagnac_beat_data(config['tbeg'], config['tend'], "U", config['path_to_autodata'])
+beatZ = __load_sagnac_beat_data(config['tbeg'], config['tend'], "Z", config['path_to_autodata'])
+beatV = __load_sagnac_beat_data(config['tbeg'], config['tend'], "V", config['path_to_autodata'])
 
 
 # In[6]:
@@ -160,21 +151,14 @@ def __makeplot():
 # In[8]:
 
 
-try:
-    beatZ['fj'] = np.where((beatZ.fj > Zupper), np.nan, beatZ.fj)
-    beatZ['fj'] = np.where((beatZ.fj < Zlower), np.nan, beatZ.fj)
-except:
-    pass
-try:
-    beatU['fj'] = np.where((beatU.fj > Uupper), np.nan, beatU.fj)
-    beatU['fj'] = np.where((beatU.fj < Ulower), np.nan, beatU.fj)
-except:
-    pass
-try:
-    beatV['fj'] = np.where((beatV.fj > Vupper), np.nan, beatV.fj)
-    beatV['fj'] = np.where((beatV.fj < Vlower), np.nan, beatV.fj)
-except:
-    pass
+beatZ['fj'] = np.where((beatZ.fj > Zupper), np.nan, beatZ.fj)
+beatZ['fj'] = np.where((beatZ.fj < Zlower), np.nan, beatZ.fj)
+
+beatU['fj'] = np.where((beatU.fj > Uupper), np.nan, beatU.fj)
+beatU['fj'] = np.where((beatU.fj < Ulower), np.nan, beatU.fj)
+
+beatV['fj'] = np.where((beatV.fj > Vupper), np.nan, beatV.fj)
+beatV['fj'] = np.where((beatV.fj < Vlower), np.nan, beatV.fj)
 
 
 # ### Load Maintenance LXX log
@@ -258,7 +242,7 @@ except:
 
 # ### Get MLTI statistics
 
-# In[13]:
+# In[16]:
 
 
 try:
@@ -320,7 +304,7 @@ except:
 
 # ## Plotting
 
-# In[15]:
+# In[20]:
 
 
 def __makeplot():
@@ -417,6 +401,12 @@ def __makeplot():
 fig = __makeplot();
 
 fig.savefig(config['path_to_figs']+f"html2_beatdrift.png", format="png", dpi=150, bbox_inches='tight')
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

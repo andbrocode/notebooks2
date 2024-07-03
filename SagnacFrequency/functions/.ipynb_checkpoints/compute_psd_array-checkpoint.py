@@ -11,8 +11,7 @@ def __compute_psd_array(st0, twin_sec=60, spec="PSD"):
         ## determine length of the input time series
         n = int(len(signal_in))
 
-
-        ## calculate spectrum (with or without window function applied to time series)
+        # calculate spectrum (with or without window function applied to time series)
         if window:
             win = signal.get_window(window, n);
             spectrum = fft(signal_in * win)
@@ -20,19 +19,17 @@ def __compute_psd_array(st0, twin_sec=60, spec="PSD"):
         else:
             spectrum = fft(signal_in)
 
-        ## calculate frequency array
+        # calculate frequency array
         frequencies = fftfreq(n, d=dt)
 
-
-        ## correct amplitudes of spectrum
+        # correct amplitudes of spectrum
         magnitude = abs(spectrum) * 2.0 / n
-
 
         phase = angle(spectrum, deg=False)
         # phase = imag(spectrum)
 
         ## return the positive frequencies
-        return  magnitude[0:n//2], frequencies[0:n//2], phase[0:n//2]
+        return magnitude[0:n//2], frequencies[0:n//2], phase[0:n//2]
 
     _st = st0.copy()
 
@@ -52,6 +49,15 @@ def __compute_psd_array(st0, twin_sec=60, spec="PSD"):
                             noverlap=overlap,
                             nfft=nblock,
                             scaling="density",
+                            return_onesided=True)
+
+        elif spec.upper() == "SPEC":
+            ff, Pxx = welch(tr.data,
+                            fs=tr.stats.sampling_rate,
+                            window=win,
+                            noverlap=overlap,
+                            nfft=nblock,
+                            scaling="spectrum",
                             return_onesided=True)
 
         elif spec.upper() == "FFT":

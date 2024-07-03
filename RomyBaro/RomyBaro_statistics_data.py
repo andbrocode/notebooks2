@@ -21,7 +21,6 @@ from functions.estimate_linear_coefficients import __estimate_linear_coefficient
 from functions.variance_reduction import __variance_reduction
 
 import warnings
-warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -73,6 +72,8 @@ config['interval_overlap'] = 3600
 
 def main(config):
 
+    warnings.filterwarnings('ignore')
+
     # define data frame
     df = DataFrame()
 
@@ -99,6 +100,8 @@ def main(config):
         arr_t1.append(t1)
         arr_t2.append(t2)
 
+        stop = False
+
         try:
 
             # ___________________________________________________________
@@ -108,14 +111,14 @@ def main(config):
             st0 += __read_sds(config['path_to_sds'], "BW.ROMY.30.BJN", t1-config['tbuffer'], t2+config['tbuffer'])
             st0 += __read_sds(config['path_to_sds'], "BW.ROMY.30.BJE", t1-config['tbuffer'], t2+config['tbuffer'])
 
-            print(st0)
+            # print(st0)
 
             # check if any is masked
-            if len(st0) > 3:
-                print(f" -> masked array(s)")
-                stop = True
-            else:
-                stop = False
+            # if len(st0) > 3:
+            #     print(f" -> masked array(s)")
+            #     stop = True
+            # else:
+            #     stop = False
 
             # for tr in st0:
             #     if np.ma.isMaskedArray(tr.data):
@@ -127,12 +130,15 @@ def main(config):
 
             status.append(stop)
 
-            if stop:
-                continue
+            # jump if traces are masked
+            # if stop:
+            #     continue
 
-            st0.merge(fill_value="interpolate")
+            st0 = st0.merge(fill_value="interpolate")
+            # st0 = st0.merge(fill_value=0)
 
-            print(st0)
+            # print(st0)
+            # st0.plot();
 
             # ___________________________________________________________
             # load barometer data
@@ -141,7 +147,7 @@ def main(config):
             ffbi0 = __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDF", t1-config['tbuffer'], t2+config['tbuffer'])
 
             if len(ffbi0) != 2:
-                ffbi0.merge();
+                ffbi0 = ffbi0.merge();
 
 
             ffbi0 += __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDO", t1-config['tbuffer'], t2+config['tbuffer'])
@@ -174,7 +180,10 @@ def main(config):
             # ___________________________________________________________
             # integrate ROMY data to tilt
 
-            til1 = st0.copy().integrate("spline")
+            til1 = st0.copy()
+            # til1 = til1.integrate()
+            til1 = til1.detrend("demean")
+            til1 = til1.integrate("spline")
 
             # ___________________________________________________________
             # prepare stream
@@ -197,15 +206,17 @@ def main(config):
 
             stt = stt.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
-            stt = stt.trim(t1, t2)
+            stt = stt.trim(t1, t2, nearest_sample=False)
+
+            # stt.plot(equal_scale=False);
 
             stt = stt.taper(0.05, type="cosine")
 
             # check if all data for this period is there
-            if len(stt) !=5:
+            if len(stt) != 5:
                 print(f" -> missing data")
                 print(stt)
-                continue
+                stop = True
 
             # check if data has same length
             Nexpected = int((t2 - t1)*1)
@@ -292,8 +303,11 @@ def main(config):
             arr_R_Z[_n], arr_R_N[_n], arr_R_E[_n] = R_Z, R_N, R_E
 
         except Exception as e:
-            print("- > processing failed")
+            print(" -> processing failed")
             print(e)
+
+        if stop:
+            continue
 
         # ___________________________________________________________
         # plotting
@@ -363,7 +377,7 @@ def main(config):
                         format="png", dpi=150, bbox_inches='tight')
 
         except Exception as e:
-            print("- > plotting failed")
+            print(" -> plotting failed")
             print(e)
 
     df['t1'] = arr_t1
