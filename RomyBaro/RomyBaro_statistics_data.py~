@@ -51,7 +51,7 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 config['path_to_out_data'] = data_path+"romy_baro/data/"
 
 # data
-config['tbeg'] = obs.UTCDateTime("2024-03-20 00:00")
+config['tbeg'] = obs.UTCDateTime("2024-01-20 00:00")
 config['tend'] = obs.UTCDateTime("2024-05-20 00:00")
 
 config['tbuffer'] = 7200 # seconds
@@ -97,6 +97,8 @@ def main(config):
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
+        print(t1 ,t2)
+
         arr_t1.append(t1)
         arr_t2.append(t2)
 
@@ -134,8 +136,10 @@ def main(config):
             # if stop:
             #     continue
 
-            st0 = st0.merge(fill_value="interpolate")
-            # st0 = st0.merge(fill_value=0)
+            st0 = st0.detrend("linear")
+
+            # st0 = st0.merge(fill_value="interpolate")
+            st0 = st0.merge(fill_value=0)
 
             # print(st0)
             # st0.plot();
@@ -157,7 +161,9 @@ def main(config):
                 if "O" in tr.stats.channel:
                     tr.data = tr.data /1.0 /6.28099e5 /1e-5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 100 mV/hPa
 
-            ffbi0.merge();
+            ffbi0 = ffbi0.merge();
+
+            ffbi0 = ffbi0.decimate(2)
 
             # ___________________________________________________________
             # load promy pressure data
@@ -182,8 +188,11 @@ def main(config):
 
             til1 = st0.copy()
             # til1 = til1.integrate()
-            til1 = til1.detrend("demean")
+            # til1 = til1.detrend("demean")
             til1 = til1.integrate("spline")
+
+            #st0.plot(equal_scale=False)
+            #til1.plot(equal_scale=False)
 
             # ___________________________________________________________
             # prepare stream
@@ -193,8 +202,10 @@ def main(config):
             stt += ffbi0.copy()
 
             # resample to 1 Hz
-            stt = stt.resample(10.0, no_filter=True)
-            stt = stt.resample(1.0, no_filter=True)
+            # stt = stt.decimate(2, no_filter=False)
+            # stt = stt.decimate(5, no_filter=False)
+            # stt = stt.resample(10.0, no_filter=True)
+            # stt = stt.resample(1.0, no_filter=True)
 
             # stt += promy.copy()
             # stt += rmy.copy()
@@ -202,13 +213,14 @@ def main(config):
             # pre-process data
             stt = stt.detrend("demean")
             stt = stt.detrend("linear")
+            stt = stt.detrend("simple")
             stt = stt.taper(0.1, type="cosine")
 
             stt = stt.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
             stt = stt.trim(t1, t2, nearest_sample=False)
 
-            # stt.plot(equal_scale=False);
+            stt.plot(equal_scale=False);
 
             stt = stt.taper(0.05, type="cosine")
 
@@ -219,7 +231,7 @@ def main(config):
                 stop = True
 
             # check if data has same length
-            Nexpected = int((t2 - t1)*1)
+            Nexpected = int((t2 - t1)*stt[0].stats.sampling_rate)
             for tr in stt:
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
