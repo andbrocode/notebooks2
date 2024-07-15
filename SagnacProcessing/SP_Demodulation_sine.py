@@ -47,6 +47,10 @@ config['t1'] = UTCDateTime("2024-07-11 15:00")
 # config['t2'] = UTCDateTime("2024-07-11 16:00")
 config['t2'] = config['t1'] +86400
 
+
+# V / count  [0.59604645ug  from obsidian]
+config['conversion'] = 0.59604645e-6
+
 # define intervals for data loading (in seconds)
 config['interval_seconds'] = 600
 
@@ -177,7 +181,7 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
             fails += 1
             # f0, a0, p0, cf, ca = nan, nan, nan, nan, nan
 
-        if cf > 0.001 or ca > 0.001:
+        if cf > 0.001:
             f0, a0, p0 = nan, nan, nan
 
         # append values
@@ -321,7 +325,7 @@ def main(config):
 
         # convert to volt
         for tr in st00:
-            tr.data = tr.data*0.59604645e-6 # V / count  [0.59604645ug  from obsidian]
+            tr.data = tr.data*config['conversion']
 
         # remove trend
         st00 = st00.detrend("linear")
