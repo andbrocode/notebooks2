@@ -236,7 +236,7 @@ def main(config):
         print(_t1, _t2)
 
         # load data
-        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1, _t2)
+        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1-60, _t2+60)
 
         # convert to volt
         for tr in st00:
@@ -251,7 +251,11 @@ def main(config):
 
         st = __hibert_filter2(st00, cut=20, df_out=20)
 
+        # cut to interval
+        st = st.trim(_t1, _t2, nearest_sample=False)
+
         stout += st
+
 
     # adjust seed code
     for tr in stout:
