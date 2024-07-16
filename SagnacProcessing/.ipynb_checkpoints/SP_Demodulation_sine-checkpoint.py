@@ -385,12 +385,12 @@ def main(config):
 
     # phase stream
     stpout = stpout.merge()
-    # stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
+    stpout = stpout.split()
     __write_stream_to_sds(stpout, config['path_to_out_file'])
 
     # frequency stream
     stfout = stfout.merge()
-    # stfout.write(config['path_to_out_file']+f"tmp_frequency.mseed")
+    stfout = stfout.split()
     __write_stream_to_sds(stfout, config['path_to_out_file'])
 
 if __name__ == "__main__":
