@@ -261,10 +261,11 @@ def main(config):
         tr.stats.channel = f"BJ{config['ring']}"
 
     # phase stream
-    stpout = stout.merge()
+    stout = stout.merge()
     # stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
     __write_stream_to_sds(stout, config['path_to_out_file'])
 
+    print(stout)
 
 if __name__ == "__main__":
     main(config)
