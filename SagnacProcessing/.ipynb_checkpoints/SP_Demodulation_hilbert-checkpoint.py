@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 # coding: utf-8
 
 # ### Demodulation with Sine Fitting
@@ -115,11 +115,11 @@ def __write_stream_to_sds(st, path_to_sds):
 
         try:
             st_tmp = st.copy()
-            st_tmp.select(network=nn, station=ss, location=ll, channel=cc).write(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}", format="MSEED")
+            st_tmp = st_tmp.select(network=nn, station=ss, location=ll, channel=cc)
+            st_tmp.write(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}", format="MSEED")
+            print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
         except:
             print(f" -> failed to write: {cc}")
-        finally:
-            print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
 
 def __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
 
@@ -262,6 +262,7 @@ def main(config):
 
     # phase stream
     stout = stout.merge()
+    stout = stout.split()
     # stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
     __write_stream_to_sds(stout, config['path_to_out_file'])
 
