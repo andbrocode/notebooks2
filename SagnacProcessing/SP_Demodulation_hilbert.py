@@ -253,9 +253,12 @@ def main(config):
 
         stout += st
 
-    # adjust location code
+    # adjust seed code
     for tr in stout:
+        tr.stats.network = "BW"
+        tr.stats.station = "ROMY"
         tr.stats.location = "80"
+        tr.stats.channel = f"BJ{config['ring']}"
 
     # phase stream
     stpout = stout.merge()
