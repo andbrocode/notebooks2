@@ -32,7 +32,7 @@ elif os.uname().nodename == 'lin-ffb-01':
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/bay200/'
 
-
+# _________________________________________________________________________
 # ## Configurations
 
 config = {}
@@ -41,7 +41,7 @@ config['ring'] = "U"
 
 config['path_to_archive'] = archive_path+"romy_archive/"
 
-config['path_to_out_file'] = "/home/brotzer/Downloads/tmp/output/"
+config['path_to_out_file'] = archive_path+"temp_archive/"
 
 config['t1'] = UTCDateTime("2024-07-11 15:00")
 # config['t2'] = UTCDateTime("2024-07-11 16:00")
@@ -65,6 +65,7 @@ config['Toverlap'] = 0.95
 
 config['new_delta'] = config['Tinterval']-config['Toverlap']
 
+# _________________________________________________________________________
 
 def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
 
@@ -260,6 +261,44 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
     return times
 
+def __write_stream_to_sds(st, path_to_sds):
+
+    import os
+
+    # check if output path exists
+    if not os.path.exists(path_to_sds):
+        print(f" -> {path_to_sds} does not exist!")
+        return
+
+    for tr in st:
+        nn, ss, ll, cc = tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel
+        yy, jj = tr.stats.starttime.year, tr.stats.starttime.julday
+
+        if not os.path.exists(path_to_sds+f"{yy}/"):
+            os.mkdir(path_to_sds+f"{yy}/")
+            print(f"creating: {path_to_sds}{yy}/")
+        if not os.path.exists(path_to_sds+f"{yy}/{nn}/"):
+            os.mkdir(path_to_sds+f"{yy}/{nn}/")
+            print(f"creating: {path_to_sds}{yy}/{nn}/")
+        if not os.path.exists(path_to_sds+f"{yy}/{nn}/{ss}/"):
+            os.mkdir(path_to_sds+f"{yy}/{nn}/{ss}/")
+            print(f"creating: {path_to_sds}{yy}/{nn}/{ss}/")
+        if not os.path.exists(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D"):
+            os.mkdir(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D")
+            print(f"creating: {path_to_sds}{yy}/{nn}/{ss}/{cc}.D")
+
+    for tr in st:
+        nn, ss, ll, cc = tr.stats.network, tr.stats.station, tr.stats.location, tr.stats.channel
+        yy, jj = tr.stats.starttime.year, str(tr.stats.starttime.julday).rjust(3, "0")
+
+        try:
+            st_tmp = st.copy()
+            st_tmp.select(network=nn, station=ss, location=ll, channel=cc).write(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}", format="MSEED")
+        except:
+            print(f" -> failed to write: {cc}")
+        finally:
+            print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
+
 def __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
 
     '''
@@ -321,7 +360,7 @@ def main(config):
         print(_t1, _t2)
 
         # load data
-        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']", _t1, _t2)
+        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1, _t2)
 
         # convert to volt
         for tr in st00:
@@ -329,6 +368,8 @@ def main(config):
 
         # remove trend
         st00 = st00.detrend("linear")
+
+        # apply bandpass
         # st00 = st00.taper(0.01)
         # st00 = st00.filter("bandpass", freqmin=fsagnac-fband, freqmax=fsagnac+fband, corners=4, zerophase=True)
 
@@ -344,12 +385,13 @@ def main(config):
 
     # phase stream
     stpout = stpout.merge()
-    stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
+    # stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
+    __write_stream_to_sds(stpout, config['path_to_out_file'])
 
     # frequency stream
     stfout = stfout.merge()
-    stfout.write(config['path_to_out_file']+f"tmp_frequency.mseed")
-
+    # stfout.write(config['path_to_out_file']+f"tmp_frequency.mseed")
+    __write_stream_to_sds(stfout, config['path_to_out_file'])
 
 if __name__ == "__main__":
     main(config)

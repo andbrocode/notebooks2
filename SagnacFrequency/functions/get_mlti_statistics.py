@@ -4,9 +4,9 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
     import matplotlib.pyplot as plt
 
     # relative times
-    mlti_times_sec = np.array(mlti_times - times[0]).astype(int)
+    mlti_times_sec = np.array(mlti_times - times[0])
 
-    times_sec = np.array(times - times[0]).astype(int)
+    times_sec = np.array(times - times[0])
 
     # start mlti array
     _mlti = np.zeros(len(times))
@@ -27,7 +27,7 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
 
     # to percent
     mlti_cumsum = mlti_cumsum
-    mlti_cumsum_percent = mlti_cumsum  / max(mlti_cumsum) * 100
+    mlti_cumsum_percent = mlti_cumsum / max(mlti_cumsum) * 100
 
     # inter mlti times
     mlti_times_sec_shift = np.roll(mlti_times_sec, 1)
@@ -38,8 +38,8 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
     if plot:
         fig, ax = plt.subplots(1, 2, figsize=(15, 5))
 
-        ax[0].plot(np.arange(0, len(mlti_cumsum_percent))/86400, mlti_cumsum_percent)
-        ax[1].hist(mlti_inter_sec/60, bins=int(1440/10), range=(0, 1440))
+        ax[0].plot(times_sec/86400, mlti_cumsum_percent)
+        ax[1].hist(mlti_inter_sec/3600, bins=int(24/1), range=(0, 24), rwidth=0.8)
 
         if ylog:
             ax[1].set_yscale("log")
@@ -48,11 +48,11 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
         ax[1].grid(color="grey", ls="--", alpha=0.4)
 
         ax[0].set_xlabel("Time (days)", fontsize=12)
-        ax[0].set_ylabel("Amount MLTI (%)", fontsize=12)
+        ax[0].set_ylabel("MLTI Count (%)", fontsize=12)
 
-        ax[1].set_xlabel("Inter-MLTI-Time (min)", fontsize=12)
-        ax[1].set_ylabel("Amount MLTI", fontsize=12)
+        ax[1].set_xlabel("Inter-MLTI-Time (hours)", fontsize=12)
+        ax[1].set_ylabel("MLTI Count", fontsize=12)
 
         plt.show();
 
-    return _mlti, mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec
+    return mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec, times_sec
