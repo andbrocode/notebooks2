@@ -8,6 +8,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import sys
 import gc
 import os
 
@@ -37,7 +38,10 @@ elif os.uname().nodename == 'lin-ffb-01':
 
 config = {}
 
-config['ring'] = "U"
+if len(sys.argv) > 1:
+    config['ring'] = sys.argv[1]
+else:
+    config['ring'] = "U"
 
 config['path_to_archive'] = archive_path+"romy_archive/"
 
@@ -65,9 +69,16 @@ config['Toverlap'] = 0.95
 
 config['new_delta'] = config['Tinterval']-config['Toverlap']
 
+# conversion to from hertz to rotation rate
+config['rotation_rate'] = True
+
+# ring nominal sagnac frequencies
+config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
+
+
 # _________________________________________________________________________
 
-def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
+def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True):
 
     '''
     Fitting a sin-function to the data to estimate an instantaneous frequency
@@ -77,6 +88,7 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
 
     from obspy import Trace, Stream
     from scipy import optimize
+    from scipy.signal import hilbert
     from numpy import sin, hanning, pi, arange, array, diag, zeros, nan, isnan, isinf, pi, inf
 
     # def func(x, a, f):
@@ -84,9 +96,6 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
 
     def func(x, a, f, p):
         return a * sin(2 * pi * f * x + p)
-
-    # ring nominal sagnac frequencies
-    rings = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
 
     # codes
     net, sta, loc, cha = seed.split('.')
@@ -127,9 +136,7 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
     cas = zeros(Nwin)*nan
 
     # initial values
-    a00 = 0.9
-    f00 = rings[cha[-1]]
-    p00 = 0
+    a00, f00, p00 = values
 
     # specify start indices
     # n1, n2 = 0, int(Nsamples - Noverlap)
@@ -144,13 +151,19 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
         # set start values at begin
         if _win == 0:
             a0, f0, p0 = a00, f00, p00
+        else:
+            a0, f0, p0 = amps[~isnan(amps)][-1], freq[~isnan(freq)][-1], phas[~isnan(phas)][-1]
 
         # cut data for interval
         _time = tt[n1:n2]
         _data = data[n1:n2]
 
+        # scale by envelope
+        env = abs(hilbert(_data)) + 0.001
+        _data = _data / env
+
         # slightly change start values using round
-        # a0, f0, p0 = round(a0, 1), round(f0, 1), round(p0, 1)
+        a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
 
         # reset start values if nan
         if isnan(a0) or isnan(f0) or isnan(p0):
@@ -158,8 +171,6 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
 
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
-
-        # a0, f0, p0 = a00, f00, p00
 
         # fit sine to data
         try:
@@ -243,7 +254,9 @@ def __sine_fit_stream(st_in, seed, Tinterval=1, Toverlap=0.8, plot=True):
     st_out_f = streamout(freq, "60")
     st_out_p = streamout(phas, "70")
 
-    return st_out_f, st_out_p
+    values = [ amps[~isnan(amps)][-1], freq[~isnan(freq)][-1], phas[~isnan(phas)][-1] ]
+
+    return st_out_f, st_out_p, values
 
 def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
@@ -354,13 +367,16 @@ def main(config):
     stfout = Stream()
     stpout = Stream()
 
+    # initial values
+    values = [0.9, config['rings'][config['ring']], 0]
 
     for _t1, _t2 in times:
 
         print(_t1, _t2)
+        print(values)
 
         # load data
-        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1, _t2)
+        st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1-10, _t2+10)
 
         # convert to volt
         for tr in st00:
@@ -373,15 +389,24 @@ def main(config):
         # st00 = st00.taper(0.01)
         # st00 = st00.filter("bandpass", freqmin=fsagnac-fband, freqmax=fsagnac+fband, corners=4, zerophase=True)
 
-        stf, stp = __sine_fit_stream(st00, f"BW.ROMY..BJ{config['ring']}",
-                                     Tinterval=config['Tinterval'],
-                                     Toverlap=config['Toverlap'],
-                                     plot=False
-                                    )
+        stf, stp, values = __sine_fit_stream(st00, f"BW.ROMY..BJ{config['ring']}", values,
+                                             Tinterval=config['Tinterval'],
+                                             Toverlap=config['Toverlap'],
+                                             plot=False
+                                            )
+
+        stf = stf.trim(_t1, _t2, nearest_sample=False)
+        stp = stp.trim(_t1, _t2, nearest_sample=False)
 
         stfout += stf
         stpout += stp
 
+    # convert frequency to rotation rate (rad/s)
+    if config['rotation_rate']:
+        f0 = config['rings'][config['ring']]
+        omegaE = 2*np.pi/86400
+        for _tr in stfout:
+            _tr.data = ( _tr.data - f0 ) / f0 * omegaE
 
     # phase stream
     stpout = stpout.merge()

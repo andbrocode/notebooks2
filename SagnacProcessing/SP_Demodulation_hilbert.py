@@ -8,6 +8,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import sys
 import gc
 import os
 
@@ -37,7 +38,10 @@ elif os.uname().nodename == 'lin-ffb-01':
 
 config = {}
 
-config['ring'] = "U"
+if len(sys.argv) > 1:
+    config['ring'] = sys.argv[1]
+else:
+    config['ring'] = "U"
 
 config['path_to_archive'] = archive_path+"romy_archive/"
 
@@ -52,7 +56,7 @@ config['t2'] = UTCDateTime("2024-07-11 17:00")
 config['conversion'] = 0.59604645e-6
 
 # define intervals for data loading (in seconds)
-config['interval_seconds'] = 600
+config['interval_seconds'] = 1800
 
 # define overlap for data loading (in seconds)
 config['interval_overlap'] = 0
@@ -64,6 +68,12 @@ config['Tinterval'] = 1
 config['Toverlap'] = 0.95
 
 config['new_delta'] = config['Tinterval']-config['Toverlap']
+
+# conversion to from hertz to rotation rate
+config['rotation_rate'] = True
+
+# ring nominal sagnac frequencies
+config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
 
 # _________________________________________________________________________
 
@@ -256,6 +266,12 @@ def main(config):
 
         stout += st
 
+    # convert frequency to rotation rate (rad/s)
+    if config['rotation_rate']:
+        f0 = config['rings'][config['ring']]
+        omegaE = 2*np.pi/86400
+        for _tr in stout:
+            _tr.data = ( _tr.data - f0 ) / f0 * omegaE
 
     # adjust seed code
     for tr in stout:
@@ -270,7 +286,6 @@ def main(config):
     # stpout.write(config['path_to_out_file']+f"tmp_phase.mseed")
     __write_stream_to_sds(stout, config['path_to_out_file'])
 
-    print(stout)
 
 if __name__ == "__main__":
     main(config)

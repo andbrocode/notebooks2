@@ -21,9 +21,6 @@ from andbro__save_to_pickle import __save_to_pickle
 
 
 from functions.load_status import __load_status
-# from functions.load_beat import __load_beat
-# from functions.load_mlti import __load_mlti
-# from functions.get_mlti_intervals import __get_mlti_intervals
 
 
 # In[3]:
@@ -165,15 +162,9 @@ except:
     pass
 
 
-# In[12]:
-
-
-statusW_mod
-
-
 # ### Form one Data Frame
 
-# In[47]:
+# In[8]:
 
 
 # create new frame with all rings and their quality
@@ -181,62 +172,64 @@ df_new = statusZ_mod.copy()
 
 try:
     df_new = df_new.merge(statusU_mod, how="outer", on=["times_utc"])
+
+    # drop irrelevant columns
+    df_new.drop(columns=["index_x", "index_y"], inplace=True)
+
+    # renaming ...
+    df_new.rename(columns={"quality_x":"RZ", "quality_y":"RU"}, inplace=True)
+
 except:
     pass
 
-# drop irrelevant columns
-df_new.drop(columns=["index_x", "index_y"], inplace=True)
 
-# renaming ...
-df_new.rename(columns={"quality_x":"RZ", "quality_y":"RU"}, inplace=True)
-
-
-# In[48]:
+# In[9]:
 
 
 try:
     df_new = df_new.merge(statusV_mod, how="outer", on=["times_utc"])
+
+    # drop irrelevant columns
+    df_new.drop(columns=["index"], inplace=True)
+
+    # renaming ...
+    df_new.rename(columns={"quality":"RV"}, inplace=True)
+
 except:
     pass
 
-# drop irrelevant columns
-df_new.drop(columns=["index"], inplace=True)
 
-# # renaming ...
-df_new.rename(columns={"quality":"RV"}, inplace=True)
-
-
-# In[49]:
+# In[10]:
 
 
 try:
     df_new = df_new.merge(statusW_mod, how="outer", on=["times_utc"])
+
+    # drop irrelevant columns
+    df_new.drop(columns=["index"], inplace=True)
+
+    # renaming ...
+    df_new.rename(columns={"quality":"RW"}, inplace=True)
+
 except:
     pass
 
 
-# drop irrelevant columns
-df_new.drop(columns=["index"], inplace=True)
-
-# # renaming ...
-df_new.rename(columns={"quality":"RW"}, inplace=True)
+# In[11]:
 
 
-# In[50]:
-
-
-## add relative times
+# add relative times
 ref_time = df_new.times_utc.iloc[0]
 df_new['times_utc_sec'] = np.array([abs(obs.UTCDateTime(ref_time) - obs.UTCDateTime(_t) +30) for _t in df_new.times_utc])
 
-## add RW column
+# add RW column
 # df_new['RW'] = np.ones(df_new.shape[0])*np.nan
 
-## sort all by time
+# sort all by time
 df_new.sort_values(by="times_utc", inplace=True)
 
 
-# In[51]:
+# In[12]:
 
 
 # sub data frame for one day
@@ -257,7 +250,7 @@ df_year = df_new.copy()
 
 # ### Plotting
 
-# In[52]:
+# In[13]:
 
 
 def __makeplot():
@@ -368,12 +361,12 @@ def __makeplot():
     return fig
 
 
-# In[53]:
+# In[14]:
 
 
 fig = __makeplot()
 
-fig.savefig(config['path_to_figs']+f"html2_status.png", format="png", dpi=150, bbox_inches='tight')
+fig.savefig(config['path_to_figs']+f"html_status.png", format="png", dpi=150, bbox_inches='tight')
 
 del fig
 

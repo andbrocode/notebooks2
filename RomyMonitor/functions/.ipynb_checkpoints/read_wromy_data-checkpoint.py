@@ -6,10 +6,10 @@ def __read_wromy_data(t1, t2, cha, path_to_data):
     from obspy import UTCDateTime
 
 
-    path = f"{path_to_data}{config['tbeg'].year}/BW/WROMY/{cha}.D/"
+    datapath = f"{path_to_data}{UTCDateTime(t1).year}/BW/WROMY/{cha}.D/"
 
-    if not path.isdir(path):
-        print(f" -> Path: {path}, does not exists!")
+    if not path.isdir(datapath):
+        print(f" -> Path: {datapath}, does not exists!")
         return
 
     j1, j2 = UTCDateTime(t1).julday, UTCDateTime(t2).julday
@@ -19,12 +19,14 @@ def __read_wromy_data(t1, t2, cha, path_to_data):
 
     for doy in range(j1, j2+1):
 
+        doy = str(doy).rjust(3, "0")
+
         filename = f'BW.WROMY.{cha}.D.{year}.{doy}'
 
-        print(f'   reading {filename} ...')
+        # print(f'   reading {filename} ...')
 
         try:
-            df0 = read_csv(path+filename)
+            df0 = read_csv(datapath+filename)
 
             # replace error indicating values (-9999, 999.9) with NaN values
             df0.replace(to_replace=-9999, value=nan, inplace=True)
