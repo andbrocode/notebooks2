@@ -56,16 +56,16 @@ config['t2'] = UTCDateTime("2024-07-11 17:00")
 config['conversion'] = 0.59604645e-6
 
 # define intervals for data loading (in seconds)
-config['interval_seconds'] = 1800
+config['interval_seconds'] = 600
 
 # define overlap for data loading (in seconds)
 config['interval_overlap'] = 0
 
 # interval for fitting (in seconds)
-config['Tinterval'] = 1
+config['Tinterval'] = 600
 
 # overlap for fitting (in seconds)
-config['Toverlap'] = 0.95
+config['Toverlap'] = 60
 
 config['new_delta'] = config['Tinterval']-config['Toverlap']
 
@@ -241,9 +241,9 @@ def main(config):
     # prepare output streams
     stout = Stream()
 
-    for _t1, _t2 in times:
+    for _t1, _t2 in tqdm(times):
 
-        print(_t1, _t2)
+        # print(_t1, _t2)
 
         # load data
         st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1-60, _t2+60)

@@ -159,7 +159,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         _data = data[n1:n2]
 
         # scale by envelope
-        env = abs(hilbert(_data)) + 0.001
+        env = abs(hilbert(_data)) + 0.1
         _data = _data / env
 
         # slightly change start values using round
