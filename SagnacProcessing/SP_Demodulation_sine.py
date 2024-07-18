@@ -431,7 +431,8 @@ def main(config):
 
     # convert frequency to rotation rate (rad/s)
     if config['rotation_rate']:
-        f0 = config['rings'][config['ring']]
+        # f0 = config['rings'][config['ring']]
+        f0 = np.nanmedian(stfout.copy().merge(fill_value=np.nan)[0].data)
         omegaE = 2*np.pi/86400
         for _tr in stfout:
             _tr.data = ( _tr.data - f0 ) / f0 * omegaE
