@@ -47,8 +47,8 @@ config['path_to_archive'] = archive_path+"romy_archive/"
 
 config['path_to_out_file'] = archive_path+"temp_archive/"
 
-config['t1'] = UTCDateTime("2024-07-11 15:00")
-config['t2'] = UTCDateTime("2024-07-11 17:00")
+config['t1'] = UTCDateTime("2024-07-11 15:30")
+config['t2'] = UTCDateTime("2024-07-11 16:00")
 # config['t2'] = config['t1'] + 86400
 
 
@@ -172,6 +172,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
 
+        print(a0, f0, p0)
         # fit sine to data
         try:
             params, params_covariance = optimize.curve_fit(func,
@@ -188,7 +189,8 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
 
             ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
 
-        except Exception as e:
+        except:
+            # fit again with initial values
             try:
                 params, params_covariance = optimize.curve_fit(func,
                                                                _time,
@@ -207,10 +209,10 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
             except Exception as e:
                 # print(e)
                 fails += 1
-                # f0, a0, p0, cf, ca = nan, nan, nan, nan, nan
+                f0, a0, p0 = nan, nan, nan
 
-        if cf > 0.001:
-            f0, a0, p0 = nan, nan, nan
+        # if cf > 0.001:
+        #     f0, a0, p0 = nan, nan, nan
 
         # append values
         amps[_win] = a0
