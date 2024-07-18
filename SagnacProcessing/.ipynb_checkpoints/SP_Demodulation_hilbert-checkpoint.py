@@ -76,7 +76,7 @@ config['rotation_rate'] = True
 # ring nominal sagnac frequencies
 config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
 
-config['upsampling'] = True
+config['upsampling'] = False
 
 
 # _________________________________________________________________________
