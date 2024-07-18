@@ -180,7 +180,8 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                            _data,
                                                            p0=[a0, f0, p0],
                                                            check_finite=True,
-                                                           # bounds=([-2, f00-1, -inf],[2, f00+1, inf]),
+                                                           maxfex=400,
+                                                           # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
                                                            # method="trf",
                                                           )
             a0 = params[0]
@@ -190,7 +191,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
             ca, cf, cp = diag(params_covariance)[0], diag(params_covariance)[1], diag(params_covariance)[2]
 
         except Exception as e:
-            print(e)
+            print("1: "+e)
 
             # fit again with initial values
             try:
@@ -208,7 +209,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                 ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
 
             except Exception as e:
-                # print(e)
+                print("2: "+e)
                 fails += 1
                 f0, a0, p0 = nan, nan, nan
 
@@ -232,7 +233,10 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
 
                 ax.plot(_time, _data, color='black')
 
-                ax.plot(_time, func(_time, params[0], params[1], params[2]), color='red')
+                try:
+                    ax.plot(_time, func1(_time, params[0], params[1], params[2]), color='red')
+                except:
+                    ax.plot(_time, func2(_time, params[0], params[1]), color='red')
 
                 plt.show();
 
