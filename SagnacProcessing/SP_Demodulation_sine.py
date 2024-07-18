@@ -91,11 +91,12 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
     from scipy.signal import hilbert
     from numpy import sin, hanning, pi, arange, array, diag, zeros, nan, isnan, isinf, pi, inf
 
-    # def func(x, a, f):
-    #     return a * sin(2 * pi * f * x)
 
-    def func(x, a, f, p):
+    def func1(x, a, f, p):
         return a * sin(2 * pi * f * x + p)
+
+    def func2(x, a, f):
+        return a * sin(2 * pi * f * x)
 
     # codes
     net, sta, loc, cha = seed.split('.')
@@ -172,11 +173,9 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
 
-        a0, f0, p0 = a00, f00, p00
-
         # fit sine to data
         try:
-            params, params_covariance = optimize.curve_fit(func,
+            params, params_covariance = optimize.curve_fit(func1,
                                                            _time,
                                                            _data,
                                                            p0=[a0, f0, p0],
@@ -188,22 +187,21 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
             f0 = params[1]
             p0 = params[2]
 
-            ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
+            ca, cf, cp = diag(params_covariance)[0], diag(params_covariance)[1], diag(params_covariance)[2]
 
         except:
             # fit again with initial values
             try:
-                params, params_covariance = optimize.curve_fit(func,
+                params, params_covariance = optimize.curve_fit(func2,
                                                                _time,
                                                                _data,
-                                                               p0=[a00, f00, p00],
+                                                               p0=[a00, f00],
                                                                check_finite=True,
                                                                # bounds=([-2, f00-1, -inf],[2, f00+1, inf]),
                                                                # method="trf",
                                                               )
                 a0 = params[0]
                 f0 = params[1]
-                p0 = params[2]
 
                 ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
 
