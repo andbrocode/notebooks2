@@ -370,10 +370,10 @@ def main(config):
     # initial values
     values = [0.9, config['rings'][config['ring']], 0]
 
-    for _t1, _t2 in times:
+    for _t1, _t2 in tqdm(times):
 
-        print(_t1, _t2)
-        print(values)
+        # print(_t1, _t2)
+        # print(values)
 
         # load data
         st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1-10, _t2+10)

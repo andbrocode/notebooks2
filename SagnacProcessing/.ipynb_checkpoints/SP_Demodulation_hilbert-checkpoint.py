@@ -14,6 +14,7 @@ import os
 
 # from scipy.signal import resample, hilbert, correlate
 from tqdm import tqdm
+from scipy.signal import hilbert
 from obspy import UTCDateTime, read, Stream
 
 
@@ -251,6 +252,10 @@ def main(config):
         # convert to volt
         for tr in st00:
             tr.data = tr.data*config['conversion']
+
+            # scale by envelope
+            env = abs(hilbert(tr.data)) + 0.1
+            tr.data = tr.data / env
 
         # remove trend
         st00 = st00.detrend("linear")
