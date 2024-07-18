@@ -189,9 +189,25 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
             ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
 
         except Exception as e:
-            # print(e)
-            fails += 1
-            # f0, a0, p0, cf, ca = nan, nan, nan, nan, nan
+            try:
+                params, params_covariance = optimize.curve_fit(func,
+                                                               _time,
+                                                               _data,
+                                                               p0=[a00, f00, p00],
+                                                               check_finite=True,
+                                                               # bounds=([-2, f00-1, -inf],[2, f00+1, inf]),
+                                                               # method="trf",
+                                                              )
+                a0 = params[0]
+                f0 = params[1]
+                p0 = params[2]
+
+                ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
+
+            except Exception as e:
+                # print(e)
+                fails += 1
+                # f0, a0, p0, cf, ca = nan, nan, nan, nan, nan
 
         if cf > 0.001:
             f0, a0, p0 = nan, nan, nan
