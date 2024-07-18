@@ -169,6 +169,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         if isnan(a0) or isnan(f0) or isnan(p0):
             a0, f0, p0 = a00, f00, p00
 
+        # reset start values if inf
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
 
@@ -179,7 +180,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                       _data,
                                                       p0=[a0, f0, p0],
                                                       check_finite=True,
-                                                      maxfev=800,
+                                                      maxfev=400,
                                                      )
             a0 = params[0]
             f0 = params[1]
@@ -193,7 +194,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
 
             # fit again with initial values
             try:
-                a0, f0, p0 = a00, f00, p00
+                a0, f0, p0 = a0, f0, p00
 
                 params, params_covar = optimize.curve_fit(func1,
                                                           _time,
@@ -244,8 +245,8 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         n1 = n1 + Nsamples - Noverlap
         n2 = n2 + Nsamples - Noverlap
 
-    print(f" -> fails1: {fails1} of {Nwin} ({fails1/Nwin*100}%)")
-    print(f" -> fails2: {fails2} of {Nwin} ({fails2/Nwin*100}%)")
+    print(f" -> fails1: {fails1} of {Nwin} ({round(fails1/Nwin*100, 2)}%)")
+    print(f" -> fails2: {fails2} of {Nwin} ({round(fails2/Nwin*100, 2)}%)")
 
     # checkup plot
     if plot:

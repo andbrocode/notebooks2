@@ -262,7 +262,7 @@ def main(config):
 
         # upsampling to 10 kHz
         if config['upsampling']:
-            st00 = st00.resample(100000)
+            st00 = st00.resample(10000)
 
         # remove trend
         st00 = st00.detrend("linear")
