@@ -16,6 +16,8 @@ import os
 from tqdm import tqdm
 from obspy import UTCDateTime, read, Stream
 
+import warnings
+warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'

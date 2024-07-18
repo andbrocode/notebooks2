@@ -76,6 +76,9 @@ config['rotation_rate'] = True
 # ring nominal sagnac frequencies
 config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
 
+config['upsampling'] = True
+
+
 # _________________________________________________________________________
 
 def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
@@ -215,8 +218,8 @@ def __hibert_filter2(stt, cut=20, df_out=200):
     stt[0].data = insta_frequency
 
     # downsampling
-    # if config['upsampling']:
-    #     stt.decimate(2) # 10000 -> 5000
+    if config['upsampling']:
+        stt.decimate(2) # 10000 -> 5000
     stt = stt.decimate(5) # 5000 -> 1000
     stt = stt.decimate(5) # 1000 -> 200
     if df_out == 100 or df_out == 20:
@@ -256,6 +259,10 @@ def main(config):
             # scale by envelope
             env = abs(hilbert(tr.data)) + 0.1
             tr.data = tr.data / env
+
+        # upsampling to 10 kHz
+        if config['upsampling']:
+            st00 = st00.resample(100000)
 
         # remove trend
         st00 = st00.detrend("linear")
