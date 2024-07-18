@@ -144,7 +144,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
     n1, n2 = 0, Nsamples
 
     # fail counter
-    fails = 0
+    fails1, fails2 = 0, 0
 
     # looping
     for _win in range(Nwin):
@@ -175,42 +175,45 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
 
         # fit sine to data
         try:
-            params, params_covariance = optimize.curve_fit(func1,
-                                                           _time,
-                                                           _data,
-                                                           p0=[a0, f0, p0],
-                                                           check_finite=True,
-                                                           maxfex=400,
-                                                           # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                           # method="trf",
-                                                          )
+            params, params_covar = optimize.curve_fit(func1,
+                                                      _time,
+                                                      _data,
+                                                      p0=[a0, f0, p0],
+                                                      check_finite=True,
+                                                      maxfex=400,
+                                                      # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
+                                                      # method="trf",
+                                                      # x_scale=[1, 100, 1],
+                                                     )
             a0 = params[0]
             f0 = params[1]
             p0 = params[2]
 
-            ca, cf, cp = diag(params_covariance)[0], diag(params_covariance)[1], diag(params_covariance)[2]
+            ca, cf, cp = diag(params_covar)[0], diag(params_covar)[1], diag(params_covar)[2]
 
         except Exception as e:
-            print("1: "+e)
+            # print("1: ", e)
+            fails1 += 1
 
             # fit again with initial values
             try:
-                params, params_covariance = optimize.curve_fit(func2,
-                                                               _time,
-                                                               _data,
-                                                               p0=[a00, f00],
-                                                               check_finite=True,
-                                                               # bounds=([-2, f00-1, -inf],[2, f00+1, inf]),
-                                                               # method="trf",
-                                                              )
+                params, params_covar = optimize.curve_fit(func2,
+                                                          _time,
+                                                          _data,
+                                                          p0=[a00, f00],
+                                                          check_finite=True,
+                                                          # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
+                                                          # method="trf",
+                                                          # x_scale=[1, 100, 1],
+                                                          )
                 a0 = params[0]
                 f0 = params[1]
 
-                ca, cf = diag(params_covariance)[0], diag(params_covariance)[1]
+                ca, cf = diag(params_covar)[0], diag(params_covar)[1]
 
             except Exception as e:
-                print("2: "+e)
-                fails += 1
+                # print("2: ", e)
+                fails2 += 1
                 f0, a0, p0 = nan, nan, nan
 
         # if cf > 0.001:
@@ -244,6 +247,9 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         n1 = n1 + Nsamples - Noverlap
         n2 = n2 + Nsamples - Noverlap
 
+    print(f" -> fails1: {fails1} of {Nwin} ({fails1/Nwin*100}%)")
+    print(f" -> fails2: {fails2} of {Nwin} ({fails2/Nwin*100}%)")
+
     # checkup plot
     if plot:
 
@@ -272,7 +278,6 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         tr_out.stats.delta = (Tinterval-Toverlap)
         return Stream(tr_out)
 
-    print(f" -> fails: {fails}")
 
     st_out_f = streamout(freq, "60")
     st_out_p = streamout(phas, "70")
