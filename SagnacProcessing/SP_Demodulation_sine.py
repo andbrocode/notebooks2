@@ -164,7 +164,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         _data = _data / env
 
         # slightly change start values using round
-        a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
+        # a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
 
         # reset start values if nan
         if isnan(a0) or isnan(f0) or isnan(p0):
@@ -180,9 +180,9 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                       _data,
                                                       p0=[a0, f0, p0],
                                                       check_finite=True,
-                                                      maxfex=400,
+                                                      maxfex=800,
                                                       # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                      method="trf",
+                                                      # method="trf",
                                                       # x_scale=[1, 100, 1],
                                                      )
             a0 = params[0]
@@ -203,7 +203,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                           p0=[a00, f00],
                                                           check_finite=True,
                                                           # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                          method="trf",
+                                                          # method="trf",
                                                           # x_scale=[1, 100, 1],
                                                           )
                 a0 = params[0]
