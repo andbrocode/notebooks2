@@ -181,9 +181,9 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                       p0=[a0, f0, p0],
                                                       check_finite=True,
                                                       maxfex=400,
-                                                      # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                      # method="trf",
-                                                      # x_scale=[1, 100, 1],
+                                                      bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
+                                                      method="trf",
+                                                      x_scale=[1, 100, 1],
                                                      )
             a0 = params[0]
             f0 = params[1]
@@ -202,9 +202,9 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                           _data,
                                                           p0=[a00, f00],
                                                           check_finite=True,
-                                                          # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                          # method="trf",
-                                                          # x_scale=[1, 100, 1],
+                                                          bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
+                                                          method="trf",
+                                                          x_scale=[1, 100, 1],
                                                           )
                 a0 = params[0]
                 f0 = params[1]
