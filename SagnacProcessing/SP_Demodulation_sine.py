@@ -49,8 +49,8 @@ config['path_to_archive'] = archive_path+"romy_archive/"
 
 config['path_to_out_file'] = archive_path+"temp_archive/"
 
-config['t1'] = UTCDateTime("2024-07-11 15:30")
-config['t2'] = UTCDateTime("2024-07-11 16:00")
+config['t1'] = UTCDateTime("2024-07-11 15:00")
+config['t2'] = UTCDateTime("2024-07-11 17:00")
 # config['t2'] = config['t1'] + 86400
 
 
@@ -58,7 +58,7 @@ config['t2'] = UTCDateTime("2024-07-11 16:00")
 config['conversion'] = 0.59604645e-6
 
 # define intervals for data loading (in seconds)
-config['interval_seconds'] = 600
+config['interval_seconds'] = 300
 
 # define overlap for data loading (in seconds)
 config['interval_overlap'] = 0
@@ -154,13 +154,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         else:
             a0, f0, p0 = amps[~isnan(amps)][-1], freq[~isnan(freq)][-1], phas[~isnan(phas)][-1]
 
-        # cut data for interval
-        _time = tt[n1:n2]
-        _data = data[n1:n2]
 
-        # scale by envelope
-        env = abs(hilbert(_data)) + 0.1
-        _data = _data / env
 
         # slightly change start values using round
         a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
@@ -172,6 +166,14 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         # reset start values if inf
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
+
+        # cut data for interval
+        _time = tt[n1:n2]
+        _data = data[n1:n2]
+
+        # scale by envelope
+        env = abs(hilbert(_data)) + 0.1
+        _data = _data / env
 
         # fit sine to data
         try:
