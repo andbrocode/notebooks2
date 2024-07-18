@@ -74,7 +74,8 @@ config['new_delta'] = config['Tinterval']-config['Toverlap']
 config['rotation_rate'] = True
 
 # ring nominal sagnac frequencies
-config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
+# config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
+config['rings'] = {"Z":551.677, "U":302.959, "V":448.092, "W":448.092}
 
 config['upsampling'] = False
 
