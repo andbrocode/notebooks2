@@ -152,7 +152,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         if _win == 0:
             a0, f0, p0 = a00, f00, p00
         else:
-            a0, f0, p0 = amps[~isnan(amps)][-1], freq[~isnan(freq)][-1], phas[~isnan(phas)][-1]
+            a0, f0, p0 = amps[~isnan(amps)][-2], freq[~isnan(freq)][-2], phas[~isnan(phas)][-2]
 
         # cut data for interval
         _time = tt[n1:n2]
@@ -172,7 +172,8 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         if isinf(a0) or isinf(f0) or isinf(p0):
             a0, f0, p0 = a00, f00, p00
 
-        print(a0, f0, p0)
+        a0, f0, p0 = a00, f00, p00
+
         # fit sine to data
         try:
             params, params_covariance = optimize.curve_fit(func,
