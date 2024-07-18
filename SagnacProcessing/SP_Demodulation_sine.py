@@ -91,12 +91,11 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
     from scipy.signal import hilbert
     from numpy import sin, hanning, pi, arange, array, diag, zeros, nan, isnan, isinf, pi, inf
 
-
     def func1(x, a, f, p):
         return a * sin(2 * pi * f * x + p)
 
-    def func2(x, a, f):
-        return a * sin(2 * pi * f * x)
+    def func2(x, f, p):
+        return sin(2 * pi * f * x + p)
 
     # codes
     net, sta, loc, cha = seed.split('.')
@@ -125,8 +124,6 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
     while x2 < Ndata:
         x2 = x2 + Nsamples - Noverlap
         Nwin += 1
-
-    # print(Nwin, Ndata, Nsamples, Noverlap)
 
     # prepare arrays
     amps = zeros(Nwin)*nan
@@ -164,7 +161,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         _data = _data / env
 
         # slightly change start values using round
-        # a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
+        a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
 
         # reset start values if nan
         if isnan(a0) or isnan(f0) or isnan(p0):
@@ -181,9 +178,6 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                       p0=[a0, f0, p0],
                                                       check_finite=True,
                                                       maxfex=800,
-                                                      # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                      # method="trf",
-                                                      # x_scale=[1, 100, 1],
                                                      )
             a0 = params[0]
             f0 = params[1]
@@ -200,16 +194,14 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                 params, params_covar = optimize.curve_fit(func2,
                                                           _time,
                                                           _data,
-                                                          p0=[a00, f00],
+                                                          p0=[f00, p00],
                                                           check_finite=True,
-                                                          # bounds=([-2, f00-2, -1000],[2, f00+2, 1000]),
-                                                          # method="trf",
-                                                          # x_scale=[1, 100, 1],
+                                                          maxfev=800,
                                                           )
-                a0 = params[0]
-                f0 = params[1]
+                f0 = params[0]
+                p0 = params[1]
 
-                ca, cf = diag(params_covar)[0], diag(params_covar)[1]
+                cf, cp = diag(params_covar)[0], diag(params_covar)[1]
 
             except Exception as e:
                 # print("2: ", e)
@@ -225,8 +217,8 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         phas[_win] = p0
         time[_win] = (tt[n2]-tt[n1])/2 + tt[n1]
 
-        cfs[_win] = cf
-        cas[_win] = ca
+        # cfs[_win] = cf
+        # cas[_win] = ca
 
         # checkup plot for fit
         if plot:
