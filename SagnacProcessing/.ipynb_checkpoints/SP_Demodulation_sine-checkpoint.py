@@ -177,7 +177,7 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
                                                       _data,
                                                       p0=[a0, f0, p0],
                                                       check_finite=True,
-                                                      maxfex=800,
+                                                      maxfev=800,
                                                      )
             a0 = params[0]
             f0 = params[1]
@@ -191,17 +191,20 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
 
             # fit again with initial values
             try:
-                params, params_covar = optimize.curve_fit(func2,
+                a0, f0, p0 = a00, f00, p00
+
+                params, params_covar = optimize.curve_fit(func1,
                                                           _time,
                                                           _data,
-                                                          p0=[f00, p00],
+                                                          p0=[a0, f0, p0],
                                                           check_finite=True,
                                                           maxfev=800,
-                                                          )
-                f0 = params[0]
-                p0 = params[1]
+                                                         )
+                a0 = params[0]
+                f0 = params[1]
+                p0 = params[2]
 
-                cf, cp = diag(params_covar)[0], diag(params_covar)[1]
+                ca, cf, cp = diag(params_covar)[0], diag(params_covar)[1], diag(params_covar)[2]
 
             except Exception as e:
                 # print("2: ", e)
