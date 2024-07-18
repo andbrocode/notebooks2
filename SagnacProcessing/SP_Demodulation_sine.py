@@ -49,9 +49,10 @@ config['path_to_archive'] = archive_path+"romy_archive/"
 
 config['path_to_out_file'] = archive_path+"temp_archive/"
 
-config['t1'] = UTCDateTime("2024-07-11 15:00")
-config['t2'] = UTCDateTime("2024-07-11 17:00")
-# config['t2'] = config['t1'] + 86400
+config['t1'] = UTCDateTime("2024-07-11 00:00")
+# config['t1'] = UTCDateTime("2024-07-11 15:00")
+# config['t2'] = UTCDateTime("2024-07-11 17:00")
+config['t2'] = config['t1'] + 86400
 
 
 # V / count  [0.59604645ug  from obsidian]
