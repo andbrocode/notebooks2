@@ -289,7 +289,10 @@ def main(config):
     for tr in stout:
         tr.stats.network = "BW"
         tr.stats.station = "ROMY"
-        tr.stats.location = "80"
+        if config['upsampling']:
+            tr.stats.location = "80"
+        else:
+            tr.stats.location = "90"
         tr.stats.channel = f"BJ{config['ring']}"
 
     # phase stream
