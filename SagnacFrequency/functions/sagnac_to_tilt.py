@@ -16,13 +16,12 @@ def __sagnac_to_tilt(data=None, ring="Z", tilt="n-s"):
     # Scale factor
     S = (sqrt(3)*L[ring])/(3*632.8e-9)
 
-    #ROMY latitude
+    # ROMY latitude
     lat = deg2rad(48.162941)
     lon = deg2rad(11.275501)
 
     # nominal Earth rotation
     omegaE = 2*pi/86400 * array([0, 0, 1])
-
 
     # matrix 1
     D = array([[-sin(lat)*cos(lon), -sin(lon), cos(lat)*cos(lon)],
