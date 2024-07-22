@@ -54,7 +54,7 @@ config['path_to_out_data'] = data_path+"romy_baro/data/"
 config['tbeg'] = obs.UTCDateTime("2024-01-20 00:00")
 config['tend'] = obs.UTCDateTime("2024-05-20 00:00")
 
-config['tbuffer'] = 7200 # seconds
+config['tbuffer'] = 3600 # 7200 # seconds
 
 # ROMY coordinates
 config['sta_lon'] = 11.275501
@@ -64,8 +64,8 @@ config['sta_lat'] = 48.162941
 config['fmin'], config['fmax'] = 0.0005, 0.01
 
 # define time intervals
-config['interval_seconds'] = 10800
-config['interval_overlap'] = 3600
+config['interval_seconds'] = 7200 # 10800
+config['interval_overlap'] = 1800 # 3600
 
 
 
