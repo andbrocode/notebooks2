@@ -45,15 +45,19 @@ if len(sys.argv) > 1:
 else:
     config['ring'] = "U"
 
+
+if len(sys.argv) > 2:
+    config['t1'] = UTCDateTime(sys.argv[2])
+    config['t2'] = config['t1'] + 86400
+else:
+    config['t1'] = UTCDateTime("2024-07-11 15:00")
+    config['t2'] = UTCDateTime("2024-07-11 17:00")
+
+# specify path to seed data
 config['path_to_archive'] = archive_path+"romy_archive/"
 
+# specify path for output data
 config['path_to_out_file'] = archive_path+"temp_archive/"
-
-config['t1'] = UTCDateTime("2024-07-11 00:00")
-# config['t1'] = UTCDateTime("2024-07-11 15:00")
-# config['t2'] = UTCDateTime("2024-07-11 17:00")
-config['t2'] = config['t1'] + 86400
-
 
 # V / count  [0.59604645ug  from obsidian]
 config['conversion'] = 0.59604645e-6
