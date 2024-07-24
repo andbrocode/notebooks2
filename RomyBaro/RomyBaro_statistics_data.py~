@@ -22,21 +22,26 @@ from functions.variance_reduction import __variance_reduction
 
 import warnings
 
+
+import matplotlib as mpl
+print(mpl.get_cachedir())
+
+
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
 elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
 
 
 config = {}
@@ -51,10 +56,10 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 config['path_to_out_data'] = data_path+"romy_baro/data/"
 
 # data
-config['tbeg'] = obs.UTCDateTime("2024-01-20 00:00")
-config['tend'] = obs.UTCDateTime("2024-05-20 00:00")
+config['tbeg'] = obs.UTCDateTime("2024-02-01 00:00")
+config['tend'] = obs.UTCDateTime("2024-07-20 00:00")
 
-config['tbuffer'] = 7200 # seconds
+config['tbuffer'] = 3600 # 7200 # seconds
 
 # ROMY coordinates
 config['sta_lon'] = 11.275501
@@ -64,8 +69,8 @@ config['sta_lat'] = 48.162941
 config['fmin'], config['fmax'] = 0.0005, 0.01
 
 # define time intervals
-config['interval_seconds'] = 10800
-config['interval_overlap'] = 3600
+config['interval_seconds'] = 7200 # 10800
+config['interval_overlap'] = 1800 # 3600
 
 
 
@@ -220,7 +225,7 @@ def main(config):
 
             stt = stt.trim(t1, t2, nearest_sample=False)
 
-            stt.plot(equal_scale=False);
+            # stt.plot(equal_scale=False);
 
             stt = stt.taper(0.05, type="cosine")
 
