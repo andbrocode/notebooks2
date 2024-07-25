@@ -128,25 +128,25 @@ def main(config):
             # print(st0)
 
             # check if any is masked
-#             if len(st0) > 3:
-#                 print(f" -> masked array(s)")
-#                 stop = True
-#             else:
-#                 stop = False
+            if len(st0) > 3:
+                print(f" -> masked array(s)")
+                stop = True
+            else:
+                stop = False
 
-#             for tr in st0:
-#                 if np.ma.isMaskedArray(tr.data):
-#                     print(f" -> masked array: {tr.stats.channel}")
-#                     stop = True
-#                     continue
-#                 else:
-#                     stop = False
+            for tr in st0:
+                if np.ma.isMaskedArray(tr.data):
+                    print(f" -> masked array: {tr.stats.channel}")
+                    stop = True
+                    continue
+                else:
+                    stop = False
 
             status.append(stop)
 
             # jump if traces are masked
-            # if stop:
-            #     continue
+            if stop:
+                continue
 
             st0 = st0.detrend("linear")
 
