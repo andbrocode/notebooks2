@@ -212,8 +212,8 @@ def main(config):
             stt = obs.Stream()
             stt += til1.copy()
             stt += ffbi0.copy()
-            
-            del st0, til1, ffbi0
+
+            # del st0, til1, ffbi0
 
             # resample to 1 Hz
             # stt = stt.decimate(2, no_filter=False)
@@ -344,7 +344,7 @@ def main(config):
             # continue
 
         if stop:
-            del stt
+            # del stt
             continue
 
         # ___________________________________________________________
