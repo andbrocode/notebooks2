@@ -442,7 +442,7 @@ def main(config):
     df['b_n'] = arr_b_N
     df['b_e'] = arr_b_E
 
-    df.to_pickle(config['path_to_out_data']+"RB_statistics.pkl")
+    df.to_pickle(config['path_to_out_data']+f"RB_statistics_{config['tbeg'].date}_{config['tend'].date}.pkl")
 
 if __name__ == "__main__":
     main(config)
