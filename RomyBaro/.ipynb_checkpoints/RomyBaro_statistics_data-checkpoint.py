@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import os
+import sys
 import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,22 +22,23 @@ from functions.estimate_linear_coefficients import __estimate_linear_coefficient
 from functions.variance_reduction import __variance_reduction
 
 import warnings
+warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
 elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
 
 
 config = {}
@@ -51,8 +53,12 @@ config['path_to_sds'] = archive_path+"temp_archive/"
 config['path_to_out_data'] = data_path+"romy_baro/data/"
 
 # data
-config['tbeg'] = obs.UTCDateTime("2024-02-01 00:00")
-config['tend'] = obs.UTCDateTime("2024-07-20 00:00")
+if len(sys.argv) > 1:
+    config['tbeg'] = obs.UTCDateTime(sys.argv[1])
+    config['tend'] = obs.UTCDateTime(sys.argv[2])
+else:
+    config['tbeg'] = obs.UTCDateTime("2024-06-01 00:00")
+    config['tend'] = obs.UTCDateTime("2024-07-20 00:00")
 
 config['tbuffer'] = 3600 # 7200 # seconds
 
@@ -87,8 +93,12 @@ def main(config):
     NN = len(times)
 
     arr_t1, arr_t2 = [], []
-    arr_shift_PP_N, arr_shift_PP_E, arr_shift_HP_N, arr_shift_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN), np.zeros(NN)
-    arr_ccmax_PP_N, arr_ccmax_PP_E, arr_ccmax_HP_N, arr_ccmax_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    arr_shift_PP_Z, arr_shift_PP_N, arr_shift_PP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    arr_shift_HP_Z, arr_shift_HP_N, arr_shift_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+
+    arr_ccmax_PP_Z, arr_ccmax_PP_N, arr_ccmax_PP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    arr_ccmax_HP_Z, arr_ccmax_HP_N, arr_ccmax_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+
     arr_a_Z, arr_a_N, arr_a_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_b_Z, arr_b_N, arr_b_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_R_Z, arr_R_N, arr_R_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
@@ -97,7 +107,7 @@ def main(config):
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
-        print(t1 ,t2)
+        # print(t1, t2)
 
         arr_t1.append(t1)
         arr_t2.append(t2)
@@ -116,19 +126,19 @@ def main(config):
             # print(st0)
 
             # check if any is masked
-            # if len(st0) > 3:
-            #     print(f" -> masked array(s)")
-            #     stop = True
-            # else:
-            #     stop = False
+#             if len(st0) > 3:
+#                 print(f" -> masked array(s)")
+#                 stop = True
+#             else:
+#                 stop = False
 
-            # for tr in st0:
-            #     if np.ma.isMaskedArray(tr.data):
-            #         print(f" -> masked array: {tr.stats.channel}")
-            #         stop = True
-            #         continue
-            #     else:
-            #         stop = False
+#             for tr in st0:
+#                 if np.ma.isMaskedArray(tr.data):
+#                     print(f" -> masked array: {tr.stats.channel}")
+#                     stop = True
+#                     continue
+#                 else:
+#                     stop = False
 
             status.append(stop)
 
@@ -200,6 +210,8 @@ def main(config):
             stt = obs.Stream()
             stt += til1.copy()
             stt += ffbi0.copy()
+            
+            del st0, til1, ffbi0
 
             # resample to 1 Hz
             # stt = stt.decimate(2, no_filter=False)
@@ -228,7 +240,8 @@ def main(config):
             if len(stt) != 5:
                 print(f" -> missing data")
                 print(stt)
-                stop = True
+                # stop = True
+                continue
 
             # check if data has same length
             Nexpected = int((t2 - t1)*stt[0].stats.sampling_rate)
@@ -258,6 +271,8 @@ def main(config):
             ccf_HP_N = correlate(arrHP, arrN, shift=Nshift, demean=False, normalize='naive', method='fft')
             ccf_PP_E = correlate(arrPP, arrE, shift=Nshift, demean=False, normalize='naive', method='fft')
             ccf_HP_E = correlate(arrHP, arrE, shift=Nshift, demean=False, normalize='naive', method='fft')
+            ccf_PP_Z = correlate(arrPP, arrZ, shift=Nshift, demean=False, normalize='naive', method='fft')
+            ccf_HP_Z = correlate(arrHP, arrZ, shift=Nshift, demean=False, normalize='naive', method='fft')
 
             # compute lag time
             cclags = np.arange(-Nshift, Nshift+1) * dt
@@ -267,6 +282,8 @@ def main(config):
             shift_HP_N, ccmax_HP_N = xcorr_max(ccf_HP_N)
             shift_PP_E, ccmax_PP_E = xcorr_max(ccf_PP_E)
             shift_HP_E, ccmax_HP_E = xcorr_max(ccf_HP_E)
+            shift_PP_Z, ccmax_PP_Z = xcorr_max(ccf_PP_Z)
+            shift_HP_Z, ccmax_HP_Z = xcorr_max(ccf_HP_Z)
 
             # ___________________________________________________________
             # estimation of pressure model
@@ -306,10 +323,13 @@ def main(config):
             # ___________________________________________________________
             # add values to arrays
             arr_a_Z[_n], arr_a_N[_n], arr_a_E[_n] = a_Z, a_N, a_E
-            arr_shift_PP_N[_n], arr_shift_PP_E[_n] = shift_PP_N, shift_PP_E
-            arr_shift_HP_N[_n], arr_shift_HP_E[_n] = shift_HP_N, shift_HP_E
-            arr_ccmax_PP_N[_n], arr_ccmax_PP_E[_n] = ccmax_PP_N, ccmax_PP_E
-            arr_ccmax_HP_N[_n], arr_ccmax_HP_E[_n] = ccmax_HP_N, ccmax_HP_E
+
+            arr_shift_PP_N[_n], arr_shift_PP_E[_n], arr_shift_PP_Z[_n] = shift_PP_N, shift_PP_E, shift_PP_Z
+            arr_shift_HP_N[_n], arr_shift_HP_E[_n], arr_shift_HP_Z[_n] = shift_HP_N, shift_HP_E, shift_HP_Z
+
+            arr_ccmax_PP_N[_n], arr_ccmax_PP_E[_n], arr_ccmax_PP_Z[_n] = ccmax_PP_N, ccmax_PP_E, ccmax_PP_Z
+            arr_ccmax_HP_N[_n], arr_ccmax_HP_E[_n], arr_ccmax_HP_Z[_n] = ccmax_HP_N, ccmax_HP_E, ccmax_HP_Z
+
             arr_a_Z[_n], arr_a_N[_n], arr_a_E[_n] = a_Z, a_N, a_E
             arr_b_Z[_n], arr_b_N[_n], arr_b_E[_n] = b_Z, b_N, b_E
             arr_R_Z[_n], arr_R_N[_n], arr_R_E[_n] = R_Z, R_N, R_E
@@ -317,8 +337,11 @@ def main(config):
         except Exception as e:
             print(" -> processing failed")
             print(e)
+            # stop = True
+            continue
 
         if stop:
+            del stt
             continue
 
         # ___________________________________________________________

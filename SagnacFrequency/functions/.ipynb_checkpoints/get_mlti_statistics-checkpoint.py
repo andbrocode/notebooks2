@@ -1,15 +1,20 @@
-def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
+def __get_mlti_statistics(mlti, starttime, endtime, plot=True, ylog=False):
 
     import numpy as np
     import matplotlib.pyplot as plt
+    from obspy import UTCDateTime
 
-    # relative times
-    mlti_times_sec = np.array(mlti_times - times[0])
+    # convert to array with UTCDateTime objects
+    mlti_times = np.array([UTCDateTime(_t) for _t in mlti.time_utc])
 
-    times_sec = np.array(times - times[0])
+    # relative time in seconds
+    mlti_times_sec = np.array(mlti_times - starttime)
+
+    # timeline in seconds
+    times_sec = np.array(np.arange(0, UTCDateTime(endtime)-UTCDateTime(starttime), 1))
 
     # start mlti array
-    _mlti = np.zeros(len(times))
+    _mlti = np.zeros(len(times_sec))
 
     # switch 0 to 1 for each mlti time
     _t0 = 0
@@ -55,4 +60,12 @@ def __get_mlti_statistics(mlti_times, times, plot=True, ylog=False):
 
         plt.show();
 
-    return mlti_cumsum, mlti_cumsum_percent, mlti_inter_sec, times_sec
+    output = {"cumsum":mlti_cumsum,
+              "cumsumsec":mlti_cumsum*30,
+              "cumsump":mlti_cumsum_percent,
+              "intersec":mlti_inter_sec,
+              "tsec":times_sec,
+              "mlti_series":_mlti
+             }
+
+    return output
