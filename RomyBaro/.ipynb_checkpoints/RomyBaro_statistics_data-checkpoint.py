@@ -105,12 +105,14 @@ def main(config):
 
     status = []
 
+    arr_t1, arr_t2 = np.zeros(len(times)), np.zeros(len(times))
+
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
         # print(t1, t2)
 
-        arr_t1.append(t1)
-        arr_t2.append(t2)
+        arr_t1[_n] = t1
+        arr_t2[_n] = t2
 
         stop = False
 
@@ -240,8 +242,8 @@ def main(config):
             if len(stt) != 5:
                 print(f" -> missing data")
                 print(stt)
-                # stop = True
-                continue
+                stop = True
+                # continue
 
             # check if data has same length
             Nexpected = int((t2 - t1)*stt[0].stats.sampling_rate)
@@ -337,8 +339,9 @@ def main(config):
         except Exception as e:
             print(" -> processing failed")
             print(e)
-            # stop = True
-            continue
+            print(stt)
+            stop = True
+            # continue
 
         if stop:
             del stt
