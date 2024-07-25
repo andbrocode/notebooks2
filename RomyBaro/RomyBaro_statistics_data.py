@@ -422,13 +422,19 @@ def main(config):
 
     df['shift_PP_N'] = arr_shift_PP_N
     df['shift_PP_E'] = arr_shift_PP_E
+    df['shift_PP_Z'] = arr_shift_PP_Z
+
     df['shift_HP_N'] = arr_shift_HP_N
     df['shift_HP_E'] = arr_shift_HP_E
+    df['shift_HP_Z'] = arr_shift_HP_Z
 
     df['cmax_PP_N'] = arr_ccmax_PP_N
     df['cmax_PP_E'] = arr_ccmax_PP_E
+    df['cmax_PP_Z'] = arr_ccmax_PP_Z
+
     df['cmax_HP_N'] = arr_ccmax_HP_N
     df['cmax_HP_E'] = arr_ccmax_HP_E
+    df['cmax_HP_Z'] = arr_ccmax_HP_Z
 
     df['r_z'] = arr_R_Z
     df['r_n'] = arr_R_N
