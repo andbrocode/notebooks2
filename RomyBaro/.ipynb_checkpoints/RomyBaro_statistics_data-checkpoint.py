@@ -181,7 +181,6 @@ def main(config):
 
             ffbi0 = ffbi0.merge();
 
-
             # ___________________________________________________________
             # load promy pressure data
             # promy = __get_mean_promy_pressure(["03", "04", "05", "07", "09"],
@@ -192,13 +191,11 @@ def main(config):
 
             # ___________________________________________________________
             # load rmy pressure data
-            # rmy = __get_mean_rmy_pressure(["PROMY", "ALFT", "TON", "BIB", "GELB", "GRMB"],
-            #                               t1-config['tbuffer'],
-            #                               t2+config['tbuffer'],
-            #                               plot=True
-            #                              )
-
-
+            # brmy = __get_mean_rmy_pressure(["PROMY", "ALFT", "TON", "BIB", "GELB", "GRMB"],
+            #                                t1-config['tbuffer'],
+            #                                t2+config['tbuffer'],
+            #                                plot=True
+            #                               )
 
             # ___________________________________________________________
             # integrate ROMY data to tilt
@@ -235,8 +232,9 @@ def main(config):
             # pre-process data
             stt = stt.detrend("demean")
             stt = stt.detrend("linear")
-            stt = stt.detrend("simple")
-            stt = stt.taper(0.1, type="cosine")
+            # stt = stt.detrend("simple")
+
+            stt = stt.taper(0.05, type="cosine")
 
             stt = stt.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
 
@@ -261,7 +259,7 @@ def main(config):
                     tr.data = tr.data[:Nexpected]
                     # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
-            ch = "BDO"
+            ch = "*DO"
 
             # prepare arrays
             arrHP = np.imag(hilbert(stt.select(channel=ch)[0].data))
