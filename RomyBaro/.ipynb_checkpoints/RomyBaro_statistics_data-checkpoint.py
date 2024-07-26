@@ -240,7 +240,11 @@ def main(config):
 
             stt = stt.trim(t1, t2, nearest_sample=False)
 
-            stt = stt.resample(1.0, no_filter=True)
+            # downsample to LJ*
+            for tr in stt:
+                if "J" in tr.stats.channel:
+                    tr = tr.decimate(2, no_filter=True)
+                    tr = tr.decimate(10, no_filter=True)
 
             # stt.plot(equal_scale=False);
 
