@@ -55,7 +55,7 @@ config['path_to_out_data'] = data_path+"romy_baro/data/"
 # data
 if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
-    config['tend'] = obs.UTCDateTime(sys.argv[2])
+    config['tend'] = config['tbeg'] + 86400
 else:
     config['tbeg'] = obs.UTCDateTime("2024-01-01 00:00")
     config['tend'] = obs.UTCDateTime("2024-07-20 00:00")
@@ -107,7 +107,7 @@ def main(config):
 
     arr_t1, arr_t2 = np.zeros(len(times)), np.zeros(len(times))
 
-    for _n, (t1, t2) in enumerate(tqdm(times)):
+    for _n, (t1, t2) in enumerate(times):
 
         print(t1, t2)
 
@@ -451,7 +451,7 @@ def main(config):
     df['b_n'] = arr_b_N
     df['b_e'] = arr_b_E
 
-    df.to_pickle(config['path_to_out_data']+f"RB_statistics_{config['tbeg'].date}_{config['tend'].date}.pkl")
+    df.to_pickle(config['path_to_out_data']+f"RB_statistics_{config['tbeg'].date}.pkl")
 
 if __name__ == "__main__":
     main(config)
