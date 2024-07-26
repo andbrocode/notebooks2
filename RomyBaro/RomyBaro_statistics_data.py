@@ -300,8 +300,8 @@ def main(config):
 
             # ___________________________________________________________
             # estimation of pressure model
-            c2 = "BDO" # pressure
-            c3 = "BDO" # hilbert of pressure
+            c2 = "*DO" # pressure
+            c3 = "*DO" # hilbert of pressure
 
             a_Z, b_Z, hh_Z, res_Z = __estimate_linear_coefficients(stt, c1="BJZ", c2=c2, c3=c3)
 
@@ -347,7 +347,6 @@ def main(config):
             arr_b_Z[_n], arr_b_N[_n], arr_b_E[_n] = b_Z, b_N, b_E
             arr_R_Z[_n], arr_R_N[_n], arr_R_E[_n] = R_Z, R_N, R_E
 
-
         except Exception as e:
             print(" -> processing failed")
             print(e)
@@ -355,7 +354,7 @@ def main(config):
             stop = True
             # continue
 
-
+        # check if stop is required
         if stop:
             # del stt
             continue
