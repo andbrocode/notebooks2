@@ -245,6 +245,7 @@ def main(config):
                 if "J" in tr.stats.channel:
                     tr = tr.decimate(2, no_filter=True)
                     tr = tr.decimate(10, no_filter=True)
+            print(stt)
 
             # stt.plot(equal_scale=False);
 
