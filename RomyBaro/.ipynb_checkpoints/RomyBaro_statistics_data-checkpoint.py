@@ -14,12 +14,14 @@ from pandas import DataFrame
 from scipy.signal import hilbert
 
 from andbro__read_sds import __read_sds
+from andbro__load_FURT_stream import __load_furt_stream
 
 from functions.get_mean_promy_pressure import __get_mean_promy_pressure
 from functions.get_mean_rmy_pressure import __get_mean_rmy_pressure
 from functions.get_time_intervals import __get_time_intervals
 from functions.estimate_linear_coefficients import __estimate_linear_coefficients
 from functions.variance_reduction import __variance_reduction
+from functions.smoothing import __smooth
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -102,6 +104,8 @@ def main(config):
     arr_a_Z, arr_a_N, arr_a_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_b_Z, arr_b_N, arr_b_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_R_Z, arr_R_N, arr_R_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+
+    arr_w_dir, arr_w_vel = np.zeros(NN), np.zeros(NN)
 
     status = []
 
@@ -215,8 +219,7 @@ def main(config):
             stt += til1.copy()
             stt += ffbi0.copy()
 
-            print(stt)
-            stt.plot(equal_scale=False)
+            # stt.plot(equal_scale=False)
 
             # del st0, til1, ffbi0
 
@@ -271,7 +274,6 @@ def main(config):
             arrN = stt.select(component="N")[0].data
             arrE = stt.select(component="E")[0].data
             arrZ = stt.select(component="Z")[0].data
-            print(stt)
 
             # number of samples
             Nshift = len(arrN)
@@ -353,6 +355,47 @@ def main(config):
             # print(stt)
             stop = True
             # continue
+
+        # ___________________________________________________________
+        # load furt for wind direction and velocity
+        try:
+            furt = __load_furt_stream(config['tbeg'], config['tend'],
+                                      path_to_archive=bay_path+'gif_online/FURT/WETTER/'
+                                     )
+
+            # ___________________________________________________________
+            # get wind velocity estimate
+
+            dx = 1
+
+            wind_vel = furt.select(channel="LAW")[0].data
+
+            wind_vel_smooth = __smooth(wind_vel, 60)
+
+            _hist = np.histogram(wind_vel_smooth, bins=int(15/dx), range=(0, 15))
+
+            wind_vel_mean = _hist[1][np.argmax(_hist[0])] + dx/2
+
+            arr_w_vel[_n] = wind_vel_mean
+
+            # ___________________________________________________________
+            # get wind direction estimate
+
+            dx = 10
+
+            wind_dir = furt.select(channel="LAD")[0].data
+
+            wind_dir_smooth = __smooth(wind_dir, 60)
+
+            _hist = np.histogram(wind_dir_smooth, bins=int(360/dx), range=(0, 360))
+
+            wind_dir_mean = _hist[1][np.argmax(_hist[0])] + dx/2
+
+            arr_w_dir[_n] = wind_dir_mean
+
+        except Exception as e:
+            print(" -> FURT failed")
+            print(e)
 
         # check if stop is required
         if stop:
