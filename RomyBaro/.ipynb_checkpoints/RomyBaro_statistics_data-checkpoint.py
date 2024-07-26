@@ -107,9 +107,9 @@ def main(config):
 
     arr_t1, arr_t2 = np.zeros(len(times)), np.zeros(len(times))
 
-    for _n, (t1, t2) in enumerate(times):
+    for _n, (t1, t2) in enumerate(tqdm(times)):
 
-        print(t1, t2)
+        # print(t1, t2)
 
         arr_t1[_n] = t1
         arr_t2[_n] = t2
