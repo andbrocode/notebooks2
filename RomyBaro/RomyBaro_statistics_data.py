@@ -245,7 +245,6 @@ def main(config):
                 if "J" in tr.stats.channel:
                     tr = tr.decimate(2, no_filter=True)
                     tr = tr.decimate(10, no_filter=True)
-            print(stt)
 
             # stt.plot(equal_scale=False);
 
@@ -266,14 +265,13 @@ def main(config):
                     tr.data = tr.data[:Nexpected]
                     # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
-            ch = "*DO"
-
             # prepare arrays
-            arrHP = np.imag(hilbert(stt.select(channel=ch)[0].data))
-            arrPP = stt.select(channel=ch)[0].data
+            arrHP = np.imag(hilbert(stt.select(component="O")[0].data))
+            arrPP = stt.select(component="O")[0].data
             arrN = stt.select(component="N")[0].data
             arrE = stt.select(component="E")[0].data
             arrZ = stt.select(component="Z")[0].data
+            print(stt)
 
             # number of samples
             Nshift = len(arrN)
