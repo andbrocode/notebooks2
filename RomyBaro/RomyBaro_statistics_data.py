@@ -107,6 +107,8 @@ def main(config):
 
     arr_t1, arr_t2 = np.zeros(len(times)), np.zeros(len(times))
 
+    print(config['tbeg'].date)
+
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
         # print(t1, t2)
@@ -149,6 +151,7 @@ def main(config):
             #     continue
 
             st0 = st0.detrend("linear")
+            st0 = st0.detrend("demean")
 
             # st0 = st0.merge(fill_value="interpolate")
             st0 = st0.merge(fill_value=0)
@@ -160,22 +163,24 @@ def main(config):
             # load barometer data
             ffbi_inv = read_inventory(root_path+"/Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml")
 
-            ffbi0 = __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDF", t1-config['tbuffer'], t2+config['tbuffer'])
+#             ffbi0 = __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDF", t1-config['tbuffer'], t2+config['tbuffer'])
 
-            if len(ffbi0) != 2:
-                ffbi0 = ffbi0.merge();
+#             if len(ffbi0) != 2:
+#                 ffbi0 = ffbi0.merge();
 
+#             ffbi0 += __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDO", t1-config['tbuffer'], t2+config['tbuffer'])
+#             for tr in ffbi0:
+#                 if "F" in tr.stats.channel:
+#                     tr = tr.remove_response(ffbi_inv, water_level=10)
+#                 if "O" in tr.stats.channel:
+#                     tr.data = tr.data /1.0 /6.28099e5 /1e-5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 100 mV/hPa
+            # ffbi0 = ffbi0.decimate(2)
 
-            ffbi0 += __read_sds(bay_path+"mseed_online/archive/", "BW.FFBI..BDO", t1-config['tbuffer'], t2+config['tbuffer'])
-            for tr in ffbi0:
-                if "F" in tr.stats.channel:
-                    tr = tr.remove_response(ffbi_inv, water_level=10)
-                if "O" in tr.stats.channel:
-                    tr.data = tr.data /1.0 /6.28099e5 /1e-5   # gain=1 sensitivity_reftek=6.28099e5count/V; sensitivity = 100 mV/hPa
+            ffbi0 = __read_sds(archive_path+"temp_archive/", "BW.FFBI.30.LDF", config['tbeg'], config['tend'])
+            ffbi0 += __read_sds(archive_path+"temp_archive/", "BW.FFBI.30.LDO", config['tbeg'], config['tend'])
 
             ffbi0 = ffbi0.merge();
 
-            ffbi0 = ffbi0.decimate(2)
 
             # ___________________________________________________________
             # load promy pressure data
@@ -212,6 +217,9 @@ def main(config):
             stt = obs.Stream()
             stt += til1.copy()
             stt += ffbi0.copy()
+
+            print(stt)
+            stt.plot(equal_scale=False)
 
             # del st0, til1, ffbi0
 
@@ -336,12 +344,14 @@ def main(config):
             arr_b_Z[_n], arr_b_N[_n], arr_b_E[_n] = b_Z, b_N, b_E
             arr_R_Z[_n], arr_R_N[_n], arr_R_E[_n] = R_Z, R_N, R_E
 
+
         except Exception as e:
             print(" -> processing failed")
             print(e)
-            print(stt)
+            # print(stt)
             stop = True
             # continue
+
 
         if stop:
             # del stt
