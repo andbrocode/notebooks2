@@ -360,7 +360,9 @@ def main(config):
             stop = True
             # continue
 
-
+        # ___________________________________________________________
+        # perform multi-variant regression
+        reg_type = "ransac"
         try:
 
             dff = DataFrame()
@@ -376,7 +378,7 @@ def main(config):
                 dff[c] = stt.select(station="ROMY", location="30", channel=f"*{c}")[0].data
 
             # model Z ffbi
-            outZ = __regression(dff, ['ffbPP', 'ffbHP'], target='Z', reg='ransac')
+            outZ = __regression(dff, ['ffbPP', 'ffbHP'], target='Z', reg=reg_type, verbose=False)
 
             xx_Z0 = outZ['slope'][0]*dff['ffbPP'] + outZ['slope'][1]*dff['ffbHP']
             re_Z0 = dff['Z'] - xx_Z0
@@ -384,7 +386,7 @@ def main(config):
             ra_Z0 = round(outZ['slope'][0]/outZ['slope'][1], 3)
 
             # model N ffbi
-            outN = __regression(dff, ['ffbPP', 'ffbHP'], target='N', reg='ransac')
+            outN = __regression(dff, ['ffbPP', 'ffbHP'], target='N', reg=reg_type, verbose=False)
 
             xx_N0 = outN['slope'][0]*dff['ffbPP'] + outN['slope'][1]*dff['ffbHP']
             re_N0 = dff['N'] - xx_N0
@@ -392,7 +394,7 @@ def main(config):
             ra_N0 = round(outN['slope'][0]/outN['slope'][1], 3)
 
             # model E ffbi
-            outE = __regression(dff, ['ffbPP', 'ffbHP'], target='E', reg='ransac')
+            outE = __regression(dff, ['ffbPP', 'ffbHP'], target='E', reg=reg_type, verbose=False)
 
             xx_E0 = outE['slope'][0]*dff['ffbPP'] + outE['slope'][1]*dff['ffbHP']
             re_E0 = dff['E'] - xx_E0

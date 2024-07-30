@@ -1,4 +1,4 @@
-def __regression(ddf, _features, target="fj_fs", reg="theilsen"):
+def __regression(ddf, _features, target="fj_fs", reg="theilsen", verbose=True):
 
     from sklearn import linear_model
     from sklearn.linear_model import LinearRegression, RANSACRegressor, HuberRegressor, TheilSenRegressor
@@ -30,30 +30,31 @@ def __regression(ddf, _features, target="fj_fs", reg="theilsen"):
     if reg.lower() == "ols":
         ols = linear_model.LinearRegression()
         model = ols.fit(X, y)
-
-        print("R2:", model.score(X, y))
-        print("X0:",  model.intercept_)
-        print("Coef: ",  model.coef_)
-        for _f, _c in zip(_features, model.coef_):
-            print(f"{_f} : {_c}")
+        if verbose:
+            print("R2:", model.score(X, y))
+            print("X0:",  model.intercept_)
+            print("Coef: ",  model.coef_)
+            for _f, _c in zip(_features, model.coef_):
+                print(f"{_f} : {_c}")
 
     elif reg.lower() == "ransac":
         model = RANSACRegressor(random_state=1).fit(X, y)
-        print("R2:", model.score(X, y))
-        print("IC: ", model.estimator_.intercept_)
-        print("Coef: ",  model.estimator_.coef_)
-        for _f, _c in zip(_features, model.estimator_.coef_):
-            print(f"{_f} : {_c}")
+        if verbose:
+            print("R2:", model.score(X, y))
+            print("IC: ", model.estimator_.intercept_)
+            print("Coef: ",  model.estimator_.coef_)
+            for _f, _c in zip(_features, model.estimator_.coef_):
+                print(f"{_f} : {_c}")
 
     # using TheilSen
     elif reg.lower() == "theilsen":
         model = TheilSenRegressor().fit(X, y)
-
-        print("R2:", model.score(X, y))
-        print("X0:",  model.intercept_)
-        print("Coef: ",  model.coef_)
-        for _f, _c in zip(_features, model.coef_):
-            print(f"{_f} : {_c}")
+        if verbose:
+            print("R2:", model.score(X, y))
+            print("X0:",  model.intercept_)
+            print("Coef: ",  model.coef_)
+            for _f, _c in zip(_features, model.coef_):
+                print(f"{_f} : {_c}")
 
     # prediction
     model_predict = []
