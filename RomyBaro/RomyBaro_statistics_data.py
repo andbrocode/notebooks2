@@ -22,6 +22,7 @@ from functions.get_time_intervals import __get_time_intervals
 from functions.estimate_linear_coefficients import __estimate_linear_coefficients
 from functions.variance_reduction import __variance_reduction
 from functions.smoothing import __smooth
+from functions.regression import __regression
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -106,6 +107,10 @@ def main(config):
     arr_R_Z, arr_R_N, arr_R_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
 
     arr_w_dir, arr_w_vel = np.zeros(NN), np.zeros(NN)
+
+    reg_a_Z, reg_a_N, reg_a_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    reg_b_Z, reg_b_N, reg_b_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    reg_R_Z, reg_R_N, reg_R_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
 
     status = []
 
@@ -352,9 +357,57 @@ def main(config):
         except Exception as e:
             print(" -> processing failed")
             print(e)
-            # print(stt)
             stop = True
             # continue
+
+
+        try:
+
+            dff = DataFrame()
+
+            dff['time'] = stt[0].times()
+            dff['ffbPP'] = stt.select(station="FFBI", channel="*O")[0].data
+            dff['ffbHP'] = np.imag(hilbert(stt.select(station="FFBI", channel="*O")[0].data))
+
+            # dff['rmyPP'] = stt.select(station="RMY", channel="*O")[0].data
+            # dff['rmyHP'] = np.imag(hilbert(stt.select(station="RMY", channel="*O")[0].data))
+
+            for c in ["N", "E", "Z"]:
+                dff[c] = stt.select(station="ROMY", location="30", channel=f"*{c}")[0].data
+
+            # model Z ffbi
+            outZ = __regression(dff, ['ffbPP', 'ffbHP'], target='Z', reg='ransac')
+
+            xx_Z0 = outZ['slope'][0]*dff['ffbPP'] + outZ['slope'][1]*dff['ffbHP']
+            re_Z0 = dff['Z'] - xx_Z0
+            vr_Z0 = __variance_reduction(xx_Z0, dff['Z'] - xx_Z0)
+            ra_Z0 = round(outZ['slope'][0]/outZ['slope'][1], 3)
+
+            # model N ffbi
+            outN = __regression(dff, ['ffbPP', 'ffbHP'], target='N', reg='ransac')
+
+            xx_N0 = outN['slope'][0]*dff['ffbPP'] + outN['slope'][1]*dff['ffbHP']
+            re_N0 = dff['N'] - xx_N0
+            vr_N0 = __variance_reduction(xx_N0, dff['N'] - xx_N0)
+            ra_N0 = round(outN['slope'][0]/outN['slope'][1], 3)
+
+            # model E ffbi
+            outE = __regression(dff, ['ffbPP', 'ffbHP'], target='E', reg='ransac')
+
+            xx_E0 = outE['slope'][0]*dff['ffbPP'] + outE['slope'][1]*dff['ffbHP']
+            re_E0 = dff['E'] - xx_E0
+            vr_E0 = __variance_reduction(xx_E0, dff['E'] - xx_E0)
+            ra_E0 = round(outE['slope'][0]/outE['slope'][1], 3)
+
+            # add to arrays
+            reg_a_Z[_n], reg_a_N[_n], reg_a_E[_n] = outZ['slope'][0], outN['slope'][0], outE['slope'][0]
+            reg_b_Z[_n], reg_b_N[_n], reg_b_E[_n] = outZ['slope'][1], outN['slope'][1], outE['slope'][1]
+            reg_R_Z[_n], reg_R_N[_n], reg_R_E[_n] = vr_Z0, vr_N0, vr_E0
+
+        except Exception as e:
+            print(" -> regression processing failed")
+            print(e)
+            stop = True
 
         # ___________________________________________________________
         # load furt for wind direction and velocity
@@ -505,6 +558,9 @@ def main(config):
     df['b_z'] = arr_b_Z
     df['b_n'] = arr_b_N
     df['b_e'] = arr_b_E
+
+    df['wvel'] = arr_w_vel
+    df['wdir'] = arr_w_dir
 
     df.to_pickle(config['path_to_out_data']+f"RB_statistics_{config['tbeg'].date}.pkl")
 
