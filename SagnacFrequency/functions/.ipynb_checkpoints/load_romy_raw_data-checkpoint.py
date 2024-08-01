@@ -3,7 +3,6 @@ def __load_romy_raw_data(seed, tbeg, tend, path_to_sds):
     from andbro__read_sds import __read_sds
     from obspy import Stream, UTCDateTime
 
-
     print(f" -> loading {seed}...")
 
     try:

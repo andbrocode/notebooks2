@@ -39,18 +39,26 @@ elif os.uname().nodename == 'lin-ffb-01':
 
 config = {}
 
+# extract ring
 if len(sys.argv) > 1:
     config['ring'] = sys.argv[1]
 else:
     config['ring'] = "U"
 
+# specify path to data archive
 config['path_to_archive'] = archive_path+"romy_archive/"
 
+# specify path to output files
 config['path_to_out_file'] = archive_path+"temp_archive/"
 
+# set if amplitdes are corrected with envelope
+config['correct_amplitudes'] = True
+
+# set prewhitening factor (to avoid division by zero)
+config['prewhitening'] = 0.1
+
+# set time interval
 config['t1'] = UTCDateTime("2024-07-11 00:00")
-# config['t1'] = UTCDateTime("2024-07-11 15:00")
-# config['t2'] = UTCDateTime("2024-07-11 17:00")
 config['t2'] = config['t1'] + 86400
 
 # V / count  [0.59604645ug  from obsidian]
@@ -73,10 +81,11 @@ config['new_delta'] = config['Tinterval']-config['Toverlap']
 # conversion to from hertz to rotation rate
 config['rotation_rate'] = True
 
-# ring nominal sagnac frequencies
+# specify ring nominal sagnac frequencies
 # config['rings'] = {"Z":553.5, "U":302.5, "V":447.5, "W":447.5}
 config['rings'] = {"Z":551.677, "U":302.959, "V":448.092, "W":448.092}
 
+# set upsampling to 10 kHz
 config['upsampling'] = False
 
 
@@ -257,9 +266,11 @@ def main(config):
         for tr in st00:
             tr.data = tr.data*config['conversion']
 
-            # scale by envelope
-            env = abs(hilbert(tr.data)) + 0.1
-            tr.data = tr.data / env
+            # correct amplitudes with envelope
+            if config['correct_amplitudes']:
+                # scale by envelope
+                env = abs(hilbert(tr.data)) + config['prewhitening']
+                tr.data = tr.data / env
 
         # upsampling to 10 kHz
         if config['upsampling']:

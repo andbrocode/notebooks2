@@ -1,4 +1,4 @@
-def __compute_psd_array(st0, twin_sec=60, spec="PSD"):
+def __compute_psd_array(st0, twin_sec=60, spec="PSD", sort=True):
 
     from scipy.signal import welch
     from scipy.signal import get_window
@@ -33,7 +33,8 @@ def __compute_psd_array(st0, twin_sec=60, spec="PSD"):
 
     _st = st0.copy()
 
-    _st.sort(keys=['channel'], reverse=True)
+    if sort:
+        _st.sort(keys=['channel'], reverse=True)
 
     nblock = int(_st[0].stats.sampling_rate * twin_sec)
     overlap = int(0.5*nblock)

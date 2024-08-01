@@ -12,7 +12,6 @@ import sys
 import gc
 import os
 
-# from scipy.signal import resample, hilbert, correlate
 from tqdm import tqdm
 from obspy import UTCDateTime, read, Stream
 
@@ -40,12 +39,13 @@ elif os.uname().nodename == 'lin-ffb-01':
 
 config = {}
 
+# extract ring
 if len(sys.argv) > 1:
     config['ring'] = sys.argv[1]
 else:
     config['ring'] = "U"
 
-
+# extract time interval
 if len(sys.argv) > 2:
     config['t1'] = UTCDateTime(sys.argv[2])
     config['t2'] = config['t1'] + 86400
@@ -58,6 +58,12 @@ config['path_to_archive'] = archive_path+"romy_archive/"
 
 # specify path for output data
 config['path_to_out_file'] = archive_path+"temp_archive/"
+
+# set if amplitdes are corrected with envelope
+config['correct_amplitudes'] = True
+
+# set prewhitening factor (to avoid division by zero)
+config['prewhitening'] = 0.1
 
 # V / count  [0.59604645ug  from obsidian]
 config['conversion'] = 0.59604645e-6
@@ -159,8 +165,6 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         else:
             a0, f0, p0 = amps[~isnan(amps)][-1], freq[~isnan(freq)][-1], phas[~isnan(phas)][-1]
 
-
-
         # slightly change start values using round
         a0, f0, p0 = round(a0, 2), round(f0, 2), round(p0, 2)
 
@@ -176,9 +180,11 @@ def __sine_fit_stream(st_in, seed, values, Tinterval=1, Toverlap=0.8, plot=True)
         _time = tt[n1:n2]
         _data = data[n1:n2]
 
-        # scale by envelope
-        env = abs(hilbert(_data)) + 0.1
-        _data = _data / env
+        # correct amplitudes with envelope
+        if config['correct_amplitudes']:
+            # scale by envelope
+            env = abs(hilbert(_data)) + config['prewhitening']
+            _data = _data / env
 
         # fit sine to data
         try:
@@ -363,7 +369,6 @@ def __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
 
     EXAMPLE:
     >>> st = __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED")
-
     '''
 
     import os
@@ -376,13 +381,13 @@ def __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
         print(f" -> {path_to_archive} does not exist!")
         return
 
-    ## separate seed id
+    # separate seed id
     net, sta, loc, cha = seed.split(".")
 
-    ## define SDS client
+    # define SDS client
     client = Client(path_to_archive, sds_type='D', format=data_format)
 
-    ## read waveforms
+    # read waveforms
     try:
         st = client.get_waveforms(net, sta, loc, cha, tbeg, tend, merge=-1)
     except:
@@ -404,9 +409,6 @@ def main(config):
     values = [0.9, config['rings'][config['ring']], 0]
 
     for _t1, _t2 in tqdm(times):
-
-        # print(_t1, _t2)
-        # print(values)
 
         # load data
         st00 = __read_sds(config['path_to_archive'], f"BW.DROMY..FJ{config['ring']}", _t1-10, _t2+10)
