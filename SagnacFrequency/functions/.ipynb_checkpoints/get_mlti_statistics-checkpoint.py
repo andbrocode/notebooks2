@@ -1,14 +1,48 @@
-def __get_mlti_statistics(mlti, starttime, endtime, plot=True, ylog=False):
+def __get_mlti_statistics(mlti, starttime, endtime, plot=True, ylog=False, intervals=False):
 
     import numpy as np
     import matplotlib.pyplot as plt
     from obspy import UTCDateTime
 
+    def __get_mlti_intervals(mlti_times, time_delta=60):
+
+        from obspy import UTCDateTime
+        from numpy import array
+
+        if len(mlti_times) == 0:
+            return array([]), array([])
+
+        t1, t2 = [], []
+        for k, _t in enumerate(mlti_times):
+
+            _t = UTCDateTime(_t)
+
+            if k == 0:
+                _tlast = _t
+                t1.append(UTCDateTime(str(_t)[:16]))
+
+            if _t -_tlast > time_delta:
+                t2.append(UTCDateTime(str(_tlast)[:16])+60)
+                t1.append(UTCDateTime(str(_t)[:16]))
+
+            _tlast = _t
+
+        t2.append(UTCDateTime(str(_t)[:16])+60)
+
+        return array(t1), array(t2)
+
+    # get intervals
+    if intervals:
+        mlti_t1, mlti_t2 = __get_mlti_intervals(mlti.time_utc, time_delta=60)
+    
     # convert to array with UTCDateTime objects
     mlti_times = np.array([UTCDateTime(_t) for _t in mlti.time_utc])
 
     # relative time in seconds
-    mlti_times_sec = np.array(mlti_times - starttime)
+    if intervals:
+        mlti_times_sec = np.array(mlti_t1 - starttime)
+    else:
+        mlti_times_sec = np.array(mlti_times - starttime)
 
     # timeline in seconds
     times_sec = np.array(np.arange(0, UTCDateTime(endtime)-UTCDateTime(starttime), 1))

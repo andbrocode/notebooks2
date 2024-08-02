@@ -43,6 +43,7 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     archive_path = '/import/freenas-ffb-01-data/'
     bay_path = '/import/ontap-ffb-bay200/'
 
+# _____________________________________________________
 
 config = {}
 
@@ -53,15 +54,15 @@ config['path_to_figs'] = data_path+"romy_baro/outfigs/"
 config['path_to_sds'] = archive_path+"temp_archive/"
 
 # path to output data
-config['path_to_out_data'] = data_path+"romy_baro/data/"
+config['path_to_out_data'] = data_path+"romy_baro/data2/"
 
 # data
 if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
 else:
-    config['tbeg'] = obs.UTCDateTime("2024-01-01 00:00")
-    config['tend'] = obs.UTCDateTime("2024-07-20 00:00")
+    config['tbeg'] = obs.UTCDateTime("2024-02-01 00:00")
+    config['tend'] = obs.UTCDateTime("2024-07-31 00:00")
 
 config['tbuffer'] = 3600 # 7200 # seconds
 
@@ -76,8 +77,7 @@ config['fmin'], config['fmax'] = 0.0005, 0.01
 config['interval_seconds'] = 7200 # 10800
 config['interval_overlap'] = 1800 # 3600
 
-
-
+# _____________________________________________________
 
 def main(config):
 
@@ -565,6 +565,8 @@ def main(config):
     df['wdir'] = arr_w_dir
 
     df.to_pickle(config['path_to_out_data']+f"RB_statistics_{config['tbeg'].date}.pkl")
+
+# _____________________________________________________
 
 if __name__ == "__main__":
     main(config)

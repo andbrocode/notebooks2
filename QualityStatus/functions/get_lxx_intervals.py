@@ -1,13 +1,13 @@
-def __get_mlti_intervals(mlti_times, time_delta=60):
+def __get_lxx_intervals(lxx_times, time_delta=60):
 
     from obspy import UTCDateTime
     from numpy import array
 
-    if len(mlti_times) == 0:
+    if len(lxx_times) == 0:
         return array([]), array([])
 
     t1, t2 = [], []
-    for k, _t in enumerate(mlti_times):
+    for k, _t in enumerate(lxx_times):
 
         _t = UTCDateTime(_t)
 
@@ -22,6 +22,5 @@ def __get_mlti_intervals(mlti_times, time_delta=60):
         _tlast = _t
 
     t2.append(UTCDateTime(str(_t)[:16])+60)
-    # t2.append(mlti_times[-1])
 
     return array(t1), array(t2)

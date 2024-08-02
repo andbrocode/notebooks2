@@ -42,6 +42,9 @@ config['tend'] = config['tbeg'] + 86400
 # extract ring
 config['ring'] = sys.argv[2]
 
+# select frequency estimation mode
+config['mode'] = "hilbert" # "hilbert" | "sine"
+
 # specify seed codes
 config['seeds'] = [f"BW.DROMY..FJ{config['ring']}", "BW.DROMY..F1V", "BW.DROMY..F2V"]
 
@@ -52,10 +55,10 @@ config['interval'] = 120
 config['correct_amplitudes'] = False
 
 # set prewhitening factor (to avoid division by zero)
-config['prewhitening'] = 0.001
+config['prewhitening'] = 0.1
 
 # interval buffer (before and after) in seconds
-config['ddt'] = 30
+config['ddt'] = 60
 
 # frequency band (minus and plus)
 config['fband'] = 2 # 10
@@ -188,7 +191,7 @@ def __sine_fit(st0, nominal_sagnac, fband=2, Tinterval=20, Toverlap=2, plot=True
 
     # bandpass with butterworth around Sagnac Frequency
     st0 = st0.detrend("linear")
-    # st0 = st0.taper(0.01)
+    # st0 = st0.taper(0.01, type="cosine")
     st0 = st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=4, zerophase=True)
 
     # to array
@@ -300,7 +303,7 @@ def __hilbert_frequency_estimator(st, nominal_sagnac, fband=10, cut=0):
 
     # bandpass with butterworth around Sagnac Frequency
     st0 = st0.detrend("linear")
-    st0 = st0.taper(0.01)
+    st0 = st0.taper(0.01, type="cosine")
     st0 = st0.filter("bandpass", freqmin=f_lower, freqmax=f_upper, corners=4, zerophase=True)
 
     # estimate instantaneous frequency with hilbert
@@ -500,9 +503,9 @@ def main(config):
     for _tbeg, _tend in hours:
 
         # load data
-        sagn = __load_romy_raw_data(config['seeds'][0], _tbeg, _tend, config['path_to_sds'])
-        mon1 = __load_romy_raw_data(config['seeds'][1], _tbeg, _tend, config['path_to_sds'])
-        mon2 = __load_romy_raw_data(config['seeds'][2], _tbeg, _tend, config['path_to_sds'])
+        sagn = __load_romy_raw_data(config['seeds'][0], _tbeg-config['ddt'], _tend+config['ddt'], config['path_to_sds'])
+        mon1 = __load_romy_raw_data(config['seeds'][1], _tbeg-config['ddt'], _tend+config['ddt'], config['path_to_sds'])
+        mon2 = __load_romy_raw_data(config['seeds'][2], _tbeg-config['ddt'], _tend+config['ddt'], config['path_to_sds'])
 
         # get time intervals for iteration
         times = __get_time_intervals(_tbeg, _tend, interval_seconds=config['interval'], interval_overlap=0)
@@ -543,21 +546,23 @@ def main(config):
                         env = abs(hilbert(tr.data)) + config['prewhitening']
                         tr.data = tr.data / env
 
-                # estimate instantaneous frequency average via hilbert
-                t, fs[_n], _, st[_n] = __hilbert_frequency_estimator(_dat,
-                                                                     config['nominal_sagnac'],
-                                                                     fband=config['fband'],
-                                                                     cut=config['ddt']
-                                                                     )
+                if config['mode'] == "hilbert":
+                    # estimate instantaneous frequency average via hilbert
+                    t, fs[_n], _, st[_n] = __hilbert_frequency_estimator(_dat,
+                                                                         config['nominal_sagnac'],
+                                                                         fband=config['fband'],
+                                                                         cut=config['ddt']
+                                                                         )
 
-                # estimate instantaneous frequency average via sine fit
-                t, fs[_n], _, st[_n] = __sine_fit(_dat,
-                                                  config['nominal_sagnac'],
-                                                  fband=config['fband'],
-                                                  Tinterval=config['interval'],
-                                                  Toverlap=0,
-                                                  plot=False
-                                                 )
+                elif config['mode'] == "sine":
+                    # estimate instantaneous frequency average via sine fit
+                    t, fs[_n], _, st[_n] = __sine_fit(_dat,
+                                                      config['nominal_sagnac'],
+                                                      fband=config['fband'],
+                                                      Tinterval=config['interval'],
+                                                      Toverlap=0,
+                                                      plot=False
+                                                     )
 
                 # estimate DC and AC based on time series (time domain)
                 # dc[_n] = np.mean(_dat)
