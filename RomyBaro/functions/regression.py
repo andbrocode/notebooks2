@@ -16,8 +16,6 @@ def __regression(ddf, _features, target="fj_fs", reg="theilsen", verbose=True):
     except:
         pass
 
-    print(_features)
-
     # define x data
     X = _df[_features].values.reshape(-1, len(_features))
 

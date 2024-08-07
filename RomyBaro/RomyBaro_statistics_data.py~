@@ -61,7 +61,7 @@ if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
 else:
-    config['tbeg'] = obs.UTCDateTime("2024-02-01 00:00")
+    config['tbeg'] = obs.UTCDateTime("2024-07-01 00:00")
     config['tend'] = obs.UTCDateTime("2024-07-31 00:00")
 
 config['tbuffer'] = 3600 # 7200 # seconds

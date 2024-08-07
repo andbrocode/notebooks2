@@ -61,8 +61,8 @@ if len(sys.argv) > 1:
     config['tbeg'] = obs.UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
 else:
-    config['tbeg'] = obs.UTCDateTime("2024-07-01 00:00")
-    config['tend'] = obs.UTCDateTime("2024-07-31 00:00")
+    config['tbeg'] = obs.UTCDateTime("2024-06-01 00:00")
+    config['tend'] = obs.UTCDateTime("2024-06-30 00:00")
 
 config['tbuffer'] = 3600 # 7200 # seconds
 
@@ -561,6 +561,20 @@ def main(config):
     df['b_n'] = arr_b_N
     df['b_e'] = arr_b_E
 
+    # regression output
+    df['r_z'] = reg_R_Z
+    df['r_n'] = reg_R_N
+    df['r_e'] = reg_R_E
+
+    df['a_z'] = reg_a_Z
+    df['a_n'] = reg_a_N
+    df['a_e'] = reg_a_E
+
+    df['b_z'] = reg_b_Z
+    df['b_n'] = reg_b_N
+    df['b_e'] = reg_b_E
+
+    # wind direction and velocity
     df['wvel'] = arr_w_vel
     df['wdir'] = arr_w_dir
 

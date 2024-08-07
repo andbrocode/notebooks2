@@ -1,12 +1,8 @@
-def __smooth(y, npts, win="hanning"):
+def __smooth(y, npts):
 
     from numpy import ones, convolve, hanning, nan
 
-    if win == "hanning":
-        win = hanning(npts)
-    elif win == "boxcar":
-        win = ones(npts)
-
+    win = hanning(npts)
     y_smooth = convolve(y, win/sum(win), mode='same')
 
     y_smooth[:npts//2] = nan
