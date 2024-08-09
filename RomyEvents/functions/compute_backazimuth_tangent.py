@@ -11,12 +11,12 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
     df = rot0[0].stats.sampling_rate
 
-    ## windows
+    # windows
     t_win = win_time_s
     n_win = int(win_time_s*df)
     nover = int(overlap*n_win)
 
-    ## extract components
+    # extract components
     rot_n = rot0.select(channel="*N")[0].data
     rot_e = rot0.select(channel="*E")[0].data
 
@@ -25,15 +25,13 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     else:
         acc_z = acc0.select(channel="*Z")[0].data
 
-
-    ## define windows
+    # define windows
     n, windows = 0, []
     while n < npts-n_win:
         windows.append((n, n+n_win))
         n += n_win
 
-
-    ## add overlap
+    # add overlap
     if overlap != 0:
         windows_overlap = []
         for i, w in enumerate(windows):
@@ -46,7 +44,7 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     else:
         windows_overlap = windows
 
-    ## compute baz and ccorr for each window
+    # compute baz and ccorr for each window
     baz, ccor = ones(len(windows_overlap))*nan, ones(len(windows_overlap))*nan
 
     for j, (w1, w2) in enumerate(windows_overlap):
@@ -68,22 +66,25 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         baz0 = -arctan((Q[1, 0]/Q[0, 0]))*180/pi
 
-        ## make sure baz is between 0 - 360
+        # make sure baz is between 0 - 360
         if baz0 <= 0:
             baz0 += 180
 
-        ## __________________________
-        ## remove 180° ambiguity
+        # __________________________
+        # remove 180° ambiguity
 
         rot_r, rot_t = rotate_ne_rt(rot_n[w1:w2], rot_e[w1:w2], baz0)
 
-        # corr_baz = corrcoef(acc_z[w1:w2], rot_t)[0][1]
+        # compute zero-lag cross-correlation
         corr_baz = correlate(acc_z[w1:w2], rot_t, 0, 'auto')[0]
 
-        if (corr_baz > 0): ## original
+        # if (corr_baz > 0): # original
+        #     baz0 += 180
+
+        if (corr_baz < 0):
             baz0 += 180
 
-        ## add new values to array
+        # add new values to array
         if abs(corr_baz) > cc_thres:
             baz[j] = baz0
             ccor[j] = abs(corr_baz)

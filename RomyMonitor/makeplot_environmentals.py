@@ -25,10 +25,6 @@ from scipy.ndimage import gaussian_filter1d
 # In[2]:
 
 
-# from functions.get_fft import __get_fft
-# from functions.multitaper_psd import __multitaper_psd
-# from functions.welch_psd import __welch_psd
-
 from functions.reduce import __reduce
 from functions.load_backscatter_data import __load_backscatter_data
 from functions.read_sds import __read_sds
@@ -94,7 +90,7 @@ config['ring'] = "Z"
 config['seed'] = f"BW.DROMY..FJ{config['ring']}"
 
 # specify length of time interval to show
-config['time_interval'] = 10 # days
+config['time_interval'] = 14 # days
 
 # define time interval
 config['tend'] = UTCDateTime().now()
@@ -392,7 +388,7 @@ except:
 
 # ### Load Tilt Data
 
-# In[42]:
+# In[20]:
 
 
 # path_to_tilt = data_path+"TiltmeterDataBackup/Tilt_downsampled/"
@@ -407,7 +403,7 @@ except:
     pass
 
 
-# In[43]:
+# In[21]:
 
 
 try:
@@ -435,7 +431,7 @@ except:
 
 # ### Load Water Level Data
 
-# In[44]:
+# In[22]:
 
 
 try:
@@ -451,11 +447,11 @@ except:
 
 # ### Load Beam Wander Data
 
-# In[45]:
+# In[23]:
 
 
 try:
-    cam = "07"
+    cam = "03"
 
     bw = __load_beam_wander_data(config['tbeg'].date, config['tend'].date, data_path+f"ids/data{cam}/")
 
@@ -464,7 +460,7 @@ except:
     pass
 
 
-# In[46]:
+# In[24]:
 
 
 try:
@@ -493,7 +489,7 @@ except:
     pass
 
 
-# In[47]:
+# In[25]:
 
 
 gc.collect()
@@ -501,7 +497,7 @@ gc.collect()
 
 # ### Load Infrasound FFBI
 
-# In[48]:
+# In[26]:
 
 
 try:
@@ -519,7 +515,7 @@ except:
 
 # ## Plotting
 
-# In[54]:
+# In[31]:
 
 
 def __makeplot():
@@ -550,6 +546,10 @@ def __makeplot():
     # ax[0].plot(bs_time_sec*time_scaling, bs.fj_bs_dejump, color="gold", lw=1, label=f"BS dejump")
 
     f_min, f_max = __find_max_min([bs.fj_fs_nan], 99)
+    if f_min < 553.56:
+        f_min = 553.56
+    if f_max > 553.59:
+        f_max = 553.59
     ax[0].set_ylim(f_min-0.001, f_max+0.001)
 
     ax[0].ticklabel_format(useOffset=False)
@@ -605,7 +605,6 @@ def __makeplot():
     ax22.set_yticks(np.linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax[2].get_yticks())))
     # ax22.set_zorder(2)
 
-
     ax24 = ax[2].twinx()
     ax24.plot(rain[0].times(reftime=ref_date), rain_cumsum/max(rain_cumsum)*100, alpha=0.9, zorder=1, ls="--", color="darkblue")
 
@@ -615,8 +614,7 @@ def __makeplot():
     ax24.set_ylabel(f"Cum. Rain (%)", fontsize=font, color="darkblue")
     [t.set_color('darkblue') for t in ax24.yaxis.get_ticklabels()]
 
-
-    # _____________________________________________________________________________________
+     # _____________________________________________________________________________________
     #
     ax[3].plot(tromy.select(channel="*N")[0].times(reftime=ref_date)[:-20],
                tromyN_smooth[:-20]*1e6,
@@ -703,38 +701,32 @@ def __makeplot():
         ax[_n].grid(ls=":", zorder=0, alpha=0.5)
         # ax[_n].set_xlim(left=0, right=np.array(bs.time_sec)[-1]*time_scaling)
         ax[_n].set_xlim(0, (config['tend'] - config['tbeg'])*time_scaling)
+        _, _ , _ymin, _ymax = ax[_n].axis()
 
+        # add maintenance
+        for lx1, lx2 in zip(lxx_t1, lxx_t2):
+            lx1_sec = lx1-UTCDateTime(ref_date)
+            lx2_sec = lx2-UTCDateTime(ref_date)
+            ax[_n].fill_betweenx([_ymin, _ymax], lx1_sec, lx2_sec, color="yellow", alpha=0.5)
 
-    ax[0].legend(loc=4, ncol=4)
-    ax[1].legend(loc=9, ncol=3)
-    ax11.legend(loc=4, ncol=1)
-    ax[3].legend(loc=4, ncol=2)
-    ax[4].legend(loc=1, ncol=1)
-    ax[5].legend(loc=4, ncol=2)
+    ax[0].legend(loc=4, ncol=4, fontsize=font-1)
+    ax[1].legend(loc=9, ncol=3, fontsize=font-1)
+    ax11.legend(loc=4, ncol=1, fontsize=font-1)
+    ax[3].legend(loc=4, ncol=2, fontsize=font-1)
+    ax[4].legend(loc=1, ncol=1, fontsize=font-1)
+    ax[5].legend(loc=4, ncol=2, fontsize=font-1)
 
-    # ax[Nrow-1].set_xlabel("Time (days)", fontsize=font)
-
-    ## add maintenance
-    for lx1, lx2 in zip(lxx_t1, lxx_t2):
-        lx1_sec = lx1-UTCDateTime(ref_date)
-        lx2_sec = lx2-UTCDateTime(ref_date)
-        ax[0].fill_betweenx([f_min-0.001, f_max+0.001], lx1_sec, lx2_sec, color="orange", alpha=0.5)
-
-    ## add dates to x-axis
+    # add dates to x-axis
     tcks = ax[Nrow-1].get_xticks()
     tcklbls = [f"{UTCDateTime(UTCDateTime(ref_date)+t).date} \n {str(UTCDateTime(UTCDateTime(ref_date)+t).time).split('.')[0]}" for t in tcks]
     ax[Nrow-1].set_xticklabels(tcklbls)
 
-    # for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)']):
-    #     ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
-
     gc.collect()
 
-    # plt.show();
     return fig
 
 
-# In[55]:
+# In[32]:
 
 
 fig = __makeplot();
@@ -742,37 +734,6 @@ fig = __makeplot();
 fig.savefig(config['path_to_figs']+f"html_environmentals.png", format="png", dpi=150, bbox_inches='tight')
 
 del fig
-
-
-# ## prepare Hilbert transform of pressure
-
-# In[51]:
-
-
-# pp = ffbi.select(channel="*DO").copy()
-
-# hp = pp.copy()
-
-
-# for tr in hp:
-#     NN = int(1e6)
-#     tr.data = np.pad(tr.data, (NN, NN), mode="edge")
-
-#     tr.data = np.imag(hilbert(tr.data))
-
-#     tr.data = tr.data[NN:-NN]
-
-# # hp = hp.detrend("simple")
-# # pp = pp.detrend("simple")
-
-# for tr in pp:
-#     tr.data = __reduce(tr.data, 100)
-
-# for tr in hp:
-#     tr.data = __reduce(tr.data, 100)
-
-# pp.plot();
-# hp.plot();
 
 
 # In[ ]:

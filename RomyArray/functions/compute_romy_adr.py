@@ -109,8 +109,6 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
         if config['array_stations'][i] not in excluded_stations:
             config['subarray_stations'].append(config['array_stations'][i])
 
-    config['subarray_sta'] = config['subarray_stations']
-
     # specify if bandpass is applied to data
     # config['prefilt'] = (0.001, 0.01, 5, 10)
     config['apply_bandpass'] = False
@@ -156,14 +154,14 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
             try:
                 try:
                     # load local version
-                    inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}.{sta}.xml")
+                    inventory = read_inventory(data_path+f"stationxml_ringlaser/station_{net}.{sta}.xml")
 
                     if config['verbose']:
                         print(f" -> load local inventory for {net}.{sta} ...")
 
                 except:
                     if sta == "FUR":
-                            inventory = read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}.xml")
+                            inventory = read_inventory(data_path+f"stationxml_ringlaser/station_{net}_{sta}.xml")
                     else:
                         inventory = config['fdsn_client'][net].get_stations(
                                                                             network=net,
@@ -232,7 +230,7 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
 
             # rotate to ZNE
             try:
-                if submask == "inner":
+                if sta in ["FFB1", "FFB2", "FFB3"]:
                     stats = stats.rotate(method='->ZNE', inventory=inventory, components=['Z12'])
                 else:
                     stats = stats.rotate(method='->ZNE', inventory=inventory, components=['ZNE'])
@@ -248,14 +246,15 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
             stats = stats.filter("highpass", freq=0.001, corners=4, zerophase=True);
             # stats = stats.filter("highpass", freq=0.001);
 
+            # resample to output sampling rate
+            if sta in ["FFB1", "FFB2", "FFB3"]:
+                stats = stats.decimate(2, no_filter=False)
+
             # store stream of reference station as template
             if station == config['reference_station']:
-                if submask == "inner":
-                    # upsample from 20 to 40 Hz
-                    stats = stats.resample(40.0, no_filter=True)
-                    stats = stats.trim(t1, t2)
-
                 ref_station = stats.copy()
+
+            stats = stats.trim(t1, t2)
 
             # add station data to stream
             st += stats
@@ -275,7 +274,12 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
         config['subarray_stations'] = config['subarray']
 
         if config['verbose']:
-            print(f" -> obtained: {len(st)/3} of {len(config['subarray_stations'])} stations!")
+            print(f" -> obtained: {int(len(st)/3)} of {len(config['subarray_stations'])} stations!")
+
+        # check for reference station
+        if config['reference_station'] not in config['subarray_stations']:
+            print(f" -> reference station not in station set!!!")
+            return st, Stream(), config
 
         if len(st) == 0:
             return st, Stream(), config
@@ -449,9 +453,6 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
     except Exception as e:
         print(e)
         return None, None
-
-    # resample to output sampling rate
-    rot = rot.decimate(2, no_filter=False)
 
     # trim to requested interval
     rot = rot.trim(config['tbeg'], config['tend'])

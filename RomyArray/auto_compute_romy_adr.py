@@ -92,6 +92,7 @@ def __write_stream_to_sds(st, path_to_sds):
 
         print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
 
+
 def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded_stations=[], map_plot=False, verbose=False):
 
     """
@@ -202,8 +203,6 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
     for i in config['subarray_mask']:
         if config['array_stations'][i] not in excluded_stations:
             config['subarray_stations'].append(config['array_stations'][i])
-
-    config['subarray_sta'] = config['subarray_stations']
 
     # specify if bandpass is applied to data
     # config['prefilt'] = (0.001, 0.01, 5, 10)
@@ -374,7 +373,7 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
         config['subarray_stations'] = config['subarray']
 
         if config['verbose']:
-            print(f" -> obtained: {int(len(st)/3)} of {len(config['array_stations'])} stations!")
+            print(f" -> obtained: {int(len(st)/3)} of {len(config['subarray_stations'])} stations!")
 
         # check for reference station
         if config['reference_station'] not in config['subarray_stations']:
@@ -560,92 +559,6 @@ def __compute_romy_adr(tbeg, tend, submask='all', ref_station='GR.FUR', excluded
     # stop times
     stop_timer1 = timeit.default_timer()
     print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60, 2)} minutes\n")
-
-    return rot
-
-    def __adjust_time_line(st0, reference="GR.FUR"):
-
-        Rnet, Rsta = reference.split(".")
-
-        ref_start = st0.select(network=Rnet, station=Rsta)[0].stats.starttime
-        ref_times = st0.select(network=Rnet, station=Rsta)[0].times()
-
-        dt = st0.select(network=Rnet, station=Rsta)[0].stats.delta
-
-        for tr in st0:
-            times = tr.times(reftime=ref_start)
-
-            tr.data = np.interp(ref_times, times, tr.data)
-            tr.stats.starttime = ref_start
-
-        return st0
-
-    # __________________________________________________________
-    # MAIN
-
-    # launch a times
-    start_timer1 = timeit.default_timer()
-
-    # status of stations loaded
-    config['stations_loaded'] = np.ones(len(config['subarray_stations']))
-
-    # request data for pfo array
-    st, ref_station, config = __get_data(config)
-
-    # processing
-    st = st.detrend("linear")
-    st = st.detrend("demean")
-
-    # bandpass filter
-    if config['apply_bandpass']:
-        st = st.taper(0.02, type="cosine")
-        st = st.filter('bandpass', freqmin=config['freq1'], freqmax=config['freq2'], corners=4, zerophase=True)
-        print(f" -> bandpass: {config['freq1']} - {config['freq2']} Hz")
-
-    ## plot station coordinates for check up
-    if map_plot:
-        stas = []
-        for tr in st:
-            if tr.stats.station not in stas:
-                stas.append(tr.stats.station)
-        # make checkup plot
-        import matplotlib.pyplot as plt
-        plt.figure()
-        for c, s in zip(config['coo'], stas):
-            if config['verbose']:
-                print(s, c)
-            plt.scatter(c[0], c[1], label=s)
-            plt.legend()
-            plt.show();
-
-    # check if enough stations for ADR are available otherwise continue
-    if len(st) < 9:
-        print(" -> not enough stations (< 3) for ADR computation!")
-        return
-    else:
-        if config['verbose']:
-            print(f" -> continue computing ADR for {int(len(st)/3)} of {len(config['subarray_mask'])} stations ...")
-
-    # homogenize the time line
-    st = __adjust_time_line(st, reference=config['reference_station'])
-
-    # check for same amount of samples
-    __check_samples_in_stream(st, config)
-
-    # compute array derived rotation (ADR)
-    try:
-        rot = __compute_ADR(st, config, ref_station)
-    except Exception as e:
-        print(e)
-        return None, None
-
-    # trim to requested interval
-    rot = rot.trim(config['tbeg'], config['tend'])
-
-    # stop times
-    stop_timer1 = timeit.default_timer()
-    print(f"\n -> Runtime: {round((stop_timer1 - start_timer1)/60, 2)} minutes\n")
-
 
     return rot
 

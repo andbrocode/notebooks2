@@ -1,6 +1,4 @@
-#!/bin/python3
-
-def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", reverse_rotZ=False, reverse_accZ=False, win_time_s=2.0, cc_thres=0.8, overlap=0.5, flim=(None,None), plot=False):
+def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", reverse_rotZ=False, reverse_accZ=False, win_time_s=2.0, cc_thres=0.8, overlap=0.5, flim=(None,None), ymax=6000, plot=False):
 
     from scipy.stats import pearsonr
     from numpy import zeros, nan, ones, nanmean, array, nanmax, linspace, std
@@ -116,7 +114,6 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", r
         ax.plot(array(range(len(rot)))/df, rot/max(abs(rot)), alpha=1, color="grey", label="rotation rate (rad/s)")
         ax.plot(array(range(len(acc)))/df, acc/max(abs(acc)), alpha=0.5, color="tab:red", label=r"acceleration (m/s$^2$)")
 
-
         ax.set_ylim(-1, 1)
         ax.set_xlim(0, len(rot)/df)
         ax.set_xlabel("Time (s)",fontsize=14)
@@ -128,7 +125,7 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", r
         cax = ax2.scatter(time, vel, c=ccor, s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, label="phase velocity estimate", zorder=2)
         ax2.errorbar(time, vel, xerr=terr, yerr=None, zorder=1, color="lightgrey", marker='o', markersize=2, ls="None")
         ax2.set_ylabel(r"Phase Velocity (m/s)", fontsize=14)
-        ax2.set_ylim(bottom=0)
+        ax2.set_ylim(0, ymax)
         ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax.get_yticks())))
         ax2.legend(loc=1, fontsize=13)
 
@@ -149,5 +146,3 @@ def __compute_velocity_from_amplitude_ratio(rot0, acc0, baz=None, mode="love", r
         out = {"time":time, "velocity":vel, "ccoef":ccor, "terr":terr, }
 
     return out
-
-## End of File

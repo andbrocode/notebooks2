@@ -71,7 +71,7 @@ config['tbeg'] = config['tend'] - config['time_interval'] * 86400
 
 Zlower, Zupper = 553.55, 553.60
 Ulower, Uupper = 302.39, 302.49
-Vlower, Vupper = 447.70, 447.75
+Vlower, Vupper = 447.70, 447.76
 
 # specify path to data
 config['path_to_sds'] = archive_path+"romy_archive/"
@@ -259,31 +259,47 @@ except:
 
 # ### Get MLTI statistics
 
-# In[13]:
+# In[32]:
 
 
 try:
-    mlti_statsU = __get_mlti_statistics(mltiU, config['tbeg'], config['tend'], plot=False, ylog=False)
+    mlti_statsU = __get_mlti_statistics(mltiU, config['tbeg'], config['tend'],
+                                        intervals=True, plot=False, ylog=False
+                                       )
+
+    mlti_statsU["mlti_series_avg"] = __smooth(mlti_statsU["mlti_series"], 86400)
+
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RU")
 
 try:
-    mlti_statsV = __get_mlti_statistics(mltiV, config['tbeg'], config['tend'], plot=False, ylog=False)
+    mlti_statsV = __get_mlti_statistics(mltiV, config['tbeg'], config['tend'],
+                                        intervals=True, plot=False, ylog=False
+                                       )
+    
+    mlti_statsV["mlti_series_avg"] = __smooth(mlti_statsV["mlti_series"], 86400)
+
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RV")
 
 try:
-    mlti_statsZ = __get_mlti_statistics(mltiZ, config['tbeg'], config['tend'], plot=False, ylog=False)
+    mlti_statsZ = __get_mlti_statistics(mltiZ, config['tbeg'], config['tend'],
+                                        intervals=True, plot=False, ylog=False
+                                       )
+
+    mlti_statsZ["mlti_series_avg"] = __smooth(mlti_statsZ["mlti_series"], 86400)
+    
 except Exception as e:
     print(e)
     print(f" -> failed to get MLTI statistics for RZ")
 
 
+
 # ## Smoothing
 
-# In[14]:
+# In[28]:
 
 
 n_minutes = 24*60
@@ -321,7 +337,7 @@ except:
 
 # ## Plotting
 
-# In[21]:
+# In[53]:
 
 
 def __makeplot():
@@ -375,34 +391,54 @@ def __makeplot():
     ax[2].set_ylabel("Western\nring (Hz)", fontsize=font)
 
     try:
-        n_rz = int(mlti_statsZ['Z']['cumsum'][-1])
-        ax[3].plot(mlti_statsZ['Z']['tsec']*time_scaling, mlti_statsZ['Z']['cumsump'], color="tab:blue", label=f"RZ (N={n_rz})")
+        n_rz = int(mlti_statsZ['cumsum'][-1])
+        # ax[3].plot(mlti_statsZ['tsec']*time_scaling, mlti_statsZ['cumsump'], color="tab:blue", label=f"RZ (N={n_rz})")
+        ax[3].plot(mlti_statsZ['tsec']*time_scaling, mlti_statsZ['mlti_series_avg'],
+                   color="tab:blue", label=f"RZ (N={n_rz})")
+        ax[3].fill_between(mlti_statsZ['tsec']*time_scaling, 0, mlti_statsZ['mlti_series_avg'],
+                           color="tab:blue", alpha=0.3
+                          )
     except:
         pass
     try:
-        n_ru = int(mlti_statsU['U']['cumsum'][-1])
-        ax[3].plot(mlti_statsU['U']['tsec']*time_scaling, mlti_statsU['U']['cumsump'], color="tab:green", label=f"RU (N={n_ru})")
+        n_ru = int(mlti_statsU['cumsum'][-1])
+        # ax[3].plot(mlti_statsU['tsec']*time_scaling, mlti_statsU['cumsump'], color="tab:green", label=f"RU (N={n_ru})")
+        ax[3].plot(mlti_statsU['tsec']*time_scaling, mlti_statsU['mlti_series_avg'],
+                   color="tab:green", label=f"RU (N={n_ru})")
+        ax[3].fill_between(mlti_statsU['tsec']*time_scaling, 0, mlti_statsU['mlti_series_avg'],
+                           color="tab:green", alpha=0.3
+                          )
     except:
         pass
     try:
-        n_rv = int(mlti_statsV['V']['cumsum'][-1])
-        ax[3].plot(mlti_statsV['V']['tsec']*time_scaling, mlti_statsV['V']['cumsump'], color="tab:red", label=f"RV (N={n_rv})")
+        n_rv = int(mlti_statsV['cumsum'][-1])
+        # ax[3].plot(mlti_statsV['tsec']*time_scaling, mlti_statsV['cumsump'], color="tab:red", label=f"RV (N={n_rv})")
+        ax[3].plot(mlti_statsV['tsec']*time_scaling, mlti_statsV['mlti_series_avg'],
+                   color="tab:red", label=f"RV (N={n_rv})"
+                  )
+        ax[3].fill_between(mlti_statsV['tsec']*time_scaling, 0, mlti_statsV['mlti_series_avg'],
+                           color="tab:red", alpha=0.3
+                          )
     except:
         pass
 
-    ax[3].set_ylim(0, 105)
-    ax[3].set_ylabel("cumulative\nMLTI", fontsize=font)
+    ax[3].legend(loc=1, ncol=3)
+
+    # ax[3].set_ylim(0, 105)
+    # ax[3].set_ylabel("cumulative\nMLTI", fontsize=font)
+    ax[3].set_ylim(bottom=0)
+    ax[3].set_ylabel("MLTI\nDensity", fontsize=font)
 
     for _n in range(Nrow):
         ax[_n].grid(ls=":", zorder=0)
-        # ax[_n].legend(loc=1, ncol=1)
         ax[_n].set_xlim(0, (config['tend'] - config['tbeg'])*time_scaling)
+        _, _ , _ymin, _ymax = ax[_n].axis()
 
         # add maintenance times
         for lx1, lx2 in zip(lxx_t1, lxx_t2):
             lx1_sec = lx1-UTCDateTime(ref_date)
             lx2_sec = lx2-UTCDateTime(ref_date)
-            ax[_n].fill_betweenx([-1000, 1000], lx1_sec, lx2_sec, color="orange", alpha=0.3)
+            ax[_n].fill_betweenx([_ymin, _ymax], lx1_sec, lx2_sec, color="yellow", alpha=0.3)
 
     ax[3].legend(loc=2, ncol=3, fontsize=font-5)
 
@@ -420,7 +456,7 @@ def __makeplot():
     return fig
 
 
-# In[21]:
+# In[54]:
 
 
 fig = __makeplot();

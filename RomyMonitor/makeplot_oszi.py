@@ -21,6 +21,9 @@ from IPython.display import Image, display
 from datetime import datetime
 from numpy import asarray
 
+import os
+os.environ['MPLCONFIGDIR'] = "/import/kilauea-data/tmp_cache_matplotlib/"
+
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
@@ -51,30 +54,30 @@ def main():
     scope = DS1054Z(DS1054Z_IP)
     # scope = DS1054Z(f'TCPIP::{DS1054Z_IP}::INSTR')
 
-    # activate scope
-    scope.run()
-    
+    #stop scope
+    scope.stop()
+
     scope.set_probe_ratio(1, 1) ## set screen ratio
 
     # take a screenshot
     # print(" -> taking screenshot...")
     bmap_scope = scope.display_data
 
-    # stop acquisition
-    scope.stop()
+    # restart scope
+    scope.run()
 
     # display the screentshot
     #display(Image(bmap_scope))
     #print(type(bmap_scope))
-    
+
     # save image to file
-    with open(path_to_images+f"tmp_html2_oszi.png", "wb") as _img:
+    with open(path_to_images+f"tmp_html_oszi.bmp", "wb") as _img:
         _img.write(bmap_scope)
-    
-       
+
+
     try:
         # load image
-        img = mpimg.imread(path_to_images+f"tmp_html2_oszi.png")
+        img = mpimg.imread(path_to_images+f"tmp_html_oszi.bmp")
 
         # plot image as figure with time stamp
         fig = plt.figure()
@@ -84,7 +87,7 @@ def main():
         plt.close();
 
         # save image with time stamp
-        fig.savefig(path_to_images+f"html2_oszi.png", format="png", dpi=150, bbox_inches='tight');
+        fig.savefig(path_to_images+f"html_oszi.png", format="png", dpi=150, bbox_inches='tight');
 
     except Exception as e:
         print(f" -> failed to save figure")
