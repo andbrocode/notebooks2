@@ -562,17 +562,17 @@ def main(config):
     df['b_e'] = arr_b_E
 
     # regression output
-    df['r_z'] = reg_R_Z
-    df['r_n'] = reg_R_N
-    df['r_e'] = reg_R_E
+    df['reg_r_z'] = reg_R_Z
+    df['reg_r_n'] = reg_R_N
+    df['reg_r_e'] = reg_R_E
 
-    df['a_z'] = reg_a_Z
-    df['a_n'] = reg_a_N
-    df['a_e'] = reg_a_E
+    df['reg_a_z'] = reg_a_Z
+    df['reg_a_n'] = reg_a_N
+    df['reg_a_e'] = reg_a_E
 
-    df['b_z'] = reg_b_Z
-    df['b_n'] = reg_b_N
-    df['b_e'] = reg_b_E
+    df['reg_b_z'] = reg_b_Z
+    df['reg_b_n'] = reg_b_N
+    df['reg_b_e'] = reg_b_E
 
     # wind direction and velocity
     df['wvel'] = arr_w_vel
