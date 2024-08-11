@@ -382,7 +382,7 @@ def main(config):
 
             xx_Z0 = outZ['slope'][0]*dff['ffbPP'] + outZ['slope'][1]*dff['ffbHP']
             re_Z0 = dff['Z'] - xx_Z0
-            vr_Z0 = __variance_reduction(xx_Z0, dff['Z'] - xx_Z0)
+            vr_Z0 = __variance_reduction(dff['Z'], dff['Z'] - xx_Z0)
             ra_Z0 = round(outZ['slope'][0]/outZ['slope'][1], 3)
 
             # model N ffbi
@@ -390,7 +390,7 @@ def main(config):
 
             xx_N0 = outN['slope'][0]*dff['ffbPP'] + outN['slope'][1]*dff['ffbHP']
             re_N0 = dff['N'] - xx_N0
-            vr_N0 = __variance_reduction(xx_N0, dff['N'] - xx_N0)
+            vr_N0 = __variance_reduction(dff['N'], dff['N'] - xx_N0)
             ra_N0 = round(outN['slope'][0]/outN['slope'][1], 3)
 
             # model E ffbi
@@ -398,7 +398,7 @@ def main(config):
 
             xx_E0 = outE['slope'][0]*dff['ffbPP'] + outE['slope'][1]*dff['ffbHP']
             re_E0 = dff['E'] - xx_E0
-            vr_E0 = __variance_reduction(xx_E0, dff['E'] - xx_E0)
+            vr_E0 = __variance_reduction(dff['E'], dff['E'] - xx_E0)
             ra_E0 = round(outE['slope'][0]/outE['slope'][1], 3)
 
             # add to arrays
