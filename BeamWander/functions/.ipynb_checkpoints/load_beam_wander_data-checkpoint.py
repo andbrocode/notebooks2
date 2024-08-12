@@ -1,8 +1,10 @@
-def __load_beam_wander_data(tbeg, tend, path_to_data):
+def __load_beam_wander_data(tbeg, tend, path_to_data, cam):
 
     from obspy import UTCDateTime
     from datetime import date
     from pandas import read_pickle, concat, DataFrame, date_range, to_datetime
+
+    path_to_data += f"data{cam}/"
 
     t1 = date.fromisoformat(str(UTCDateTime(tbeg).date))
     t2 = date.fromisoformat(str((UTCDateTime(tend)).date))
@@ -15,7 +17,7 @@ def __load_beam_wander_data(tbeg, tend, path_to_data):
             df0 = read_pickle(path_to_data+file)
             df = concat([df, df0])
         except:
-            print(f"error for {file}")
+            print(f" -> error for {file}")
 
     # remove NaN from time column
     df.dropna(subset=['time'], inplace=True)
