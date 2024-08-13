@@ -26,7 +26,7 @@ def __regression(ddf, _features, target="fj_fs", reg="theilsen", verbose=True):
 
     # using OLS
     if reg.lower() == "ols":
-        ols = linear_model.LinearRegression()
+        ols = linear_model.LinearRegression(fit_intercept=True)
         model = ols.fit(X, y)
         if verbose:
             print("R2:", model.score(X, y))

@@ -20,7 +20,10 @@ def __load_beam_wander_data(tbeg, tend, path_to_data, cam):
             print(f" -> error for {file}")
 
     # remove NaN from time column
-    df.dropna(subset=['time'], inplace=True)
+    try:
+        df.dropna(subset=['time'], inplace=True)
+    except:
+        pass
 
     # reset the index column
     df.reset_index(inplace=True, drop=True)
