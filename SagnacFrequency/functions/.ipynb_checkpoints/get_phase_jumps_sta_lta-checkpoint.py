@@ -65,28 +65,40 @@ def get_phase_jumps_sta_lta(arr, times, LT, ST, amp_threshold, plot=True):
 
         font = 12
 
+        tscale, tunit = 1/86400, "days"
+        
         fig, ax = plt.subplots(Nrow, Ncol, figsize=(12, 5), sharex=True)
 
         plt.subplots_adjust(hspace=0.1)
 
-        ax[0].plot(times, arr)
-        ax[0].plot(times, arr*np.array(detect))
+        ax[0].plot(times*tscale, arr, label=f"$\delta$f w/ jumps")
+        ax[0].plot(times*tscale, arr*np.array(detect), label=f"$\delta$f w/o jumps")
 
-        ax[1].plot(times, amp_ratio, "k")
-        ax[1].axhline(amp_threshold, color="darkred", alpha=0.5, ls="--")
-        ax[1].set_ylim(0, 3*amp_threshold)
+        ax[1].plot(times*tscale, amp_ratio*1e6, "k", label=f"phase ratio (x10$^6$)")
+
+        ax[1].axhline(amp_threshold*1e6, color="darkred", alpha=0.5, ls="--", label=f"detection threshold")
+        ax[1].set_ylim(0, 3*amp_threshold*1e6)
 
         for _k in range(Nrow):
             ax[_k].grid(which="both", ls="--", color="grey", alpha=0.5, zorder=0)
+            ax[_k].legend(loc=1, fontsize=font-2)
 
         for _n, d in enumerate(detect):
             if np.isnan(d):
-                ax[0].axvline(times[_n], 0, np.nanmax(arr)*2, color="grey", alpha=0.2, zorder=1)
-                ax[1].axvline(times[_n], 0, 10, color="grey", alpha=0.2, zorder=1)
+                ax[0].axvline(times[_n]*tscale, 0, np.nanmax(arr)*2, color="grey", alpha=0.2, zorder=1)
+                ax[1].axvline(times[_n]*tscale, 0, 10, color="grey", alpha=0.2, zorder=1)
 
+        ax[0].ticklabel_format(useOffset=False)
+        ax[0].set_ylabel(f"$\delta$f (Hz)", fontsize=font)
+
+        ax[1].set_ylabel("Phase Ratio", fontsize=font)
+        ax[1].set_xlabel(f"Time ({tunit})", fontsize=font)
         plt.show();
 
     # change detections to one and everything else to zero
     detect2 = abs(np.nan_to_num(detect, 0) - 1)
 
-    return np.array(amp_ratio), np.array(detect2)
+    if plot:
+        return np.array(amp_ratio), np.array(detect2), fig
+    else:
+        return np.array(amp_ratio), np.array(detect2)
