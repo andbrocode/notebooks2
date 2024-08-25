@@ -8,8 +8,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
 
     net, sta, loc, cha = seed.split(".")
 
-
-    ## querry inventory data
+    # querry inventory data
     try:
         inventory = client.get_stations(network=net,
                                         station=sta,
@@ -22,8 +21,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
         print(" -> Failed to load inventory!")
         inventory = None
 
-
-    ## querry waveform data
+    # querry waveform data
     try:
 
         if bulk_download:
@@ -42,9 +40,9 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
         print(" -> Failed to load waveforms!")
         waveform = None
 
-    ## adjust channel names
+    # adjust channel names
     if cha[1] == "J" and waveform is not None:
-#     if sta == "BSPF" and waveform is not None:
+
         waveform.remove_sensitivity(inventory=inventory)
         print(" -> sensitivity removed!")
 
@@ -56,7 +54,7 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
         #     elif tr.stats.channel[-1] == "3":
         #         tr.stats.channel = str(tr.stats.channel).replace("3","Z")
 
-    ## adjust channel names
+    # adjust channel names
     elif cha[1] == "H" and waveform is not None:
         waveform.remove_response(inventory=inventory, output=translation_type, plot=False)
         print(" -> response removed!")
@@ -83,5 +81,4 @@ def __request_data(seed, tbeg, tend, bulk_download=True, translation_type="ACC")
 
     return waveform, inventory
 
-
-## End of File
+# End of File

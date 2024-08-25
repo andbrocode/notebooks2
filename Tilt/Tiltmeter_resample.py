@@ -15,6 +15,9 @@ from pandas import date_range
 from tqdm import tqdm
 from obspy.clients.filesystem.sds import Client
 
+import warnings
+warnings.filterwarnings('ignore')
+
 # ### Setup
 
 if os.uname().nodename == "lighthouse":
@@ -125,10 +128,12 @@ config={}
 #path = f"{root_path}Desktop/tiltmeter/"
 
 ## define new sampling rate
-config['resample_rate'] = 1/600
+#config['resample_rate'] = 1/600
+config['resample_rate'] = input("Enter new sampling rate [1/600]: ") or 1/600
 
 ## define seed code of instrument
-config['seed_id'] = "BW.DROMY..LA*"
+config['seed_id'] = input("Enter seed [BW.DROMY..LA*]: ") or "BW.DROMY..LA*"
+#config['seed_id'] = "BW.DROMY..LA*"
 #config['seed_id'] = "BW.ROMYT..MA*"
 #config['seed_id'] = "BW.TROMY..MA*"
 
@@ -137,8 +142,10 @@ config['seed_id'] = "BW.DROMY..LA*"
 config['datapath'] =  f"{data_path}romy_archive/"
 
 ## define time window
-config['tbeg'] = UTCDateTime("2023-12-01 00:00")
-config['tend'] = UTCDateTime("2023-12-31 00:00")
+config['tbeg'] = UTCDateTime(input("Enter tbeg: "))
+config['tend'] = UTCDateTime(input("Enter tend: "))
+#config['tbeg'] = UTCDateTime("2023-12-01 00:00")
+#config['tend'] = UTCDateTime("2023-12-31 00:00")
 
 ## add some time before and after one day to avoid filter effects
 config['temporal_puffer'] = 6*3600 # seconds

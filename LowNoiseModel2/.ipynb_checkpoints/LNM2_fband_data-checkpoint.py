@@ -45,19 +45,20 @@ year = "2023"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2023-09-01", "2024-01-31"
+t1, t2 = "2024-02-01", "2024-03-31"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
 else:
-    names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA"]
+    names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA", "ROMYT"]
 
 ## define dates to ignore
 filter_dates = {"FUR": ["20231106", "20231115"],
-                "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231"],
-                "ROMY": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231"],
+                "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231", "20240108", "20240110"],
+                "ROMY": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231", "20240106", "20240205", "20240206", "20240207"],
                 "ROMYA": [],
                 "DROMY": [],
+                "ROMYT": [],
                }
 
 ## define rejection limits for PSDs
@@ -65,9 +66,9 @@ rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "N": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "E": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]}
                     },
-            "ROMY": {"Z": {"tmean":5e-19, "tmin":1e-23, "flim":[0.002, 0.01]},
-                     "N": {"tmean":5e-19, "tmin":1e-22, "flim":[0.002, 0.01]},
-                     "E": {"tmean":5e-19, "tmin":1e-22, "flim":[0.002, 0.01]}
+            "ROMY": {"Z": {"tmean":5e-19, "tmax":1e-16, "tmin":1e-23, "flim":[0.5, 0.9]},
+                     "N": {"tmean":5e-19, "tmax":1e-16, "tmin":1e-22, "flim":[0.5, 0.9]},
+                     "E": {"tmean":5e-19, "tmax":1e-16, "tmin":1e-22, "flim":[0.5, 0.9]}
                     },
             "FFBI": {"F": {"tmean":1e7, "tmin":1e-7, "flim":[0.001, 1.0]},
                      "O": {"tmean":1e7, "tmin":1e-5, "flim":[0.001, 1.0]},
@@ -172,6 +173,9 @@ for name in names:
 
     elif name == "DROMY":
         comps = ["LAT", "LAN", "LAE"]
+
+    elif name == "ROMYT":
+        comps = ["MAT", "MAN", "MAE"]
 
     elif name == "ROMY":
         # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]

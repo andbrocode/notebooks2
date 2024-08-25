@@ -22,6 +22,8 @@ def __load_beat(tbeg, tend, ring, path_to_data):
         print(" -> empty dataframe!")
         return df
 
+
+    
     ## trim to defined times
     df = df[(df.times_utc >= tbeg) & (df.times_utc < tend)]
 

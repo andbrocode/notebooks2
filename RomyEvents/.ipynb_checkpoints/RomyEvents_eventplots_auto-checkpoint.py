@@ -3,9 +3,8 @@
 
 # # RomyEvents - Automatic Eventplots
 
-# Creates automatic event plots based on catalog 
+# Creates automatic event plots based on catalog
 
-# In[44]:
 
 
 import os
@@ -14,18 +13,18 @@ import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import numpy.ma as ma
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from pprint import pprint
 
-# from functions.request_data import __request_data
 from functions.add_distances_and_backazimuth import __add_distances_and_backazimuth
 
 from andbro__querrySeismoData import __querrySeismoData
+from andbro__read_sds import __read_sds
 
-
-# In[45]:
-
+import warnings
+warnings.filterwarnings('ignore')
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -36,8 +35,6 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
 
-
-# In[46]:
 
 
 def __makeplot(config, st):
@@ -51,7 +48,7 @@ def __makeplot(config, st):
         acc_min, acc_max = -1e-6, 1e-6
 
     try:
-        rot_min, rot_max = -max(abs(st_in.select(station="RLAS")[0].data)), max(abs(st_in.select(station="RLAS")[0].data))
+        rot_min, rot_max = -3*max(abs(st_in.select(station="RLAS")[0].data)), 3*max(abs(st_in.select(station="RLAS")[0].data))
     except:
         rot_min, rot_max = -1e-9, 1e-9
 
@@ -66,7 +63,7 @@ def __makeplot(config, st):
 
         ax[i].legend(loc=1)
 
-        if "FUR" in tr.stats.station:
+        if "FUR" in tr.stats.station or "WET" in tr.stats.station:
             ax[i].set_ylim(acc_min*1.2, acc_max*1.2)
         else:
             ax[i].set_ylim(rot_min*1.2, rot_max*1.2)
@@ -74,7 +71,6 @@ def __makeplot(config, st):
     return fig
 
 
-# In[47]:
 
 
 def __makeplotStreamSpectra2(st, config, fscale=None):
@@ -99,12 +95,8 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
 
     st.sort(keys=['channel'], reverse=True)
 
-    for i, tr in enumerate(st_in):
+    for i, tr in enumerate(tqdm(st_in)):
 
-#         comp_fft = abs(fftpack.fft(tr.data))
-#         ff       = fftpack.fftfreq(comp_fft.size, d=1/tr.stats.sampling_rate)
-#         comp_fft = fftpack.fftshift(comp_fft)
-#         ff, spec = ff[1:len(ff)//2], abs(fftpack.fft(tr.data)[1:len(ff)//2])
 
         if tr.stats.channel[-2] == "J":
             scaling = rot_scaling
@@ -140,7 +132,7 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
         elif fscale == "linlog":
             axes[i,1].semilogy(ff, spec, color='black', lw=1.0)
         else:
-            axes[i,1].plot(ff, spec, color='black', lw=1.0)         
+            axes[i,1].plot(ff, spec, color='black', lw=1.0)
 
 
         if tr.stats.channel[1] == "J":
@@ -150,8 +142,8 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
         else:
             unit = "Amplitude", "a.u."
 
-        axes[i,0].set_ylabel(f'{sym} ({unit})',fontsize=font)    
-        axes[i,1].set_ylabel(f'ASD \n({unit}/Hz)',fontsize=font)        
+        axes[i,0].set_ylabel(f'{sym} ({unit})',fontsize=font)
+        axes[i,1].set_ylabel(f'ASD \n({unit}/Hz)',fontsize=font)
         axes[i,0].legend(loc='upper left',bbox_to_anchor=(0.8, 1.10), framealpha=1.0)
 
 #         axes[i,0].ticklabel_format(axis='y', style='sci', scilimits=(0,0))
@@ -165,9 +157,6 @@ def __makeplotStreamSpectra2(st, config, fscale=None):
 
     del st_in
     return fig
-
-
-# In[48]:
 
 
 def __empty_stream(reference_stream):
@@ -192,8 +181,6 @@ def __empty_stream(reference_stream):
 
 # ## Configurations
 
-# In[49]:
-
 
 config = {}
 
@@ -201,8 +188,7 @@ config = {}
 config['ROMY_lon'] = 11.275501
 config['ROMY_lat'] = 48.162941
 
-
-config['duration'] = 3600*2
+config['duration'] = 3600*3 # in seconds
 
 config['fmin'] = 0.01
 config['fmax'] = 0.1
@@ -216,13 +202,17 @@ config['outpath_data'] = data_path+"romy_events/data/waveforms/"
 
 config['seeds'] = ["BW.ROMY.10.BJZ", "BW.ROMY..BJU", "BW.ROMY..BJV", "BW.ROMY..BJW",
                    "BW.RLAS..BJZ",
-                   "GR.FUR..BHZ", "GR.FUR..BHN", "GR.FUR..BHE"
+                   "GR.FUR..BHZ", "GR.FUR..BHN", "GR.FUR..BHE",
+                   "GR.WET..BHZ", "GR.WET..BHN", "GR.WET..BHE",
                   ]
 
 config['path_to_catalog'] = data_path+"romy_events/data/catalogs/"
 
-config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
+# config['catalog'] = "ROMY_global_catalog_20200101_20231231.pkl"
+config['catalog'] = "ROMY_global_catalog_20190101_20240430.pkl"
 
+# specify output unit of translation
+config['tra_output'] = "ACC"
 
 # ## Load Events
 
@@ -246,18 +236,13 @@ events
 
 # In[53]:
 
-
+## select events for minmal magnitude
 events = events[events.magnitude > 6]
 events
 
 
-# In[ ]:
-
-
-
 
 ## RUN LOOP
-# In[ ]:
 
 
 global errors
@@ -267,8 +252,8 @@ adr_status = []
 
 
 for jj in range(events.shape[0]):
-# for jj, ev in enumerate(events[:1]):
 
+    # specify event number
     num = str(jj).rjust(3, "0")
 
     print(f"\n -> {num} {events.origin.iloc[jj]} ")
@@ -280,50 +265,75 @@ for jj in range(events.shape[0]):
         continue
 
 
-#     ## check if file already exists
-#     filename = config['outpath_figs']+"raw/"+f"{event_name}_raw.png"
-#     if os.path.isfile(filename):
-#         print(f" -> file alread exits for {event_name}")
-#         continue
+    # check if file already exists
+    filename = config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png"
+    if os.path.isfile(filename):
+        print(f" -> file alread exits for {event_name}")
+        continue
 
-    ## configuration adjustments
+    # waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
+    # if os.path.isfile(config['outpath_data']+config['tra_output']+"/"+waveform_filename):
+    #     print(f" -> mseed file alread exits!")
+    #     continue
+
+
+    # configuration adjustments
     config['title'] = f"{num}_{events.origin.iloc[jj]} UTC | M{events.magnitude.iloc[jj]}"
     config['tbeg'] = obs.UTCDateTime(str(events.origin.iloc[jj]))
 
 
-    # ## select appropriate seismometer
-    # if config['tbeg'].date < obs.UTCDateTime("2023-04-01"):
-    #     config['seed_seismometer'] = config['seed_seismometer1']
-    #     config['fmin'], config['fmax'] = 0.01, 18.0
-    # else:
-    #     config['seed_seismometer'] = config['seed_seismometer2']
-    #     config['fmin'], config['fmax'] = 0.01, 80.0
-
-
-    ## same endtime for all
+    # same endtime for all
     config['tend'] = obs.UTCDateTime(events.origin.iloc[jj]) + config['duration']
 
-
+    # prepare stream object
     st0 = obs.Stream()
 
-    for seed in config['seeds']:
+
+    for seed in tqdm(config['seeds']):
 
         if "FUR" in seed:
-            repo = "jane"
+            repo = "online"
+        elif "WET" in seed:
+            repo = "online"
         else:
             repo = "george"
 
+        net, sta, loc, cha = seed.split(".")
+
         try:
-            stx, invx = __querrySeismoData( seed_id=seed,
-                                            starttime=config['tbeg'],
-                                            endtime=config['tend'],
-                                            repository=repo,
-                                            path=None,
-                                            restitute=True,
-                                            detail=None,
-                                            fill_value=None,
-                                          )
-            st0 += stx
+            try:
+                stx, invx = __querrySeismoData(
+                                                seed_id=seed,
+                                                starttime=config['tbeg'],
+                                                endtime=config['tend'],
+                                                repository=repo,
+                                                path=None,
+                                                restitute=False,
+                                                detail=None,
+                                                fill_value=None,
+                                            )
+                if "FUR" in seed or "WET" in seed:
+                    stx = stx.remove_response(invx, output=config['tra_output'].upper())
+                else:
+                    stx = stx.remove_sensitivity(invx)
+
+                st0 += stx
+
+            except:
+                print(f"  -> {repo} failed")
+
+            try:
+                stx = __read_sds(archive_path+"romy_archive/", seed, config['tbeg'], config['tend'])
+
+                # invx = obs.read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/station_{net}_{sta}.xml", format="STATIONXML")
+                invx = obs.read_inventory(root_path+f"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.{net}_{sta}", format="SEED")
+
+                if "J" in cha:
+                    stx = stx.remove_sensitivity(invx)
+
+                st0 += stx
+            except:
+                print(f"  -> archive failed")
 
         except Exception as e:
             print(e)
@@ -331,58 +341,79 @@ for jj in range(events.shape[0]):
             errors.append(f" -> failed to request {seed} for event: {events.origin.iloc[jj]}")
             continue
 
-
+    # ______________________________________________________________
+    # processing data stream
 
     st0 = st0.sort()
 
-    ## processing data stream
+    st0 = st0.merge();
+
+    print(st0)
+
+    # check for masked arrays
+    for tr in st0:
+        arr = tr.data
+        if ma.is_masked(arr):
+            print(f"  -> masked array: {tr.stats.station}.{tr.stats.channel}")
+            tr.data = arr.filled(fill_value=0)
+
     st1 = st0.copy();
     st1 = st1.detrend("linear");
-    st1 = st1.taper(0.1);
+    st1 = st1.taper(0.05);
     st1 = st1.filter("bandpass", freqmin=config['fmin'], freqmax=config['fmax'], corners=4, zerophase=True);
-
-    st0 = st0.merge();
-    st1 = st1.merge();
 
     st0 = st0.trim(config['tbeg'], config['tend']);
     st1 = st1.trim(config['tbeg'], config['tend']);
 
+    st0.sort();
+    st1.sort();
 
-    #st.plot(equal_scale=False);
+    # st.plot(equal_scale=False);
 
-    ## store waveform data
-#     num = str(jj).rjust(3, "0")
-#     waveform_filename = f"ACC/{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-#     st0.write(config['outpath_data']+waveform_filename, format="MSEED");
+    # ______________________________________________________________
+    # store waveform data
+    try:
 
-#     ## store waveform data as vel / rad
-#     waveform_filename = f"VEL/{num}_{str(events.origin[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
-#     st00 = st0.copy()
-#     st00.integrate(method='spline')
-#     st00.write(config['outpath_data']+waveform_filename, format="MSEED");
+        # create subdir
+        if not os.path.isdir(config['outpath_data']+config['tra_output']):
+            os.mkdir(config['outpath_data']+config['tra_output'])
 
+        # prepare filename
+        waveform_filename = f"{num}_{str(events.origin.iloc[jj]).split('.')[0].replace('-','').replace(':','').replace(' ','_')}.mseed"
 
+        # store data
+        st0.write(config['outpath_data']+config['tra_output']+"/"+waveform_filename, format="MSEED");
 
-    ## plotting figures
-    fig1 = st0.plot(equal_scale=False, show=False);
-    fig2 = st1.plot(equal_scale=False, show=False);
+        print(f"  -> stored: {waveform_filename}")
 
-    fig2 = __makeplot(config, st1)
+    except Exception as e:
+        print(f"  -> failed to store waveforms!")
+        print(e)
 
-    ## saving figures
-    fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
-    fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+    # ______________________________________________________________
+    # plotting figures
+    try:
+        fig1 = st0.plot(equal_scale=False, show=False);
+        fig2 = st1.plot(equal_scale=False, show=False);
+
+        fig2 = __makeplot(config, st1)
+
+        # saving figures
+        fig1.savefig(config['outpath_figs']+"raw/"+f"{num}_{event_name}_raw.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_raw.png")
+
+        fig2.savefig(config['outpath_figs']+"filtered/"+f"{num}_{event_name}_filtered.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+        print(f"  -> stored: {num}_{event_name}_filtered.png")
+    except:
+        print(f"  -> failed to store figures!")
 
     gc.collect()
-
-# In[ ]:
 
 
 pprint(errors)
 
-# In[ ]:
-
-# ## Make StatusPlot
+# ______________________________________________________________
+# Make StatusPlot
 
 import matplotlib.colors
 
@@ -397,3 +428,5 @@ ax.set_yticks(np.arange(0, len(config['seeds']))+0.5, labels=config['seeds'])
 ax.set_xlabel("Event No.", fontsize=12)
 
 fig3.savefig(config['outpath_figs']+f"status.png", dpi=150, bbox_inches='tight', pad_inches=0.05)
+
+# End of File

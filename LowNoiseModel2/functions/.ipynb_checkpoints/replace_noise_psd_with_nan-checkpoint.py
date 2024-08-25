@@ -1,11 +1,13 @@
-def __replace_noisy_psds_with_nan(arr, ff=None, threshold_mean=1e-16, flim=[None, None], threshold_min=None, threshold_max=None):
+def __replace_noisy_psds_with_nan(arr, ff, threshold_mean=None, flim=[None, None], threshold_min=None, threshold_max=None):
 
     from numpy import delete, shape, sort, array, ones, nan, nanmean, array, isnan
+
+    arr = array(arr)
 
     idx_min = 0
     idx_max = arr.shape[1]-1
 
-    if flim[0] is not None and flim[1] is not None and ff is not None:
+    if flim[0] is not None and flim[1] is not None:
 
         flim = array(flim)
 
@@ -31,20 +33,23 @@ def __replace_noisy_psds_with_nan(arr, ff=None, threshold_mean=1e-16, flim=[None
             continue
 
         ## appy upper threshold
-        if ff is not None:
+        if threshold_mean is not None:
             if nanmean(arr[ii, idx_min:idx_max]) > threshold_mean:
+                # print("mean threshold")
                 rejected.append(arr[ii, :])
                 arr[ii, :] = ones(shape(arr)[1]) * nan
 
         ## appy minimum threshold
-        if ff is not None and threshold_min is not None:
+        if threshold_min is not None:
             if any(arr[ii, :] < threshold_min):
+                # print("min threshold")
                 rejected.append(arr[ii, :])
                 arr[ii, :] = ones(shape(arr)[1]) * nan
 
         ## appy maximum threshold
-        if ff is not None and threshold_max is not None:
+        if threshold_max is not None:
             if any(arr[ii, :] > threshold_max):
+                # print("max threshold")
                 rejected.append(arr[ii, :])
                 arr[ii, :] = ones(shape(arr)[1]) * nan
 

@@ -22,6 +22,9 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
     config = conf
 
+    kde1_success, kde2_success, kde3_success = False, False, False
+    vel_kde1_success, vel_kde2_success = False, False
+
 #     config['tbeg'] = rot[0].stats.starttime
 #     config['tend'] = rot[0].stats.endtime
 
@@ -97,110 +100,171 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     angles = arange(0, 365, deltaa)
     angles2 = arange(0, 365, 1)
 
-    ## ______________________________________
-    ## Rayleigh
+    # ______________________________________
+    # Rayleigh
+    baz_rayleigh_max, baz_rayleigh_mean, baz_rayleigh_std = nan, nan, nan
     try:
         baz_rayleigh_no_nan = out1['cc_max_y'][~isnan(out1['cc_max_y'])]
         cc_rayleigh_no_nan = out1['cc_max'][~isnan(out1['cc_max'])]
 
-        hist = histogram(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out1['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out1['cc_max_y'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out1['cc_max'], density=True
+                        )
 
         baz_rayleigh_mean = round(average(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan), 0)
         baz_rayleigh_std = sqrt(cov(baz_rayleigh_no_nan, aweights=cc_rayleigh_no_nan))
 
-        kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan)
+        try:
+            kde1 = sts.gaussian_kde(baz_rayleigh_no_nan, weights=cc_rayleigh_no_nan)
+            kde1_success = True
+        except:
+            kde1_success = False
 
-        if len(baz_rayleigh_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_rayleigh_no_nan) > min_num_of_datapoints and kde1_success:
             baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
-        else:
-            baz_rayleigh_max = nan
-
-        ## ______________________________________
-        ## Love
-        baz_love_no_nan = out2['cc_max_y'][~isnan(out2['cc_max_y'])]
-        cc_love_no_nan = out2['cc_max'][~isnan(out2['cc_max'])]
-
-        hist = histogram(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out2['cc_max'], density=True)
-
-        baz_love_mean = round(average(baz_love_no_nan, weights=cc_love_no_nan), 0)
-        baz_love_std = sqrt(cov(baz_love_no_nan, aweights=cc_love_no_nan))
-
-        # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
-        kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
-
-        if len(baz_love_no_nan) > min_num_of_datapoints:
-            baz_love_max = angles2[argmax(kde2.pdf(angles2))]
-        else:
-            baz_love_max = nan
-
-        ## ______________________________________
-        ## Tangent
-        baz_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
-        cc_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
-
-        hist = histogram(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)], weights=out3['ccoef'], density=True)
-
-        baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
-        baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
-
-        kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
-
-        if len(baz_tangent_no_nan) > min_num_of_datapoints:
-            baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
-        else:
-            baz_tangent_max = nan
 
     except Exception as e:
         print(e)
         pass
 
-    ## statistics of velocities
+    # ______________________________________
+    # baz love
+    baz_love_max, baz_love_mean, baz_love_std = nan, nan, nan
+    try:
+        baz_love_no_nan = out2['cc_max_y'][~isnan(out2['cc_max_y'])]
+        cc_love_no_nan = out2['cc_max'][~isnan(out2['cc_max'])]
+
+        # compute histogram
+        hist = histogram(out2['cc_max_y'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out2['cc_max'], density=True
+                        )
+
+        baz_love_mean = round(average(baz_love_no_nan, weights=cc_love_no_nan), 0)
+        baz_love_std = sqrt(cov(baz_love_no_nan, aweights=cc_love_no_nan))
+
+        # baz_love_max = angles[argmax(hist[0])]+deltaa  ## add half of deltaa to be in the bin center
+        try:
+            kde2 = sts.gaussian_kde(baz_love_no_nan, weights=cc_love_no_nan)
+            kde2_success = True
+        except:
+            kde2_success = False
+
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_love_no_nan) > min_num_of_datapoints and kde2_success:
+            baz_love_max = angles2[argmax(kde2.pdf(angles2))]
+
+    except Exception as e:
+        print(e)
+        pass
+
+    # ______________________________________
+    # baz tangent
+    baz_tangent_max, baz_tangent_mean, baz_tangent_std = nan, nan, nan
+    try:
+        baz_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
+        cc_tangent_no_nan = out3['baz_est'][~isnan(out3['ccoef'])]
+
+        # compute histogram
+        hist = histogram(out3['baz_est'], bins=len(angles)-1,
+                         range=[min(angles), max(angles)],
+                         weights=out3['ccoef'], density=True
+                        )
+
+        baz_tangent_mean = round(average(baz_tangent_no_nan, weights=cc_tangent_no_nan), 0)
+        baz_tangent_std = sqrt(cov(baz_tangent_no_nan, aweights=cc_tangent_no_nan))
+
+        try:
+            kde3 = sts.gaussian_kde(baz_tangent_no_nan, weights=cc_tangent_no_nan)
+            kde3_success = True
+        except:
+            kde3_success = False
+
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(baz_tangent_no_nan) > min_num_of_datapoints and kde3_success:
+            baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
+
+    except Exception as e:
+        print(e)
+        pass
+
+    # statistics of velocities
     delta_vel = 200
     velocities = arange(0, 4000, delta_vel)
     velocities_fine = arange(0, 400, 50)
 
 
+    # ______________________________________
+    # Rayleigh velocity
+    vel_rayleigh_mean, vel_rayleigh_std, vel_rayleigh_max = nan, nan, nan
     try:
-        ## Rayleigh
         vel_rayleigh_no_nan, cc_vel_rayleigh_no_nan = zeros(len(out1['vel'])), zeros(len(out1['cc_max']))
         for _k, (_v, _c) in enumerate(zip(out1['vel'], out1['cc_max'])):
             if not isnan(_v) and not isnan(_c):
                 vel_rayleigh_no_nan[_k] = _v
                 cc_vel_rayleigh_no_nan[_k] = _c
 
-        hist = histogram(out1['vel'], bins=len(velocities)-1, range=[min(velocities), max(velocities)], weights=out1['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out1['vel'], bins=len(velocities)-1,
+                         range=[min(velocities), max(velocities)],
+                         weights=out1['cc_max'], density=True
+                        )
 
         vel_rayleigh_mean = round(average(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan), 0)
         vel_rayleigh_std = sqrt(cov(vel_rayleigh_no_nan, aweights=cc_vel_rayleigh_no_nan))
 
-        vel_kde1 = sts.gaussian_kde(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan)
+        try:
+            vel_kde1 = sts.gaussian_kde(vel_rayleigh_no_nan, weights=cc_vel_rayleigh_no_nan)
+            vel_kde1_success = True
+        except:
+            vel_kde1_success = False
 
-        if len(vel_rayleigh_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(vel_rayleigh_no_nan) > min_num_of_datapoints and vel_kde1_success:
             vel_rayleigh_max = velocities_fine[argmax(vel_kde1.pdf(velocities_fine))]
         else:
             vel_rayleigh_max = nan
 
-        ## Love
+    except Exception as e:
+        print(" -> no Rayleigh velocities")
+        print(e)
+        pass
+
+
+    # ______________________________________
+    # Love velocity
+    vel_love_mean, vel_love_std, vel_love_max = nan, nan, nan
+    try:
+
         vel_love_no_nan, cc_vel_love_no_nan = zeros(len(out2['vel'])), zeros(len(out2['cc_max']))
         for _k, (_v, _c) in enumerate(zip(out2['vel'], out2['cc_max'])):
             if not isnan(_v) and not isnan(_c):
                 vel_love_no_nan[_k] = _v
                 cc_vel_love_no_nan[_k] = _c
 
-        hist = histogram(out2['vel'], bins=len(velocities)-1, range=[min(velocities), max(velocities)], weights=out2['cc_max'], density=True)
+        # compute histogram
+        hist = histogram(out2['vel'], bins=len(velocities)-1,
+                         range=[min(velocities), max(velocities)],
+                         weights=out2['cc_max'], density=True
+                        )
 
         vel_love_mean = round(average(vel_love_no_nan, weights=cc_vel_love_no_nan), 0)
         vel_love_std = sqrt(cov(vel_love_no_nan, aweights=cc_vel_love_no_nan))
+        try:
+            vel_kde2 = sts.gaussian_kde(vel_love_no_nan, weights=cc_vel_love_no_nan)
+            vel_kde2_success = True
+        except:
+            vel_kde2_success = False
 
-        vel_kde2 = sts.gaussian_kde(vel_love_no_nan, weights=cc_vel_love_no_nan)
-
-        if len(vel_love_no_nan) > min_num_of_datapoints:
+        # find maximum of KDE if computation successful and more than X values are used
+        if len(vel_love_no_nan) > min_num_of_datapoints and vel_kde2_success:
             vel_love_max = velocities_fine[argmax(vel_kde2.pdf(velocities_fine))]
-        else:
-            vel_love_max = nan
 
     except Exception as e:
-        print("no velocities")
+        print(" -> no Love velocities")
         print(e)
         pass
 
@@ -236,147 +300,156 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         ax7.set_axis_off()
         ax8.set_axis_off()
 
-        for _ax in [ax0, ax1, ax2, ax3, ax4, ax5]:
-            _ax.set_xticklabels([])
+        try:
+            for _ax in [ax0, ax1, ax2, ax3, ax4, ax5]:
+                _ax.set_xticklabels([])
 
-        rot_scaling, rot_unit = 1e9, r"nrad/s"
-        trans_scaling, trans_unit = 1e6, r"$\mu$m/s$^2$"
+            rot_scaling, rot_unit = 1e9, r"nrad/s"
+            trans_scaling, trans_unit = 1e6, r"$\mu$m/s$^2$"
 
-        font = 12
+            font = 12
 
-        hz = acc.select(channel="*HZ")[0]
-        hn = acc.select(channel="*HN")[0]
-        he = acc.select(channel="*HE")[0]
+            hz = acc.select(channel="*HZ")[0]
+            hn = acc.select(channel="*HN")[0]
+            he = acc.select(channel="*HE")[0]
 
-        jz = rot.select(channel="*JZ")[0]
-        jn = rot.select(channel="*JN")[0]
-        je = rot.select(channel="*JE")[0]
+            jz = rot.select(channel="*JZ")[0]
+            jn = rot.select(channel="*JN")[0]
+            je = rot.select(channel="*JE")[0]
 
-        hr, ht = rotate_ne_rt(hn.data, he.data, baz_tangent_max)
-        jr, jt = rotate_ne_rt(jn.data, je.data, baz_tangent_max)
+            hr, ht = rotate_ne_rt(hn.data, he.data, baz_tangent_max)
+            jr, jt = rotate_ne_rt(jn.data, je.data, baz_tangent_max)
 
-        ## reverse polarity of transverse rotation!!
-        jt *= -1
+            ## reverse polarity of transverse rotation!!
+            jt *= -1
 
-        ax0.plot(hz.times(), ht*trans_scaling, 'black', label=f"FUR.BHT")
-        ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"FUR.BHR")
-        ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
+            ax0.plot(hz.times(), ht*trans_scaling, 'black', label=f"FUR.BHT")
+            ax1.plot(hz.times(), hr*trans_scaling, 'black', label=f"FUR.BHR")
+            ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
 
-        ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
-        ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
-        ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+            try:
+                ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
+                ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+                ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+            except:
+                print(f" -> y axes limits failed!")
 
-        ax00 = ax0.twinx()
-        ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
+            ax00 = ax0.twinx()
+            ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
 
-        ax11 = ax1.twinx()
-        ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
+            ax11 = ax1.twinx()
+            ax11.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
 
-        ax22 = ax2.twinx()
-        ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
+            ax22 = ax2.twinx()
+            ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
 
-        ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
-        ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
-        ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+            try:
+                ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
+                ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+                ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+            except:
+                print(f" -> y axes limits failed!")
 
-        cmap = plt.get_cmap("viridis", 10)
+            cmap = plt.get_cmap("viridis", 10)
 
-        ca3 = ax3.scatter(out1['cc_max_t'], out1['cc_max_y'], c=out1['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca3 = ax3.scatter(out1['cc_max_t'], out1['cc_max_y'], c=out1['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
-        ca4 = ax4.scatter(out2['cc_max_t'], out2['cc_max_y'], c=out2['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca4 = ax4.scatter(out2['cc_max_t'], out2['cc_max_y'], c=out2['cc_max'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
-        ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca5 = ax5.scatter(out3['t_win_center'], out3['baz_est'], c=out3['ccoef'], s=50, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
-        ca9 = ax9.scatter(out1['cc_max_t'], out1['vel'], c=out1['cc_max'], marker='s', label="Rayleigh",
-                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
-        ca9 = ax9.scatter(out2['cc_max_t'], out2['vel'], c=out2['cc_max'], marker='^', label="Love",
-                          s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca9 = ax9.scatter(out1['cc_max_t'], out1['vel'], c=out1['cc_max'], marker='s', label="Rayleigh",
+                              s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
+            ca9 = ax9.scatter(out2['cc_max_t'], out2['vel'], c=out2['cc_max'], marker='^', label="Love",
+                              s=30, cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1, zorder=2)
 
-        cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
-        cb3 = plt.colorbar(ca3, ax=ax3, cax=cax3)
-        cb3.set_label("CC-Coeff.", fontsize=font)
+            cax3 = ax3.inset_axes([1.01, 0., 0.02, 1])
+            cb3 = plt.colorbar(ca3, ax=ax3, cax=cax3)
+            cb3.set_label("CC-Coeff.", fontsize=font)
 
-        cax4 = ax4.inset_axes([1.01, 0., 0.02, 1])
-        cb4 = plt.colorbar(ca4, ax=ax4, cax=cax4)
-        cb4.set_label("CC-Coeff.", fontsize=font)
+            cax4 = ax4.inset_axes([1.01, 0., 0.02, 1])
+            cb4 = plt.colorbar(ca4, ax=ax4, cax=cax4)
+            cb4.set_label("CC-Coeff.", fontsize=font)
 
-        cax5 = ax5.inset_axes([1.01, 0., 0.02, 1])
-        cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
-        cb5.set_label("CC-Coeff.", fontsize=font)
+            cax5 = ax5.inset_axes([1.01, 0., 0.02, 1])
+            cb5 = plt.colorbar(ca5, ax=ax5, cax=cax5)
+            cb5.set_label("CC-Coeff.", fontsize=font)
 
-        cax9 = ax9.inset_axes([1.01, 0., 0.02, 1])
-        cb9 = plt.colorbar(ca9, ax=ax9, cax=cax9)
-        cb9.set_label("CC-Coeff.", fontsize=font)
+            cax9 = ax9.inset_axes([1.01, 0., 0.02, 1])
+            cb9 = plt.colorbar(ca9, ax=ax9, cax=cax9)
+            cb9.set_label("CC-Coeff.", fontsize=font)
 
-        ax3.set_ylabel(f"Rayleigh Baz. (°)")
-        ax4.set_ylabel(f"Love Baz. (°)")
-        ax5.set_ylabel(f"CoVar. Baz. (°)")
-        ax9.set_ylabel(f"Phase Velocity (m/s)")
+            ax3.set_ylabel(f"Rayleigh Baz. (°)")
+            ax4.set_ylabel(f"Love Baz. (°)")
+            ax5.set_ylabel(f"CoVar. Baz. (°)")
+            ax9.set_ylabel(f"Phase Velocity (m/s)")
 
-        ax66 = ax6.twinx()
-        ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax66.axhline(baz_rayleigh_max, color="k", ls="--")
-        ax66.set_axis_off()
-        ax66.yaxis.tick_right()
-        ax66.invert_xaxis()
+            ax66 = ax6.twinx()
+            ax66.hist(out1['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out1['cc_max'], orientation="horizontal", density=True, color="grey")
+            if kde1_success:
+                ax66.plot(kde1.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax66.axhline(baz_rayleigh_max, color="k", ls="--")
+            ax66.set_axis_off()
+            ax66.yaxis.tick_right()
+            ax66.invert_xaxis()
 
-        ax77 = ax7.twinx()
-        ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
-        ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax77.axhline(baz_love_max, color="k", ls="--")
-        ax77.set_axis_off()
-        ax77.yaxis.tick_right()
-        ax77.invert_xaxis()
+            ax77 = ax7.twinx()
+            ax77.hist(out2['cc_max_y'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out2['cc_max'], orientation="horizontal", density=True, color="grey")
+            if kde2_success:
+                ax77.plot(kde2.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax77.axhline(baz_love_max, color="k", ls="--")
+            ax77.set_axis_off()
+            ax77.yaxis.tick_right()
+            ax77.invert_xaxis()
 
-        ax88 = ax8.twinx()
-        ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
-                  weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
-        ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
-        ax88.axhline(baz_tangent_max, color="k", ls="--")
-        ax88.set_axis_off()
-        ax88.yaxis.tick_right()
-        ax88.invert_xaxis()
+            ax88 = ax8.twinx()
+            ax88.hist(out3['baz_est'], bins=len(angles)-1, range=[min(angles), max(angles)],
+                      weights=out3['ccoef'], orientation="horizontal", density=True, color="grey")
+            if kde3_success:
+                ax88.plot(kde3.pdf(angles), angles, c="k", lw=2, label='KDE')
+            ax88.axhline(baz_tangent_max, color="k", ls="--")
+            ax88.set_axis_off()
+            ax88.yaxis.tick_right()
+            ax88.invert_xaxis()
 
 
-        ax0.set_yticks(linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax0.get_yticks())))
-        ax00.set_yticks(linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax0.get_yticks())))
+            ax0.set_yticks(linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax0.get_yticks())))
+            ax00.set_yticks(linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax0.get_yticks())))
 
-        ax1.set_yticks(linspace(ax1.get_yticks()[0], ax1.get_yticks()[-1], len(ax1.get_yticks())))
-        ax11.set_yticks(linspace(ax11.get_yticks()[0], ax11.get_yticks()[-1], len(ax1.get_yticks())))
+            ax1.set_yticks(linspace(ax1.get_yticks()[0], ax1.get_yticks()[-1], len(ax1.get_yticks())))
+            ax11.set_yticks(linspace(ax11.get_yticks()[0], ax11.get_yticks()[-1], len(ax1.get_yticks())))
 
-        ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax2.get_yticks())))
-        ax22.set_yticks(linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax2.get_yticks())))
+            ax2.set_yticks(linspace(ax2.get_yticks()[0], ax2.get_yticks()[-1], len(ax2.get_yticks())))
+            ax22.set_yticks(linspace(ax22.get_yticks()[0], ax22.get_yticks()[-1], len(ax2.get_yticks())))
 
-        for _ax in [ax0, ax1, ax2]:
-            _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-            _ax.legend(loc=1)
-            _ax.set_ylabel(f"a ({trans_unit})")
-            _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+            for _ax in [ax0, ax1, ax2]:
+                _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+                _ax.legend(loc=1)
+                _ax.set_ylabel(f"a ({trans_unit})")
+                _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
 
-        for _ax in [ax3 ,ax4, ax5]:
-            _ax.set_ylim(-5, 365)
-            _ax.set_yticks(range(0, 360+60, 60))
-            _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-            _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+            for _ax in [ax3, ax4, ax5]:
+                _ax.set_ylim(-5, 365)
+                _ax.set_yticks(range(0, 360+60, 60))
+                _ax.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+                _ax.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
 
-            # _ax.set_ylabel(f"Baz.(°)")
-            # _ax.plot([t1, t2], ones(2)*out3['baz_theo'], lw=1.5, alpha=0.7, color="k", ls="--", zorder=1)
-            # _ax.fill_between([t1, t2], ones(2)*out3['baz_theo']-10, ones(2)*out3['baz_theo']+10, lw=1.5, alpha=0.5, color="grey", ls="--", zorder=1)
+            for aaxx in [ax00, ax11, ax22]:
+                aaxx.tick_params(axis='y', colors="darkred")
+                aaxx.set_ylabel(f"$\omega$ ({rot_unit})", color="darkred")
+                aaxx.legend(loc=4)
 
-        for aaxx in [ax00, ax11, ax22]:
-            aaxx.tick_params(axis='y', colors="darkred")
-            aaxx.set_ylabel(f"$\omega$ ({rot_unit})", color="darkred")
-            aaxx.legend(loc=4)
+            ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {round(fmin ,3)}-{round(fmax,3)} Hz | T = {config['win_length_sec']} s | CC > {config['cc_thres']} | {config['overlap']} % overlap")
 
-        ax0.set_title(f" {config['tbeg'].date}  {str(config['tbeg'].time).split('.')[0]}-{str(config['tend'].time).split('.')[0]} UTC | f = {round(fmin ,3)}-{round(fmax,3)} Hz | T = {config['win_length_sec']} s | CC > {config['cc_thres']} | {config['overlap']} % overlap")
+            ax9.set_xlabel("Time (s)")
+            ax9.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
+            ax9.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
+            ax9.legend(loc=1, fontsize=font-1)
 
-        ax9.set_xlabel("Time (s)")
-        ax9.grid(which="both", ls=":", alpha=0.7, color="grey", zorder=0)
-        ax9.set_xlim(0, (config['tend']-config['tbeg'])*1.15)
-        ax9.legend(loc=1, fontsize=font-1)
+        except:
+            pass
 
         if plot:
             plt.show();
@@ -415,8 +488,6 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     out['times_relative'] = out1['cc_max_t']
 
     if plot or save:
-        # out['fig1'] = fig1
-        # out['fig2'] = fig2
         out['fig3'] = fig3
 
     return out

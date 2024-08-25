@@ -1,4 +1,4 @@
-def __load_backscatter_data(tbeg, tend, ring, path_to_data):
+def __load_backscatter_data(tbeg, tend, ring, path_to_data, label=""):
 
     from os.path import isfile
     from obspy import UTCDateTime
@@ -6,21 +6,21 @@ def __load_backscatter_data(tbeg, tend, ring, path_to_data):
     from pandas import read_pickle, concat, DataFrame, date_range
 
     t1 = date.fromisoformat(str(UTCDateTime(tbeg).date))
-    t2 = date.fromisoformat(str((UTCDateTime(tend)+86400).date))
+    t2 = date.fromisoformat(str((UTCDateTime(tend)-86400).date))
 
     df = DataFrame()
     for dat in date_range(t1, t2):
-        # print(dat)
+
         dat_str = str(dat)[:10].replace("-", "")
-        file = f"FJ{ring}_{dat_str}_backscatter.pkl"
+        file = f"FJ{ring}_{dat_str}_backscatter{label}.pkl"
 
         if not isfile(path_to_data+file):
-            _path = path_to_data+"sagnac_frequency/data/"
+            _path = "/".join(path_to_data.split("/")[:-2])+"/"
 
             out = DataFrame()
             for m in range(24):
                 hour = str(m).rjust(2, '0')+":00:00"
-                filename = f"FJU_{dat_str}_{hour}_backscatter.pkl"
+                filename = f"FJ{ring}_{dat_str}_{hour}_backscatter{label}.pkl"
                 try:
                     _df = read_pickle(_path+filename)
                     out = concat([out, _df])
@@ -29,8 +29,8 @@ def __load_backscatter_data(tbeg, tend, ring, path_to_data):
                     continue
 
             if not out.empty:
-                print(f" -> write to: {_path}backscatter/FJU_{dat_str}_backscatter.pkl")
-                out.to_pickle(f"{_path}backscatter/FJU_{dat_str}_backscatter.pkl")
+                print(f" -> write to: {_path}backscatter/FJ{ring}_{dat_str}_backscatter{label}.pkl")
+                out.to_pickle(f"{_path}backscatter/FJ{ring}_{dat_str}_backscatter{label}.pkl")
             else:
                 continue
 

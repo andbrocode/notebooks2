@@ -39,4 +39,4 @@ def __get_fft(signal_in, dt, window=None):
     # phase = imag(spectrum)
 
     ## return the positive frequencies
-    return frequencies[0:n//2], magnitude[0:n//2], phase[0:n//2]
+    return  magnitude[0:n//2], frequencies[0:n//2], phase[0:n//2]
