@@ -8,14 +8,11 @@ def __smooth(y, npts, win="hanning", setpad=True):
         win = ones(npts)
 
     if setpad:
-        y = pad(y, npts)
+        y = pad(y, npts, mode="edge")
 
     y_smooth = convolve(y, win/sum(win), mode='same')
 
     if setpad:
         y_smooth = y_smooth[npts:-npts]
-
-    y_smooth[:npts//2] = nan
-    y_smooth[-npts//2:] = nan
 
     return y_smooth
