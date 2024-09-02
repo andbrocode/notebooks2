@@ -67,11 +67,11 @@ def __makeplotStream_velocities(rot, acc, fmin, fmax, baz, overlap=0.5, cc_thres
     acc_n = acc00.select(channel="*N")[0].data
     acc_e = acc00.select(channel="*E")[0].data
 
-    Nrow, Ncol = 2, 1
+    Nrow, Ncol = 4, 1
 
     font = 12
 
-    fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 5), sharex=True)
+    fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 7), sharex=True)
 
     plt.subplots_adjust(hspace=0.1)
 
@@ -85,67 +85,80 @@ def __makeplotStream_velocities(rot, acc, fmin, fmax, baz, overlap=0.5, cc_thres
         ax[0].plot(np.array(range(len(rot_z)))/df, rot_z/max(abs(rot_z)), alpha=1, color="black", label="$\Omega_Z$ (rad/s)")
 
     ax[0].plot(np.array(range(len(acc_t)))/df, acc_t/max(abs(acc_t)), alpha=1, color="tab:red", label=r"$a_T$ (m/s$^2$)")
+    ax[2].plot(np.array(range(len(rot_t)))/df, rot_t/max(abs(rot_t)), alpha=1, color="black", label="$\Omega_T$ (rad/s)")
 
-    ax[1].plot(np.array(range(len(rot_t)))/df, rot_t/max(abs(rot_t)), alpha=1, color="black", label="$\Omega_T$ (rad/s)")
     if reverse_accZ:
-        ax[1].plot(np.array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=1, color="tab:red", label=r"-1*$a_Z$ (m/s$^2$)")
+        ax[2].plot(np.array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=1, color="tab:red", label=r"-1x $a_Z$ (m/s$^2$)")
     else:
-        ax[1].plot(np.array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=1, color="tab:red", label=r"$a_Z$ (m/s$^2$)")
+        ax[2].plot(np.array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=1, color="tab:red", label=r"$a_Z$ (m/s$^2$)")
 
 
     ## velocity axis
-    ax0 = ax[0].twinx()
-    caa = ax0.scatter(out1['time'], out1['velocity'], c=out1['ccoef'], s=50,
-                      cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1,
-                      label="phase velocity", zorder=2,
-                     )
+    caa = ax[1].scatter(out1['time'], out1['velocity'], c=out1['ccoef'], s=50,
+                        cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1,
+                        label="phase velocity", zorder=2,
+                        )
 
-    ax0.errorbar(out1['time'], out1['velocity'], xerr=out1['terr'], yerr=None,
+    ax[1].errorbar(out1['time'], out1['velocity'], xerr=out1['terr'], yerr=None,
                  zorder=1, color="black", alpha=0.4, marker='o', markersize=2, ls="None",
                 )
 
-    ax0.set_ylabel(f"Love Phase \n Velocity (m/s)", fontsize=font)
-    ax0.set_ylim(bottom=0)
-    ax0.set_yticks(np.linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax[0].get_yticks())))
-    ax0.legend(loc=4, fontsize=font-2)
+    ax[1].set_ylabel(f"Love Phase \n Velocity (m/s)", fontsize=font)
+    ax[1].set_ylim(bottom=0)
+    # ax[1].set_yticks(np.linspace(ax0.get_yticks()[0], ax0.get_yticks()[-1], len(ax[0].get_yticks())))
+    ax[1].legend(loc=4, fontsize=font-2)
 
-    cbar = plt.colorbar(caa, pad=0.08)
-    cbar.set_label("CC-Coefficient", fontsize=font)
-    # cbar.set_clip_on(False)
+    # cbar = plt.colorbar(caa, pad=0.08)
+    # cbar.set_label("CC-Coefficient", fontsize=font)
+    # # cbar.set_clip_on(False)
 
-    ax1 = ax[1].twinx()
-    caa = ax1.scatter(out2['time'], out2['velocity'], c=out2['ccoef'], s=50,
-                      cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1,
-                      label="phase velocity", zorder=2,
-                     )
+    caa = ax[3].scatter(out2['time'], out2['velocity'], c=out2['ccoef'], s=50,
+                        cmap=cmap, edgecolors="k", lw=1, vmin=0, vmax=1,
+                        label="phase velocity", zorder=2,
+                       )
 
-    ax1.errorbar(out2['time'], out2['velocity'], xerr=out2['terr'], yerr=None,
+    ax[3].errorbar(out2['time'], out2['velocity'], xerr=out2['terr'], yerr=None,
                  zorder=1, color="black", alpha=0.4, marker='o', markersize=2, ls="None",
                 )
 
-    ax1.set_ylabel(f" Rayleigh Phase \n Velocity (m/s)", fontsize=font)
-    ax1.set_ylim(bottom=0)
-    ax1.set_yticks(np.linspace(ax1.get_yticks()[0], ax1.get_yticks()[-1], len(ax[1].get_yticks())))
-    ax1.legend(loc=4, fontsize=font-2)
+    ax[3].set_ylabel(f" Rayleigh Phase \n Velocity (m/s)", fontsize=font)
+    ax[3].set_ylim(bottom=0)
+    # ax[3].set_yticks(np.linspace(ax[3].get_yticks()[0], ax[3].get_yticks()[-1], len(ax[1].get_yticks())))
+    ax[3].legend(loc=4, fontsize=font-2)
 
-    cbar = plt.colorbar(caa, pad=0.08)
-    cbar.set_label("CC-Coefficient", fontsize=font)
-    # cbar.set_clip_on(False)
+    # cbar = plt.colorbar(caa, pad=0.08)
+    # cbar.set_label("CC-Coefficient", fontsize=font)
+    # # cbar.set_clip_on(False)
+
+    # add colorbar
+    cbar_ax = fig.add_axes([0.91, 0.11, 0.021, 0.77]) #[left, bottom, width, height]
+    cb = plt.colorbar(caa, cax=cbar_ax)
+    cb.set_label("CC-Coefficient", fontsize=font, labelpad=5, color="k")
 
 
     for _n in range(Nrow):
         ax[_n].grid(ls=":", zorder=0)
-        ax[_n].legend(loc=1)
+        ax[_n].legend(loc=1, ncol=2)
         ax[_n].set_xlim(0, len(rot_z)/df)
-        ax[_n].set_ylim(-1, 1)
 
-    ax[0].set_ylabel("norm. Amplitude", fontsize=font)
-    ax[1].set_ylabel("norm. Amplitude", fontsize=font)
+    ax[1].set_ylim(0, 4000)
+    ax[3].set_ylim(0, 4000)
 
-    ax[1].set_xlabel("Time (s)", fontsize=font)
+    ax[0].set_ylim(-1.1, 1.1)
+    ax[2].set_ylim(-1.1, 1.1)
+
+    ax[0].set_ylabel(f"norm.\nAmplitude", fontsize=font)
+    ax[2].set_ylabel(f"norm.\nAmplitude", fontsize=font)
+
+    ax[3].set_xlabel("Time (s)", fontsize=font)
 
     title_str = f"f = {fmin}-{fmax} Hz | T = {twin} s | Overlap = {int(overlap*100)}% | CC > {cc_threshold}"
     ax[0].set_title(title_str, fontsize=font+1)
+
+    for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)']):
+        ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
+
+
 
     plt.show();
     return fig

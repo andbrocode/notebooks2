@@ -25,13 +25,11 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
     else:
         acc_z = acc0.select(channel="*Z")[0].data
 
-
     ## define windows
     n, windows = 0, []
     while n < npts-n_win:
         windows.append((n, n+n_win))
         n += n_win
-
 
     ## add overlap
     if overlap != 0:
@@ -80,14 +78,16 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
         # corr_baz = corrcoef(acc_z[w1:w2], rot_t)[0][1]
         corr_baz = correlate(acc_z[w1:w2], rot_t, 0, 'auto')[0]
 
-        if (corr_baz > 0): ## original
+#         if (corr_baz > 0): ## original
+#             baz0 += 180
+
+        if (corr_baz < 0): ## original
             baz0 += 180
 
         ## add new values to array
         if abs(corr_baz) > cc_thres:
             baz[j] = baz0
             ccor[j] = abs(corr_baz)
-
 
     ## define time axis
     t1 = array([w1/df for (w1, w2) in windows_overlap])
@@ -98,7 +98,6 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
     win_center = array([(((w2-w1)/2)+w1) for (w1, w2) in windows_overlap])
     t_win_center = win_center/df
-
 
     ## Plotting
     if plot:
@@ -111,7 +110,6 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
 
         ax.plot(array(range(len(rot0_t)))/df, rot0_t/max(abs(rot0_t)), alpha=1, color="grey", label="rotation rate T (rad/s)")
         ax.plot(array(range(len(acc_z)))/df, acc_z/max(abs(acc_z)), alpha=0.5, color="tab:red", label=r"acceleration Z (m/s$^2$)")
-
 
         ax.set_ylim(-1, 1)
         # ax.set_xlim(0, len(rot0_t)/df)

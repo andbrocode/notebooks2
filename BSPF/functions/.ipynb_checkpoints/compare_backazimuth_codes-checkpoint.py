@@ -24,8 +24,8 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
     config['eventtime'] = UTCDateTime(cat_event.origins[0].time)
 
     ## specify coordinates of station
-    config['station_longitude'] =  -116.455439
-    config['station_latitude']  = 33.6106
+    config['station_longitude'] = -116.455439
+    config['station_latitude'] = 33.6106
 
     ## specify window length for baz estimation in seconds
     config['win_length_sec'] = Twin
@@ -89,8 +89,6 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
         for ii, _cc in enumerate(out3['ccoef']):
             if abs(_cc) <= cc_thres:
                 out3['ccoef'][ii], out3['baz_est'][ii] = nan, nan
-
-
 
     ## compute statistics
     deltaa = 10
@@ -302,7 +300,6 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
         plt.show();
 
-
     ## prepare output directory
     out = {}
     out['baz_theo'] = round(out2['baz_theo'], 0)
@@ -316,7 +313,6 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
     out['baz_love_max'] = baz_love_max
     out['baz_love_mean'] = baz_love_mean
     out['baz_love_std'] = baz_love_std
-
 
     if plot:
         # out['fig1'] = fig1
