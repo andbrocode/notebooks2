@@ -2,6 +2,7 @@
 
 import os
 import sys
+import pprint
 import obspy as obs
 import matplotlib.pyplot as plt
 import numpy as np
@@ -59,7 +60,10 @@ def __store_as_pickle(obj, filename):
 config = {}
 
 # set what rotation to use:  ROMY | ADR | FUR
-config['rot'] = "FUR"
+config['rot'] = "ROMY"
+
+# sec location code
+config['loc'] = "40" # 30 | 40
 
 # output path for figures
 config['path_to_figs'] = data_path+f"romy_baro/outfigs/{config['rot'].upper()}/"
@@ -97,6 +101,9 @@ config['interval_overlap'] = 1800 # 3600
 # _____________________________________________________
 
 def main(config):
+
+    print("\n______________________________________")
+    pprint.pp(config)
 
     # store config file
     __store_as_pickle(config, config['path_to_out_data']+"config.conf")
@@ -137,14 +144,14 @@ def main(config):
 
     arr_t1, arr_t2 = np.zeros(len(times)), np.zeros(len(times))
 
-    print(config['tbeg'].date)
-
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
         # print(t1, t2)
 
         arr_t1[_n] = t1
         arr_t2[_n] = t2
+
+        t_str = f"{str(t1.time)[:10]}_{str(t2.time)[:10]}"
 
         stop = False
 
@@ -157,12 +164,12 @@ def main(config):
             if config['rot'].upper() == "ROMY":
                 # load ROMY data
 
-                st0 += __read_sds(config['path_to_sds_romy'], "BW.ROMY.30.BJZ", t1-config['tbuffer'], t2+config['tbuffer'])
-                st0 += __read_sds(config['path_to_sds_romy'], "BW.ROMY.30.BJN", t1-config['tbuffer'], t2+config['tbuffer'])
-                st0 += __read_sds(config['path_to_sds_romy'], "BW.ROMY.30.BJE", t1-config['tbuffer'], t2+config['tbuffer'])
+                st0 += __read_sds(config['path_to_sds_romy'], f"BW.ROMY.{config['loc']}.BJZ", t1-config['tbuffer'], t2+config['tbuffer'])
+                st0 += __read_sds(config['path_to_sds_romy'], f"BW.ROMY.{config['loc']}.BJN", t1-config['tbuffer'], t2+config['tbuffer'])
+                st0 += __read_sds(config['path_to_sds_romy'], f"BW.ROMY.{config['loc']}.BJE", t1-config['tbuffer'], t2+config['tbuffer'])
 
-                st0 = st0.decimate(2, no_filter=True)
-                st0 = st0.decimate(10, no_filter=True)
+                st0 = st0.decimate(2, no_filter=False)
+                st0 = st0.decimate(10, no_filter=False)
 
             # !! not in ADR frequency range...
 #             elif config['rot'].upper() == "ADR":
@@ -181,7 +188,7 @@ def main(config):
 
                 st0 = st0.remove_response(inv_fur, output="ACC")
 
-                #resample from 20 Hz to 1 Hz to match FFBI
+                # resample from 20 Hz to 1 Hz to match FFBI
                 st0 = st0.decimate(4, no_filter=False)
                 st0 = st0.decimate(5, no_filter=False)
 
@@ -192,17 +199,12 @@ def main(config):
             # check if any is masked
             if len(st0) > 3:
                 print(f" -> masked array(s)")
+                for _c in ["Z", "N", "E"]:
+                    if len(st0.select(channel=f"*{_c}")) > 1:
+                        print(f"  -> {_c} masked")
                 stop = True
             else:
                 stop = False
-
-#             for tr in st0:
-#                 if np.ma.isMaskedArray(tr.data):
-#                     print(f" -> masked array: {tr.stats.channel}")
-#                     stop = True
-#                     continue
-#                 else:
-#                     stop = False
 
             status.append(stop)
 
@@ -215,6 +217,9 @@ def main(config):
 
             # st0 = st0.merge(fill_value="interpolate")
             st0 = st0.merge(fill_value=0)
+
+            # st0 = st0._trim_common_channels()
+            # st0 = st0._rtrim(t2)
 
             # print(st0)
             # st0.plot();
@@ -267,14 +272,6 @@ def main(config):
 
             # stt.plot(equal_scale=False)
 
-            # del st0, til1, ffbi0
-
-            # resample to 1 Hz
-            # stt = stt.decimate(2, no_filter=False)
-            # stt = stt.decimate(5, no_filter=False)
-            # stt = stt.resample(10.0, no_filter=True)
-            # stt = stt.resample(1.0, no_filter=True)
-
             # stt += promy.copy()
             # stt += rmy.copy()
 
@@ -289,12 +286,6 @@ def main(config):
 
             stt = stt.trim(t1, t2, nearest_sample=False)
 
-            # # downsample to LJ*
-            # for tr in stt:
-            #     if "J" in tr.stats.channel:
-            #         tr = tr.decimate(2, no_filter=True)
-            #         tr = tr.decimate(10, no_filter=True)
-
             # stt.plot(equal_scale=False);
 
             stt = stt.taper(0.05, type="cosine")
@@ -302,9 +293,8 @@ def main(config):
             # check if all data for this period is there
             if len(stt) != 5:
                 print(f" -> missing data")
-                print(stt)
                 stop = True
-                # continue
+                continue
 
             # check if data has same length
             Nexpected = int((t2 - t1)*stt[0].stats.sampling_rate)
@@ -314,6 +304,14 @@ def main(config):
                     tr.data = tr.data[:Nexpected]
                     # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
+            print(stt)
+
+        except Exception as e:
+            print(" -> loading data failed")
+            print(e)
+            stop = True
+
+        try:
             # prepare arrays
             arrHP = np.imag(hilbert(stt.select(component="O")[0].data))
             arrPP = stt.select(component="O")[0].data
@@ -399,7 +397,6 @@ def main(config):
             print(" -> processing failed")
             print(e)
             stop = True
-            # continue
 
         # ___________________________________________________________
         # perform multi-variant regression
@@ -417,7 +414,7 @@ def main(config):
 
             for c in ["N", "E", "Z"]:
                 if config['rot'] == "ROMY":
-                    dff[c] = stt.select(station="ROMY", location="30", channel=f"*{c}")[0].data
+                    dff[c] = stt.select(station="ROMY", location=config['loc'], channel=f"*{c}")[0].data
                 elif config['rot'] == "FUR":
                     dff[c] = stt.select(station="FUR", location="", channel=f"*{c}")[0].data
 
@@ -498,13 +495,13 @@ def main(config):
 
         # check if stop is required
         if stop:
-            # del stt
             continue
 
         # ___________________________________________________________
         # plotting
-        
-        if _n == 1:
+
+        # if _n == 1:
+        if True:
             try:
 
                 Nrow, Ncol = 6, 1
@@ -560,15 +557,18 @@ def main(config):
 
                 ax[0].set_title(f" {t1.date} {str(t1.time).split('.')[0]} - {str(t2.time).split('.')[0]} UTC  |  f = {config['fmin']*1e3} - {config['fmax']*1e3} mHz", fontsize=font)
 
-
                 for i in range(Nrow):
                     ax[i].legend(loc=1, ncol=2)
 
                 for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)']):
                     ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
 
-                fig.savefig(config['path_to_figs']+f"RB_{config['tbeg'].date}_waveforms_corrected.png",
-                            format="png", dpi=150, bbox_inches='tight')
+                dir_name = f"{config['tbeg'].date.year}_{str(config['tbeg'].date.month).rjust(2, '0')}"
+                if not os.path.isdir(config['path_to_figs']+dir_name):
+                    os.mkdir(config['path_to_figs']+dir_name)
+
+                fig.savefig(config['path_to_figs']+dir_name+"/"+f"RB_{config['tbeg'].date}_{t_str}_waveforms_corrected.png",
+                            format="png", dpi=100, bbox_inches='tight')
 
             except Exception as e:
                 print(" -> plotting failed")
