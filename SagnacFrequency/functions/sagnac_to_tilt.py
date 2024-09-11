@@ -1,6 +1,6 @@
 def __sagnac_to_tilt(data=None, ring="Z", tilt="n-s"):
 
-    from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array
+    from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
     # angle in horizontal plane
     h_rot = {"Z":0, "U":0, "V":60, "W":60}
@@ -61,6 +61,9 @@ def __sagnac_to_tilt(data=None, ring="Z", tilt="n-s"):
             out = ( (data /S /omegaE[2]) - term1 - term2 ) / fz
         elif tilt == "e-w":
             out = ( (data /S /omegaE[2]) - term1 - term2 ) / fa
-
+        elif tilt == "rad_to_hz":
+            out = zeros(len(data))
+            for n in range(len(data)):
+                out[n] = S * ( (omegaE + data[n]) @ ( D @ (R @ nx) ) )
 
     return out
