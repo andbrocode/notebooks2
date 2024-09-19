@@ -15,30 +15,30 @@ from functions.compute_beamforming_ROMY import __compute_beamforming_ROMY
 from functions.compute_backazimuth_and_velocity_noise import __compute_backazimuth_and_velocity_noise
 from functions.load_lxx import __load_lxx
 
-from andbro__read_sds import __read_sds
-from andbro__save_to_pickle import __save_to_pickle
+from functions import __read_sds
 
-## ---------------------------------------
-
+# ______________________________________________________
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
+    lamont_path = '/home/andbro/lamont/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 
-
-## ---------------------------------------
+# ______________________________________________________
 
 config = {}
 
@@ -48,6 +48,9 @@ config = {}
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
+else:
+    print(f" -> missing date argument (e.g. 2024-09-01)!")
+    sys.exit()
 
 # config['tbeg'] = UTCDateTime("2023-09-20 21:00")
 # config['tend'] = UTCDateTime("2023-09-20 22:00")
@@ -63,7 +66,7 @@ config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
 config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
-## set maximum number of MLTI in time interval. Otherwise skip interval.
+# set maximum number of MLTI in time interval. Otherwise skip interval.
 config['num_mlti'] = 3
 
 config['fmin'], config['fmax'] = 1/10, 1/7
@@ -79,8 +82,7 @@ config['window_length_sec'] = 2/config['fmin']
 
 config['sps'] = 20 # Hz
 
-
-## ---------------------------------------
+# ______________________________________________________
 
 def __load_mlti(tbeg, tend, ring, path_to_archive):
 
@@ -121,58 +123,66 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
 def main(config):
 
+    # prepare time intervals for loop
     times = __get_time_intervals(config['tbeg'],
                                  config['tend'],
                                  interval_seconds=config['interval_seconds'],
                                  interval_overlap=config['interval_overlap']
                                 )
 
-    baz_tangent = []
-    baz_rayleigh = []
-    baz_love = []
+    # set sample size
+    NN = len(times)
 
-    baz_tangent_std = []
-    baz_rayleigh_std = []
-    baz_love_std = []
+    # prepare dummy trace
+    dummy_size = 90
+    nan_dummy = np.ones(dummy_size)*np.nan
 
-    baz_tangent_all = []
-    baz_rayleigh_all = []
-    baz_love_all = []
-    baz_bf_all = []
+    # prepare arrays
+    baz_tangent = np.ones(NN)*np.nan
+    baz_rayleigh = np.ones(NN)*np.nan
+    baz_love = np.ones(NN)*np.nan
 
-    cc_tangent_all = []
-    cc_rayleigh_all = []
-    cc_love_all = []
+    baz_tangent_std = np.ones(NN)*np.nan
+    baz_rayleigh_std = np.ones(NN)*np.nan
+    baz_love_std = np.ones(NN)*np.nan
 
-    vel_love_max = []
-    vel_love_std = []
-    vel_rayleigh_max = []
-    vel_rayleigh_std = []
+    baz_tangent_all = np.ones([NN, dummy_size])*np.nan
+    baz_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    baz_love_all = np.ones([NN, dummy_size])*np.nan
+    baz_bf_all = np.ones([NN, dummy_size])*np.nan
 
-    vel_rayleigh_all = []
-    vel_love_all = []
-    vel_bf_all = []
+    cc_tangent_all = np.ones([NN, dummy_size])*np.nan
+    cc_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    cc_love_all = np.ones([NN, dummy_size])*np.nan
 
-    times_relative = []
-    times_all = []
+    vel_love_max = np.ones(NN)*np.nan
+    vel_love_std = np.ones(NN)*np.nan
+    vel_rayleigh_max = np.ones(NN)*np.nan
+    vel_rayleigh_std = np.ones(NN)*np.nan
 
-    baz_bf = []
-    baz_bf_std = []
+    vel_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    vel_love_all = np.ones([NN, dummy_size])*np.nan
+    vel_bf_all = np.ones([NN, dummy_size])*np.nan
 
-    vel_bf = []
-    time_bf = []
+    times_relative = np.ones([NN, dummy_size])*np.nan
+    times_all = np.ones([NN, dummy_size])*np.nan
 
-    ttime = []
-    ttime_bf = []
+    baz_bf = np.ones(NN)*np.nan
+    baz_bf_std = np.ones(NN)*np.nan
 
-    num_stations_used = []
+    vel_bf = np.ones(NN)*np.nan
+    time_bf = np.ones(NN)*np.nan
+
+    ttime = np.ones(NN)*np.nan
+    ttime_bf = np.ones(NN)*np.nan
+
+    num_stations_used = np.ones(NN)*np.nan
 
     # prepare status variable
     status = np.zeros((2, len(times)))
 
-    # prepare dummy trace
-    nan_dummy = np.ones(90)*np.nan
 
+    # ______________________________________________________
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
     # for _n, (t1, t2) in enumerate(times):
@@ -235,7 +245,6 @@ def main(config):
                     tr.data = tr.data[:Nexpected]
                     # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
-
             # get amplitude levels
             levels = {}
             for tr in st1:
@@ -250,7 +259,8 @@ def main(config):
             print(e)
             pass
 
-    # ---------------------------------------
+        # ______________________________________________________
+        # pre-processing
 
         try:
             st1 = st1.detrend("linear");
@@ -271,7 +281,6 @@ def main(config):
             print(f" -> processing failed !")
             pass
 
-
         # check if data is all zero
         for tr in rot:
             if np.count_nonzero(tr.data) == 0:
@@ -280,9 +289,8 @@ def main(config):
             if np.count_nonzero(tr.data) == 0:
                 print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
-
-
-        # ---------------------------------------
+        # ______________________________________________________
+        # configurations
 
         conf = {}
 
@@ -307,6 +315,9 @@ def main(config):
 
         conf['cc_thres'] = config['cc_threshold']
 
+        # ______________________________________________________
+        # compute backatzimuths
+
         try:
             print(f"\ncompute backazimuth estimation ...")
             out = __compute_backazimuth_and_velocity_noise(conf, rot, acc,
@@ -323,6 +334,8 @@ def main(config):
             baz_computed = False
             print(e)
 
+        # ______________________________________________________
+        # check for MTLI launches
 
         try:
             print(f"\ncheckup for MLTI ...")
@@ -355,8 +368,9 @@ def main(config):
             print(f" -> chekup failed!")
             print(e)
 
-
+        # ______________________________________________________
         # compute beamforming for array
+
         try:
             print(f"\ncompute beamforming ...")
 
@@ -373,7 +387,7 @@ def main(config):
 
 
 
-            ## change status to success
+            # change status to success
             status[1, _n] = 1
             bf_computed = True
 
@@ -382,96 +396,86 @@ def main(config):
             bf_computed = False
             print(e)
 
+        # ______________________________________________________
+        # assign values to arrays
 
-        # assign values
-        ttime.append(t1)
+        # always assign time values
+        ttime[_n] = t1
+        ttime_bf[_n] = t1
+
+        print(out)
 
         if baz_computed:
-            baz_tangent.append(out['baz_tangent_max'])
-            baz_tangent_std.append(out['baz_tangent_std'])
-            baz_tangent_all.append(out['baz_tangent_all'])
+            baz_tangent[_n] = out['baz_tangent_max']
+            baz_tangent_std[_n] = out['baz_tangent_std']
 
-            baz_rayleigh.append(out['baz_rayleigh_max'])
-            baz_rayleigh_std.append(out['baz_rayleigh_std'])
-            baz_rayleigh_all.append(out['baz_rayleigh_all'])
+            baz_rayleigh[_n] = out['baz_rayleigh_max']
+            baz_rayleigh_std[_n] = out['baz_rayleigh_std']
 
-            vel_rayleigh_max.append(out['vel_rayleigh_max'])
-            vel_rayleigh_std.append(out['vel_rayleigh_std'])
-            vel_rayleigh_all.append(out['vel_rayleigh_all'])
+            vel_rayleigh_max[_n] = out['vel_rayleigh_max']
+            vel_rayleigh_std[_n] = out['vel_rayleigh_std']
 
-            cc_rayleigh_all.append(out['cc_rayleigh_all'])
-            cc_tangent_all.append(out['cc_tangent_all'])
+            baz_love[_n] = out['baz_love_max']
+            baz_love_std[_n] = out['baz_love_std']
 
-            baz_love.append(out['baz_love_max'])
-            baz_love_std.append(out['baz_love_std'])
+            vel_love_max[_n] = out['vel_love_max']
+            vel_love_std[_n] = out['vel_love_std']
 
-            baz_love_all.append(out['baz_love_all'])
+            baz_love_all[_n] = out['baz_love_all']
+            baz_rayleigh_all[_n] = out['baz_rayleigh_all']
+            baz_tangent_all[_n] = out['baz_tangent_all']
 
-            vel_love_max.append(out['vel_love_max'])
-            vel_love_std.append(out['vel_love_std'])
-            vel_love_all.append(out['vel_love_all'])
+            vel_love_all[_n] = out['vel_love_all']
+            vel_rayleigh_all[_n] = out['vel_rayleigh_all']
 
-            cc_love_all.append(out['cc_love_all'])
+            cc_tangent_all[_n] = out['cc_tangent_all']
+            cc_love_all[_n] = out['cc_love_all']
+            cc_rayleigh_all[_n] = out['cc_rayleigh_all']
 
-            times_relative.append(out['times_relative'])
+            times_relative[_n] = out['times_relative']
+
             times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-            times_all.append(times_absolute)
+            times_all[_n] = times_absolute
 
-        else:
-            baz_tangent.append(np.nan)
-            baz_rayleigh.append(np.nan)
-            baz_love.append(np.nan)
+#         else:
 
-            baz_tangent_std.append(np.nan)
-            baz_rayleigh_std.append(np.nan)
-            baz_love_std.append(np.nan)
+#             baz_tangent_all.append(nan_dummy)
+#             baz_rayleigh_all.append(nan_dummy)
+#             baz_love_all.append(nan_dummy)
 
-            vel_love_max.append(np.nan)
-            vel_love_std.append(np.nan)
-            vel_rayleigh_max.append(np.nan)
-            vel_rayleigh_std.append(np.nan)
+#             cc_tangent_all.append(nan_dummy)
+#             cc_rayleigh_all.append(nan_dummy)
+#             cc_love_all.append(nan_dummy)
 
-            baz_tangent_all.append(nan_dummy)
-            baz_rayleigh_all.append(nan_dummy)
-            baz_love_all.append(nan_dummy)
+#             vel_rayleigh_all.append(nan_dummy)
+#             vel_love_all.append(nan_dummy)
 
-            cc_tangent_all.append(nan_dummy)
-            cc_rayleigh_all.append(nan_dummy)
-            cc_love_all.append(nan_dummy)
-
-            vel_rayleigh_all.append(nan_dummy)
-            vel_love_all.append(nan_dummy)
-
-            times_relative.append(nan_dummy)
-            times_all.append(nan_dummy)
-
-        ttime_bf.append(t1)
+#             times_relative.append(nan_dummy)
+#             times_all.append(nan_dummy)
 
         if bf_computed:
 
-            baz_bf.append(out_bf['baz_bf_max'])
-            baz_bf_std.append(out_bf['baz_bf_std'])
-            vel_bf_all.append(out_bf['slow'])
-            baz_bf_all.append(out_bf['baz'])
+            baz_bf[_n] = out_bf['baz_bf_max']
+            baz_bf_std[_n] = out_bf['baz_bf_std']
+            vel_bf_all[_n] = out_bf['slow']
+            baz_bf_all[_n] = out_bf['baz']
 
             times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
-            time_bf.append(times_abs)
+            time_bf[_n] = times_abs
 
-            num_stations_used.append(out_bf['num_stations_used'])
+            num_stations_used[_n] = out_bf['num_stations_used']
 
-        else:
-            baz_bf.append(np.nan)
-            baz_bf_std.append(np.nan)
-            vel_bf_all.append(np.nan)
-            time_bf.append(np.nan)
-            baz_bf_all.append(np.nan)
+#         else:
+#             vel_bf_all.append(nan_dummy)
+#             baz_bf_all.append(nan_dummy)
 
-            num_stations_used.append(np.nan)
+#             num_stations_used.append(np.nan)
 
         # print(len(ttime), len(baz_bf))
 
+        # ______________________________________________________
+        # store plots
 
-        # store plot
         try:
             print(f"\ncreate plot ...")
 
@@ -486,6 +490,7 @@ def main(config):
 
         print("\n_______________________________________________\n")
 
+    # ______________________________________________________
 
     # convert to array
     def __to_array(arr_in):
@@ -501,8 +506,14 @@ def main(config):
 
         return np.array(arr_out)
 
+    # ______________________________________________________
+    # reshape arrays
+    def reshaping(_arr):
+        return _arr.reshap(NN*dummy_size)
 
-    # prepare output dictionary 0
+    # ______________________________________________________
+    # prepare output dictionary
+
     output = {}
 
     output['time'] = np.array(ttime)
@@ -533,21 +544,21 @@ def main(config):
     # prepare output dictionary 1
     output1 = {}
 
-    output1['time'] = __to_array(times_all)
-    output1['time_bf'] = __to_array(time_bf)
+    output1['time'] = reshaping(__to_array(times_all))
+    output1['time_bf'] = reshaping(__to_array(time_bf))
 
-    output1['baz_tangent_all'] = __to_array(baz_tangent_all)
-    output1['baz_rayleigh_all'] = __to_array(baz_rayleigh_all)
-    output1['baz_love_all'] = __to_array(baz_love_all)
-    output1['baz_bf_all'] = __to_array(baz_bf_all)
+    output1['baz_tangent_all'] = reshaping(__to_array(baz_tangent_all))
+    output1['baz_rayleigh_all'] = reshaping(__to_array(baz_rayleigh_all))
+    output1['baz_love_all'] = reshaping(__to_array(baz_love_all))
+    output1['baz_bf_all'] = reshaping(__to_array(baz_bf_all))
 
-    output1['cc_tangent_all'] = __to_array(cc_tangent_all)
-    output1['cc_rayleigh_all'] = __to_array(cc_rayleigh_all)
-    output1['cc_love_all'] = __to_array(cc_love_all)
+    output1['cc_tangent_all'] = reshaping(__to_array(cc_tangent_all))
+    output1['cc_rayleigh_all'] = reshaping(__to_array(cc_rayleigh_all))
+    output1['cc_love_all'] = reshaping(__to_array(cc_love_all))
 
-    output1['vel_rayleigh_all'] = __to_array(vel_rayleigh_all)
-    output1['vel_love_all'] = __to_array(vel_love_all)
-    output1['vel_bf_all'] = __to_array(vel_bf_all)
+    output1['vel_rayleigh_all'] = reshaping(__to_array(vel_rayleigh_all))
+    output1['vel_love_all'] = reshaping(__to_array(vel_love_all))
+    output1['vel_bf_all'] = reshaping(__to_array(vel_bf_all))
 
 
     # store output to file

@@ -17,8 +17,12 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
     acc = acc0.copy()
 
     ## remove mean and filter
-    rot.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
-    acc.detrend("demean").taper(0.1).filter("bandpass", freqmin=fmin, freqmax=fmax)
+    rot = rot.detrend("demean").taper(0.1, type="cosine")
+    rot = rot.filter("bandpass", freqmin=fmin, freqmax=fmax)
+
+    acc = acc.detrend("demean").taper(0.1, type="cosine")
+    acc = acc.filter("bandpass", freqmin=fmin, freqmax=fmax)
+
 
     config = conf
 
@@ -93,8 +97,6 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             if abs(_cc) <= config['cc_thres']:
                 out3['ccoef'][ii], out3['baz_est'][ii] = nan, nan
 
-
-
     ## statistics of backazimuth
     deltaa = 10
     angles = arange(0, 365, deltaa)
@@ -127,6 +129,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             baz_rayleigh_max = angles2[argmax(kde1.pdf(angles2))]
 
     except Exception as e:
+        print(" -> failed for rayleigh")
         print(e)
         pass
 
@@ -158,8 +161,11 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             baz_love_max = angles2[argmax(kde2.pdf(angles2))]
 
     except Exception as e:
+        print(" -> failed for love")
         print(e)
         pass
+
+    print(out3['baz_est'][~isnan(out3['ccoef'])])
 
     # ______________________________________
     # baz tangent
@@ -188,6 +194,7 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             baz_tangent_max = angles2[argmax(kde3.pdf(angles2))]
 
     except Exception as e:
+        print(" -> failed for tangent")
         print(e)
         pass
 
@@ -329,10 +336,19 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
             try:
                 ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
+            except Exception as e:
+                print(e)
+                print(f" -> y1 axes limits failed!")
+            try:
                 ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+            except Exception as e:
+                print(e)
+                print(f" -> y1 axes limits failed!")
+            try:
                 ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
-            except:
-                print(f" -> y axes limits failed!")
+            except Exception as e:
+                print(e)
+                print(f" -> y1 axes limits failed!")
 
             ax00 = ax0.twinx()
             ax00.plot(jz.times(), jz.data*rot_scaling, 'darkred', label=r"ROMY.BJZ")
@@ -345,10 +361,19 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
 
             try:
                 ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
+            except Exception as e:
+                print(e)
+                print(f" -> y2 axes limits failed!")
+            try:
                 ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+            except Exception as e:
+                print(e)
+                print(f" -> y2 axes limits failed!")
+            try:
                 ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
-            except:
-                print(f" -> y axes limits failed!")
+            except Exception as e:
+                print(e)
+                print(f" -> y2 axes limits failed!")
 
             cmap = plt.get_cmap("viridis", 10)
 

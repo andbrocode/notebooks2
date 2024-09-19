@@ -560,10 +560,12 @@ def main(config):
     cmap = matplotlib.colors.ListedColormap(['red', 'green'])
 
     fig = plt.figure()
+
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
     fig.savefig(config['path_to_figures2']+f"VC_BAZ_{config['tbeg'].date}_status.png",
                 format="png", dpi=100, bbox_inches='tight')
+
     print(f" -> stored: {config['path_to_figures2']}VC_BAZ_{config['tbeg'].date}.png")
 
     del fig

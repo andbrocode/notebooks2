@@ -14,40 +14,40 @@ from functions.get_time_intervals import __get_time_intervals
 from functions.compute_beamforming_ROMY import __compute_beamforming_ROMY
 from functions.compute_backazimuth_and_velocity_noise import __compute_backazimuth_and_velocity_noise
 from functions.load_lxx import __load_lxx
+from functions.read_sds import __read_sds
 
-from andbro__read_sds import __read_sds
-from andbro__save_to_pickle import __save_to_pickle
-
-## ---------------------------------------
-
+# ______________________________________________________
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
+    lamont_path = '/home/andbro/lamont/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 
-
-## ---------------------------------------
+# ______________________________________________________
 
 config = {}
 
-# config['station1'] = "BW.ROMY.10.BJZ"
-# config['station2'] = "GR.FUR..BHN"
-
+# argument for date is expected
 if len(sys.argv) > 1:
     config['tbeg'] = UTCDateTime(sys.argv[1])
     config['tend'] = config['tbeg'] + 86400
+else:
+    print(f" -> missing date argument (e.g. 2024-09-01)!")
+    sys.exit()
 
 # config['tbeg'] = UTCDateTime("2023-09-20 21:00")
 # config['tend'] = UTCDateTime("2023-09-20 22:00")
@@ -57,30 +57,36 @@ config['path_to_sds1'] = archive_path+"temp_archive/"
 config['path_to_sds2'] = bay_path+f"mseed_online/archive/"
 
 config['path_to_figures'] = data_path+f"VelocityChanges/figures/autoplots/"
-config['path_to_figures2'] = data_path+f"VelocityChanges/figures/autoplots_status/"
+
+config['path_to_figures_status'] = data_path+f"VelocityChanges/figures/autoplots_status/"
 
 config['path_to_inv'] = root_path+"Documents/ROMY/stationxml_ringlaser/"
 
 config['path_to_data_out'] = data_path+f"VelocityChanges/data/"
 
-## set maximum number of MLTI in time interval. Otherwise skip interval.
+# set maximum number of MLTI in time interval. Otherwise skip interval.
 config['num_mlti'] = 3
 
-config['fmin'], config['fmax'] = 1/10, 1/7
+# set frequency band
+config['fmin'], config['fmax'] = 1/11, 1/6 # 1/10, 1/7
 
-config['cc_threshold'] = 0.5
+# set cross-correlation threshold
+config['cc_threshold'] = 0.5 # 0.5
 
-config['interval_seconds'] = 1800
+# set interval and overlap of data ( in seconds )
+config['interval_seconds'] = 3600 # 1800
 config['interval_overlap'] = 0
 
-config['window_overlap'] = 90
+# set window lenght for computations ( in seconds )
+config['window_length_sec'] = 3/config['fmin']  #2/config['fmin']
 
-config['window_length_sec'] = 2/config['fmin']
+# set window overlap for computations ( in seconds )
+config['window_overlap'] = 75 # 90
 
+# set sampling rate
 config['sps'] = 20 # Hz
 
-
-## ---------------------------------------
+# ______________________________________________________
 
 def __load_mlti(tbeg, tend, ring, path_to_archive):
 
@@ -101,6 +107,15 @@ def __load_mlti(tbeg, tend, ring, path_to_archive):
 
     return mlti
 
+def __store_as_pickle(object, name):
+
+    import os, pickle
+
+    ofile = open(name+".pkl", 'wb')
+    pickle.dump(object, ofile)
+
+    if os.path.ifile(name+".pkl"):
+        print(f"created: {name}.pkl")
 
 def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
@@ -118,64 +133,86 @@ def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
 
     return times
 
+def __to_array(arr_in):
+
+    arr_out = []
+
+    for _t in arr_in:
+        _t = np.array(_t)
+        if _t.size > 1:
+            for _x in _t:
+                arr_out.append(_x)
+        elif _t.size == 1:
+            arr_out.append(np.nan)
+
+    return np.array(arr_out)
+
+# ______________________________________________________
 
 def main(config):
 
+    # prepare time intervals for loop
     times = __get_time_intervals(config['tbeg'],
                                  config['tend'],
                                  interval_seconds=config['interval_seconds'],
                                  interval_overlap=config['interval_overlap']
                                 )
 
-    baz_tangent = []
-    baz_rayleigh = []
-    baz_love = []
+    # set sample size
+    NN = len(times)
 
-    baz_tangent_std = []
-    baz_rayleigh_std = []
-    baz_love_std = []
+    # prepare dummy trace
+    dummy_size = 90
+    nan_dummy = np.ones(dummy_size)*np.nan
 
-    baz_tangent_all = []
-    baz_rayleigh_all = []
-    baz_love_all = []
-    baz_bf_all = []
+    # prepare arrays
+    baz_tangent = np.ones(NN)*np.nan
+    baz_rayleigh = np.ones(NN)*np.nan
+    baz_love = np.ones(NN)*np.nan
 
-    cc_tangent_all = []
-    cc_rayleigh_all = []
-    cc_love_all = []
+    baz_tangent_std = np.ones(NN)*np.nan
+    baz_rayleigh_std = np.ones(NN)*np.nan
+    baz_love_std = np.ones(NN)*np.nan
 
-    vel_love_max = []
-    vel_love_std = []
-    vel_rayleigh_max = []
-    vel_rayleigh_std = []
+    baz_tangent_all = np.ones([NN, dummy_size])*np.nan
+    baz_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    baz_love_all = np.ones([NN, dummy_size])*np.nan
+    baz_bf_all = np.ones([NN, dummy_size])*np.nan
 
-    vel_rayleigh_all = []
-    vel_love_all = []
-    vel_bf_all = []
+    cc_tangent_all = np.ones([NN, dummy_size])*np.nan
+    cc_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    cc_love_all = np.ones([NN, dummy_size])*np.nan
 
-    times_relative = []
-    times_all = []
+    vel_love_max = np.ones(NN)*np.nan
+    vel_love_std = np.ones(NN)*np.nan
+    vel_rayleigh_max = np.ones(NN)*np.nan
+    vel_rayleigh_std = np.ones(NN)*np.nan
 
-    baz_bf = []
-    baz_bf_std = []
+    vel_rayleigh_all = np.ones([NN, dummy_size])*np.nan
+    vel_love_all = np.ones([NN, dummy_size])*np.nan
+    vel_bf_all = np.ones([NN, dummy_size])*np.nan
 
-    vel_bf = []
-    time_bf = []
+    times_relative = np.ones([NN, dummy_size])*np.nan
+    times_all = np.ones([NN, dummy_size])*np.nan
 
-    ttime = []
-    ttime_bf = []
+    baz_bf = np.ones(NN)*np.nan
+    baz_bf_std = np.ones(NN)*np.nan
 
-    num_stations_used = []
+    vel_bf = np.ones(NN)*np.nan
+    time_bf = np.ones(NN)*np.nan
+
+    ttime = np.ones(NN)*np.nan
+    ttime_bf = np.ones(NN)*np.nan
+
+    num_stations_used = np.ones(NN)*np.nan
 
     # prepare status variable
     status = np.zeros((2, len(times)))
 
-    # prepare dummy trace
-    nan_dummy = np.ones(90)*np.nan
 
+    # ______________________________________________________
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
-    # for _n, (t1, t2) in enumerate(times):
 
         # print(_n, t1, t2)
 
@@ -203,7 +240,7 @@ def main(config):
             # st1.remove_sensitivity(inv1);
 
             # remove response for FUR
-            st2.remove_response(inv2, output="ACC", water_level=10);
+            st2 = st2.remove_response(inv2, output="ACC", water_level=60);
 
             # get length of streams
             N_Z = len(st1.select(channel="*Z"))
@@ -213,11 +250,13 @@ def main(config):
             # check if merging is necessary
             if len(st1) > 3:
                 print(f" -> merging required: rot")
-                st1 = st1.merge(fill_value="interpolate")
+                # st1 = st1.merge(fill_value="interpolate")
+                st1 = st1.merge(fill_value=0)
 
             if len(st2) > 3:
                 print(f" -> merging required: acc")
-                st2 = st2.merge(fill_value="interpolate")
+                # st2 = st2.merge(fill_value="interpolate")
+                st2 = st2.merge(fill_value=0)
 
             print(st1)
             print(st2)
@@ -235,7 +274,6 @@ def main(config):
                     tr.data = tr.data[:Nexpected]
                     # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
-
             # get amplitude levels
             levels = {}
             for tr in st1:
@@ -250,7 +288,8 @@ def main(config):
             print(e)
             pass
 
-    # ---------------------------------------
+        # ______________________________________________________
+        # pre-processing
 
         try:
             st1 = st1.detrend("linear");
@@ -271,7 +310,6 @@ def main(config):
             print(f" -> processing failed !")
             pass
 
-
         # check if data is all zero
         for tr in rot:
             if np.count_nonzero(tr.data) == 0:
@@ -280,9 +318,14 @@ def main(config):
             if np.count_nonzero(tr.data) == 0:
                 print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
 
+        # rot.plot(equal_scale=False);
+        # acc.plot(equal_scale=False);
 
+        print(rot)
+        print(acc)
 
-        # ---------------------------------------
+        # ______________________________________________________
+        # configurations
 
         conf = {}
 
@@ -307,6 +350,9 @@ def main(config):
 
         conf['cc_thres'] = config['cc_threshold']
 
+        # ______________________________________________________
+        # compute backatzimuths
+
         try:
             print(f"\ncompute backazimuth estimation ...")
             out = __compute_backazimuth_and_velocity_noise(conf, rot, acc,
@@ -323,6 +369,8 @@ def main(config):
             baz_computed = False
             print(e)
 
+        # ______________________________________________________
+        # check for MTLI launches
 
         try:
             print(f"\ncheckup for MLTI ...")
@@ -332,31 +380,19 @@ def main(config):
 
             if N_N > 1 or N_E > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (horizontal)")
-
-                out['baz_tangent_max'], out['baz_tangent_std'], out['baz_tangent_all'] = np.nan, np.nan, nan_dummy
-
-                out['baz_rayleigh_max'], out['baz_rayleigh_std'], out['baz_rayleigh_all'] = np.nan, np.nan, nan_dummy
-
-                out['vel_rayleigh_max'], out['vel_rayleigh_std'], out['vel_rayleigh_all'] = np.nan, np.nan, nan_dummy
-
-                out['cc_rayleigh_all'], out['cc_tangent_all'] = nan_dummy, nan_dummy
+                baz_computed = False
 
             if N_Z > 1 or levels["Z"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (vertical)")
-
-                out['baz_love_max'], out['baz_love_std'], out['baz_love_all'] = np.nan, np.nan, nan_dummy
-
-                out['vel_love_max'], out['vel_love_std'], out['vel_love_all'] = np.nan, np.nan, nan_dummy
-
-                out['cc_love_all'] = nan_dummy
-
+                baz_computed = False
 
         except Exception as e:
             print(f" -> chekup failed!")
             print(e)
 
-
+        # ______________________________________________________
         # compute beamforming for array
+
         try:
             print(f"\ncompute beamforming ...")
 
@@ -373,105 +409,84 @@ def main(config):
 
 
 
-            ## change status to success
+            # change status to success
             status[1, _n] = 1
             bf_computed = True
 
         except Exception as e:
             print(f" -> beamforming computation failed!")
-            bf_computed = False
             print(e)
+            bf_computed = False
 
+        # ______________________________________________________
+        # assign values to arrays
 
-        # assign values
-        ttime.append(t1)
+        # always assign time values
+        ttime[_n] = t1
+        ttime_bf[_n] = t1
 
         if baz_computed:
-            baz_tangent.append(out['baz_tangent_max'])
-            baz_tangent_std.append(out['baz_tangent_std'])
-            baz_tangent_all.append(out['baz_tangent_all'])
 
-            baz_rayleigh.append(out['baz_rayleigh_max'])
-            baz_rayleigh_std.append(out['baz_rayleigh_std'])
-            baz_rayleigh_all.append(out['baz_rayleigh_all'])
+            try:
+                baz_tangent[_n] = out['baz_tangent_max']
+                baz_tangent_std[_n] = out['baz_tangent_std']
 
-            vel_rayleigh_max.append(out['vel_rayleigh_max'])
-            vel_rayleigh_std.append(out['vel_rayleigh_std'])
-            vel_rayleigh_all.append(out['vel_rayleigh_all'])
+                baz_rayleigh[_n] = out['baz_rayleigh_max']
+                baz_rayleigh_std[_n] = out['baz_rayleigh_std']
 
-            cc_rayleigh_all.append(out['cc_rayleigh_all'])
-            cc_tangent_all.append(out['cc_tangent_all'])
+                vel_rayleigh_max[_n] = out['vel_rayleigh_max']
+                vel_rayleigh_std[_n] = out['vel_rayleigh_std']
 
-            baz_love.append(out['baz_love_max'])
-            baz_love_std.append(out['baz_love_std'])
+                baz_love[_n] = out['baz_love_max']
+                baz_love_std[_n] = out['baz_love_std']
 
-            baz_love_all.append(out['baz_love_all'])
+                vel_love_max[_n] = out['vel_love_max']
+                vel_love_std[_n] = out['vel_love_std']
+            except:
+                pass
 
-            vel_love_max.append(out['vel_love_max'])
-            vel_love_std.append(out['vel_love_std'])
-            vel_love_all.append(out['vel_love_all'])
+            try:
+                baz_love_all[_n] = out['baz_love_all']
+                baz_rayleigh_all[_n] = out['baz_rayleigh_all']
+                baz_tangent_all[_n] = out['baz_tangent_all']
 
-            cc_love_all.append(out['cc_love_all'])
+                vel_love_all[_n] = out['vel_love_all']
+                vel_rayleigh_all[_n] = out['vel_rayleigh_all']
 
-            times_relative.append(out['times_relative'])
-            times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-            times_all.append(times_absolute)
+                cc_tangent_all[_n] = out['cc_tangent_all']
+                cc_love_all[_n] = out['cc_love_all']
+                cc_rayleigh_all[_n] = out['cc_rayleigh_all']
 
-        else:
-            baz_tangent.append(np.nan)
-            baz_rayleigh.append(np.nan)
-            baz_love.append(np.nan)
+                times_relative[_n] = out['times_relative']
 
-            baz_tangent_std.append(np.nan)
-            baz_rayleigh_std.append(np.nan)
-            baz_love_std.append(np.nan)
+                times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+                times_all[_n] = times_absolute
+            except:
+                pass
 
-            vel_love_max.append(np.nan)
-            vel_love_std.append(np.nan)
-            vel_rayleigh_max.append(np.nan)
-            vel_rayleigh_std.append(np.nan)
-
-            baz_tangent_all.append(nan_dummy)
-            baz_rayleigh_all.append(nan_dummy)
-            baz_love_all.append(nan_dummy)
-
-            cc_tangent_all.append(nan_dummy)
-            cc_rayleigh_all.append(nan_dummy)
-            cc_love_all.append(nan_dummy)
-
-            vel_rayleigh_all.append(nan_dummy)
-            vel_love_all.append(nan_dummy)
-
-            times_relative.append(nan_dummy)
-            times_all.append(nan_dummy)
-
-        ttime_bf.append(t1)
 
         if bf_computed:
 
-            baz_bf.append(out_bf['baz_bf_max'])
-            baz_bf_std.append(out_bf['baz_bf_std'])
-            vel_bf_all.append(out_bf['slow'])
-            baz_bf_all.append(out_bf['baz'])
+            try:
+                baz_bf[_n] = out_bf['baz_bf_max']
+                baz_bf_std[_n] = out_bf['baz_bf_std']
 
-            times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
-            time_bf.append(times_abs)
+                num_stations_used[_n] = out_bf['num_stations_used']
+            except:
+                pass
 
-            num_stations_used.append(out_bf['num_stations_used'])
+            try:
+                vel_bf_all[_n] = out_bf['slow']
+                baz_bf_all[_n] = out_bf['baz']
 
-        else:
-            baz_bf.append(np.nan)
-            baz_bf_std.append(np.nan)
-            vel_bf_all.append(np.nan)
-            time_bf.append(np.nan)
-            baz_bf_all.append(np.nan)
+                times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
+                time_bf[_n] = times_abs
+            except:
+                pass
 
-            num_stations_used.append(np.nan)
+        # ______________________________________________________
+        # store plots
 
-        # print(len(ttime), len(baz_bf))
-
-
-        # store plot
         try:
             print(f"\ncreate plot ...")
 
@@ -487,22 +502,14 @@ def main(config):
         print("\n_______________________________________________\n")
 
 
-    # convert to array
-    def __to_array(arr_in):
-        arr_out = []
-        for _t in arr_in:
-            _t = np.array(_t)
-            if _t.size > 1:
-                for _x in _t:
-                    arr_out.append(_x)
-            elif _t.size == 1:
-                arr_out.append(np.nan)
+    # ______________________________________________________
+    # reshape arrays
+    def reshaping(_arr):
+        return _arr.reshap(NN*dummy_size)
 
+    # ______________________________________________________
+    # prepare output dictionary
 
-        return np.array(arr_out)
-
-
-    # prepare output dictionary 0
     output = {}
 
     output['time'] = np.array(ttime)
@@ -524,38 +531,42 @@ def main(config):
 
     output['num_stations_used'] = num_stations_used
 
-
+    # ______________________________________________________
     # store output to file
+
     print(f"-> store: {config['path_to_data_out']}statistics/VC_BAZ_{config['tbeg'].date}.pkl")
-    __save_to_pickle(output, config['path_to_data_out']+"statistics/", f"VC_BAZ_{config['tbeg'].date}")
+    __store_as_pickle(output, config['path_to_data_out']+"statistics/"+f"VC_BAZ_{config['tbeg'].date}")
 
-
+    # ______________________________________________________
     # prepare output dictionary 1
+
     output1 = {}
 
-    output1['time'] = __to_array(times_all)
-    output1['time_bf'] = __to_array(time_bf)
+    output1['time'] = reshaping(times_all)
+    output1['time_bf'] = reshaping(time_bf)
 
-    output1['baz_tangent_all'] = __to_array(baz_tangent_all)
-    output1['baz_rayleigh_all'] = __to_array(baz_rayleigh_all)
-    output1['baz_love_all'] = __to_array(baz_love_all)
-    output1['baz_bf_all'] = __to_array(baz_bf_all)
+    output1['baz_tangent_all'] = reshaping(baz_tangent_all)
+    output1['baz_rayleigh_all'] = reshaping(baz_rayleigh_all)
+    output1['baz_love_all'] = reshaping(baz_love_all)
+    output1['baz_bf_all'] = reshaping(baz_bf_all)
 
-    output1['cc_tangent_all'] = __to_array(cc_tangent_all)
-    output1['cc_rayleigh_all'] = __to_array(cc_rayleigh_all)
-    output1['cc_love_all'] = __to_array(cc_love_all)
+    output1['cc_tangent_all'] = reshaping(cc_tangent_all)
+    output1['cc_rayleigh_all'] = reshaping(cc_rayleigh_all)
+    output1['cc_love_all'] = reshaping(cc_love_all)
 
-    output1['vel_rayleigh_all'] = __to_array(vel_rayleigh_all)
-    output1['vel_love_all'] = __to_array(vel_love_all)
-    output1['vel_bf_all'] = __to_array(vel_bf_all)
+    output1['vel_rayleigh_all'] = reshaping(vel_rayleigh_all)
+    output1['vel_love_all'] = reshaping(vel_love_all)
+    output1['vel_bf_all'] = reshaping(vel_bf_all)
 
-
+    # ______________________________________________________
     # store output to file
+
     print(f"-> store: {config['path_to_data_out']}all/VC_BAZ_{config['tbeg'].date}_all.pkl")
-    __save_to_pickle(output1, config['path_to_data_out']+"all/", f"VC_BAZ_{config['tbeg'].date}_all")
+    __store_as_pickle(output1, config['path_to_data_out']+"all/"+f"VC_BAZ_{config['tbeg'].date}_all")
 
-
+    # ______________________________________________________
     # status plot
+
     import matplotlib.colors
     cmap = matplotlib.colors.ListedColormap(['red', 'green'])
 
@@ -563,15 +574,16 @@ def main(config):
 
     c = plt.pcolormesh(np.arange(0, status.shape[1]), ["BAZ", "BF"], status, edgecolors='k', linewidths=1, cmap=cmap)
 
-    fig.savefig(config['path_to_figures2']+f"VC_BAZ_{config['tbeg'].date}_status.png",
+    fig.savefig(config['path_to_figures_status']+f"VC_BAZ_{config['tbeg'].date}_status.png",
                 format="png", dpi=100, bbox_inches='tight')
 
-    print(f" -> stored: {config['path_to_figures2']}VC_BAZ_{config['tbeg'].date}.png")
+    print(f" -> stored: {config['path_to_figures_status']}VC_BAZ_{config['tbeg'].date}.png")
 
     del fig
 
     print("\n")
 
+# ______________________________________________________
 
 if __name__ == "__main__":
     main(config)

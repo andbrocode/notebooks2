@@ -9,7 +9,7 @@
 # I did some code cleanup and changed mainly the BAZ estimation so it gives
 # now the to be expected values. Also changed is the error estimation 
 # which is now representing the covariance estimate used for the kde_gaussian
-# modelling 
+# modelling
 # Joachim Wassermann 2014
 #-------------------------------------------------------------------------
 #
@@ -1133,7 +1133,7 @@ class rolode_estimator:
         if not (len(accel_n.data) == len(accel_e.data) == len(rotrate_z.data)):
             msg = 'Input signals must have same length'
             raise ValueError(msg)
-     
+
         self.start = accel_n.stats['starttime']
         self.end = accel_n.stats['endtime']
 
@@ -1145,7 +1145,7 @@ class rolode_estimator:
             cft = recursive_sta_lta(tdata.data,int(self.tsta*df),int(self.tlta*df))
             on_off = trigger_onset(cft,self.thres1,self.thres2)
             #plot_trigger(tdata,cft,self.thres1,self.thres2)
-        
+
         if verbose:
             print("ROLODE parameter estimation for seperate time windows\n")
             print("  from: " + self.start.ctime())
@@ -1246,9 +1246,8 @@ class rolode_estimator:
                     else:
 
                         # Calculate optimal direction with ODR
-                        phi_0 =  np.random.uniform(-1.,1.)*np.pi
+                        phi_0 = np.random.uniform(-1.,1.)*np.pi
                         sl_0 = np.random.random_sample()*self.sl_0
-
 
                         odr_data = odr.Data(acc_ne,rot_z)
                         odr_model = odr.Model(fcn = self.f_phi_cw)
@@ -1518,30 +1517,34 @@ class rolode_estimator:
                         inv_err = delta/np.sum(odr_output.y**2) + eps/acczsq
                         wght = np.sqrt(inv_err)
 
-                        rot_t = self.f_phi_cw_ray([phi_opt,cw_opt],rotrate_ne)/cw_opt
+                        rot_t = self.f_phi_cw_ray([phi_opt, cw_opt], rotrate_ne)/cw_opt
                         t_rot = rotrate_ne[0]*np.sin(phi_opt) - rotrate_ne[1]*np.cos(phi_opt)
                         rotsq = np.sum(rot_t**2)
 
-                        cc = correlate(accz_d,t_rot,shift=0)
-                        shift,mcor = xcorr_max(cc)
-                        if np.sign(mcor)>0:
+                        cc = correlate(accz_d, t_rot, shift=0)
+                        shift, mcor = xcorr_max(cc)
+                        if np.sign(mcor) > 0:
                             phi_opt += np.pi
 
-                        if phi_opt > 2*np.pi: phi_opt -= 2*np.pi
-                        if phi_opt < 0: phi_opt += 2*np.pi
+                        if phi_opt > 2*np.pi:
+                            phi_opt -= 2*np.pi
+                        if phi_opt < 0:
+                            phi_opt += 2*np.pi
 
                         phi_opt = np.degrees(phi_opt)
 
-
                         window = window_estimator(phi_opt,np.abs(cw_opt),err,wght,rotsq,acczsq)
-                        self.append(window,f_num)
+                        self.append(window, f_num)
                 except:
                     if verbose:
                         print('-')
                     pass
+
         self.wineval = True
+
         tend = datetime.now()
         self.calctime = (tend-tstart).seconds
+
         if verbose:
             print("\nROLODE parameter estimation done.")
             print("Elapsed time: %0.2f seconds" %(tend-tstart).seconds)
@@ -1566,7 +1569,7 @@ class rolode_estimator:
 
         tstart = datetime.now()
 
-        #Input checks
+        # Input checks
         if not (len(rotrate_n.data) == len(rotrate_e.data) == acc[0].stats.npts == acc[1].stats.npts == acc[2].stats.npts):
             msg = 'Input signals must have same length'
             raise ValueError(msg)
@@ -1593,8 +1596,8 @@ class rolode_estimator:
             print("  from: " + self.start.ctime())
             print("  to:   " + self.end.ctime() + "\n")
 
-        #%% Loop over frequencies    
-        for f_num in range(0,self.f_n):
+        # Loop over frequencies
+        for f_num in range(0, self.f_n):
             if self.f_lower[f_num] < (self.f_higher[f_num] - self.f_lower[f_num]):
                        bandwidth = self.f_lower[f_num];
             else:
@@ -1617,16 +1620,16 @@ class rolode_estimator:
             if verbose:
                 print("Applied filter %f - %f"%(self.f_lower[f_num],self.f_higher[f_num]))
 
-            acc_z_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
-            acc_z_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
-            acc_n_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
-            acc_n_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
-            acc_e_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
-            acc_e_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
-            rot_n_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
-            rot_n_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
-            rot_e_trace.filter( 'lowpass', freq = self.f_higher[f_num] ,zerophase=True)
-            rot_e_trace.filter( 'highpass', freq = self.f_lower[f_num] ,zerophase=True)
+            acc_z_trace.filter('lowpass', freq = self.f_higher[f_num] ,zerophase=True)
+            acc_z_trace.filter('highpass', freq = self.f_lower[f_num] ,zerophase=True)
+            acc_n_trace.filter('lowpass', freq = self.f_higher[f_num] ,zerophase=True)
+            acc_n_trace.filter('highpass', freq = self.f_lower[f_num] ,zerophase=True)
+            acc_e_trace.filter('lowpass', freq = self.f_higher[f_num] ,zerophase=True)
+            acc_e_trace.filter('highpass', freq = self.f_lower[f_num] ,zerophase=True)
+            rot_n_trace.filter('lowpass', freq = self.f_higher[f_num] ,zerophase=True)
+            rot_n_trace.filter('highpass', freq = self.f_lower[f_num] ,zerophase=True)
+            rot_e_trace.filter('lowpass', freq = self.f_higher[f_num] ,zerophase=True)
+            rot_e_trace.filter('highpass', freq = self.f_lower[f_num] ,zerophase=True)
 
 
             if trigger:
@@ -1740,11 +1743,17 @@ class rolode_estimator:
                     acc_n = acc_n.compressed()
                     acc_e = acc_e.compressed()
                 else:
-                    rot_n = rotn.data
-                    rot_e = rote.data
-                    acc_z = accz.data
-                    acc_n = accn.data
-                    acc_e = acce.data
+                    # rot_n = rotn.data
+                    # rot_e = rote.data
+                    # acc_z = accz.data
+                    # acc_n = accn.data
+                    # acc_e = acce.data
+
+                    rot_n = rotn.data[:int(win_len)]
+                    rot_e = rote.data[:int(win_len)]
+                    acc_z = accz.data[:int(win_len)]
+                    acc_n = accn.data[:int(win_len)]
+                    acc_e = acce.data[:int(win_len)]
 
                     if not (len(acc_z) == len(rot_n) == len(rot_e)):
                         if verbose:
