@@ -114,7 +114,7 @@ def __store_as_pickle(object, name):
     ofile = open(name+".pkl", 'wb')
     pickle.dump(object, ofile)
 
-    if os.path.ifile(name+".pkl"):
+    if os.path.isfile(name+".pkl"):
         print(f"created: {name}.pkl")
 
 def __get_time_intervals(tbeg, tend, interval_seconds, interval_overlap):
@@ -201,8 +201,8 @@ def main(config):
     vel_bf = np.ones(NN)*np.nan
     time_bf = np.ones(NN)*np.nan
 
-    ttime = np.ones(NN)*np.nan
-    ttime_bf = np.ones(NN)*np.nan
+    ttime = []
+    ttime_bf = []
 
     num_stations_used = np.ones(NN)*np.nan
 
@@ -286,7 +286,6 @@ def main(config):
         except Exception as e:
             print(f" -> data loading failed!")
             print(e)
-            pass
 
         # ______________________________________________________
         # pre-processing
@@ -308,21 +307,23 @@ def main(config):
 
         except:
             print(f" -> processing failed !")
+
+        try:
+            # check if data is all zero
+            for tr in rot:
+                if np.count_nonzero(tr.data) == 0:
+                    print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+            for tr in acc:
+                if np.count_nonzero(tr.data) == 0:
+                    print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
+
+            # rot.plot(equal_scale=False);
+            # acc.plot(equal_scale=False);
+
+            print(rot)
+            print(acc)
+        except:
             pass
-
-        # check if data is all zero
-        for tr in rot:
-            if np.count_nonzero(tr.data) == 0:
-                print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
-        for tr in acc:
-            if np.count_nonzero(tr.data) == 0:
-                print(f" -> all zero: {tr.stats.station}.{tr.stats.channel}")
-
-        # rot.plot(equal_scale=False);
-        # acc.plot(equal_scale=False);
-
-        print(rot)
-        print(acc)
 
         # ______________________________________________________
         # configurations
@@ -422,8 +423,10 @@ def main(config):
         # assign values to arrays
 
         # always assign time values
-        ttime[_n] = t1
-        ttime_bf[_n] = t1
+        # ttime[_n] = t1
+        # ttime_bf[_n] = t1
+        ttime.append(t1)
+        ttime_bf.append(t1)
 
         if baz_computed:
 
@@ -462,6 +465,7 @@ def main(config):
                 times_absolute = [t1 + float(_t) for _t in out['times_relative']]
                 times_all[_n] = times_absolute
             except:
+                print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
                 pass
 
 
@@ -505,7 +509,7 @@ def main(config):
     # ______________________________________________________
     # reshape arrays
     def reshaping(_arr):
-        return _arr.reshap(NN*dummy_size)
+        return _arr.reshape(NN*dummy_size)
 
     # ______________________________________________________
     # prepare output dictionary
@@ -542,8 +546,8 @@ def main(config):
 
     output1 = {}
 
-    output1['time'] = reshaping(times_all)
-    output1['time_bf'] = reshaping(time_bf)
+    output1['time'] = np.array(times_all)
+    output1['time_bf'] = np.array(time_bf)
 
     output1['baz_tangent_all'] = reshaping(baz_tangent_all)
     output1['baz_rayleigh_all'] = reshaping(baz_rayleigh_all)

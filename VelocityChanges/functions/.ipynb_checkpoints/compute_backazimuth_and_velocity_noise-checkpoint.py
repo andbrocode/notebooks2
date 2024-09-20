@@ -165,7 +165,6 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
         print(e)
         pass
 
-    print(out3['baz_est'][~isnan(out3['ccoef'])])
 
     # ______________________________________
     # baz tangent
@@ -335,17 +334,17 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             ax2.plot(hz.times(), hz.data*trans_scaling, 'black', label=f"FUR.BHZ")
 
             try:
-                ax0.set_ylim(-max(abs(ht*trans_scaling)), max(abs(ht*trans_scaling)))
+                ax0.set_ylim(-max(abs(ht[~isnan(hr)]*trans_scaling)), max(abs(ht[~isnan(hr)]*trans_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y1 axes limits failed!")
             try:
-                ax1.set_ylim(-max(abs(hr*trans_scaling)), max(abs(hr*trans_scaling)))
+                ax1.set_ylim(-max(abs(hr[~isnan(hr)]*trans_scaling)), max(abs(hr[~isnan(hr)]*trans_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y1 axes limits failed!")
             try:
-                ax2.set_ylim(-max(abs(hz.data*trans_scaling)), max(abs(hz.data*trans_scaling)))
+                ax2.set_ylim(-max(abs(hz.data[~isnan(hz.data)]*trans_scaling)), max(abs(hz.data[~isnan(hz.data)]*trans_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y1 axes limits failed!")
@@ -360,17 +359,17 @@ def __compute_backazimuth_and_velocity_noise(conf, rot0, acc0, fmin, fmax, plot=
             ax22.plot(jz.times(), jt*rot_scaling, 'darkred', label=r"-1x ROMY.BJT")
 
             try:
-                ax00.set_ylim(-max(abs(jz.data*rot_scaling)), max(abs(jz.data*rot_scaling)))
+                ax00.set_ylim(-max(abs(jz.data[~isnan(jz.data)]*rot_scaling)), max(abs(jz.data[~isnan(jz.data)]*rot_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y2 axes limits failed!")
             try:
-                ax11.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+                ax11.set_ylim(-max(abs(jt[~isnan(jt)]*rot_scaling)), max(abs(jt[~isnan(jt)]*rot_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y2 axes limits failed!")
             try:
-                ax22.set_ylim(-max(abs(jt*rot_scaling)), max(abs(jt*rot_scaling)))
+                ax22.set_ylim(-max(abs(jt[~isnan(jt)]*rot_scaling)), max(abs(jt[~isnan(jt)]*rot_scaling)))
             except Exception as e:
                 print(e)
                 print(f" -> y2 axes limits failed!")

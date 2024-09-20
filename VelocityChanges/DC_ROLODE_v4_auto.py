@@ -38,7 +38,6 @@ import sys
 import yaml
 import numpy as np
 import scipy as sp
-import rochade_v3 as rochade
 import pickle
 
 from tqdm import tqdm
@@ -47,6 +46,8 @@ from obspy import read, read_inventory, UTCDateTime, Stream
 from obspy.clients.filesystem.sds import Client
 from obspy.core import AttribDict
 from obspy.signal.rotate import rotate2zne
+
+from functions import rochade_v3 as rochade
 
 #matplotlib.use('agg')
 

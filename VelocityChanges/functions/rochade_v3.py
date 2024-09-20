@@ -1770,7 +1770,6 @@ class rolode_estimator:
                         odr_opti = odr.ODR(odr_data, odr_azi, beta0=np.array([0,0]))
                         odr_output = odr_opti.run()
 
-
                         az_sl = odr_output.beta[0]
                         sl_error = odr_output.sd_beta[0]
 
@@ -1818,6 +1817,7 @@ class rolode_estimator:
                         odr_opti = odr.ODR(odr_data,odr_model, beta0=[cw_0])
                         odr_opti.set_job(fit_type = 0, deriv = 1, var_calc = 2)
                         odr_output = odr_opti.run()
+
                         if body == True:
                             cw_opt = odr_output.beta[0]/2.
                         else:
