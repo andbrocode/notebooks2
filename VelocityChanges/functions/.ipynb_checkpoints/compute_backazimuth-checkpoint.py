@@ -28,7 +28,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     import matplotlib as mpl
     import matplotlib.pyplot as plt
 
-    from numpy import ones, arange, linspace, asarray, array, meshgrid, round, shape
+    from numpy import ones, arange, linspace, asarray, array, meshgrid, shape, nan
     from scipy import odr
     from pprint import pprint
     from obspy import read, read_events, UTCDateTime
@@ -37,8 +37,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     from obspy.signal.cross_correlation import correlate, xcorr_max
     from obspy.signal.rotate import rotate_ne_rt
 
-    ## _______________________________
-    ## check config
+    # _______________________________
+    # check config
     keywords=['tbeg','tend','station_latitude', 'station_longitude',
               'step', 'win_length_sec', 'overlap', 'eventtime']
 
@@ -47,29 +47,26 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             print(f" -> {key} is missing in config!\n")
             pprint(keywords)
             return
-
-
-    ## _______________________________
-    ## Defaults
+    # _______________________________
+    # Defaults
     if 'win_length_sec' not in config.keys():
-        config['win_length_sec'] = .5    ## window length for correlation
+        config['win_length_sec'] = .5    # window length for correlation
     if 'step' not in config.keys():
         config['step'] = 1
     if 'overlap' not in config.keys():
         config['overlap'] = 25
 
-
-    ## time period
+    # time period
     config['tbeg'], config['tend'] = UTCDateTime(config['tbeg']), UTCDateTime(config['tend'])
     config['eventime'] = UTCDateTime(config['eventtime'])
 
-    ## _______________________________
-    ## prepare streams
+    # _______________________________
+    # prepare streams
     if wave_type == "love":
         ACC = st_acc.copy().trim(config['tbeg'], config['tend'])
         ROT = st_rot.copy().trim(config['tbeg'], config['tend'])
 
-        ## revert polarity for Z
+        # revert polarity for Z
         # for tr in ROT:
         #     if "Z" in tr.stats.channel:
         #         tr.data *= -1
@@ -80,8 +77,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ACC = st_acc.copy()
         ROT = st_rot.copy()
 
-    ## _______________________________
-    ## get event if not provided
+    # _______________________________
+    # get event if not provided
     if event == "auto":
         try:
             events = Client("USGS").get_events(starttime=config['eventtime']-20, endtime=config['eventtime']+20)
@@ -92,8 +89,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         except:
             print(" -> no event found in USGS catalog")
 
-
-    ## event location from event info
+    # event location from event info
     if event is not None:
         config['source_latitude'] = event.origins[0].latitude
         config['source_longitude'] = event.origins[0].longitude
@@ -102,9 +98,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             print(" -> event used for theoretical backazimuth:")
             print(" -> ", event.event_descriptions[0]['type'], ': ',event.event_descriptions[0]['text'] + "\n")
 
-
-        ## _______________________________
-        ## theoretical backazimuth and distance
+        # _______________________________
+        # theoretical backazimuth and distance
 
         config['baz'] = gps2dist_azimuth(
                                         config['source_latitude'], config['source_longitude'],
@@ -115,8 +110,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             print(f" -> Theoretical azimuth [deg]:     {round(config['baz'][1],1)}")
             print(f" -> Theoretical backazimuth [deg]: {round(config['baz'][2],1)}")
 
-    ## _______________________________
-    ## backazimuth estimation with Love or Rayleigh waves
+    # _______________________________
+    # backazimuth estimation with Love or Rayleigh waves
 
     config['sampling_rate'] = int(ROT.select(channel="*Z")[0].stats.sampling_rate)
 
@@ -124,38 +119,38 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
     backas = linspace(0, 360 - config['step'], int(360 / config['step']))
 
+    # prepare arrays
+    corrbaz = ones(config['num_windows'])*nan
     corrbaz = []
 
     ind = None
-
-    config['num_windows']
 
     for i_deg in range(0, len(backas)):
 
         for i_win in range(0, config['num_windows']):
 
-            ## infer indices
+            # infer indices
             idx1 = int(config['sampling_rate'] * config['win_length_sec'] * i_win)
             idx2 = int(config['sampling_rate'] * config['win_length_sec'] * (i_win + 1))
 
-            ## add overlap
+            # add overlap
             if i_win > 0 and i_win < config['num_windows']:
                 idx1 = int(idx1 - config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
                 idx2 = int(idx2 + config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
 
-            ## prepare traces according to selected wave type
+            # prepare traces according to selected wave type
             if wave_type == "love":
 
                 if show_details and i_deg == 0 and i_win == 0:
                     print(f"\n -> using {wave_type} waves for estimation ...")
 
-                ## rotate NE to RT
+                # rotate NE to RT
                 R, T = rotate_ne_rt(ACC.select(channel='*N')[0].data,
                                     ACC.select(channel='*E')[0].data,
                                     backas[i_deg]
                                    )
 
-                ## compute correlation for backazimuth
+                # compute correlation for backazimuth
 #                 corrbaz0 = xcorr(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,)
                 ccorr = correlate(ROT.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
                                   demean=True, normalize='naive', method='fft')
@@ -169,15 +164,14 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                 if show_details and i_deg == 0 and i_win == 0:
                     print(f"\n -> using {wave_type} waves for estimation ...")
 
-                ## rotate NE to RT
-
+                # rotate NE to RT
                 R, T = rotate_ne_rt(ROT.select(channel='*N')[0].data,
                                     ROT.select(channel='*E')[0].data,
                                     backas[i_deg]
                                    )
 
-                ## compute correlation for backazimuth
-                ## vertical acceleration has to be reversed for definition of polarization reasons
+                # compute correlation for backazimuth
+                # vertical acceleration has to be reversed for definition of polarization reasons
                 ccorr = correlate(-1*ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
                                   demean=True, normalize='naive', method='fft')
 #                 ccorr = correlate(ACC.select(channel="*Z")[0][idx1:idx2], T[idx1:idx2], 0,
@@ -196,37 +190,37 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     corrbaz = asarray(corrbaz)
     corrbaz = corrbaz.reshape(len(backas), config['num_windows'])
 
-
-    ## extract maxima
+    # extract maxima
     maxcorr = array([backas[corrbaz[:, l1].argmax()] for l1 in range(0, config['num_windows'])])
     maxcorr_value = array([max(corrbaz[:, l1]) for l1 in range(0, config['num_windows'])])
 
-    ## create mesh grid
+    # create mesh grid
     t_win = arange(0, config['win_length_sec']*config['num_windows']+config['win_length_sec'], config['win_length_sec'])
     t_win_center = t_win[:-1]+config['win_length_sec']/2
     mesh = meshgrid(t_win, backas)
 
+    # estimat velocity
+    # vel = []
+    vel = ones(config['num_windows'])*nan
 
-    ## estimat velocity
-    vel = []
     for _j, i_win in enumerate(range(0, config['num_windows'])):
 
-        ## infer indices
+        # infer indices
         idx1 = int(config['sampling_rate'] * config['win_length_sec'] * i_win)
         idx2 = int(config['sampling_rate'] * config['win_length_sec'] * (i_win + 1))
 
-        ## add overlap
+        # add overlap
         if i_win > 0 and i_win < config['num_windows']:
             idx1 = int(idx1 - config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
             idx2 = int(idx2 + config['overlap']/100 * config['win_length_sec'] * config['sampling_rate'])
 
-        ## prepare traces according to selected wave type
+        # prepare traces according to selected wave type
         if wave_type == "love":
             R_acc, T_acc = rotate_ne_rt(ACC.select(channel='*N')[0].data,
                                         ACC.select(channel='*E')[0].data,
                                         maxcorr[_j]
                                        )
-            ## ODR
+            # ODR
             data = odr.RealData(ROT.select(channel="*Z")[0][idx1:idx2], 0.5*T_acc[idx1:idx2])
             out = odr.ODR(data, model=odr.unilinear).run()
             slope, intercept = out.beta
@@ -243,29 +237,29 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             slope, intercept = out.beta
             _vel = abs(slope)
 
-        vel.append(_vel)
+        vel[_j] = _vel
 
     corrvel = asarray(vel)
 
-    ## _______________________________
-    ## Plotting
+    # _______________________________
+    # Plotting
     def __makeplot():
 
-        ## define figure
+        # define figure
         fig, ax = plt.subplots(3, 1, figsize=(15, 10), sharex=True)
 
         plt.subplots_adjust(hspace=0.1)
 
-        ## parameters
+        # parameters
         font = 12
 
         acc_scaling, acc_unit = 1e3, "mm/s$^2$"
         rot_scaling, rot_unit = 1e6, r"$\mu$rad/s"
 
-        ## create time axis
+        # create time axis
         time = linspace(0, len(ACC[0].data)/ACC[0].stats.sampling_rate, len(ACC[0].data))
 
-        ## plot vertical rotation rate
+        # plot vertical rotation rate
         if wave_type == "love":
             ax[0].plot(time, ROT.select(channel="*Z")[0].data*rot_scaling, label='vertical rotation rate')
             ax[0].set_ylabel(f'vert. rot. rate \n({rot_unit})', fontsize=font)
@@ -273,8 +267,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             ax[0].plot(time, T*rot_scaling, label='transverse rotation rate')
             ax[0].set_ylabel(f'trans. rot. rate \n({rot_unit})', fontsize=font)
 
-
-        ## plot transverse acceleration
+        # plot transverse acceleration
         if wave_type == "love":
             ax[1].plot(time, T*acc_scaling, 'k',label='transverse acceleration')
             ax[1].set_ylabel(f'transv. acc. \n({acc_unit})', fontsize=font)
@@ -282,8 +275,7 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             ax[1].plot(time, ACC.select(channel="*Z")[0].data*acc_scaling, 'k',label='vertical acceleration')
             ax[1].set_ylabel(f'vert. acc. \n({acc_unit})', fontsize=font)
 
-
-        ## backazimuth estimation plot
+        # backazimuth estimation plot
         im = ax[2].pcolormesh(t_win, backas, corrbaz[:-1,:], cmap=plt.cm.RdYlGn_r, vmin=-1, vmax=1, shading='auto')
 
 #         ax[2].set_xlim(time[0], time[-1])
@@ -292,10 +284,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
         ax[2].set_ylabel(u'estimated \n backazimuth (°)', fontsize=font)
         ax[2].set_xlabel('time (s)', fontsize=font)
 
-
-        ## plot maximal correclation values
+        # plot maximal correclation values
         ax[2].plot(t_win_center, maxcorr, '.k')
-
 
         if event is not None:
             ## plot theoretical Backazimuth for comparison
@@ -312,12 +302,10 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
                 x_text, y_text = time[int(0.78*len(time))], config['baz'][2]-15
                 ax[2].text(x_text, y_text, baz_label, color='k', fontsize=font-2)
 
-
-            ## epicentral distance
+            # epicentral distance
             edist = round(config['baz'][0]/1000, 1)
 
-
-        ## adjust title
+        # adjust title
         date = config['tbeg'].date
         t1, t2 = str(config['tbeg'].time).split(".")[0], str(config['tend'].time).split(".")[0]
         try:
@@ -331,21 +319,20 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
             except:
                 ax[0].set_title(f" {date} | {t1} - {t2} UTC", fontsize=font-1)
 
-        ## tune tick size
+        # tune tick size
         for i in range(3):
             ax[i].tick_params(axis="y", labelsize=font-1)
             ax[i].tick_params(axis="x", labelsize=font-1)
             ax[i].set_xlim(time[0], time[-1])
 
-        ## add legends
+        # add legends
         ax[0].legend(loc=1, fontsize=font-2)
         ax[1].legend(loc=1, fontsize=font-2)
 
-        ## adjust tick label style
+        # adjust tick label style
         ax[1].ticklabel_format(axis='y', style='sci', scilimits=(-2, 2))
 
-
-        ## add colorbar
+        # add colorbar
         cax = ax[2].inset_axes([1.01, 0., 0.02, 1])
         cb1 = plt.colorbar(im, ax=ax[2], cax=cax)
         cb1.set_label("CC Coefficient", fontsize=font)
@@ -356,9 +343,8 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
     if plot:
         fig = __makeplot();
 
-
-    ## _______________________________
-    ## prepare output
+    # _______________________________
+    # prepare output
 
     output = {}
 
@@ -380,4 +366,4 @@ def __compute_backazimuth(st_acc, st_rot, config, wave_type="love", flim=(None, 
 
     return output
 
-## End of File
+# End of File
