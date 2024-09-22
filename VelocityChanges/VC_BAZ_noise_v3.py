@@ -428,6 +428,8 @@ def main(config):
         ttime.append(t1)
         ttime_bf.append(t1)
 
+        print(ttime)
+
         if baz_computed:
 
             try:
@@ -504,7 +506,6 @@ def main(config):
             print(e)
 
         print("\n_______________________________________________\n")
-
 
     # ______________________________________________________
     # reshape arrays

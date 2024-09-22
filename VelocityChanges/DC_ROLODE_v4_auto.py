@@ -501,18 +501,28 @@ def main(config):
         if config['verbose']:
             print(st)
 
+        for tr in st:
+            tr.stats.network = "BW"
+            tr.stats.station = "XROMY"
+            tr.stats.location = ""
+
+        print(st)
 
         # check if all traces have same amount of samples
         n_samples = [tr.stats.npts for tr in st]
         if not all(x == n_samples[0] for x in n_samples):
             print(f" -> stream size inconsistent: {n_samples}")
 
+            st._trim_common_channels()
             # if difference not larger than one -> adjust
-            if any([abs(x-n_samples[0]) > 1 for x in n_samples]):
-                stop = True
+            if any([abs(x-n_samples[0]) > 1000 for x in n_samples]):
+                # stop = True
+                stop = False
             else:
                 for tr in st:
                     tr.data = tr.data[:min(n_samples)]
+
+        print(st)
 
         if config['verbose']:
             print(st)
