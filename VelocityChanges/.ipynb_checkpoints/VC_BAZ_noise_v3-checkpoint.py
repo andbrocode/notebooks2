@@ -86,6 +86,12 @@ config['window_overlap'] = 75 # 90
 # set sampling rate
 config['sps'] = 20 # Hz
 
+# expected samples
+config['samples'] = config['sps'] * config['interval_seconds']
+
+# get size of arrays
+config['arr_size'] = (config['interval_seconds'] * config['sps']) // (int(config['sps'] * config['window_length_sec']))
+
 # ______________________________________________________
 
 def __load_mlti(tbeg, tend, ring, path_to_archive):
@@ -162,7 +168,7 @@ def main(config):
     NN = len(times)
 
     # prepare dummy trace
-    dummy_size = 90
+    dummy_size = config['arr_size']
     nan_dummy = np.ones(dummy_size)*np.nan
 
     # prepare arrays
@@ -208,7 +214,6 @@ def main(config):
 
     # prepare status variable
     status = np.zeros((2, len(times)))
-
 
     # ______________________________________________________
 
@@ -325,6 +330,10 @@ def main(config):
         except:
             pass
 
+        for tr in rot+acc:
+            if tr.stats.npts != config['samples']:
+                print(f"shorter {tr.stats.npts} != {config['samples']}")
+
         # ______________________________________________________
         # configurations
 
@@ -408,8 +417,6 @@ def main(config):
                                                 plot=False
                                                )
 
-
-
             # change status to success
             status[1, _n] = 1
             bf_computed = True
@@ -450,25 +457,28 @@ def main(config):
             except:
                 pass
 
-            try:
-                baz_love_all[_n] = out['baz_love_all']
-                baz_rayleigh_all[_n] = out['baz_rayleigh_all']
-                baz_tangent_all[_n] = out['baz_tangent_all']
+            # try:
+            baz_love_all[_n] = out['baz_love_all']
+            baz_rayleigh_all[_n] = out['baz_rayleigh_all']
+            baz_tangent_all[_n] = out['baz_tangent_all']
 
-                vel_love_all[_n] = out['vel_love_all']
-                vel_rayleigh_all[_n] = out['vel_rayleigh_all']
+            vel_love_all[_n] = out['vel_love_all']
+            vel_rayleigh_all[_n] = out['vel_rayleigh_all']
 
-                cc_tangent_all[_n] = out['cc_tangent_all']
-                cc_love_all[_n] = out['cc_love_all']
-                cc_rayleigh_all[_n] = out['cc_rayleigh_all']
+            cc_tangent_all[_n] = out['cc_tangent_all']
+            cc_love_all[_n] = out['cc_love_all']
+            cc_rayleigh_all[_n] = out['cc_rayleigh_all']
 
-                times_relative[_n] = out['times_relative']
+            times_relative[_n] = out['times_relative']
 
-                times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-                times_all[_n] = times_absolute
-            except:
-                print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
-                pass
+            times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+            times_all[_n] = times_absolute
+
+            print(times_all)
+            # except Exception as e:
+            #     print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
+            #     print(e)
+            #     pass
 
 
         if bf_computed:
