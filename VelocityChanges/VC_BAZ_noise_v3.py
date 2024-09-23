@@ -377,6 +377,11 @@ def main(config):
                                                            plot=False,
                                                            save=True
                                                           );
+ 
+            # check timing
+            if len(out['time']) != len(config['rel_times']):
+                print(" -> timing error")
+                
             # change status to success
             status[0, _n] = 1
             baz_computed = True
@@ -386,9 +391,6 @@ def main(config):
             baz_computed = False
             print(e)
 
-        # check timing
-        if len(out['time']) != len(config['rel_times']):
-            print(" -> timing error")
 
         # ______________________________________________________
         # check for MTLI launches
@@ -430,7 +432,11 @@ def main(config):
                                                 plot=False
                                                )
 
-            # change status to success
+            # check timing
+            if len(out_bf['time']) != len(config['rel_times']):
+                print(" -> beamforming timing error")
+            
+           # change status to success
             status[1, _n] = 1
             bf_computed = True
 
@@ -439,9 +445,6 @@ def main(config):
             print(e)
             bf_computed = False
 
-        # check timing
-        if len(out_bf['time']) != len(config['rel_times']):
-            print(" -> beamforming timing error")
 
         # ______________________________________________________
         # assign values to arrays
