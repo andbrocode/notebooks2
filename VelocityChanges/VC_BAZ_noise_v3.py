@@ -203,12 +203,12 @@ def main(config):
 
     times_relative = np.ones([NN, dummy_size])*np.nan
     times_all = np.ones([NN, dummy_size])*np.nan
+    times_all_bf = np.ones([NN, dummy_size])*np.nan
 
     baz_bf = np.ones(NN)*np.nan
     baz_bf_std = np.ones(NN)*np.nan
 
     vel_bf = np.ones(NN)*np.nan
-    time_bf = np.ones(NN)*np.nan
 
     ttime = []
     ttime_bf = []
@@ -232,7 +232,7 @@ def main(config):
         lxx = __load_lxx(t1, t2, archive_path)
 
         try:
-            print(f"\nloading data ...")
+            # print(f"\nloading data ...")
 
             # inv1 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.BW_ROMY")
             # inv2 = read_inventory(config['path_to_inv']+"dataless/dataless.seed.GR_FUR")
@@ -457,7 +457,7 @@ def main(config):
         ttime_bf.append(_time_center)
 
         times_all[_n] = np.array([t1 + float(_t) for _t in config['rel_times']])
-        time_bf[_n] = np.array([t1 + int(_t) for _t in config['rel_times']])
+        times_all_bf[_n] = np.array([t1 + int(_t) for _t in config['rel_times']])
 
         # assign mlti values
         mlti_hor.append(mlti_h)
@@ -584,8 +584,8 @@ def main(config):
 
     output1 = {}
 
-    output1['time'] = np.array(times_all)
-    output1['time_bf'] = np.array(time_bf)
+    output1['time'] = np.array(times_all_bf)
+    # output1['time_bf'] = np.array(time_bf)
 
     output1['baz_tangent_all'] = reshaping(baz_tangent_all)
     output1['baz_rayleigh_all'] = reshaping(baz_rayleigh_all)
