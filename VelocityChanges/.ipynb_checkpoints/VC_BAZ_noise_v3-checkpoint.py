@@ -215,6 +215,10 @@ def main(config):
     # prepare status variable
     status = np.zeros((2, len(times)))
 
+    # log mlti status
+    mlti_hor = []
+    mlti_ver = []
+
     # ______________________________________________________
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
@@ -382,6 +386,8 @@ def main(config):
         # ______________________________________________________
         # check for MTLI launches
 
+        mlti_h = False
+        mlti_z = False
         try:
             print(f"\ncheckup for MLTI ...")
 
@@ -390,11 +396,11 @@ def main(config):
 
             if N_N > 1 or N_E > 1 or levels["N"] > 1e-6 or levels["E"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (horizontal)")
-                baz_computed = False
+                mlti_h = True
 
             if N_Z > 1 or levels["Z"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (vertical)")
-                baz_computed = False
+                mlti_z = True
 
         except Exception as e:
             print(f" -> chekup failed!")
@@ -429,13 +435,16 @@ def main(config):
         # ______________________________________________________
         # assign values to arrays
 
-        # always assign time values
-        # ttime[_n] = t1
-        # ttime_bf[_n] = t1
-        ttime.append(t1)
-        ttime_bf.append(t1)
+        # central time of window
+        _time_center = t1 + config['interval_seconds'] / 2
 
-        print(ttime)
+        # always assign time values
+        ttime.append(_time_center)
+        ttime_bf.append(_time_center)
+
+        # assign mlti values
+        mlti_hor.append(mlti_h)
+        mlti_ver.append(mlti_v)
 
         if baz_computed:
 
@@ -488,7 +497,7 @@ def main(config):
 
                 num_stations_used[_n] = out_bf['num_stations_used']
             except Exception as e:
-                print(e):
+                print(e)
                 pass
 
             try:
