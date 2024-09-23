@@ -431,9 +431,10 @@ def main(config):
                                                 bandpass=True,
                                                 plot=False
                                                )
+            sampling_factor = int(round(len(out_bf['time'])/config['arr_size']))
 
             # check timing
-            if len(out_bf['time']) != len(config['rel_times']):
+            if len(out_bf['time'][::sampling_factor]) != len(config['rel_times']):
                 print(" -> beamforming timing error")
             
            # change status to success
@@ -513,13 +514,14 @@ def main(config):
                 baz_bf_std[_n] = out_bf['baz_bf_std']
 
                 num_stations_used[_n] = out_bf['num_stations_used']
+
             except Exception as e:
                 print(e)
                 pass
 
             try:
-                vel_bf_all[_n] = out_bf['slow']
-                baz_bf_all[_n] = out_bf['baz']
+                vel_bf_all[_n] = out_bf['slow'][::sampling_factor]
+                baz_bf_all[_n] = out_bf['baz'][::sampling_factor]
 
                 # times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
                 # time_bf[_n] = times_abs
