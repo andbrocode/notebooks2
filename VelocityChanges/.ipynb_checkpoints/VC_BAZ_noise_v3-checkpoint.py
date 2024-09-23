@@ -457,28 +457,27 @@ def main(config):
             except:
                 pass
 
-            # try:
-            baz_love_all[_n] = out['baz_love_all']
-            baz_rayleigh_all[_n] = out['baz_rayleigh_all']
-            baz_tangent_all[_n] = out['baz_tangent_all']
+            try:
+                baz_love_all[_n] = out['baz_love_all']
+                baz_rayleigh_all[_n] = out['baz_rayleigh_all']
+                baz_tangent_all[_n] = out['baz_tangent_all']
 
-            vel_love_all[_n] = out['vel_love_all']
-            vel_rayleigh_all[_n] = out['vel_rayleigh_all']
+                vel_love_all[_n] = out['vel_love_all']
+                vel_rayleigh_all[_n] = out['vel_rayleigh_all']
 
-            cc_tangent_all[_n] = out['cc_tangent_all']
-            cc_love_all[_n] = out['cc_love_all']
-            cc_rayleigh_all[_n] = out['cc_rayleigh_all']
+                cc_tangent_all[_n] = out['cc_tangent_all']
+                cc_love_all[_n] = out['cc_love_all']
+                cc_rayleigh_all[_n] = out['cc_rayleigh_all']
 
-            times_relative[_n] = out['times_relative']
+                times_relative[_n] = out['times_relative']
 
-            times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-            times_all[_n] = times_absolute
+                times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+                times_all[_n] = times_absolute
 
-            print(times_all)
-            # except Exception as e:
-            #     print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
-            #     print(e)
-            #     pass
+            except Exception as e:
+                print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
+                print(e)
+                pass
 
 
         if bf_computed:
@@ -488,7 +487,8 @@ def main(config):
                 baz_bf_std[_n] = out_bf['baz_bf_std']
 
                 num_stations_used[_n] = out_bf['num_stations_used']
-            except:
+            except Exception as e:
+                print(e):
                 pass
 
             try:
@@ -497,7 +497,8 @@ def main(config):
 
                 times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
                 time_bf[_n] = times_abs
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
         # ______________________________________________________
