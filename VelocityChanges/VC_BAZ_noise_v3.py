@@ -339,7 +339,7 @@ def main(config):
 
         for tr in rot+acc:
             if tr.stats.npts != config['samples']:
-                print(f"shorter {tr.stats.npts} != {config['samples']}")
+                print(f"-> size inconsistent: {tr.stats.npts} != {config['samples']}")
 
         # ______________________________________________________
         # configurations
@@ -379,7 +379,7 @@ def main(config):
                                                           );
  
             # check timing
-            if len(out['time']) != len(config['rel_times']):
+            if len(out['times_relative']) != len(config['rel_times']):
                 print(" -> timing error")
                 
             # change status to success
@@ -572,6 +572,9 @@ def main(config):
     output['vel_rayleigh_std'] = np.array(vel_rayleigh_std)
 
     output['num_stations_used'] = num_stations_used
+
+    output['mlti_hor'] = mlti_hor
+    output['mlti_ver'] = mlti_ver
 
     # ______________________________________________________
     # store output to file
