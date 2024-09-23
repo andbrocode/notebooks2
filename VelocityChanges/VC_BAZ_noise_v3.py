@@ -92,6 +92,9 @@ config['samples'] = config['sps'] * config['interval_seconds']
 # get size of arrays
 config['arr_size'] = (config['interval_seconds'] * config['sps']) // (int(config['sps'] * config['window_length_sec']))
 
+# relative times
+config['rel_times'] = np.linspace(0, config['arr_size']/config['sps'], config['arr_size'])
+
 # ______________________________________________________
 
 def __load_mlti(tbeg, tend, ring, path_to_archive):
@@ -383,11 +386,15 @@ def main(config):
             baz_computed = False
             print(e)
 
+        # check timing
+        if len(out['time']) != len(config['rel_times']):
+            print(" -> timing error")
+
         # ______________________________________________________
         # check for MTLI launches
 
         mlti_h = False
-        mlti_z = False
+        mlti_v = False
         try:
             print(f"\ncheckup for MLTI ...")
 
@@ -400,7 +407,7 @@ def main(config):
 
             if N_Z > 1 or levels["Z"] > 1e-6 or maintenance:
                 print(" -> to many MLTI (vertical)")
-                mlti_z = True
+                mlti_v = True
 
         except Exception as e:
             print(f" -> chekup failed!")
@@ -432,6 +439,10 @@ def main(config):
             print(e)
             bf_computed = False
 
+        # check timing
+        if len(out_bf['time']) != len(config['rel_times']):
+            print(" -> beamforming timing error")
+
         # ______________________________________________________
         # assign values to arrays
 
@@ -441,6 +452,9 @@ def main(config):
         # always assign time values
         ttime.append(_time_center)
         ttime_bf.append(_time_center)
+
+        times_all[_n] = np.array([t1 + float(_t) for _t in config['rel_times']])
+        time_bf[_n] = np.array([t1 + int(_t) for _t in config['rel_times']])
 
         # assign mlti values
         mlti_hor.append(mlti_h)
@@ -480,8 +494,8 @@ def main(config):
 
                 times_relative[_n] = out['times_relative']
 
-                times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-                times_all[_n] = times_absolute
+                # times_absolute = [t1 + float(_t) for _t in out['times_relative']]
+                # times_all[_n] = times_absolute
 
             except Exception as e:
                 print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
@@ -504,8 +518,8 @@ def main(config):
                 vel_bf_all[_n] = out_bf['slow']
                 baz_bf_all[_n] = out_bf['baz']
 
-                times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
-                time_bf[_n] = times_abs
+                # times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
+                # time_bf[_n] = times_abs
             except Exception as e:
                 print(e)
                 pass
