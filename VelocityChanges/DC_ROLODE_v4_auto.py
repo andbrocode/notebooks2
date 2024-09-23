@@ -513,7 +513,12 @@ def main(config):
         if not all(x == n_samples[0] for x in n_samples):
             print(f" -> stream size inconsistent: {n_samples}")
 
-            st._trim_common_channels()
+            _tbeg = max([tr.stats.starttime for tr in st])
+            _tend = min([tr.stats.endtime for tr in st])
+            print(_tbeg, _tend)
+            st = st.trim(_tbeg, _tend, nearest_sample=True)
+            # st._trim_common_channels()
+
             # if difference not larger than one -> adjust
             if any([abs(x-n_samples[0]) > 1000 for x in n_samples]):
                 # stop = True
