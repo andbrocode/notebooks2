@@ -52,6 +52,9 @@ else:
 # config['tbeg'] = UTCDateTime("2023-09-20 21:00")
 # config['tend'] = UTCDateTime("2023-09-20 22:00")
 
+# set if plots are stored or not
+config['store_plots'] = True
+
 config['path_to_sds1'] = archive_path+"temp_archive/"
 
 config['path_to_sds2'] = bay_path+f"mseed_online/archive/"
@@ -93,7 +96,7 @@ config['samples'] = config['sps'] * config['interval_seconds']
 config['arr_size'] = (config['interval_seconds'] * config['sps']) // (int(config['sps'] * config['window_length_sec']))
 
 # relative times
-config['rel_times'] = np.linspace(0, config['arr_size']/config['sps'], config['arr_size'])
+config['rel_times'] = np.linspace(0, config['interval_seconds']-config['window_length_sec'], config['arr_size'])
 
 # ______________________________________________________
 
@@ -156,6 +159,43 @@ def __to_array(arr_in):
 
     return np.array(arr_out)
 
+def __trim_stream(_st, set_common=True, set_interpolate=False):
+
+    from numpy import interp, arange
+
+    def __get_size(st0):
+        return [tr.stats.npts for tr in st0]
+
+    # get size of traces
+    n_samples = __get_size(_st)
+
+    # check if all traces have same amount of samples
+    if not all(x == n_samples[0] for x in n_samples):
+        print(f" -> stream size inconsistent: {n_samples}")
+
+        # if difference not larger than one -> adjust
+        if any([abs(x-n_samples[0]) > 1 for x in n_samples]):
+
+            # set to common minimum interval
+            if set_common:
+                _tbeg = max([tr.stats.starttime for tr in _st])
+                _tend = min([tr.stats.endtime for tr in _st])
+                _st = _st.trim(_tbeg, _tend, nearest_sample=True)
+                print(f"  -> adjusted: {__get_size(_st)}")
+
+                if set_interpolate:
+                    _times = arange(0, min(__get_size(_st)), _st[0].stats.delta)
+                    for tr in _st:
+                        tr.data = interp(_times, tr.times(reftime=_tbeg), tr.data)
+        else:
+            # adjust for difference of one sample
+            for tr in _st:
+                tr.data = tr.data[:min(n_samples)]
+                print(f"  -> adjusted: {__get_size(_st)}")
+
+    return _st
+
+
 # ______________________________________________________
 
 def main(config):
@@ -201,9 +241,11 @@ def main(config):
     vel_love_all = np.ones([NN, dummy_size])*np.nan
     vel_bf_all = np.ones([NN, dummy_size])*np.nan
 
-    times_relative = np.ones([NN, dummy_size])*np.nan
-    times_all = np.ones([NN, dummy_size])*np.nan
-    times_all_bf = np.ones([NN, dummy_size])*np.nan
+    # times_relative = np.ones([NN, dummy_size])*np.nan
+    # times_all = np.ones([NN, dummy_size])*np.nan
+    # times_all_bf = np.ones([NN, dummy_size])*np.nan
+    times_all = []
+    times_all_bf = []
 
     baz_bf = np.ones(NN)*np.nan
     baz_bf_std = np.ones(NN)*np.nan
@@ -223,10 +265,30 @@ def main(config):
     mlti_ver = []
 
     # ______________________________________________________
+    # reshape arrays
+    def reshaping(_arr):
+        return _arr.reshape(NN*dummy_size)
+
+    # ______________________________________________________
 
     for _n, (t1, t2) in enumerate(tqdm(times)):
 
         # print(_n, t1, t2)
+
+        # central time of window
+        _time_center = t1 + config['interval_seconds'] / 2
+
+        # always assign time values
+        ttime.append(_time_center)
+        ttime_bf.append(_time_center)
+
+        # times_all[_n] = np.array([t1 + float(_t) for _t in config['rel_times']])
+        # times_all_bf[_n] = np.array([t1 + int(_t) for _t in config['rel_times']])
+        for _t in config['rel_times']:
+            times_all.append(t1 + float(_t))
+            times_all_bf.append(t1 + float(_t))
+            
+        print(config['rel_times'][0],config['rel_times'][-1])
 
         # load maintenance file
         lxx = __load_lxx(t1, t2, archive_path)
@@ -450,16 +512,6 @@ def main(config):
         # ______________________________________________________
         # assign values to arrays
 
-        # central time of window
-        _time_center = t1 + config['interval_seconds'] / 2
-
-        # always assign time values
-        ttime.append(_time_center)
-        ttime_bf.append(_time_center)
-
-        times_all[_n] = np.array([t1 + float(_t) for _t in config['rel_times']])
-        times_all_bf[_n] = np.array([t1 + int(_t) for _t in config['rel_times']])
-
         # assign mlti values
         mlti_hor.append(mlti_h)
         mlti_ver.append(mlti_v)
@@ -481,6 +533,7 @@ def main(config):
 
                 vel_love_max[_n] = out['vel_love_max']
                 vel_love_std[_n] = out['vel_love_std']
+
             except:
                 pass
 
@@ -495,11 +548,6 @@ def main(config):
                 cc_tangent_all[_n] = out['cc_tangent_all']
                 cc_love_all[_n] = out['cc_love_all']
                 cc_rayleigh_all[_n] = out['cc_rayleigh_all']
-
-                times_relative[_n] = out['times_relative']
-
-                # times_absolute = [t1 + float(_t) for _t in out['times_relative']]
-                # times_all[_n] = times_absolute
 
             except Exception as e:
                 print(f" -> failed to assign ({dummy_size}) != {len(out['times_relative'])}")
@@ -523,40 +571,56 @@ def main(config):
                 vel_bf_all[_n] = out_bf['slow'][::sampling_factor]
                 baz_bf_all[_n] = out_bf['baz'][::sampling_factor]
 
-                # times_abs = np.array([t1 + int(_t) for _t in out_bf['time']])
-                # time_bf[_n] = times_abs
             except Exception as e:
                 print(e)
                 pass
 
+        # checkup plot
+        try:
+
+            fig, ax = plt.subplots(4, 1)
+            NT = len(times_all)
+            ax[0].scatter(times_all, reshaping(baz_love_all)[:NT])
+            ax[1].scatter(times_all, reshaping(baz_rayleigh_all)[:NT])
+            ax[2].scatter(times_all, reshaping(baz_tangent_all)[:NT])
+            ax[3].scatter(times_all_bf, reshaping(baz_bf_all)[:NT])
+            plt.xlim(0, NN*dummy_size)
+            plt.show()
+            # plt.pause(5)
+            # plt.close("all")
+
+        except Exception as e:
+            print(e)
+
+
         # ______________________________________________________
         # store plots
 
-        try:
-            print(f"\ncreate plot ...")
+        if config['store_plots']:
+            try:
+                print(f"\ncreate plot ...")
 
-            t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
-            out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
-                                format="png", dpi=100, bbox_inches='tight')
-            print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
+                t1_t2 = f"{t1.date}_{str(t1.time).split('.')[0]}_{t2.date}_{str(t2.time).split('.')[0]}"
+                out['fig3'].savefig(config['path_to_figures']+f"VC_BAZ_{t1_t2}.png",
+                                    format="png", dpi=100, bbox_inches='tight')
+                print(f" -> stored: {config['path_to_figures']}VC_BAZ_{t1_t2}.png")
 
-        except Exception as e:
-            print(f" -> plotting failed!")
-            print(e)
+            except Exception as e:
+                print(f" -> plotting failed!")
+                print(e)
 
         print("\n_______________________________________________\n")
 
-    # ______________________________________________________
-    # reshape arrays
-    def reshaping(_arr):
-        return _arr.reshape(NN*dummy_size)
 
     # ______________________________________________________
     # prepare output dictionary
 
+    relative_times = [UTCDateTime(_t) - config['tbeg'] for _t in ttime]
+
     output = {}
 
-    output['time'] = np.array(ttime)
+    output['time_rel'] = np.array(relative_times)
+    output['time_utc'] = ttime
     output['baz_tangent'] = np.array(baz_tangent)
     output['baz_rayleigh'] = np.array(baz_rayleigh)
     output['baz_love'] = np.array(baz_love)
@@ -587,10 +651,13 @@ def main(config):
     # ______________________________________________________
     # prepare output dictionary 1
 
+    relative_times1 = [UTCDateTime(_t) - config['tbeg'] for _t in times_all]
+
     output1 = {}
 
-    output1['time'] = np.array(times_all_bf)
-    # output1['time_bf'] = np.array(time_bf)
+    output1['time_rel'] = relative_times1
+    output1['time_utc'] = times_all
+    output1['time_bf'] = times_all_bf
 
     output1['baz_tangent_all'] = reshaping(baz_tangent_all)
     output1['baz_rayleigh_all'] = reshaping(baz_rayleigh_all)
