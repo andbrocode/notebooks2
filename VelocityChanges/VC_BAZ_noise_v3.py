@@ -576,21 +576,21 @@ def main(config):
                 pass
 
         # checkup plot
-        try:
+        # try:
 
-            fig, ax = plt.subplots(4, 1)
-            NT = len(times_all)
-            ax[0].scatter(times_all, reshaping(baz_love_all)[:NT])
-            ax[1].scatter(times_all, reshaping(baz_rayleigh_all)[:NT])
-            ax[2].scatter(times_all, reshaping(baz_tangent_all)[:NT])
-            ax[3].scatter(times_all_bf, reshaping(baz_bf_all)[:NT])
-            plt.xlim(0, NN*dummy_size)
-            plt.show()
-            # plt.pause(5)
-            # plt.close("all")
+        #     fig, ax = plt.subplots(4, 1)
+        #     NT = len(times_all)
+        #     ax[0].scatter(times_all, reshaping(baz_love_all)[:NT])
+        #     ax[1].scatter(times_all, reshaping(baz_rayleigh_all)[:NT])
+        #     ax[2].scatter(times_all, reshaping(baz_tangent_all)[:NT])
+        #     ax[3].scatter(times_all_bf, reshaping(baz_bf_all)[:NT])
+        #     # plt.xlim(0, NN*dummy_size)
+        #     plt.show()
+        #     plt.pause(5)
+        #     plt.close("all")
 
-        except Exception as e:
-            print(e)
+        # except Exception as e:
+        #     print(e)
 
 
         # ______________________________________________________
@@ -642,11 +642,13 @@ def main(config):
     output['mlti_hor'] = mlti_hor
     output['mlti_ver'] = mlti_ver
 
+    print(output.keys())
+
     # ______________________________________________________
     # store output to file
 
-    print(f"-> store: {config['path_to_data_out']}statistics/VC_BAZ_{config['tbeg'].date}.pkl")
-    __store_as_pickle(output, config['path_to_data_out']+"statistics/"+f"VC_BAZ_{config['tbeg'].date}")
+    print(f"-> store: {config['path_to_data_out']}statistics2/VC_BAZ_{config['tbeg'].date}.pkl")
+    __store_as_pickle(output, config['path_to_data_out']+"statistics2/"+f"VC_BAZ_{config['tbeg'].date}")
 
     # ______________________________________________________
     # prepare output dictionary 1
@@ -675,8 +677,8 @@ def main(config):
     # ______________________________________________________
     # store output to file
 
-    print(f"-> store: {config['path_to_data_out']}all/VC_BAZ_{config['tbeg'].date}_all.pkl")
-    __store_as_pickle(output1, config['path_to_data_out']+"all/"+f"VC_BAZ_{config['tbeg'].date}_all")
+    print(f"-> store: {config['path_to_data_out']}all2/VC_BAZ_{config['tbeg'].date}_all.pkl")
+    __store_as_pickle(output1, config['path_to_data_out']+"all2/"+f"VC_BAZ_{config['tbeg'].date}_all")
 
     # ______________________________________________________
     # status plot
