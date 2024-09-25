@@ -52,6 +52,8 @@ else:
 # config['tbeg'] = UTCDateTime("2023-09-20 21:00")
 # config['tend'] = UTCDateTime("2023-09-20 22:00")
 
+config['project'] = 2
+
 # set if plots are stored or not
 config['store_plots'] = True
 
@@ -97,6 +99,7 @@ config['arr_size'] = (config['interval_seconds'] * config['sps']) // (int(config
 
 # relative times
 config['rel_times'] = np.linspace(0, config['interval_seconds']-config['window_length_sec'], config['arr_size'])
+
 
 # ______________________________________________________
 
@@ -199,6 +202,12 @@ def __trim_stream(_st, set_common=True, set_interpolate=False):
 # ______________________________________________________
 
 def main(config):
+
+    # dump config settings
+    try:
+        __store_as_pickle(config, config['path_to_data_out']+f"config{config['project']}.pkl")
+    except:
+        pass
 
     # prepare time intervals for loop
     times = __get_time_intervals(config['tbeg'],
@@ -647,8 +656,8 @@ def main(config):
     # ______________________________________________________
     # store output to file
 
-    print(f"-> store: {config['path_to_data_out']}statistics2/VC_BAZ_{config['tbeg'].date}.pkl")
-    __store_as_pickle(output, config['path_to_data_out']+"statistics2/"+f"VC_BAZ_{config['tbeg'].date}")
+    print(f"-> store: {config['path_to_data_out']}statistics{config['project']}/VC_BAZ_{config['tbeg'].date}.pkl")
+    __store_as_pickle(output, config['path_to_data_out']+f"statistics{config['project']}/"+f"VC_BAZ_{config['tbeg'].date}")
 
     # ______________________________________________________
     # prepare output dictionary 1
@@ -677,8 +686,8 @@ def main(config):
     # ______________________________________________________
     # store output to file
 
-    print(f"-> store: {config['path_to_data_out']}all2/VC_BAZ_{config['tbeg'].date}_all.pkl")
-    __store_as_pickle(output1, config['path_to_data_out']+"all2/"+f"VC_BAZ_{config['tbeg'].date}_all")
+    print(f"-> store: {config['path_to_data_out']}all{config['project']}/VC_BAZ_{config['tbeg'].date}_all.pkl")
+    __store_as_pickle(output1, config['path_to_data_out']+f"all{config['project']}/"+f"VC_BAZ_{config['tbeg'].date}_all")
 
     # ______________________________________________________
     # status plot

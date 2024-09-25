@@ -25,7 +25,7 @@ def __compare_backazimuth_codes(rot0, acc0, cat_event, fmin, fmax, Twin, Toverla
 
     ## specify coordinates of station
     config['station_longitude'] = 11.275501
-    config['station_latitude']  = 48.162941
+    config['station_latitude'] = 48.162941
 
     ## specify window length for baz estimation in seconds
     config['win_length_sec'] = Twin

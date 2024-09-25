@@ -33,28 +33,29 @@ from andbro__readYaml import __readYaml
 import warnings
 warnings.filterwarnings('ignore')
 
-
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
+    lamont_path = '/home/andbro/lamont/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
-elif os.uname().nodename in ['lin-ffb-01', 'hochfelln', 'ambrym']:
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
+elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
 
 config = {}
-
 
 if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
@@ -70,8 +71,8 @@ else:
 
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-05-01")
-config['date2'] = UTCDateTime(f"{config['year']}-05-31")
+config['date1'] = UTCDateTime(f"{config['year']}-06-01")
+config['date2'] = UTCDateTime(f"{config['year']}-09-30")
 
 config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"

@@ -32,22 +32,24 @@ from functions.get_xwt import __compute_cross_wavelet_transform
 import warnings
 warnings.filterwarnings('ignore')
 
-
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
     data_path = '/home/andbro/kilauea-data/'
     archive_path = '/home/andbro/freenas/'
-    bay_path = '/home/andbro/bay200/'
+    bay_path = '/home/andbro/ontap-ffb-bay200/'
+    lamont_path = '/home/andbro/lamont/'
 elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
-elif os.uname().nodename == 'lin-ffb-01':
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
+elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/import/ontap-ffb-bay200/'
+    lamont_path = '/lamont/'
 
 # In[] ___________________________________________________________
 ''' ---- set variables ---- '''
@@ -56,7 +58,6 @@ config = {}
 
 
 config['year'] = 2023
-
 
 config['seed1'] = "BW.RLAS..BJZ"
 
