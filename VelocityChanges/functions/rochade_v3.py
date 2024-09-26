@@ -62,7 +62,7 @@ class window_estimator:
     @type cw: float
     @param cw: estimation of phase velocity
     @type err: float
-    @param err: estimation of error 
+    @param err: estimation of error
     @type wght: float
     @param wght: weight for time window
     @type rotsq: float

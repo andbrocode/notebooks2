@@ -41,11 +41,11 @@ elif os.uname().nodename == 'kilauea':
 ## ---------------------------------------
 
 
-year = "2023"
+year = "2024"
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2024-02-01", "2024-03-31"
+t1, t2 = "2024-02-01", "2024-09-30"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
@@ -235,11 +235,10 @@ for name in names:
 
             config['startdate'], config['enddate'] = t1, t2
 
-            ## specify paths
+            # specify paths
             config['outpath_figures'] = data_path+f"LNM2/figures/"
 
-            config['path_to_outdata'] = data_path+f"LNM2/data/"
-
+            config['path_to_outdata'] = data_path+f"LNM2/data2/"
 
             d1, d2 = config['startdate'], config['enddate']
 

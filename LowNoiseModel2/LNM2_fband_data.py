@@ -41,11 +41,13 @@ elif os.uname().nodename == 'kilauea':
 ## ---------------------------------------
 
 
-year = "2023"
+year = "2024"
+
+project = 2
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2024-02-01", "2024-03-31"
+t1, t2 = "2024-02-01", "2024-09-30"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
@@ -99,8 +101,6 @@ def __load_data_file(path, file):
         psds_all.append(psd)
 
     return ff, array(psds_all)
-
-
 
 def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
@@ -160,7 +160,6 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
     return out
 
-
 ## ---------------------------------------
 ## load configurations
 
@@ -202,6 +201,12 @@ for name in names:
             # print(name, comp, app)
 
             config = {}
+
+            # specify paths
+            config['outpath_figures'] = data_path+f"LNM2/figures{project}/"
+
+            config['path_to_outdata'] = data_path+f"LNM2/data{project}/"
+
             try:
 
                 if app == "BDF_coh" and name == "BFO":
@@ -234,12 +239,6 @@ for name in names:
             config['path'] = path
 
             config['startdate'], config['enddate'] = t1, t2
-
-            ## specify paths
-            config['outpath_figures'] = data_path+f"LNM2/figures/"
-
-            config['path_to_outdata'] = data_path+f"LNM2/data/"
-
 
             d1, d2 = config['startdate'], config['enddate']
 
