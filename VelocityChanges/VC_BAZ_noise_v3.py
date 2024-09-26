@@ -205,8 +205,9 @@ def main(config):
 
     # dump config settings
     try:
-        __store_as_pickle(config, config['path_to_data_out']+f"config{config['project']}.pkl")
+        __store_as_pickle(config, config['path_to_data_out']+f"config{config['project']}")
     except:
+        print(f" -> failed to dump config file!")
         pass
 
     # prepare time intervals for loop

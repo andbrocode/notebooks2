@@ -27,7 +27,6 @@ def __compute_backazimuth_tangent(rot0, acc0, win_time_s=0.5, overlap=0.5, baz_t
         windows.append((n,n+n_win))
         n+=n_win
 
-
     ## add overlap
     if overlap != 0:
         windows_overlap = []
