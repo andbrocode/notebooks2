@@ -470,22 +470,11 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
 
-                # st1 = st1.filter("lowpass", freq=5, corners=4, zerophase=True)
-                # st2 = st2.filter("lowpass", freq=5, corners=4, zerophase=True)
-
-#                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-#                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
-#                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
-
-#                 st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
-#                 st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
-
-                st1 = st1.resample(10.0, no_filter=True)
-                st2 = st2.resample(10.0, no_filter=True)
-
+                st1 = st1.resample(1.0, no_filter=True)
+                st2 = st2.resample(1.0, no_filter=True)
 
             st1 = st1.merge()
             st2 = st2.merge()
