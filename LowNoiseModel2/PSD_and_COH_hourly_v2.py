@@ -380,10 +380,7 @@ def main(config):
 
         if "BW.ROMY." in config['seed2']:
             try:
-                st2 = Stream()
-                st2 += __read_sds(config['path_to_data2'], "BW.ROMY.30.BJZ", config['tbeg']-offset_sec, config['tend']+offset_sec)
-                st2 += __read_sds(config['path_to_data2'], "BW.ROMY.30.BJN", config['tbeg']-offset_sec, config['tend']+offset_sec)
-                st2 += __read_sds(config['path_to_data2'], "BW.ROMY.30.BJE", config['tbeg']-offset_sec, config['tend']+offset_sec)
+                st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
 
             except Exception as e:
                 print(e)
