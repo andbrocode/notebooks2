@@ -393,9 +393,6 @@ def main(config):
         if len(st2) > 1:
             st2.merge(fill_value=0)
 
-        for tr in st1+st2:
-            if len(tr.data) > 86400:
-                tr.data = tr.data[:86400]
 
         # integrate romy data from rad/s to rad
         if integrate:
@@ -481,6 +478,10 @@ def main(config):
 
             st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=False)
             st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=False)
+
+            for tr in st1+st2:
+                if len(tr.data) > 86400:
+                    tr.data = tr.data[:86400]
 
         except Exception as e:
             print(f" -> pre-processing failed!")
