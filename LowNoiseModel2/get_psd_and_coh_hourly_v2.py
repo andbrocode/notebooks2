@@ -662,9 +662,9 @@ def main(config):
 
             # set arrays to dummy or default if compuation failed due to error
             else:
-                psd1 = zeros(int(config.get('nperseg'))+2)
-                psd2 = zeros(int(config.get('nperseg'))+2)
-                coh = zeros(int(config.get('nperseg'))+2)
+                psd1 = zeros(int(config.get('n_pds'))+2)
+                psd2 = zeros(int(config.get('n_pds'))+2)
+                coh = zeros(int(config.get('n_pds'))+2)
                 f1 = default_f1
                 f2 = default_f2
                 ff_coh = default_ff_coh
