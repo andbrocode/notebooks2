@@ -508,7 +508,7 @@ def main(config):
 
         stx = st1+st2
         print(stx)
-        stx.plot(equal_scale=False)
+        stx.plot(equal_scale=False, outfile=path_to_figs+f"stx.png")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
