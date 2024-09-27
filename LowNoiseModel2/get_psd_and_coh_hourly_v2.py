@@ -473,7 +473,7 @@ def main(config):
                 st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
                 st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
 
-                st1 = st1.resample(config.get('sampling_rate') no_filter=True)
+                st1 = st1.resample(config.get('sampling_rate'), no_filter=True)
                 st2 = st2.resample(config.get('sampling_rate'), no_filter=True)
 
             st1 = st1.merge()
