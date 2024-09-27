@@ -271,6 +271,8 @@ for name in names:
 
             missing_data_count, missing_data = 0, []
 
+            calc_failed_count, calc_failed = 0, []
+
             for jj, day in enumerate(date_range(d1, d2)):
 
                 day = str(day).split(" ")[0].replace("-", "")
@@ -334,7 +336,9 @@ for name in names:
             try:
                 out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
             except Exception as e:
-                print(e)
+                # print(e)
+                calc_failed_count += 1
+                calc_failed.append(day)
                 continue
 
             # create and fill data frame
@@ -351,13 +355,13 @@ for name in names:
             print(f" -> {config['outname']}.pkl")
             df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
+            print(f"\n{missing_files_count} files are missing:")
+            print([mf for mf in missing_files])
+
+            print(f"\n{missing_data_count} data are missing/filtered:")
+            print([md for md in missing_data])
+
 print("\nFINISHED")
-
-print(f"\n{missing_files_count} files are missing:\n")
-print([mf for mf in missing_files])
-
-print(f"\n{missing_data_count} data are missing/filtered:\n")
-print([md for md in missing_data])
 
 gc.collect()
 
