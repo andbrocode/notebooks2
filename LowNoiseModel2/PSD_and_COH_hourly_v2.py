@@ -512,7 +512,7 @@ def main(config):
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
         # prepare psd parameters
-        config['nperseg'] = int(config.get('sampling_rate']*config.get('tseconds'))
+        config['nperseg'] = int(config.get('sampling_rate')*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
         print(st1)
