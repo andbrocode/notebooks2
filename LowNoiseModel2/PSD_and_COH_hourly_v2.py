@@ -476,12 +476,12 @@ def main(config):
             st1 = st1.merge()
             st2 = st2.merge()
 
-            st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=False)
-            st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=False)
+            st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=True)
+            st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=True)
 
             for tr in st1+st2:
-                if len(tr.data) > 86400:
-                    tr.data = tr.data[:86400]
+                if len(tr.data) > 86401:
+                    tr.data = tr.data[:86401]
 
         except Exception as e:
             print(f" -> pre-processing failed!")
@@ -549,9 +549,9 @@ def main(config):
             if n == 0:
                 ## prepare lists
                 if config['mode'] == "welch":
-                    psds1 = zeros([len(times), int(config.get('nperseg')/2)])
-                    psds2 = zeros([len(times), int(config.get('nperseg')/2)])
-                    cohs = zeros([len(times), int(config.get('nperseg')/2)])
+                    psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
                     # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
