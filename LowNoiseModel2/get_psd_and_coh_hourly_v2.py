@@ -527,10 +527,11 @@ def main(config):
         default_f2 = zeros(int(config.get('n_pds'))+2)
         default_ff_coh = zeros(int(config.get('n_pds'))+2)
 
+        set_default = False
+
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-            set_default = False
 
             # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
