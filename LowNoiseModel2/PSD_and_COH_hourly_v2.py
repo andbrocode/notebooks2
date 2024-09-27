@@ -57,11 +57,13 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 config = {}
 
+# expected argument for seed1 (pressure) and seed2
 if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
     config['seed2'] = sys.argv[2]
 else:
-    config['seed1'] = "BW.FFBI.30.BDO"  ## F = infrasound | O = absolute
+    print(f" missing seed arguments!")
+    # config['seed1'] = "BW.FFBI.30.BDO"  ## F = infrasound | O = absolute
     # config['seed2'] = "GR.FUR..BHZ"
     # config['seed2'] = "GR.FUR..BHN"
     # config['seed2'] = "GR.FUR..BHE"
@@ -69,17 +71,21 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
-config['project'] = 2
+# define a project name
+config['project'] = "2"
 
+# specify year
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-09-01")
+# define time period to analyze
+config['date1'] = UTCDateTime(f"{config['year']}-01-01")
 config['date2'] = UTCDateTime(f"{config['year']}-09-20")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
 
+# specify path to data and metadata
 if "FUR" in config['seed2']:
     config['path_to_data2'] = bay_path+f"mseed_online/archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
@@ -87,12 +93,13 @@ elif "ROMY" in config['seed2']:
     config['path_to_data2'] = archive_path+f"temp_archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
 
+# specify path to status files
 config['path_to_status_data'] = archive_path+f"temp_archive/"
 
-
-# specify unit
+# specify unit for pressure
 config['unit'] = "Pa" ## hPa or Pa or None
 
+# define the interval and overlap to analyze (default is one hour = 3600s)
 config['interval_seconds'] = 3600 ## in seconds
 config['interval_overlap'] = 0  ## in seconds
 
@@ -102,7 +109,6 @@ config['mode'] = "multitaper"  ## "multitaper" | "welch"
 
 # __________________________
 # set welch and coherence settings
-
 config['taper'] = 'hann'
 config['tseconds'] = 3600 ## seconds
 config['toverlap'] = 0 ## 0.75
@@ -112,14 +118,13 @@ config['scaling'] = 'density'
 config['onesided'] = True
 config['frequency_limits'] = None # (0, 0.05) # in Hz
 
-## __________________________
-## set multitaper settings
+# __________________________
+# set multitaper settings
 
-## number of taper for multitaper to use
+# number of taper for multitaper to use
 config['n_taper'] = 5
 config['time_bandwith'] = 3.5
 config['mt_method'] = 2 ## 0 = adaptive, 1 = unweighted, 2 = weighted with eigenvalues
-
 
 config['sta1'] = config['seed1'].split(".")[1]
 config['sta2'] = config['seed2'].split(".")[1]
@@ -251,7 +256,7 @@ def __load_status(tbeg, tend, ring, path_to_data):
     dd1 = date.fromisoformat(str(tbeg.date))
     dd2 = date.fromisoformat(str(tend.date))
 
-    ## dummy
+    # dummy
     def __make_dummy(date):
         NN = 1440
         df_dummy = DataFrame()
