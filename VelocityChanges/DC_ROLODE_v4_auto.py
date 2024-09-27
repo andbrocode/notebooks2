@@ -363,7 +363,6 @@ config['tra_seed'] = 'GR.FUR..BH*' # seed of translational data
 config['rot_seed'] = 'BW.ROMY.30.BJ*' # seed of rotational data
 # config['rot_seed'] = 'BW.ROMY.40.BJ*' # seed of rotational data
 
-
 # specify velocity limits
 config['vmin'] = 50
 config['vmax'] = 4500
@@ -379,7 +378,6 @@ config['tend'] = config['tbeg'] + 86400
 config['interval_seconds'] = 86400 # seconds
 config['interval_overlap'] = 0 # seconds
 
-
 # specify translational output
 config['tra_output'] = "ACC"
 
@@ -388,7 +386,7 @@ config['love_waves'] = True
 config['rayleigh1_waves'] = False # old
 config['rayleigh2_waves'] = True
 
-config['periods_per_window'] = 10 # 8
+config['periods_per_window'] = 3 # 10 # 8
 
 # Specify frequency bands here
 config['f_min'] = 0.01 # smallest frequency to process

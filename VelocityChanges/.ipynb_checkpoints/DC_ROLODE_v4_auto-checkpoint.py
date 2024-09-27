@@ -38,7 +38,6 @@ import sys
 import yaml
 import numpy as np
 import scipy as sp
-import rochade_v3 as rochade
 import pickle
 
 from tqdm import tqdm
@@ -47,6 +46,8 @@ from obspy import read, read_inventory, UTCDateTime, Stream
 from obspy.clients.filesystem.sds import Client
 from obspy.core import AttribDict
 from obspy.signal.rotate import rotate2zne
+
+from functions import rochade_v3 as rochade
 
 #matplotlib.use('agg')
 
@@ -139,9 +140,6 @@ def __read_from_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
         st = Stream()
 
     return st
-
-
-# In[7]:
 
 
 def __postprocessing(config, wave_type="love"):
@@ -251,9 +249,6 @@ def __postprocessing(config, wave_type="love"):
     print(f"\n Done for {wave_type.upper()}\n")
 
 
-# In[8]:
-
-
 def __load_rot_data(config, t1, t2):
 
     net, sta, loc, cha = config['rot_seed'].split(".")
@@ -268,9 +263,6 @@ def __load_rot_data(config, t1, t2):
         print(rot)
 
     return rot
-
-
-# In[9]:
 
 
 def __load_tra_data(config, t1, t2):
@@ -302,6 +294,43 @@ def __load_tra_data(config, t1, t2):
     return tra
 
 
+def __trim_stream(_st, set_common=True, set_interpolate=False):
+
+    from numpy import interp, arange
+
+    def __get_size(st0):
+        return [tr.stats.npts for tr in st0]
+
+    # get size of traces
+    n_samples = __get_size(_st)
+
+    # check if all traces have same amount of samples
+    if not all(x == n_samples[0] for x in n_samples):
+        print(f" -> stream size inconsistent: {n_samples}")
+
+        # if difference not larger than one -> adjust
+        if any([abs(x-n_samples[0]) > 1 for x in n_samples]):
+
+            # set to common minimum interval
+            if set_common:
+                _tbeg = max([tr.stats.starttime for tr in _st])
+                _tend = min([tr.stats.endtime for tr in _st])
+                _st = _st.trim(_tbeg, _tend, nearest_sample=True)
+                print(f"  -> adjusted: {__get_size(_st)}")
+
+                if set_interpolate:
+                    _times = arange(0, min(__get_size(_st)), _st[0].stats.delta)
+                    for tr in _st:
+                        tr.data = interp(_times, tr.times(reftime=_tbeg), tr.data)
+        else:
+            # adjust for difference of one sample
+            for tr in _st:
+                tr.data = tr.data[:min(n_samples)]
+                print(f"  -> adjusted: {__get_size(_st)}")
+
+    return _st
+
+
 # ## Configurations
 
 # In[14]:
@@ -315,6 +344,8 @@ config = {}
 # Example: /FINM1/2023/XX/FINM1/HHZ.D/XX.FINM1..HHZ.D.2023.041
 
 # config['client'] = Client('/home/andbro/kilauea-data/VelocityChanges/data/VROMY/sds/', sds_type='D', format='MSEED',)
+
+config['project'] = "rolode/"
 
 config['path_to_sds_rot'] = archive_path+"temp_archive/"
 config['path_to_sds_tra'] = bay_path+"mseed_online/archive/"
@@ -330,7 +361,7 @@ config['path_to_inv_rot'] = data_path+'stationxml_ringlaser/station_BW_ROMY.xml'
 # client2 = Client("IRIS")
 config['tra_seed'] = 'GR.FUR..BH*' # seed of translational data
 config['rot_seed'] = 'BW.ROMY.30.BJ*' # seed of rotational data
-
+# config['rot_seed'] = 'BW.ROMY.40.BJ*' # seed of rotational data
 
 # specify velocity limits
 config['vmin'] = 50
@@ -338,29 +369,28 @@ config['vmax'] = 4500
 
 # define start and end time of your data
 config['tbeg'] = UTCDateTime(sys.argv[1])
-config['tend'] = UTCDateTime(sys.argv[1]) + 86400
+config['tend'] = config['tbeg'] + 86400
 
 # config['tbeg'] = UTCDateTime("2024-09-09T00:00:00")
 # config['tend'] = UTCDateTime("2024-09-09T06:00:00")
 
 # specify interval durtation and overlap
-config['interval_seconds'] = 300 # seconds
-config['interval_overlap'] = 150 #0.1 # seconds
-
+config['interval_seconds'] = 86400 # seconds
+config['interval_overlap'] = 0 # seconds
 
 # specify translational output
 config['tra_output'] = "ACC"
 
 # select methods to compute
 config['love_waves'] = True
-config['rayleigh1_waves'] = False
+config['rayleigh1_waves'] = False # old
 config['rayleigh2_waves'] = True
 
-config['periods_per_window'] = 1. # 8
+config['periods_per_window'] = 3 # 10 # 8
 
 # Specify frequency bands here
 config['f_min'] = 0.01 # smallest frequency to process
-config['f_max'] = 2.0 # highest frequency to process
+config['f_max'] = 8.0 # highest frequency to process
 # config['f_space'] = 0.1 # frequency steps
 # config['bandwidth'] = 0.1  # Bandwidth of bandpass filter
 
@@ -372,19 +402,20 @@ config['f_max'] = 2.0 # highest frequency to process
 config['wghtmethod'] = "normed"
 
 # specify mask value
-config['mvalue'] = -1 # mvalue=-1
+# mvalue = -1
+config['mvalue'] = -1
 
 # exponent of normed weights
+# exp = 0.3
 config['exponent'] = 0.3
-# exp = 0.3 # exponent of normed weights
 
 # common sampling rate to resample the data
 config['sampling_rate'] = 20.
 
 # define fraction of ocatave bands
-config['faction_of_octave'] = 2
+config['faction_of_octave'] = 3
 
-# for body waves. not ripe yet
+# for body waves [not ready yet !!]
 config['body'] = False
 
 # set trigger
@@ -404,7 +435,7 @@ config['trigger_params'] = {"sta": tsta,"lta": tlta,"thres_1":thres1,"thres_2": 
 config['firstRun'] = True
 
 # set if details are printed
-config['verbose'] = False
+config['verbose'] = True
 
 # store configurations
 # with open(config['path_to_sds']+'config.yml', 'w') as outfile:
@@ -415,7 +446,12 @@ config['verbose'] = False
 
 def main(config):
 
+    # set break toogle to false
     stop = False
+
+    # check project directory
+    if not os.path.isdir(config['path_to_outdata']+config['project']):
+        os.mkdir(config['path_to_outdata']+config['project'])
 
     # ____________________________________________
 
@@ -429,8 +465,8 @@ def main(config):
     # cut first and last
     f_lower, f_higher = f_lower[1:-1], f_higher[1:-1]
 
-    f_lower = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
-    f_higher = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
+    # f_lower = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+    # f_higher = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
 
     # reverse sorting
     f_lower, f_higher = f_lower[::-1], f_higher[::-1]
@@ -478,7 +514,8 @@ def main(config):
 
         # check if merging is required
         if len(st) > 6:
-            st = st.merge(method=1, fill_value='latest')
+            # st = st.merge(method=1, fill_value='latest')
+            st = st.merge(method=1, fill_value=0)
 
         st = st.detrend("linear")
 
@@ -490,11 +527,40 @@ def main(config):
         if config['verbose']:
             print(st)
 
-        N = st[0].stats.npts
         for tr in st:
-            if tr.stats.npts != N:
-                print(f" -> stream size inconsistent")
-                stop = True
+            tr.stats.network = "BW"
+            tr.stats.station = "XROMY"
+            tr.stats.location = ""
+
+        print(st)
+
+        # check if all traces have same amount of samples
+        st = __trim_stream(st, set_common=True)
+
+        # n_samples = [tr.stats.npts for tr in st]
+        # if not all(x == n_samples[0] for x in n_samples):
+        #     print(f" -> stream size inconsistent: {n_samples}")
+
+        #     _tbeg = max([tr.stats.starttime for tr in st])
+        #     _tend = min([tr.stats.endtime for tr in st])
+        #     print(_tbeg, _tend)
+        #     st = st.trim(_tbeg, _tend, nearest_sample=True)
+        #     # st._trim_common_channels()
+        #     config['tbeg'] = _tbeg
+        #     config['tend'] = _tend
+
+        #     # if difference not larger than one -> adjust
+        #     if any([abs(x-n_samples[0]) > 1000 for x in n_samples]):
+        #         # stop = True
+        #         stop = False
+        #     else:
+        #         for tr in st:
+        #             tr.data = tr.data[:min(n_samples)]
+
+        print(st)
+
+        if config['verbose']:
+            print(st)
 
         if stop:
             continue
@@ -507,7 +573,7 @@ def main(config):
         ###################################################################
 
         # define filename
-        name = f"ROMY_{config['tbeg'].date}_{config['tend'].date}"
+        name = f"{config['project'][:-1]}_{str(config['tbeg'].date).replace('-','')}"
 
         # store in config
         config['filename'] = name
@@ -537,11 +603,13 @@ def main(config):
 
                 irot = rot.copy()
                 irot.integrate()
-                print(irot)
 
-                windows_l.window_estimation_love(irot[0],
-                                                 tra[1],
-                                                 tra[2],
+                ivel = acc.copy()
+                ivel.integrate()
+
+                windows_l.window_estimation_love(irot.select(component="Z")[0],
+                                                 ivel.select(component="N")[0],
+                                                 ivel.select(component="E")[0],
                                                  mask_value=config['mvalue'],
                                                  body=config['body'],
                                                  trigger=config['detrigger'],
@@ -549,7 +617,7 @@ def main(config):
                                                 )
 
                 # define path where to save output:
-                save_path_love = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-SV/"
+                save_path_love = config['path_to_outdata']+config['project']+f"{name}_SV/"
 
             else:
                 windows_l.window_estimation_love(rot.select(component="Z")[0],
@@ -560,7 +628,7 @@ def main(config):
                                                  verbose=config['verbose'],
                                                 )
 
-                save_path_love = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-Love/"
+                save_path_love = config['path_to_outdata']+config['project']+f"{name}_Love/"
 
             # createt directories
             if not os.path.exists(save_path_love):
@@ -593,19 +661,23 @@ def main(config):
                 windows_r.printlog()
 
             if config['body']:
+
                 irot = rot.copy()
                 irot.integrate()
 
-                windows_r.window_estimation_rayleigh(tra[0],
-                                                     irot[1],
-                                                     irot[2],
+                ivel = acc.copy()
+                ivel.integrate()
+
+                windows_r.window_estimation_rayleigh(ivel.select(component="Z")[0],
+                                                     irot.select(component="N")[0],
+                                                     irot.select(component="E")[0],
                                                      mask_value=config['mvalue'],
                                                      body=config['body'],
                                                      trigger=config['detrigger'],
                                                      verbose=config['verbose'],
                                                     )
 
-                save_path_ray1 = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-SV1/"
+                save_path_ray1 = config['path_to_outdata']+config['project']+f"{name}_SV1/"
             else:
 
                 windows_r.window_estimation_rayleigh(acc.select(component="Z")[0],
@@ -616,7 +688,7 @@ def main(config):
                                                      verbose=config['verbose'],
                                                     )
 
-                save_path_ray1 = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-Rayleigh/"
+                save_path_ray1 = config['path_to_outdata']+config['project']+f"{name}_Rayleigh/"
 
             # createt directories
             if not os.path.exists(save_path_ray1):
@@ -649,12 +721,16 @@ def main(config):
                 windows_r2.printlog()
 
             if config['body']:
+
                 irot = rot.copy()
                 irot.integrate()
 
-                save_path_ray2 = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-SV2/"
+                ivel = acc.copy()
+                ivel.integrate()
 
-                windows_r2.window_estimation_rayleigh2(tra,
+                save_path_ray2 = config['path_to_outdata']+config['project']+f"{name}_SV2/"
+
+                windows_r2.window_estimation_rayleigh2(ivel.select(component="Z")[0],
                                                        irot.select(component="N")[0],
                                                        irot.select(component="E")[0],
                                                        body=config['body'],
@@ -665,7 +741,7 @@ def main(config):
 
             else:
 
-                save_path_ray2 = config['path_to_outdata']+f"ROLODE/VROMY_HH/{name}-Rayleigh2/"
+                save_path_ray2 = config['path_to_outdata']+config['project']+f"{name}_Rayleigh2/"
 
                 windows_r2.window_estimation_rayleigh2(acc,
                                                        rot.select(component="N")[0],
@@ -712,7 +788,7 @@ def main(config):
     config_dump['tend'] = str(config_dump['tend'])
 
     # store configurations
-    with open(config['path_to_outdata']+f"ROLODE/VROMY_HH/"+f"{config['filename']}_config.yml", "w") as outfile:
+    with open(config['path_to_outdata']+config['project']+f""+f"{config['filename']}_config.yml", "w") as outfile:
         yaml.dump(config, outfile, default_flow_style=False, sort_keys=True)
 
 
