@@ -476,16 +476,26 @@ def main(config):
             st1 = st1.merge()
             st2 = st2.merge()
 
-            st1 = st1.trim(config['tbeg'], config['tend'])
-            st2 = st2.trim(config['tbeg'], config['tend'])
+            st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=False)
+            st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=False)
 
         except Exception as e:
             print(f" -> pre-processing failed!")
             print(e)
             continue
 
-        st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
-        st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
+        if len(st1) == 0:
+            print(f" -> st1 empty!")
+            continue
+        if len(st2) == 0:
+            print(f" -> st2 empty!")
+            continue
+
+        try:
+            st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
+            st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
+        except:
+            print(f" -> waveform plotting failed!")
 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
