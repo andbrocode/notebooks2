@@ -63,10 +63,9 @@ config['path_to_figures'] = f"{data_path}LNM2/figures/"
 
 config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
 
-config['d1'], config['d2'] = "2024-01-01", "2024-03-31"
+config['d1'], config['d2'] = "2024-02-01", "2024-09-20"
 
-# config['path_to_data'] = data_path+f"VelocityChanges/data/PSDS/"
-config['path_to_data'] = data_path+f"LNM2/PSDS/"
+config['path_to_data'] = data_path+f"LNM2/PSDS2/"
 
 
 # In[4]:
