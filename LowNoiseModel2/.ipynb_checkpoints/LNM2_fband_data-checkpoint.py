@@ -296,7 +296,7 @@ for name in names:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     # print(f" -> {day}: no data found")
                     missing_files_count += 1
                     missing_files.append(day)
