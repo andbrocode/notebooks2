@@ -543,7 +543,7 @@ def main(config):
                     cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
 
             # check length
-            if len(_st1[0].data) == 0 or len(_st2[0].data) == 0:
+            if len(_st1) == 0 or len(_st2) == 0:
                 error = True
                 # continue
 
