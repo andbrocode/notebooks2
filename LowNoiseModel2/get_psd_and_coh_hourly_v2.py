@@ -545,7 +545,7 @@ def main(config):
             _st2 = st2.copy()
 
             _st1 = _st1.trim(t1, t2, nearest_sample=True)
-            _st2 = st2.trim(t1, t2, nearest_sample=True)
+            _st2 = _st2.trim(t1, t2, nearest_sample=True)
 
             print(_st1)
             print(_st2)
