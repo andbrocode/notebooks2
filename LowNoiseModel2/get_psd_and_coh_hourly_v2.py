@@ -534,11 +534,17 @@ def main(config):
 
             print(t1, t2)
 
+            print(st1)
+            print(st2)
+
             error = False
 
             # trim streams for current interval
-            _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
-            _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+            _st1 = st1.copy()
+            _st2 = st2.copy()
+
+            _st1 = _st1.trim(t1, t2, nearest_sample=True)
+            _st2 = st2.trim(t1, t2, nearest_sample=True)
 
             print(_st1)
             print(_st2)
@@ -554,8 +560,6 @@ def main(config):
                     psds1 = zeros([len(times), int(config.get('n_psd'))+2])
                     psds2 = zeros([len(times), int(config.get('n_psd'))+2])
                     cohs = zeros([len(times), int(config.get('n_psd'))+2])
-
-            print(psds1.shape)
 
             # check length
             if len(_st1) == 0 or len(_st2) == 0:
@@ -589,14 +593,15 @@ def main(config):
             try:
                 _st1 = _st1.detrend("linear")
                 _st2 = _st2.detrend("linear")
-
+            except:
+                error = True
                 # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
                 # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
-
+            try:
                 _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
                 _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
             except:
-                error = True
+                pass
 
             # compute power spectra
             if config['mode'] == "welch" and not error:
