@@ -267,21 +267,27 @@ for name in names:
 
             index = 0
 
+            missing_files_count, missing_files = 0, []
+
+            missing_data_count, missing_data = 0, []
+
             for jj, day in enumerate(date_range(d1, d2)):
 
                 day = str(day).split(" ")[0].replace("-", "")
 
                 yr = day[:4]
 
-                ## update year if necessary
+                # update year if necessary
                 if year != yr:
                     config['filename'] = config['filename'].replace(year, yr)
 
                 # print(f"{config['filename']}_{day}_hourly.pkl")
 
-                ## check dates to be filtered out
+                # check dates to be filtered out
                 if day in filter_dates[name]:
-                    print(f" -> skip {day} due to date filter")
+                    # print(f" -> skip {day} due to date filter")
+                    missing_data_count += 1
+                    missing_data.append(day)
                     continue
 
                 try:
@@ -289,7 +295,9 @@ for name in names:
 
                 except Exception as e:
                     print(e)
-                    print(f" -> {day}: no data found")
+                    # print(f" -> {day}: no data found")
+                    missing_files_count += 1
+                    missing_files.append(day)
                     continue
 
                 try:
@@ -315,6 +323,7 @@ for name in names:
                     print(f" -> skip {day}")
                     continue
 
+            # get frequency octave bands
             f_lower, f_upper, f_center = __get_octave_bands(1e-3, 1e0, faction_of_octave=12, plot=False)
 
             try:
@@ -328,7 +337,7 @@ for name in names:
                 print(e)
                 continue
 
-            ## create and fill data frame
+            # create and fill data frame
             _df_out = DataFrame()
 
             _df_out['dates'] = out0['dates']
@@ -338,10 +347,18 @@ for name in names:
 
             df_out = _df_out.copy()
 
-            ## store as pickle file
+            # store as pickle file
             print(f" -> {config['outname']}.pkl")
             df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
+print("FINISHED")
+
+print(f"\n{missing_files_count} files are missing:\n")
+print([mf for mf in missing_files])
+
+print(f"\n{missing_data_count} data are missing/filtered:\n")
+print([md for md in missing_data])
+
 gc.collect()
 
-## End of File
+# End of File
