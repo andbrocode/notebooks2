@@ -393,6 +393,9 @@ def main(config):
         if len(st2) > 1:
             st2.merge(fill_value=0)
 
+        for tr in st1+st2:
+            if len(tr.data) > 86400:
+                tr.data = tr.data[:86400]
 
         # integrate romy data from rad/s to rad
         if integrate:
@@ -518,11 +521,7 @@ def main(config):
         ## run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-
-
             ## trim streams for current interval
-            # _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
-            # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
