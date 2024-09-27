@@ -646,6 +646,11 @@ def main(config):
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
+            else:
+                psd1 = zeros(int(config.get('nperseg'))+1)
+                psd2 = zeros(int(config.get('nperseg'))+1)
+                coh = zeros(int(config.get('nperseg'))+1)
+
             # load maintenance file
             try:
                 lxx = __load_lxx(t1, t2, archive_path)
