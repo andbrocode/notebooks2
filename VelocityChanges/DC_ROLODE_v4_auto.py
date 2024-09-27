@@ -345,7 +345,7 @@ config = {}
 
 # config['client'] = Client('/home/andbro/kilauea-data/VelocityChanges/data/VROMY/sds/', sds_type='D', format='MSEED',)
 
-config['project'] = "rolode/"
+config['project'] = "rolode3/"
 
 config['path_to_sds_rot'] = archive_path+"temp_archive/"
 config['path_to_sds_tra'] = bay_path+"mseed_online/archive/"
