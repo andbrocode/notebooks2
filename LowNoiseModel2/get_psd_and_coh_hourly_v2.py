@@ -518,7 +518,7 @@ def main(config):
         print(st1)
         print(st2)
 
-        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))+2
+        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))
 
         # if len(st1[0].data) != len(st2[0].data):
         #     print(" -> not sampe amount of samples!")
