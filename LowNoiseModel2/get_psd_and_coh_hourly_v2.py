@@ -482,9 +482,9 @@ def main(config):
             st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=True)
             st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=True)
 
-            for tr in st1+st2:
-                if len(tr.data) > 86401:
-                    tr.data = tr.data[:86401]
+            # for tr in st1+st2:
+            #     if len(tr.data) > 86401:
+            #         tr.data = tr.data[:86401]
 
         except Exception as e:
             print(f" -> pre-processing failed!")
