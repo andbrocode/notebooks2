@@ -651,10 +651,13 @@ def main(config):
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
-            if not set_default:
-                default_f1 = f1
-                default_f2 = f2
-                default_ff_coh = ff_coh
+                # update default arrays
+                if not set_default:
+                    default_f1 = f1
+                    default_f2 = f2
+                    default_ff_coh = ff_coh
+
+            # set arrays to dummy or default if compuation failed due to error
             else:
                 psd1 = zeros(int(config.get('nperseg'))+2)
                 psd2 = zeros(int(config.get('nperseg'))+2)
