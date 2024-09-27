@@ -410,8 +410,13 @@ def main(config):
             print(st2)
             continue
 
+        # pressure from hPa to Pa
+        if "O" in st2[0].stats.channel:
+            st1[0].data = st1[0].data*100
+
         if "J" in st2[0].stats.channel:
-            st2 = st2.remove_sensitivity(inv2)
+            # st2 = st2.remove_sensitivity(inv2)
+            pass
 
         elif "H" in st2[0].stats.channel:
             st2 = st2.remove_response(inv2, output="ACC", water_level=60)
