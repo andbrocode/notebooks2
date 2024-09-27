@@ -377,16 +377,6 @@ def main(config):
             print(f" -> failed to load inventory {config['path_to_inv2']}...")
             continue
 
-
-        if "BW.ROMY." in config['seed2']:
-            try:
-                st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
-
-            except Exception as e:
-                print(e)
-                print(f" -> failed to rotate ROMY ...")
-                continue
-
         if len(st1) > 1:
             st1.merge(fill_value=0)
 
@@ -411,17 +401,17 @@ def main(config):
             continue
 
         # pressure from hPa to Pa
-        if "O" in st2[0].stats.channel:
+        if "O" in st1[0].stats.channel:
             st1[0].data = st1[0].data*100
 
         if "J" in st2[0].stats.channel:
             # st2 = st2.remove_sensitivity(inv2)
             pass
 
-        elif "H" in st2[0].stats.channel:
+        if "H" in st2[0].stats.channel:
             st2 = st2.remove_response(inv2, output="ACC", water_level=60)
 
-        elif "A" in st2[0].stats.channel:
+        if "A" in st2[0].stats.channel:
             if st2[0].stats.station == "DROMY":
                 st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
             elif st2[0].stats.station == "ROMYT":
@@ -433,7 +423,6 @@ def main(config):
         try:
             st1 = st1.split()
             st2 = st2.split()
-
 
             if "BW.DROMY" in config['seed2'] or "BW.ROMYT" in config['seed2']:
 
