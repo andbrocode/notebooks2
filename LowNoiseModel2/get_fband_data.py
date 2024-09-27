@@ -284,7 +284,8 @@ for name in names:
                 if year != yr:
                     config['filename'] = config['filename'].replace(year, yr)
 
-                # print(f"{config['filename']}_{day}_hourly.pkl")
+                if verbose:
+                    print(f"{config['filename']}_{day}_hourly.pkl")
 
                 # check dates to be filtered out
                 if day in filter_dates[name]:
