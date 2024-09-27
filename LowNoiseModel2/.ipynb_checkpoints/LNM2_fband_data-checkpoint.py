@@ -42,7 +42,7 @@ elif os.uname().nodename == 'kilauea':
 
 year = "2024"
 
-project = 2
+project = "2"
 
 path = data_path+f"LNM2/PSDS{project}/"
 
@@ -56,6 +56,10 @@ if len(sys.argv) > 2:
 else:
     t1, t2 = "2024-02-01", "2024-09-30"
 
+codes = {"":"B", "2":"L"}
+
+code = codes[project]
+
 # define dates to ignore
 filter_dates = {"FUR": ["20231106", "20231115"],
                 "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231", "20240108", "20240110"],
@@ -64,6 +68,7 @@ filter_dates = {"FUR": ["20231106", "20231115"],
                 "DROMY": [],
                 "ROMYT": [],
                }
+
 
 # define rejection limits for PSDs
 rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
@@ -165,7 +170,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 ## ---------------------------------------
 ## load configurations
 
-apps = ["", "BDO_coh", "BDF_coh"]
+apps = ["", f"{code}DO_coh", f"{code}DF_coh"]
 
 for name in names:
 
@@ -182,7 +187,7 @@ for name in names:
         # comps = ["BJZ", "BJU", "BJV", "BJN", "BJE"]
         comps = ["BJZ", "BJN", "BJE"]
     elif name == "FFBI":
-        comps = ["BDF", "BDO"]
+        comps = [f"{code}DF", f"{code}DO"]
 
     elif name == "ROMYA":
         name = "ROMY"
@@ -214,19 +219,19 @@ for name in names:
                 if app == "BDF_coh" and name == "BFO":
                     continue
 
-                elif app == "BDO_coh" and name == "BFO":
+                elif app == f"{code}DO_coh" and name == "BFO":
                     config['filename'] = f"{name}_coherence/{year}_BFO_LDO_{name}_{comp}_3600"
                     config['outname'] = f"BFO_LDO_{name}_{comp}_coherence"
                     N = 18001
 
-                elif app == "BDO_coh" and name != "FFBI":
-                    config['filename'] = f"{name}_coherence/{year}_FFBI_BDO_{name}_{comp}_3600"
-                    config['outname'] = f"FFBI_BDO_{name}_{comp}_coherence"
+                elif app == f"{code}DO_coh" and name != "FFBI":
+                    config['filename'] = f"{name}_coherence/{year}_FFBI_{code}DO_{name}_{comp}_3600"
+                    config['outname'] = f"FFBI_{code}DO_{name}_{comp}_coherence"
                     N = 36002
 
-                elif app == "BDF_coh" and name != "FFBI":
-                    config['filename'] = f"{name}_coherence/{year}_FFBI_BDF_{name}_{comp}_3600"
-                    config['outname'] = f"FFBI_BDF_{name}_{comp}_coherence"
+                elif app == f"{code}DF_coh" and name != "FFBI":
+                    config['filename'] = f"{name}_coherence/{year}_FFBI_{code}DF_{name}_{comp}_3600"
+                    config['outname'] = f"FFBI_{code}DF_{name}_{comp}_coherence"
                     N = 36002
 
                 else:
