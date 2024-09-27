@@ -656,6 +656,7 @@ def main(config):
                     default_f1 = f1
                     default_f2 = f2
                     default_ff_coh = ff_coh
+                    set_default = True
 
             # set arrays to dummy or default if compuation failed due to error
             else:

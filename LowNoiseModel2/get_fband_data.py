@@ -296,7 +296,7 @@ for name in names:
 
                 try:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
-                    print(dat)
+
                 except Exception as e:
                     if verbose:
                         print(f" -> {day}: no data found")
