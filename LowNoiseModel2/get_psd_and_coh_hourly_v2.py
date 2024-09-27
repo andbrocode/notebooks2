@@ -367,29 +367,29 @@ def main(config):
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed1']}...")
-            # continue
-            error = True
+            continue
+            # error = True
         try:
             st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed2']} ...")
-            # continue
-            error = True
+            continue
+            # error = True
 
         ## read inventories
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv1']}...")
-            # continue
-            error = True
+            continue
+            # error = True
 
         try:
             inv2 = read_inventory(config['path_to_inv2'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv2']}...")
-            # continue
-            error = True
+            continue
+            # error = True
 
         if len(st1) > 1:
             st1.merge(fill_value=0)
@@ -429,7 +429,8 @@ def main(config):
                 else:
                     print(" -> not defined")
         except:
-            error = True
+            continue
+            # error = True
 
         # Pre-Processing
         try:
@@ -489,18 +490,18 @@ def main(config):
         except Exception as e:
             print(f" -> pre-processing failed!")
             print(e)
-            # continue
-            error = True
+            continue
+            # error = True
 
         if len(st1) == 0:
             print(f" -> st1 empty!")
-            # continue
-            error = True
+            continue
+            # error = True
 
         if len(st2) == 0:
             print(f" -> st2 empty!")
-            # continue
-            error = True
+            continue
+            # error = True
 
         try:
             st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
