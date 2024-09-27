@@ -78,8 +78,8 @@ config['project'] = "2"
 config['year'] = 2024
 
 # define time period to analyze
-config['date1'] = UTCDateTime(f"{config['year']}-04-01")
-config['date2'] = UTCDateTime(f"{config['year']}-06-30")
+config['date1'] = UTCDateTime(f"{config['year']}-01-01")
+config['date2'] = UTCDateTime(f"{config['year']}-03-31")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
@@ -533,11 +533,6 @@ def main(config):
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-            print(t1, t2)
-
-            print(st1)
-            print(st2)
-
             error = False
 
             # trim streams for current interval
@@ -546,9 +541,6 @@ def main(config):
 
             _st1 = _st1.trim(t1, t2, nearest_sample=True)
             _st2 = _st2.trim(t1, t2, nearest_sample=True)
-
-            print(_st1)
-            print(_st2)
 
             # prepare data arrays
             if n == 0:
@@ -676,7 +668,6 @@ def main(config):
                 # update default arrays
                 if not set_default:
                     print("set defaults")
-                    print(len(f1))
                     default_f1 = f1
                     default_f2 = f2
                     default_ff_coh = ff_coh
@@ -684,8 +675,7 @@ def main(config):
 
             # set arrays to dummy or default if compuation failed due to error
             else:
-                print("use defaults")
-                print(f1)
+
                 psd1 = zeros(int(config.get('n_psd'))+2)
                 psd2 = zeros(int(config.get('n_psd'))+2)
                 coh = zeros(int(config.get('n_psd'))+2)
@@ -740,7 +730,7 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-            print(len(f1), len(psd1), len(f2), len(psd2))
+            # print(len(f1), len(psd1), len(f2), len(psd2))
 
             psds1[n] = psd1
             psds2[n] = psd2
