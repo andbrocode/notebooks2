@@ -78,8 +78,8 @@ config['project'] = "2"
 config['year'] = 2024
 
 # define time period to analyze
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-01-31")
+config['date1'] = UTCDateTime(f"{config['year']}-02-01")
+config['date2'] = UTCDateTime(f"{config['year']}-02-29")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
