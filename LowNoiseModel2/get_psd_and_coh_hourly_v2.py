@@ -103,7 +103,7 @@ config['unit'] = "Pa" ## hPa or Pa or None
 config['interval_seconds'] = 3600 ## in seconds
 config['interval_overlap'] = 0  ## in seconds
 
-config['sampling_rate'] = 1.0 ## Hz
+config['sampling_rate'] = 5.0 ## Hz
 
 # __________________________
 # choose psd method
@@ -473,8 +473,8 @@ def main(config):
                 st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
                 st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
 
-                st1 = st1.resample(5.0, no_filter=True)
-                st2 = st2.resample(5.0, no_filter=True)
+                st1 = st1.resample(config.get('sampling_rate') no_filter=True)
+                st2 = st2.resample(config.get('sampling_rate'), no_filter=True)
 
             st1 = st1.merge()
             st2 = st2.merge()
@@ -518,7 +518,7 @@ def main(config):
         print(st1)
         print(st2)
 
-        config['n_pds'] = int(config.get('tseconds')/config.get('sampling_rate')*100)
+        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))+2
 
         # if len(st1[0].data) != len(st2[0].data):
         #     print(" -> not sampe amount of samples!")
