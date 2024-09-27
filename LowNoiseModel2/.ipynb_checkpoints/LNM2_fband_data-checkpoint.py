@@ -44,8 +44,7 @@ year = "2024"
 
 project = 2
 
-path = data_path+f"LNM2/PSDS/"
-
+path = data_path+f"LNM2/PSDS{project}/"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
