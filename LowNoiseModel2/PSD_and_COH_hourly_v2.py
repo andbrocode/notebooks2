@@ -528,6 +528,11 @@ def main(config):
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
+            set_default = False
+            default_f1 = zeros(int(config.get('nperseg'))+2)
+            default_f2 = zeros(int(config.get('nperseg'))+2)
+            default_ff_coh = zeros(int(config.get('nperseg'))+2)
+
             # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
@@ -646,13 +651,17 @@ def main(config):
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
+            if not set_default:
+                default_f1 = f1
+                default_f2 = f2
+                default_ff_coh = ff_coh
             else:
                 psd1 = zeros(int(config.get('nperseg'))+2)
                 psd2 = zeros(int(config.get('nperseg'))+2)
                 coh = zeros(int(config.get('nperseg'))+2)
-                f1 = zeros(int(config.get('nperseg'))+2)
-                f2 = zeros(int(config.get('nperseg'))+2)
-                ff_coh = zeros(int(config.get('nperseg'))+2)
+                f1 = default_f1
+                f2 = default_f2
+                ff_coh = default_ff_coh
 
             # load maintenance file
             try:
