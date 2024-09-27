@@ -532,6 +532,8 @@ def main(config):
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
+            print(t1, t2)
+
             error = False
 
             # trim streams for current interval
