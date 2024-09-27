@@ -519,6 +519,7 @@ def main(config):
         print(st2)
 
         config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))
+        print(config['n_pds'])
 
         # if len(st1[0].data) != len(st2[0].data):
         #     print(" -> not sampe amount of samples!")
@@ -551,6 +552,7 @@ def main(config):
                     psds2 = zeros([len(times), int(config.get('n_pds'))+2])
                     cohs = zeros([len(times), int(config.get('n_pds'))+2])
 
+            print(psds1.shape)
 
             # check length
             if len(_st1) == 0 or len(_st2) == 0:
@@ -655,6 +657,7 @@ def main(config):
 
                 # update default arrays
                 if not set_default:
+                    print(len(f1))
                     default_f1 = f1
                     default_f2 = f2
                     default_ff_coh = ff_coh
@@ -716,7 +719,7 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-            print(f1, psd1, f2, psd2)
+            print(len(f1), len(psd1), len(f2), len(psd2))
 
             psds1[n] = psd1
             psds2[n] = psd2
