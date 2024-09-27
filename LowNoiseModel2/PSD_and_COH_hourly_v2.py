@@ -5,7 +5,7 @@ Spyder Editor
 
 """
 __author__ = 'AndreasBrotzer'
-__year__   = '2023'
+__year__  = '2023'
 
 # In[] ___________________________________________________________
 '''---- import libraries ----'''

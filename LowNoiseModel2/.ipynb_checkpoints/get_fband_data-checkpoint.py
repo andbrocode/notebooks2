@@ -44,6 +44,8 @@ year = "2024"
 
 project = "2"
 
+verbose = True
+
 path = data_path+f"LNM2/PSDS{project}/"
 
 if len(sys.argv) > 1:
@@ -286,7 +288,7 @@ for name in names:
 
                 # check dates to be filtered out
                 if day in filter_dates[name]:
-                    # print(f" -> skip {day} due to date filter")
+                    print(f" -> skip {day} due to date filter")
                     missing_data_count += 1
                     missing_data.append(day)
                     continue
@@ -295,8 +297,9 @@ for name in names:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
 
                 except Exception as e:
-                    # print(e)
-                    # print(f" -> {day}: no data found")
+                    if verbose:
+                        print(f" -> {day}: no data found")
+                        print(e)
                     missing_files_count += 1
                     missing_files.append(day)
                     continue
@@ -320,8 +323,9 @@ for name in names:
                         index += 1
 
                 except Exception as e:
-                    print(e)
-                    print(f" -> skip {day}")
+                    if verbose:
+                        print(f" -> skip {day}")
+                        print(e)
                     continue
 
             # get frequency octave bands
@@ -335,7 +339,9 @@ for name in names:
             try:
                 out0 = __get_band_average(ff, dat, f_center, f_upper, f_lower)
             except Exception as e:
-                # print(e)
+                if verbose:
+                    print(f" -> {day}: computation failed")
+                    print(e)
                 calc_failed_count += 1
                 calc_failed.append(day)
                 continue
