@@ -5,7 +5,7 @@ Spyder Editor
 
 """
 __author__ = 'AndreasBrotzer'
-__year__   = '2023'
+__year__ = '2023'
 
 # In[] ___________________________________________________________
 '''---- import libraries ----'''
@@ -57,11 +57,13 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 config = {}
 
+# expected argument for seed1 (pressure) and seed2
 if len(sys.argv) > 1:
     config['seed1'] = sys.argv[1]
     config['seed2'] = sys.argv[2]
 else:
-    config['seed1'] = "BW.FFBI.30.BDO"  ## F = infrasound | O = absolute
+    print(f" missing seed arguments!")
+    # config['seed1'] = "BW.FFBI.30.BDO"  ## F = infrasound | O = absolute
     # config['seed2'] = "GR.FUR..BHZ"
     # config['seed2'] = "GR.FUR..BHN"
     # config['seed2'] = "GR.FUR..BHE"
@@ -69,17 +71,21 @@ else:
     # config['seed2'] = "BW.ROMY..BJU"
     # config['seed2'] = "BW.ROMY..BJV"
 
-config['project'] = 2
+# define a project name
+config['project'] = "2"
 
+# specify year
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+# define time period to analyze
+config['date1'] = UTCDateTime(f"{config['year']}-04-01")
+config['date2'] = UTCDateTime(f"{config['year']}-06-30")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
 
+# specify path to data and metadata
 if "FUR" in config['seed2']:
     config['path_to_data2'] = bay_path+f"mseed_online/archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
@@ -87,14 +93,17 @@ elif "ROMY" in config['seed2']:
     config['path_to_data2'] = archive_path+f"temp_archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
 
+# specify path to status files
 config['path_to_status_data'] = archive_path+f"temp_archive/"
 
-
-# specify unit
+# specify unit for pressure
 config['unit'] = "Pa" ## hPa or Pa or None
 
+# define the interval and overlap to analyze (default is one hour = 3600s)
 config['interval_seconds'] = 3600 ## in seconds
 config['interval_overlap'] = 0  ## in seconds
+
+config['sampling_rate'] = 1.0 ## Hz
 
 # __________________________
 # choose psd method
@@ -102,7 +111,6 @@ config['mode'] = "multitaper"  ## "multitaper" | "welch"
 
 # __________________________
 # set welch and coherence settings
-
 config['taper'] = 'hann'
 config['tseconds'] = 3600 ## seconds
 config['toverlap'] = 0 ## 0.75
@@ -112,14 +120,13 @@ config['scaling'] = 'density'
 config['onesided'] = True
 config['frequency_limits'] = None # (0, 0.05) # in Hz
 
-## __________________________
-## set multitaper settings
+# __________________________
+# set multitaper settings
 
-## number of taper for multitaper to use
+# number of taper for multitaper to use
 config['n_taper'] = 5
 config['time_bandwith'] = 3.5
 config['mt_method'] = 2 ## 0 = adaptive, 1 = unweighted, 2 = weighted with eigenvalues
-
 
 config['sta1'] = config['seed1'].split(".")[1]
 config['sta2'] = config['seed2'].split(".")[1]
@@ -149,7 +156,7 @@ if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
 else:
     integrate = False
 
-path_to_figs = data_path+"LNM2/test_figs/"
+path_to_figs = data_path+"LNM2/testfigs/"
 
 # In[] ___________________________________________________________
 '''---- define methods ----'''
@@ -251,7 +258,7 @@ def __load_status(tbeg, tend, ring, path_to_data):
     dd1 = date.fromisoformat(str(tbeg.date))
     dd2 = date.fromisoformat(str(tend.date))
 
-    ## dummy
+    # dummy
     def __make_dummy(date):
         NN = 1440
         df_dummy = DataFrame()
@@ -343,6 +350,9 @@ def main(config):
     mltiZ_counter = 0
     lxx_counter = 0
 
+    # error status
+    error = False
+
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
         print(f"\nprocessing  {str(date)[:10]}...")
@@ -357,42 +367,35 @@ def main(config):
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed1']}...")
-            continue
+            # continue
+            error = True
         try:
             st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed2']} ...")
-            continue
+            # continue
+            error = True
 
         ## read inventories
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv1']}...")
-            continue
+            # continue
+            error = True
 
         try:
             inv2 = read_inventory(config['path_to_inv2'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv2']}...")
-            continue
-
-
-        if "BW.ROMY." in config['seed2']:
-            try:
-                st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
-
-            except Exception as e:
-                print(e)
-                print(f" -> failed to rotate ROMY ...")
-                continue
+            # continue
+            error = True
 
         if len(st1) > 1:
             st1.merge(fill_value=0)
 
         if len(st2) > 1:
             st2.merge(fill_value=0)
-
 
         # integrate romy data from rad/s to rad
         if integrate:
@@ -405,45 +408,48 @@ def main(config):
             for tr in st2:
                 tr.data *= 9.81 ## m/s^2
 
-        if len(st1) == 0 or len(st2) == 0:
-            print(st1)
-            print(st2)
-            continue
+        # Data Processing
+        try:
+            # pressure from hPa to Pa
+            if "O" in st1[0].stats.channel:
+                st1[0].data = st1[0].data*100
 
-        if "J" in st2[0].stats.channel:
-            st2 = st2.remove_sensitivity(inv2)
+            if "J" in st2[0].stats.channel:
+                # st2 = st2.remove_sensitivity(inv2)
+                pass
 
-        elif "H" in st2[0].stats.channel:
-            st2 = st2.remove_response(inv2, output="ACC", water_level=60)
+            if "H" in st2[0].stats.channel:
+                st2 = st2.remove_response(inv2, output="ACC", water_level=60)
 
-        elif "A" in st2[0].stats.channel:
-            if st2[0].stats.station == "DROMY":
-                st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
-            elif st2[0].stats.station == "ROMYT":
-                st2 = __conversion_to_tilt(st2, confTilt["ROMYT"])
-            else:
-                print(" -> not defined")
+            if "A" in st2[0].stats.channel:
+                if st2[0].stats.station == "DROMY":
+                    st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
+                elif st2[0].stats.station == "ROMYT":
+                    st2 = __conversion_to_tilt(st2, confTilt["ROMYT"])
+                else:
+                    print(" -> not defined")
+        except:
+            error = True
 
-        ## Pre-Processing
+        # Pre-Processing
         try:
             st1 = st1.split()
             st2 = st2.split()
 
-
             if "BW.DROMY" in config['seed2'] or "BW.ROMYT" in config['seed2']:
 
-                ## remove mean, trend and taper trace
+                # remove mean, trend and taper trace
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                ## set a filter for resampling
+                # set a filter for resampling
                 # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
                 st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
 
                 # st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
                 st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
 
-                ## resampling
+                # resampling
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
@@ -456,10 +462,7 @@ def main(config):
                     st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
                     st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-#                 st1 = st1.resample(0.1, no_filter=False)
-#                 st2 = st2.resample(0.1, no_filter=False)
-
-                ## convert tilt to acceleration
+                # convert tilt to acceleration
                 for tr in st2:
                     tr.data = tr.data*9.81
 
@@ -467,93 +470,120 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
 
-                st1 = st1.resample(1.0, no_filter=True)
-                st2 = st2.resample(1.0, no_filter=True)
+                st1 = st1.resample(5.0, no_filter=True)
+                st2 = st2.resample(5.0, no_filter=True)
 
             st1 = st1.merge()
             st2 = st2.merge()
 
-            st1 = st1.trim(config['tbeg'], config['tend'])
-            st2 = st2.trim(config['tbeg'], config['tend'])
+            st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=True)
+            st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=True)
+
+            for tr in st1+st2:
+                if len(tr.data) > 86401:
+                    tr.data = tr.data[:86401]
 
         except Exception as e:
             print(f" -> pre-processing failed!")
             print(e)
-            continue
+            # continue
+            error = True
 
-        st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
-        st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
+        if len(st1) == 0:
+            print(f" -> st1 empty!")
+            # continue
+            error = True
 
-        ## prepare time intervals
+        if len(st2) == 0:
+            print(f" -> st2 empty!")
+            # continue
+            error = True
+
+        try:
+            st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
+            st2.plot(equal_scale=False, outfile=path_to_figs+f"all/st2_{st2[0].stats.channel}_all.png")
+        except:
+            print(f" -> waveform plotting failed!")
+
+        # prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
-        ## prepare psd parameters
-        config['nperseg'] = int(st1[0].stats.sampling_rate*config.get('tseconds'))
+        # prepare psd parameters
+        config['nperseg'] = int(config.get('sampling_rate')*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
-
 
         print(st1)
         print(st2)
 
+        # if len(st1[0].data) != len(st2[0].data):
+        #     print(" -> not sampe amount of samples!")
+        #     size_counter += 1
+            # continue
 
-        if len(st1[0].data) != len(st2[0].data):
-            print(" -> not sampe amount of samples!")
-            size_counter += 1
-            continue
+        # ________________________________________________________________________________
 
-
-        ## run operations for time intervals
+        # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
+            set_default = False
+            default_f1 = zeros(int(config.get('nperseg'))+2)
+            default_f2 = zeros(int(config.get('nperseg'))+2)
+            default_ff_coh = zeros(int(config.get('nperseg'))+2)
 
-
-            ## trim streams for current interval
-            # _st1 = st1.copy().trim(t1, t2, nearest_sample=False)
-            # _st2 = st2.copy().trim(t1, t2, nearest_sample=False)
+            # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            ## check if masked array
-            if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
-                print(" -> masked array found")
-                mask_counter += 1
-                continue
-
-            _st1 = _st1.detrend("linear")
-            _st2 = _st2.detrend("linear")
-
-            # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
-            # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
-
-            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
-            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
-
-            ## check for same length
-            if len(_st1[0].data) != len(_st2[0].data):
-                print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
-                continue
-
+            # prepare data arrays
             if n == 0:
-                ## prepare lists
                 if config['mode'] == "welch":
                     psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
                     psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
-                    # psds2 = zeros([len(times), int((config['interval_seconds']*20))])
-                    # cohs = zeros([len(times), int(config.get('nperseg')/2)])
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
-                    psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
-                    cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
+                    psds1 = zeros([len(times), int(config.get('nperseg'))+2])
+                    psds2 = zeros([len(times), int(config.get('nperseg'))+2])
+                    cohs = zeros([len(times), int(config.get('nperseg'))+2])
 
 
-            ## compute power spectra
-            if config['mode'] == "welch":
+            # check length
+            if len(_st1) == 0 or len(_st2) == 0:
+                error = True
+                # continue
+
+            # check for same length
+            if not error:
+                if len(_st1[0].data) != len(_st2[0].data):
+                    print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
+                    error = True
+                    # continue
+
+            # check if masked array
+            if not error:
+                if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
+                    print(" -> masked array found")
+                    mask_counter += 1
+                    # continue
+                    error = True
+
+            try:
+                _st1 = _st1.detrend("linear")
+                _st2 = _st2.detrend("linear")
+
+                # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+                # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+
+                _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
+                _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
+            except:
+                error = True
+
+            # compute power spectra
+            if config['mode'] == "welch" and not error:
 
                 f1, psd1 = welch(
                                 _st1[0].data,
@@ -590,7 +620,7 @@ def main(config):
 
                 cohs[n] = coh
 
-            elif config['mode'] == "multitaper":
+            elif config['mode'] == "multitaper" and not error:
 
                 psd_st1 = MTSpec(_st1[0].data,
                                  dt=_st1[0].stats.delta,
@@ -621,18 +651,37 @@ def main(config):
                     print(_st1[0].data.size, _st2[0].data.size, psd1.size, psd2.size)
                     continue
 
-            # load maintenance file
-            lxx = __load_lxx(t1, t2, archive_path)
+                # update default arrays
+                if not set_default:
+                    default_f1 = f1
+                    default_f2 = f2
+                    default_ff_coh = ff_coh
+                    set_default = True
 
-            if lxx[lxx.sum_all.eq(1)].sum_all.size > 0:
-                print(f" -> maintenance period! Skipping...")
-                lxx_counter += 1
-                psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+            # set arrays to dummy or default if compuation failed due to error
+            else:
+                psd1 = zeros(int(config.get('nperseg'))+2)
+                psd2 = zeros(int(config.get('nperseg'))+2)
+                coh = zeros(int(config.get('nperseg'))+2)
+                f1 = default_f1
+                f2 = default_f2
+                ff_coh = default_ff_coh
+
+            # load maintenance file
+            try:
+                lxx = __load_lxx(t1, t2, archive_path)
+
+                if lxx[lxx.sum_all.eq(1)].sum_all.size > 0 and not error:
+                    print(f" -> maintenance period! Skipping...")
+                    lxx_counter += 1
+                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+            except:
+                pass
 
             # check data quality
             max_num_of_bad_quality = 10
 
-            if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2'] and not error:
                 try:
                     statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
                     statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
@@ -652,7 +701,7 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-            if "BW.ROMY." in config['seed2'] and "Z" in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" in config['seed2'] and not error:
                 try:
                     statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
                 except:
@@ -684,22 +733,21 @@ def main(config):
         # plt.semilogx(ff_coh, coh)
         # plt.show()
 
-        ## save psds
+        # save psds
         out1 = {}
         out1['frequencies'] = f1
         out1['psd'] = psds1
 
         __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-        ## save psds
+        # save psds
         out2 = {}
         out2['frequencies'] = f2
         out2['psd'] = psds2
 
         __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-
-        ## save coherence
+        # save coherence
         out3 = {}
         out3['frequencies'] = ff_coh
         out3['coherence'] = cohs

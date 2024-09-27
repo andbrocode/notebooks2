@@ -5,7 +5,7 @@ Spyder Editor
 
 """
 __author__ = 'AndreasBrotzer'
-__year__  = '2023'
+__year__ = '2023'
 
 # In[] ___________________________________________________________
 '''---- import libraries ----'''
@@ -78,8 +78,8 @@ config['project'] = "2"
 config['year'] = 2024
 
 # define time period to analyze
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-03-31")
+config['date1'] = UTCDateTime(f"{config['year']}-04-01")
+config['date2'] = UTCDateTime(f"{config['year']}-06-30")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
@@ -470,11 +470,11 @@ def main(config):
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=.5, corners=4, zerophase=True)
+                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
+                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
 
-                st1 = st1.resample(1.0, no_filter=True)
-                st2 = st2.resample(1.0, no_filter=True)
+                st1 = st1.resample(5.0, no_filter=True)
+                st2 = st2.resample(5.0, no_filter=True)
 
             st1 = st1.merge()
             st2 = st2.merge()
