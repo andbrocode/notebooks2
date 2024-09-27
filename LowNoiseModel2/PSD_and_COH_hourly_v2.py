@@ -562,14 +562,17 @@ def main(config):
                     # continue
                     error = True
 
-            _st1 = _st1.detrend("linear")
-            _st2 = _st2.detrend("linear")
+            try:
+                _st1 = _st1.detrend("linear")
+                _st2 = _st2.detrend("linear")
 
-            # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
-            # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+                # _st1 = _st1.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
+                # _st2 = _st2.filter("bandpass", freqmin=8e-4, freqmax=5, corners=4, zerophase=True)
 
-            _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
-            _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
+                _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
+                _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
+            except:
+                error = True
 
             # compute power spectra
             if config['mode'] == "welch" and not error:
