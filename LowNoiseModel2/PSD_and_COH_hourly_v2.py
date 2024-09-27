@@ -650,6 +650,9 @@ def main(config):
                 psd1 = zeros(int(config.get('nperseg'))+2)
                 psd2 = zeros(int(config.get('nperseg'))+2)
                 coh = zeros(int(config.get('nperseg'))+2)
+                f1 = zeros(int(config.get('nperseg'))+2)
+                f2 = zeros(int(config.get('nperseg'))+2)
+                ff_coh = zeros(int(config.get('nperseg'))+2)
 
             # load maintenance file
             try:
