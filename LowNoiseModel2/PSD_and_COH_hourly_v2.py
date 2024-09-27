@@ -73,8 +73,8 @@ config['project'] = 2
 
 config['year'] = 2024
 
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
-config['date2'] = UTCDateTime(f"{config['year']}-09-30")
+config['date1'] = UTCDateTime(f"{config['year']}-09-01")
+config['date2'] = UTCDateTime(f"{config['year']}-09-20")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
 config['path_to_data1'] = archive_path+f"temp_archive/"
@@ -343,6 +343,9 @@ def main(config):
     mltiZ_counter = 0
     lxx_counter = 0
 
+    # error status
+    error = False
+
     for date in date_range(str(config['date1'].date), str(config['date2'].date), days):
 
         print(f"\nprocessing  {str(date)[:10]}...")
@@ -357,32 +360,35 @@ def main(config):
             st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed1']}...")
-            continue
+            # continue
+            error = True
         try:
             st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
         except:
             print(f" -> failed to load data for {config['seed2']} ...")
-            continue
+            # continue
+            error = True
 
         ## read inventories
         try:
             inv1 = read_inventory(config['path_to_inv1'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv1']}...")
-            continue
+            # continue
+            error = True
 
         try:
             inv2 = read_inventory(config['path_to_inv2'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv2']}...")
-            continue
+            # continue
+            error = True
 
         if len(st1) > 1:
             st1.merge(fill_value=0)
 
         if len(st2) > 1:
             st2.merge(fill_value=0)
-
 
         # integrate romy data from rad/s to rad
         if integrate:
@@ -395,49 +401,48 @@ def main(config):
             for tr in st2:
                 tr.data *= 9.81 ## m/s^2
 
-        if len(st1) == 0 or len(st2) == 0:
-            print(st1)
-            print(st2)
-            continue
+        # Data Processing
+        try:
+            # pressure from hPa to Pa
+            if "O" in st1[0].stats.channel:
+                st1[0].data = st1[0].data*100
 
-        # pressure from hPa to Pa
-        if "O" in st1[0].stats.channel:
-            st1[0].data = st1[0].data*100
+            if "J" in st2[0].stats.channel:
+                # st2 = st2.remove_sensitivity(inv2)
+                pass
 
-        if "J" in st2[0].stats.channel:
-            # st2 = st2.remove_sensitivity(inv2)
-            pass
+            if "H" in st2[0].stats.channel:
+                st2 = st2.remove_response(inv2, output="ACC", water_level=60)
 
-        if "H" in st2[0].stats.channel:
-            st2 = st2.remove_response(inv2, output="ACC", water_level=60)
+            if "A" in st2[0].stats.channel:
+                if st2[0].stats.station == "DROMY":
+                    st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
+                elif st2[0].stats.station == "ROMYT":
+                    st2 = __conversion_to_tilt(st2, confTilt["ROMYT"])
+                else:
+                    print(" -> not defined")
+        except:
+            error = True
 
-        if "A" in st2[0].stats.channel:
-            if st2[0].stats.station == "DROMY":
-                st2 = __conversion_to_tilt(st2, confTilt["BROMY"])
-            elif st2[0].stats.station == "ROMYT":
-                st2 = __conversion_to_tilt(st2, confTilt["ROMYT"])
-            else:
-                print(" -> not defined")
-
-        ## Pre-Processing
+        # Pre-Processing
         try:
             st1 = st1.split()
             st2 = st2.split()
 
             if "BW.DROMY" in config['seed2'] or "BW.ROMYT" in config['seed2']:
 
-                ## remove mean, trend and taper trace
+                # remove mean, trend and taper trace
                 st1 = st1.detrend("linear").detrend("demean").taper(0.05)
                 st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                ## set a filter for resampling
+                # set a filter for resampling
                 # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
                 st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
 
                 # st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
                 st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
 
-                ## resampling
+                # resampling
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
@@ -450,10 +455,7 @@ def main(config):
                     st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
                     st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-#                 st1 = st1.resample(0.1, no_filter=False)
-#                 st2 = st2.resample(0.1, no_filter=False)
-
-                ## convert tilt to acceleration
+                # convert tilt to acceleration
                 for tr in st2:
                     tr.data = tr.data*9.81
 
@@ -480,14 +482,18 @@ def main(config):
         except Exception as e:
             print(f" -> pre-processing failed!")
             print(e)
-            continue
+            # continue
+            error = True
 
         if len(st1) == 0:
             print(f" -> st1 empty!")
-            continue
+            # continue
+            error = True
+
         if len(st2) == 0:
             print(f" -> st2 empty!")
-            continue
+            # continue
+            error = True
 
         try:
             st1.plot(equal_scale=False, outfile=path_to_figs+f"all/st1_{st1[0].stats.channel}_all.png")
@@ -495,40 +501,48 @@ def main(config):
         except:
             print(f" -> waveform plotting failed!")
 
-        stx = st1+st2
-        print(stx)
-        stx.plot(equal_scale=False, outfile=path_to_figs+f"stx.png")
-
-        ## prepare time intervals
+        # prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
-        ## prepare psd parameters
+        # prepare psd parameters
         config['nperseg'] = int(st1[0].stats.sampling_rate*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
-
 
         print(st1)
         print(st2)
 
+        # if len(st1[0].data) != len(st2[0].data):
+        #     print(" -> not sampe amount of samples!")
+        #     size_counter += 1
+            # continue
 
-        if len(st1[0].data) != len(st2[0].data):
-            print(" -> not sampe amount of samples!")
-            size_counter += 1
-            continue
+        # ________________________________________________________________________________
 
-
-        ## run operations for time intervals
+        # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-            ## trim streams for current interval
+            # prepare data arrays
+            if n == 0:
+                if config['mode'] == "welch":
+                    psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+
+                elif config['mode'] == "multitaper":
+                    psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
+                    psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
+                    cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
+
+            # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            ## check if masked array
+            # check if masked array
             if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
                 print(" -> masked array found")
                 mask_counter += 1
-                continue
+                # continue
+                error = True
 
             _st1 = _st1.detrend("linear")
             _st2 = _st2.detrend("linear")
@@ -539,29 +553,14 @@ def main(config):
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
 
-            ## check for same length
+            # check for same length
             if len(_st1[0].data) != len(_st2[0].data):
                 print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
-                continue
+                # continue
+                error = True
 
-            if n == 0:
-                ## prepare lists
-                if config['mode'] == "welch":
-                    psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                    psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
-
-                elif config['mode'] == "multitaper":
-                    # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
-                    # psds2 = zeros([len(times), int((config['interval_seconds']*20))])
-                    # cohs = zeros([len(times), int(config.get('nperseg')/2)])
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
-                    psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
-                    cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
-
-
-            ## compute power spectra
-            if config['mode'] == "welch":
+            # compute power spectra
+            if config['mode'] == "welch" and not error:
 
                 f1, psd1 = welch(
                                 _st1[0].data,
@@ -598,7 +597,7 @@ def main(config):
 
                 cohs[n] = coh
 
-            elif config['mode'] == "multitaper":
+            elif config['mode'] == "multitaper" and not error:
 
                 psd_st1 = MTSpec(_st1[0].data,
                                  dt=_st1[0].stats.delta,
@@ -630,17 +629,20 @@ def main(config):
                     continue
 
             # load maintenance file
-            lxx = __load_lxx(t1, t2, archive_path)
+            try:
+                lxx = __load_lxx(t1, t2, archive_path)
 
-            if lxx[lxx.sum_all.eq(1)].sum_all.size > 0:
-                print(f" -> maintenance period! Skipping...")
-                lxx_counter += 1
-                psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+                if lxx[lxx.sum_all.eq(1)].sum_all.size > 0 and not error:
+                    print(f" -> maintenance period! Skipping...")
+                    lxx_counter += 1
+                    psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
+            except:
+                pass
 
             # check data quality
             max_num_of_bad_quality = 10
 
-            if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2'] and not error:
                 try:
                     statusU = __load_status(t1, t2, "U", config['path_to_status_data'])
                     statusV = __load_status(t1, t2, "V", config['path_to_status_data'])
@@ -660,7 +662,7 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
-            if "BW.ROMY." in config['seed2'] and "Z" in config['seed2']:
+            if "BW.ROMY." in config['seed2'] and "Z" in config['seed2'] and not error:
                 try:
                     statusZ = __load_status(t1, t2, "Z", config['path_to_status_data'])
                 except:
@@ -692,22 +694,21 @@ def main(config):
         # plt.semilogx(ff_coh, coh)
         # plt.show()
 
-        ## save psds
+        # save psds
         out1 = {}
         out1['frequencies'] = f1
         out1['psd'] = psds1
 
         __save_to_pickle(out1, config['outpath1'], f"{config['outname1']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-        ## save psds
+        # save psds
         out2 = {}
         out2['frequencies'] = f2
         out2['psd'] = psds2
 
         __save_to_pickle(out2, config['outpath2'], f"{config['outname2']}_{str(date).split(' ')[0].replace('-','')}_hourly")
 
-
-        ## save coherence
+        # save coherence
         out3 = {}
         out3['frequencies'] = ff_coh
         out3['coherence'] = cohs
