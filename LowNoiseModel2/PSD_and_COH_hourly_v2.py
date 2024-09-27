@@ -530,17 +530,20 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            # prepare data arrays
-            if n == 0:
-                if config['mode'] == "welch":
-                    psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                    psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+            try:
+                # prepare data arrays
+                if n == 0:
+                    if config['mode'] == "welch":
+                        psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                        psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                        cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
-                elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
-                    psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
-                    cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
+                    elif config['mode'] == "multitaper":
+                        psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
+                        psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
+                        cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
+            except:
+                error = True
 
             # check length
             if len(_st1) == 0 or len(_st2) == 0:
