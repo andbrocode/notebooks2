@@ -532,10 +532,12 @@ def main(config):
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
-
             # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+
+            print(_st1)
+            print(_st2)
 
             # prepare data arrays
             if n == 0:
