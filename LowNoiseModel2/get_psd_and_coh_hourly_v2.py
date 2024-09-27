@@ -714,6 +714,8 @@ def main(config):
                     # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
+            print(f1, psd1, f2, psd2)
+
             psds1[n] = psd1
             psds2[n] = psd2
             cohs[n] = coh
