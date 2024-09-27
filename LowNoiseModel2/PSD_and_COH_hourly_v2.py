@@ -149,7 +149,7 @@ if "BW.ROMY" in config['seed2'] and "BA" in config['seed2']:
 else:
     integrate = False
 
-path_to_figs = data_path+"LNM2/test_figs/"
+path_to_figs = data_path+"LNM2/testfigs/"
 
 # In[] ___________________________________________________________
 '''---- define methods ----'''
