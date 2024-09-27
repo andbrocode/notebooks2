@@ -518,15 +518,11 @@ def main(config):
         print(st1)
         print(st2)
 
-        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))
-        print(config['n_pds'])
-
-        # if len(st1[0].data) != len(st2[0].data):
-        #     print(" -> not sampe amount of samples!")
-        #     size_counter += 1
-            # continue
 
         # ________________________________________________________________________________
+
+        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))
+
         default_f1 = zeros(int(config.get('n_pds'))+2)
         default_f2 = zeros(int(config.get('n_pds'))+2)
         default_ff_coh = zeros(int(config.get('n_pds'))+2)
@@ -657,6 +653,7 @@ def main(config):
 
                 # update default arrays
                 if not set_default:
+                    print("set defaults")
                     print(len(f1))
                     default_f1 = f1
                     default_f2 = f2
@@ -665,6 +662,8 @@ def main(config):
 
             # set arrays to dummy or default if compuation failed due to error
             else:
+                print("use defaults")
+                print(f1)
                 psd1 = zeros(int(config.get('n_pds'))+2)
                 psd2 = zeros(int(config.get('n_pds'))+2)
                 coh = zeros(int(config.get('n_pds'))+2)
