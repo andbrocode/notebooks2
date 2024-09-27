@@ -103,6 +103,8 @@ config['unit'] = "Pa" ## hPa or Pa or None
 config['interval_seconds'] = 3600 ## in seconds
 config['interval_overlap'] = 0  ## in seconds
 
+config['sampling_rate'] = 1.0 ## Hz
+
 # __________________________
 # choose psd method
 config['mode'] = "multitaper"  ## "multitaper" | "welch"
@@ -510,7 +512,7 @@ def main(config):
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
         # prepare psd parameters
-        config['nperseg'] = int(st1[0].stats.sampling_rate*config.get('tseconds'))
+        config['nperseg'] = int(config.get('sampling_rate']*config.get('tseconds'))
         config['noverlap'] = int(0.5*config.get('nperseg'))
 
         print(st1)
@@ -530,20 +532,18 @@ def main(config):
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
             _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
-            try:
-                # prepare data arrays
-                if n == 0:
-                    if config['mode'] == "welch":
-                        psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                        psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
-                        cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
+            # prepare data arrays
+            if n == 0:
+                if config['mode'] == "welch":
+                    psds1 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    psds2 = zeros([len(times), int(config.get('nperseg')/2)+1])
+                    cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
-                    elif config['mode'] == "multitaper":
-                        psds1 = zeros([len(times), int(_st1[0].stats.npts)+1])
-                        psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
-                        cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
-            except:
-                error = True
+                elif config['mode'] == "multitaper":
+                    psds1 = zeros([len(times), int(config.get('nperseg'))+1])
+                    psds2 = zeros([len(times), int(config.get('nperseg'))+1])
+                    cohs = zeros([len(times), int(config.get('nperseg'))+1])
+
 
             # check length
             if len(_st1) == 0 or len(_st2) == 0:
