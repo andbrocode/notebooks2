@@ -695,7 +695,7 @@ def main(config):
                 pass
 
             # check data quality
-            max_num_of_bad_quality = 10
+            max_num_of_bad_quality = 3
 
             if "BW.ROMY." in config['seed2'] and "Z" not in config['seed2'] and not error:
                 try:
@@ -708,13 +708,11 @@ def main(config):
                 if statusU[statusU.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> U: bad quality status detected!")
                     mltiU_counter += 1
-                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
                 if statusV[statusV.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> V: bad quality status detected!")
                     mltiV_counter += 1
-                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
             if "BW.ROMY." in config['seed2'] and "Z" in config['seed2'] and not error:
@@ -727,7 +725,6 @@ def main(config):
                 if statusZ[statusZ.quality.eq(0)].quality.size > max_num_of_bad_quality:
                     print(f" -> Z: bad quality status detected!")
                     mltiZ_counter += 1
-                    # psd1, psd2, coh = psd1*nan, psd2*nan, coh*nan
                     psd2, coh = psd2*nan, coh*nan
 
             # print(len(f1), len(psd1), len(f2), len(psd2))
