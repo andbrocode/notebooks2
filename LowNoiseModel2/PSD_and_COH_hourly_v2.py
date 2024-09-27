@@ -506,6 +506,9 @@ def main(config):
         except:
             print(f" -> waveform plotting failed!")
 
+        stx = st1+st2
+        stx.plot(equal_scale=False)
+                 
         ## prepare time intervals
         times = __get_time_intervals(config['tbeg'], config['tend'], config['interval_seconds'], config['interval_overlap'])
 
