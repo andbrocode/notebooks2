@@ -521,11 +521,11 @@ def main(config):
 
         # ________________________________________________________________________________
 
-        config['n_pds'] = int(config.get('tseconds')*config.get('sampling_rate'))
+        config['n_psd'] = int(config.get('tseconds')*config.get('sampling_rate'))
 
-        default_f1 = zeros(int(config.get('n_pds'))+2)
-        default_f2 = zeros(int(config.get('n_pds'))+2)
-        default_ff_coh = zeros(int(config.get('n_pds'))+2)
+        default_f1 = zeros(int(config.get('n_psd'))+2)
+        default_f2 = zeros(int(config.get('n_psd'))+2)
+        default_ff_coh = zeros(int(config.get('n_psd'))+2)
 
         set_default = False
 
@@ -547,9 +547,9 @@ def main(config):
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(config.get('n_pds'))+2])
-                    psds2 = zeros([len(times), int(config.get('n_pds'))+2])
-                    cohs = zeros([len(times), int(config.get('n_pds'))+2])
+                    psds1 = zeros([len(times), int(config.get('n_psd'))+2])
+                    psds2 = zeros([len(times), int(config.get('n_psd'))+2])
+                    cohs = zeros([len(times), int(config.get('n_psd'))+2])
 
             print(psds1.shape)
 
@@ -573,7 +573,7 @@ def main(config):
                 if len(_st2[0].data) <= config['n_psd']:
                     print(f" -> stream smaller: {len(_st2[0].data)} <= {config['n_psd']}")
                     error = True
-    
+
             # check if masked array
             if not error:
                 if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
@@ -676,9 +676,9 @@ def main(config):
             else:
                 print("use defaults")
                 print(f1)
-                psd1 = zeros(int(config.get('n_pds'))+2)
-                psd2 = zeros(int(config.get('n_pds'))+2)
-                coh = zeros(int(config.get('n_pds'))+2)
+                psd1 = zeros(int(config.get('n_psd'))+2)
+                psd2 = zeros(int(config.get('n_psd'))+2)
+                coh = zeros(int(config.get('n_psd'))+2)
                 f1 = default_f1
                 f2 = default_f2
                 ff_coh = default_ff_coh
