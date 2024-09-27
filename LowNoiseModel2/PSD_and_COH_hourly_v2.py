@@ -540,9 +540,9 @@ def main(config):
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(config.get('nperseg'))+1])
-                    psds2 = zeros([len(times), int(config.get('nperseg'))+1])
-                    cohs = zeros([len(times), int(config.get('nperseg'))+1])
+                    psds1 = zeros([len(times), int(config.get('nperseg'))+2])
+                    psds2 = zeros([len(times), int(config.get('nperseg'))+2])
+                    cohs = zeros([len(times), int(config.get('nperseg'))+2])
 
 
             # check length
@@ -647,9 +647,9 @@ def main(config):
                     continue
 
             else:
-                psd1 = zeros(int(config.get('nperseg'))+1)
-                psd2 = zeros(int(config.get('nperseg'))+1)
-                coh = zeros(int(config.get('nperseg'))+1)
+                psd1 = zeros(int(config.get('nperseg'))+2)
+                psd2 = zeros(int(config.get('nperseg'))+2)
+                coh = zeros(int(config.get('nperseg'))+2)
 
             # load maintenance file
             try:
