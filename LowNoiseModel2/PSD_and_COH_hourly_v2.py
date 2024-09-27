@@ -542,9 +542,18 @@ def main(config):
                     psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
                     cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
 
+            # check length
+            if len(_st1[0].data) == 0  or len(_st2[0].data) == 0:
+                error = True                
+                # continue
+
+            # check for same length
+            if len(_st1[0].data) != len(_st2[0].data):
+                print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
+                # continue
 
             # check if masked array
-            if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
+            if ma.is_masked(_st1[0].data) and not error or ma.is_masked(_st2[0].data and not error:
                 print(" -> masked array found")
                 mask_counter += 1
                 # continue
@@ -559,10 +568,7 @@ def main(config):
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
 
-            # check for same length
-            if len(_st1[0].data) != len(_st2[0].data):
-                print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
-                # continue
+
                 error = True
 
             # compute power spectra

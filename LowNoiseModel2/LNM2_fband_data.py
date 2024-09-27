@@ -1,10 +1,10 @@
-#/bin/python3
+#!/bin/python3
 
-# ---------------------------------------
+# ________________________________________
 
 # run data analysis
 
-# ---------------------------------------
+# ________________________________________
 
 
 from obspy import UTCDateTime
@@ -27,7 +27,7 @@ from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
 import warnings
 warnings.filterwarnings('ignore')
 
-# ---------------------------------------
+# ________________________________________
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -38,7 +38,7 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
 
-# ---------------------------------------
+# ________________________________________
 
 year = "2024"
 
@@ -84,7 +84,7 @@ rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                     },
             }
 
-# ---------------------------------------
+# ________________________________________
 
 def __load_data_file(path, file):
 
@@ -113,7 +113,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
     from numpy import nanmedian
 
-    ## get frequency indices
+    # get frequency indices
     fl_idx, fu_idx = [], []
 
     for _k, (fl, fu) in enumerate(zip(f_lower, f_upper)):
@@ -129,7 +129,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
                     fu_idx.append(int(_i))
                     break
 
-    ## compute average per band
+    # compute average per band
     psd_avg, fc, fu, fl = [], [], [], []
     for _n, (ifl, ifu) in enumerate(zip(fl_idx, fu_idx)):
 
@@ -146,7 +146,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
     psd_avg = array(psd_avg)
 
 
-    ## check up plot
+    # check up plot
 #     plt.figure(figsize=(15, 5))
 
 #     for _j, dd in enumerate(psd_avg):
@@ -157,7 +157,7 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 #     plt.show();
 
 
-    ## output
+    # output
     out = {}
     out['psd_avg'] = psd_avg
     out['fcenter'] = array(fc)
@@ -167,8 +167,8 @@ def __get_band_average(freq, data, f_center, f_upper, f_lower):
 
     return out
 
-## ---------------------------------------
-## load configurations
+# ________________________________________
+# load configurations
 
 apps = ["", f"{code}DO_coh", f"{code}DF_coh"]
 
@@ -263,7 +263,6 @@ for name in names:
             #     dat = ones((date_range(d1, d2).size*24, N))*nan
 
             # dates = ones((date_range(d1, d2).size*24))*nan
-
 
             index = 0
 
