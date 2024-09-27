@@ -521,6 +521,10 @@ def main(config):
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
 
+            # trim streams for current interval
+            _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
+            _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
+
             # prepare data arrays
             if n == 0:
                 if config['mode'] == "welch":
@@ -533,9 +537,6 @@ def main(config):
                     psds2 = zeros([len(times), int(_st2[0].stats.npts)+1])
                     cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
 
-            # trim streams for current interval
-            _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
-            _st2 = st2.copy().trim(t1, t2, nearest_sample=True)
 
             # check if masked array
             if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
