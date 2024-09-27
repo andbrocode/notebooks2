@@ -284,8 +284,8 @@ for name in names:
                 if year != yr:
                     config['filename'] = config['filename'].replace(year, yr)
 
-                if verbose:
-                    print(f"{config['filename']}_{day}_hourly.pkl")
+                # if verbose:
+                #     print(f"{config['filename']}_{day}_hourly.pkl")
 
                 # check dates to be filtered out
                 if day in filter_dates[name]:
@@ -296,7 +296,7 @@ for name in names:
 
                 try:
                     ff, _dat = __load_data_file(config['path'], f"{config['filename']}_{day}_hourly.pkl")
-
+                    print(dat)
                 except Exception as e:
                     if verbose:
                         print(f" -> {day}: no data found")
