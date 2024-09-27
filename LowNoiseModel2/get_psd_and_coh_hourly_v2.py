@@ -401,7 +401,7 @@ def main(config):
         if integrate:
             print(f" -> integrating ...")
             st2 = st2.detrend("linear")
-            st2 = st2.integrate(method='spline');
+            st2 = st2.integrate(method='spline')
             st2 = st2.detrend("linear")
 
             # tilt to acceleration
@@ -531,6 +531,8 @@ def main(config):
 
         # run operations for time intervals
         for n, (t1, t2) in enumerate(tqdm(times)):
+
+            error = False
 
             # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
