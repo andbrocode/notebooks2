@@ -557,9 +557,9 @@ def main(config):
                     # psds1 = zeros([len(times), int((config['interval_seconds']*20))])
                     # psds2 = zeros([len(times), int((config['interval_seconds']*20))])
                     # cohs = zeros([len(times), int(config.get('nperseg')/2)])
-                    psds1 = zeros([len(times), int(_st1[0].stats.npts)])
-                    psds2 = zeros([len(times), int(_st2[0].stats.npts)])
-                    cohs = zeros([len(times), int(_st2[0].stats.npts)])
+                    psds1 = zeros([len(times), int(_st1[0].stats.npts)]+1)
+                    psds2 = zeros([len(times), int(_st2[0].stats.npts)]+1)
+                    cohs = zeros([len(times), int(_st2[0].stats.npts)]+1)
 
 
             ## compute power spectra
