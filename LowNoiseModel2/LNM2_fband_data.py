@@ -356,10 +356,12 @@ for name in names:
             df_out.to_pickle(config['path_to_outdata']+f"{config['outname']}.pkl")
 
             print(f"\n{missing_files_count} files are missing:")
-            print([mf for mf in missing_files])
+            if missing_files_count != 0:
+                print([mf for mf in missing_files])
 
             print(f"\n{missing_data_count} data are missing/filtered:")
-            print([md for md in missing_data])
+            if missing_data_count != 0:
+                print([md for md in missing_data])
 
 print("\nFINISHED")
 
