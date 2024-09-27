@@ -518,6 +518,8 @@ def main(config):
         print(st1)
         print(st2)
 
+        config['n_pds'] = int(config.get('tseconds')/config.get('sampling_rate')*100)
+
         # if len(st1[0].data) != len(st2[0].data):
         #     print(" -> not sampe amount of samples!")
         #     size_counter += 1
@@ -529,9 +531,9 @@ def main(config):
         for n, (t1, t2) in enumerate(tqdm(times)):
 
             set_default = False
-            default_f1 = zeros(int(config.get('tseconds'))+2)
-            default_f2 = zeros(int(config.get('tseconds'))+2)
-            default_ff_coh = zeros(int(config.get('tseconds'))+2)
+            default_f1 = zeros(int(config.get('n_pds'))+2)
+            default_f2 = zeros(int(config.get('n_pds'))+2)
+            default_ff_coh = zeros(int(config.get('n_pds'))+2)
 
             # trim streams for current interval
             _st1 = st1.copy().trim(t1, t2, nearest_sample=True)
@@ -545,9 +547,9 @@ def main(config):
                     cohs = zeros([len(times), int(config.get('nperseg')/2)+1])
 
                 elif config['mode'] == "multitaper":
-                    psds1 = zeros([len(times), int(config.get('tseconds'))+2])
-                    psds2 = zeros([len(times), int(config.get('tseconds'))+2])
-                    cohs = zeros([len(times), int(config.get('tseconds'))+2])
+                    psds1 = zeros([len(times), int(config.get('n_pds'))+2])
+                    psds2 = zeros([len(times), int(config.get('n_pds'))+2])
+                    cohs = zeros([len(times), int(config.get('n_pds'))+2])
 
 
             # check length
