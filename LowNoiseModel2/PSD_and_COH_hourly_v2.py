@@ -548,10 +548,11 @@ def main(config):
                 # continue
 
             # check for same length
-            if len(_st1[0].data) != len(_st2[0].data):
-                print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
-                error = True
-                # continue
+            if not error:
+                if len(_st1[0].data) != len(_st2[0].data):
+                    print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
+                    error = True
+                    # continue
 
             # check if masked array
             if not error:
