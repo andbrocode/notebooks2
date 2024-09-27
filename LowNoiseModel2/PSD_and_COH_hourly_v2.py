@@ -550,6 +550,7 @@ def main(config):
             # check for same length
             if len(_st1[0].data) != len(_st2[0].data):
                 print(f" -> size difference! {len(_st1[0].data)} != {len(_st2[0].data)}")
+                error = True
                 # continue
 
             # check if masked array
@@ -568,9 +569,6 @@ def main(config):
 
             _st1.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st1_{st1[0].stats.channel}.png")
             _st2.plot(equal_scale=False, outfile=path_to_figs+f"{n}_st2_{st2[0].stats.channel}.png")
-
-
-                error = True
 
             # compute power spectra
             if config['mode'] == "welch" and not error:
