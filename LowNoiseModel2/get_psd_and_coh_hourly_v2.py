@@ -565,6 +565,15 @@ def main(config):
                     error = True
                     # continue
 
+            # check for expected length
+            if not error:
+                if len(_st1[0].data) <= config['n_psd']:
+                    print(f" -> stream smaller: {len(_st1[0].data)} <= {config['n_psd']}")
+                    error = True
+                if len(_st2[0].data) <= config['n_psd']:
+                    print(f" -> stream smaller: {len(_st2[0].data)} <= {config['n_psd']}")
+                    error = True
+    
             # check if masked array
             if not error:
                 if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
