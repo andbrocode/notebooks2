@@ -543,8 +543,8 @@ def main(config):
                     cohs = zeros([len(times), int(_st2[0].stats.npts)+1])
 
             # check length
-            if len(_st1[0].data) == 0  or len(_st2[0].data) == 0:
-                error = True                
+            if len(_st1[0].data) == 0 or len(_st2[0].data) == 0:
+                error = True
                 # continue
 
             # check for same length
@@ -553,11 +553,12 @@ def main(config):
                 # continue
 
             # check if masked array
-            if ma.is_masked(_st1[0].data) and not error or ma.is_masked(_st2[0].data and not error:
-                print(" -> masked array found")
-                mask_counter += 1
-                # continue
-                error = True
+            if not error:
+                if ma.is_masked(_st1[0].data) or ma.is_masked(_st2[0].data):
+                    print(" -> masked array found")
+                    mask_counter += 1
+                    # continue
+                    error = True
 
             _st1 = _st1.detrend("linear")
             _st2 = _st2.detrend("linear")
