@@ -1,10 +1,10 @@
 #/bin/python3
 
-## ---------------------------------------
+# ---------------------------------------
 
-## run data analysis
+# run data analysis
 
-## ---------------------------------------
+# ---------------------------------------
 
 
 from obspy import UTCDateTime
@@ -27,7 +27,7 @@ from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
 import warnings
 warnings.filterwarnings('ignore')
 
-## ---------------------------------------
+# ---------------------------------------
 
 if os.uname().nodename == 'lighthouse':
     root_path = '/home/andbro/'
@@ -38,8 +38,7 @@ elif os.uname().nodename == 'kilauea':
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
 
-## ---------------------------------------
-
+# ---------------------------------------
 
 year = "2024"
 
@@ -47,14 +46,18 @@ project = 2
 
 path = data_path+f"LNM2/PSDS/"
 
-t1, t2 = "2024-02-01", "2024-09-30"
 
 if len(sys.argv) > 1:
     names = [sys.argv[1]]
 else:
     names = ["FFBI", "ROMY", "FUR", "DROMY", "ROMYA", "ROMYT"]
 
-## define dates to ignore
+if len(sys.argv) > 2:
+    t1, t2 = sys.argv[2], sys.argv[3]
+else:
+    t1, t2 = "2024-02-01", "2024-09-30"
+
+# define dates to ignore
 filter_dates = {"FUR": ["20231106", "20231115"],
                 "FFBI": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231", "20240108", "20240110"],
                 "ROMY": ["20231215", "20231219", "20231220", "20231222", "20231227", "20231228", "20231229", "20231230", "20231231", "20240106", "20240205", "20240206", "20240207"],
@@ -63,7 +66,7 @@ filter_dates = {"FUR": ["20231106", "20231115"],
                 "ROMYT": [],
                }
 
-## define rejection limits for PSDs
+# define rejection limits for PSDs
 rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "N": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                      "E": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]}
@@ -77,7 +80,7 @@ rejection = {"FUR": {"Z": {"tmean":1e-10, "tmin":5e-20, "flim":[0, 0.05]},
                     },
             }
 
-## ---------------------------------------
+# ---------------------------------------
 
 def __load_data_file(path, file):
 
