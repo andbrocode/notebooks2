@@ -86,11 +86,14 @@ config['path_to_data1'] = archive_path+f"temp_archive/"
 config['path_to_inv1'] = root_path+"Documents/ROMY/ROMY_infrasound/station_BW_FFBI.xml"
 
 # specify path to data and metadata
-if "FUR" in config['seed2']:
+if "FUR." in config['seed2']:
     config['path_to_data2'] = bay_path+f"mseed_online/archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.GR_FUR"
-elif "ROMY" in config['seed2']:
+elif "ROMY." in config['seed2']:
     config['path_to_data2'] = archive_path+f"temp_archive/"
+    config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
+elif "ROMYT." in config['seed2']:
+    config['path_to_data2'] = archive_path+f"romy_archive/"
     config['path_to_inv2'] = root_path+"Documents/ROMY/stationxml_ringlaser/dataless/dataless.seed.BW_ROMY"
 
 # specify path to status files
@@ -341,6 +344,9 @@ def main(config):
         Path(config['outpath2']).mkdir()
         print(f" -> created {config['outpath2']}")
 
+    if not Path(config['outpath3']).exists():
+        Path(config['outpath3']).mkdir()
+        print(f" -> created {config['outpath3']}")
 
     ## set counter
     size_counter = 0
@@ -429,6 +435,7 @@ def main(config):
                 else:
                     print(" -> not defined")
         except:
+            print(f" -> failed to convert")
             continue
             # error = True
 
@@ -437,42 +444,47 @@ def main(config):
             st1 = st1.split()
             st2 = st2.split()
 
-            if "BW.DROMY" in config['seed2'] or "BW.ROMYT" in config['seed2']:
+            st1 = st1.detrend("linear").detrend("demean").taper(0.05)
+            st2 = st2.detrend("linear").detrend("demean").taper(0.05)
 
-                # remove mean, trend and taper trace
-                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
+            st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1.0, corners=4, zerophase=True)
+            st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1.0, corners=4, zerophase=True)
 
-                # set a filter for resampling
-                # st1 = st1.filter("lowpass", freq=0.25, corners=4, zerophase=True)
-                st1 = st1.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
-
-                # st2 = st2.filter("lowpass", freq=0.25, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=1e-4, freqmax=0.25, corners=4, zerophase=True)
+            if "BW.DROMY" in config['seed2']:
 
                 # resampling
                 st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
                 st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
-                st1 = st1.decimate(5, no_filter=True) ## 5 -> 1 Hz
-                st1 = st1.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
 
-                if "BW.DROMY" in config['seed2']:
-                    st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
-                elif "BW.ROMYT" in config['seed2']:
-                    st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
-                    st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 20 -> 10 Hz
+                st2 = st2.decimate(2, no_filter=True) ## 10 -> 5 Hz
+                # st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
+                # st2 = st2.decimate(2, no_filter=True) ## 1 -> 0.5 Hz
+
+                # convert tilt to acceleration
+                for tr in st2:
+                    tr.data = tr.data*9.81
+
+            elif "BW.ROMYT" in config['seed2']:
+
+                # resampling
+                st1 = st1.decimate(2, no_filter=True) ## 40 -> 20 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 20 -> 10 Hz
+                st1 = st1.decimate(2, no_filter=True) ## 10 -> 5 Hz
+
+                # st2 = st2.decimate(5, no_filter=True) ## 5 -> 1 Hz
+
+                # conovert tilt to rotation rate
+                # for tr in st2:
+                #     tr = tr.differentiate()
 
                 # convert tilt to acceleration
                 for tr in st2:
                     tr.data = tr.data*9.81
 
             else:
-                st1 = st1.detrend("linear").detrend("demean").taper(0.05)
-                st2 = st2.detrend("linear").detrend("demean").taper(0.05)
-
-                st1 = st1.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
-                st2 = st2.filter("bandpass", freqmin=5e-4, freqmax=1, corners=4, zerophase=True)
 
                 st1 = st1.resample(config.get('sampling_rate'), no_filter=True)
                 st2 = st2.resample(config.get('sampling_rate'), no_filter=True)
@@ -482,10 +494,6 @@ def main(config):
 
             st1 = st1.trim(config['tbeg'], config['tend'], nearest_sample=True)
             st2 = st2.trim(config['tbeg'], config['tend'], nearest_sample=True)
-
-            # for tr in st1+st2:
-            #     if len(tr.data) > 86401:
-            #         tr.data = tr.data[:86401]
 
         except Exception as e:
             print(f" -> pre-processing failed!")

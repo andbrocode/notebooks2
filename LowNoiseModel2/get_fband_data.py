@@ -56,9 +56,9 @@ else:
 if len(sys.argv) > 2:
     t1, t2 = sys.argv[2], sys.argv[3]
 else:
-    t1, t2 = "2024-01-01", "2024-03-31"
+    t1, t2 = "2024-01-01", "2024-09-30"
 
-codes = {"":"B", "2":"L"}
+codes = {"":"B", "2":"B"}
 
 code = codes[project]
 

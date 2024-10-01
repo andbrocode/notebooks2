@@ -86,9 +86,14 @@ config['colors'] = {"00":"tab:blue",
 # specify length of time interval to show
 config['time_interval'] = 14 # days
 
+config['last_reset'] = UTCDateTime("2024-09-24 12:00")
+
 # define time interval
 config['tend'] = UTCDateTime().now()
-config['tbeg'] = config['tend'] - config['time_interval'] * 86400
+if abs(config['tend'] - config['last_reset']) > config['time_interval'] * 86400:
+    config['tbeg'] = config['tend'] - config['time_interval'] * 86400
+else:
+    config['tbeg'] = config['last_reset']
 
 # resets
 config['resets'] = {'00':"2024-09-12 12:00",
