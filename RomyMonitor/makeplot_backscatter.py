@@ -1,3 +1,17 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## Makeplot for HTML Monitor for Environmental Overview
+
+# plotting data used for the backscatter correction (Hurst et al., 2014)
+# 
+# requires observations of monobeams and Sagnac signal for the ring under investigation to be in place
+
+# ## Imports
+
+# In[4]:
+
+
 import os
 import gc
 import matplotlib.pyplot as plt
@@ -9,9 +23,15 @@ from obspy import UTCDateTime, read
 from scipy.signal import hilbert
 
 
+# In[5]:
+
+
 from functions.load_backscatter_data import __load_backscatter_data
 from functions.find_max_min import __find_max_min
 from functions.backscatter_correction import __backscatter_correction
+
+
+# In[6]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -34,26 +54,44 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     lamont_path = '/lamont/'
 
 
+# ## Configurations
+
+# In[25]:
+
+
 config = {}
 
+# specify ring for which backscatter is done
 config['ring'] = "Z"
 
-# test Z
-config['tbeg'] = UTCDateTime("2024-08-10 00:00")
-config['tend'] = UTCDateTime("2024-08-11 00:00")
+# specify length of time interval to show
+config['time_interval'] = 2 # days
 
-config['tbeg'] = UTCDateTime("2024-10-06 00:00")
-config['tend'] = UTCDateTime("2024-10-08 00:00")
+config['last_reset'] = UTCDateTime("2024-10-01 14:00")
+
+# define time interval
+config['tend'] = UTCDateTime().now()
+if abs(config['tend'] - config['last_reset']) > config['time_interval']*86400:
+    config['tbeg'] = config['tend'] - config['time_interval'] * 86400
+else:
+    config['tbeg'] = config['last_reset']
 
 # define nominal sagnac frequency of rings
 config['ring_sagnac'] = {"U":303.05, "V":447.5, "W":447.5, "Z":553.2}
+
+# select nominal sagnac frequency
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
-# path to Sagnac data
-# config['path_to_autodata'] = archive_path+f"romy_autodata/"
-
+# specify path to the data
 config['path_to_data'] = data_path+"sagnac_frequency/data/backscatter/"
 
+# path to figure output
+config['path_to_figs'] = data_path+f"HTML_Monitor/figures/"
+
+
+# ### Load Archived Backscatter Files
+
+# In[26]:
 
 
 bs = __load_backscatter_data(config['tbeg'], config['tend'], config['ring'], config['path_to_data'])
@@ -61,15 +99,22 @@ bs = __load_backscatter_data(config['tbeg'], config['tend'], config['ring'], con
 bs['time_sec'] = bs.time2 - bs.time1 + (bs.time1 - bs.time1.loc[0])
 
 
-# compute backscatter corrected signal
-bs['fj_bs'], _, _ = __backscatter_correction(bs.f1_ac / bs.f1_dc,
-                                             bs.f2_ac / bs.f2_dc,
-                                             np.unwrap(bs.f1_phw) - np.unwrap(bs.f2_phw),
-                                             bs.fj_fs,
-                                             np.nanmedian(bs.fj_fs),
-                                             cm_filter_factor=1.033,
-                                             )
+# In[27]:
 
+
+# compute backscatter corrected signal
+bs['fj_bs'] = __backscatter_correction(bs.f1_ac / bs.f1_dc,
+                                         bs.f2_ac / bs.f2_dc,
+                                         np.unwrap(bs.f1_phw) - np.unwrap(bs.f2_phw),
+                                         bs.fj_fs,
+                                         np.nanmedian(bs.fj_fs),
+                                         cm_filter_factor=1.033,
+                                         )
+
+
+# ## Processing
+
+# In[28]:
 
 
 def __find_max_min(lst, pp=99, perc=0, add_percent=None):
@@ -96,6 +141,9 @@ def __find_max_min(lst, pp=99, perc=0, add_percent=None):
         return out_min-out_min*add_percent, out_max+out_max*add_percent
 
 
+# In[30]:
+
+
 def __makeplot2(df):
 
     from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
@@ -119,10 +167,11 @@ def __makeplot2(df):
     ax[0].set_ylabel("$\delta$f (Hz)", fontsize=font)
     ax[0].ticklabel_format(useOffset=False)
     ax[0].set_ylim(__find_max_min([df['f1_fs'], df['f2_fs']], pp=98))
+    ax[0].legend(loc=1, ncol=2)
 
     ax00 = ax[0].twinx()
-    ax00.plot(t_axis, df['fj_fs'], zorder=2, label="fj", color="tab:blue")
-    ax00.plot(t_axis, df['w_s'], zorder=2, label="bs", ls="--", color="k")
+    ax00.plot(t_axis, df['fj_fs'], zorder=2, color="tab:blue", label="fj")
+    ax00.plot(t_axis, df['w_s'], zorder=2, ls="--", color="k", label="backscatter removed")
     ax00.set_ylabel("$\delta$f (Hz)", fontsize=font)
     ax00.spines['right'].set_color('tab:blue')
     ax00.yaxis.label.set_color('tab:blue')
@@ -130,6 +179,7 @@ def __makeplot2(df):
     # ax00.set_yticks(np.linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax[0].get_yticks())))
     ax00.ticklabel_format(useOffset=False)
     ax00.set_ylim(__find_max_min([df['fj_fs']], pp=99.9))
+    ax00.legend(loc=4, ncol=2)
 
     ax[1].plot(t_axis, df['f1_ac']*1e3, zorder=2, label="f1", color="tab:orange")
     ax[1].plot(t_axis, df['f2_ac']*1e3, zorder=2, label="f2", color="tab:red")
@@ -195,10 +245,10 @@ def __makeplot2(df):
 
 fig = __makeplot2(bs);
 
-# fig.savefig(config['path_to_figs']+f"SF_BS_{config['ring']}_{method}_values.png", format="png", dpi=150, bbox_inches='tight')
+fig.savefig(config['path_to_figs']+f"html_backscatter.png", format="png", dpi=150, bbox_inches='tight')
 
 
-
+# In[ ]:
 
 
 
