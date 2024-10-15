@@ -60,7 +60,7 @@ def __store_as_pickle(obj, filename):
 config = {}
 
 # set what rotation to use:  ROMY | ADR | FUR
-config['rot'] = "ROMY"
+config['rot'] = "FUR"
 
 # sec location code
 config['loc'] = "40" # 30 | 40
@@ -68,9 +68,10 @@ config['loc'] = "40" # 30 | 40
 # output path for figures
 config['path_to_figs'] = data_path+f"romy_baro/outfigs/{config['rot'].upper()}/"
 
-# path to data sds
+# path to data sds for ROMY
 config['path_to_sds_romy'] = archive_path+"temp_archive/"
 
+# path to data sds for FUR
 config['path_to_sds_fur'] = bay_path+"mseed_online/archive/"
 
 # path to output data
