@@ -60,7 +60,10 @@ def __store_as_pickle(obj, filename):
 config = {}
 
 # set what rotation to use:  ROMY | ADR | FUR
-config['rot'] = "FUR"
+if len(sys.argv) > 2:
+    config['rot'] = sys.argv[2]
+else:
+    config['rot'] = "ROMY"
 
 # sec location code
 config['loc'] = "40" # 30 | 40
