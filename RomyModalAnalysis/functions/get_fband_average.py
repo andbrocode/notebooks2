@@ -16,8 +16,6 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
     >>> out = __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=False)
 
-
-
     """
 
     import matplotlib.pyplot as plt
@@ -44,7 +42,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
         from acoustics.octave import Octave
         from numpy import array
 
-        ## avoid fmin = zero
+        # avoid fmin = zero
         if fmin == 0:
             # print(f" -> set fmin to 1e-10 instead of 0")
             fmin = 1e-10
@@ -70,11 +68,10 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
         return array(f_lower), array(f_upper), array(f_centers)
 
-
-    ## get octave bands
+    # get octave bands
     f_center, f_upper, f_lower = __get_octave_bands(freq[0], freq[-1], faction_of_octave=faction_of_octave, plot=False)
 
-    ## get frequency indices
+    # get frequency indices
     fl_idx, fu_idx = [], []
 
     for _k, (fl, fu) in enumerate(zip(f_lower, f_upper)):
@@ -90,7 +87,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
                     fu_idx.append(int(_i))
                     break
 
-    ## compute mean per band
+    # compute mean per band
     psd_average, fc, fu, fl = [], [], [], []
     for _n, (ifl, ifu) in enumerate(zip(fl_idx, fu_idx)):
         if ifl != ifu:
@@ -105,7 +102,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
 
     psd_average = array(psd_average)
 
-    ## check up plot
+    # check up plot
     if plot:
         fig = plt.figure(figsize=(15, 5))
 
@@ -118,8 +115,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
         plt.legend()
         plt.show();
 
-
-    ## output
+    # output
     out = {}
     out['psd_means'] = array(psd_average)
     out['fcenter'] = array(fc)

@@ -21,7 +21,7 @@ from obspy import UTCDateTime, Stream
 # sys.path.append('..')
 
 
-# In[27]:
+# In[3]:
 
 
 from functions.load_lxx import __load_lxx
@@ -229,7 +229,7 @@ except Exception as e:
 
 # ### Plotting
 
-# In[28]:
+# In[19]:
 
 
 def __makeplot():
@@ -306,7 +306,7 @@ def __makeplot():
         # ax[_n].grid(ls=":", zorder=0)
         ax[_n].set_xlim(left=0)
 
-    ax[1].legend(ncol=4, bbox_to_anchor=(0.5, 2.55), fontsize=font-2)
+    ax[1].legend(ncol=4, bbox_to_anchor=(0.5, 2.5), loc="center", fontsize=font-2)
 
     # add maintenance
     for lx1, lx2 in zip(lxx_t1, lxx_t2):
@@ -336,19 +336,19 @@ def __makeplot():
     return fig
 
 
-# In[29]:
+# In[ ]:
 
 
 fig = __makeplot();
 
 
-# In[30]:
+# In[ ]:
 
 
 fig.savefig(config['path_to_figs']+f"html_wromy.png", format="png", dpi=150, bbox_inches='tight')
 
 
-# In[31]:
+# In[ ]:
 
 
 del fig

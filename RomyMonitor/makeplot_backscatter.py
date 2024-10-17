@@ -9,10 +9,12 @@
 
 # ## Imports
 
-# In[4]:
+# In[1]:
 
 
 import os
+os.environ['MPLCONFIGDIR'] = '/tmp/mplconfig_cache'
+
 import gc
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,7 +25,7 @@ from obspy import UTCDateTime, read
 from scipy.signal import hilbert
 
 
-# In[5]:
+# In[2]:
 
 
 from functions.load_backscatter_data import __load_backscatter_data
@@ -31,7 +33,7 @@ from functions.find_max_min import __find_max_min
 from functions.backscatter_correction import __backscatter_correction
 
 
-# In[6]:
+# In[3]:
 
 
 if os.uname().nodename == 'lighthouse':
@@ -56,7 +58,7 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 # ## Configurations
 
-# In[25]:
+# In[4]:
 
 
 config = {}
@@ -65,12 +67,13 @@ config = {}
 config['ring'] = "Z"
 
 # specify length of time interval to show
-config['time_interval'] = 2 # days
+config['time_interval'] = 1 # days
 
 config['last_reset'] = UTCDateTime("2024-10-01 14:00")
 
 # define time interval
-config['tend'] = UTCDateTime().now()
+config['tend'] = UTCDateTime(UTCDateTime().now().date)
+
 if abs(config['tend'] - config['last_reset']) > config['time_interval']*86400:
     config['tbeg'] = config['tend'] - config['time_interval'] * 86400
 else:
@@ -91,7 +94,7 @@ config['path_to_figs'] = data_path+f"HTML_Monitor/figures/"
 
 # ### Load Archived Backscatter Files
 
-# In[26]:
+# In[5]:
 
 
 bs = __load_backscatter_data(config['tbeg'], config['tend'], config['ring'], config['path_to_data'])
@@ -99,7 +102,7 @@ bs = __load_backscatter_data(config['tbeg'], config['tend'], config['ring'], con
 bs['time_sec'] = bs.time2 - bs.time1 + (bs.time1 - bs.time1.loc[0])
 
 
-# In[27]:
+# In[6]:
 
 
 # compute backscatter corrected signal
@@ -114,7 +117,7 @@ bs['fj_bs'] = __backscatter_correction(bs.f1_ac / bs.f1_dc,
 
 # ## Processing
 
-# In[28]:
+# In[7]:
 
 
 def __find_max_min(lst, pp=99, perc=0, add_percent=None):
@@ -132,7 +135,7 @@ def __find_max_min(lst, pp=99, perc=0, add_percent=None):
     else:
         _min = min(mins)
         _max = max(maxs)
-        xx = _max*(1+perc) -_max
+        xx = _max*(1+perc) - _max
         out_min, out_max = _min-xx, _max+xx
 
     if add_percent is None:
@@ -141,7 +144,7 @@ def __find_max_min(lst, pp=99, perc=0, add_percent=None):
         return out_min-out_min*add_percent, out_max+out_max*add_percent
 
 
-# In[30]:
+# In[8]:
 
 
 def __makeplot2(df):
@@ -178,7 +181,7 @@ def __makeplot2(df):
     ax00.tick_params(axis='y', colors='tab:blue')
     # ax00.set_yticks(np.linspace(ax00.get_yticks()[0], ax00.get_yticks()[-1], len(ax[0].get_yticks())))
     ax00.ticklabel_format(useOffset=False)
-    ax00.set_ylim(__find_max_min([df['fj_fs']], pp=99.9))
+    ax00.set_ylim(__find_max_min([df['fj_fs']], pp=98))
     ax00.legend(loc=4, ncol=2)
 
     ax[1].plot(t_axis, df['f1_ac']*1e3, zorder=2, label="f1", color="tab:orange")
@@ -246,6 +249,12 @@ def __makeplot2(df):
 fig = __makeplot2(bs);
 
 fig.savefig(config['path_to_figs']+f"html_backscatter.png", format="png", dpi=150, bbox_inches='tight')
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

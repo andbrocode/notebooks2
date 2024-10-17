@@ -54,7 +54,7 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 config = {}
 
-# specify cameras (designed for 4)
+# specify cameras (designed for 4 cameras)
 config['cameras'] = ['00', '01', '03', '05']
 
 # path to beam walk data
@@ -86,7 +86,8 @@ config['colors'] = {"00":"tab:blue",
 # specify length of time interval to show
 config['time_interval'] = 14 # days
 
-config['last_reset'] = UTCDateTime("2024-10-01 14:00")
+# config['last_reset'] = UTCDateTime("2024-10-01 14:00")
+config['last_reset'] = UTCDateTime("2024-10-09 13:00")
 
 # define time interval
 config['tend'] = UTCDateTime().now()
@@ -182,9 +183,11 @@ def __filter(df0):
     # remove bad estimates
     df0 = df0[df0['y_sig_var'] != np.inf]
     df0 = df0[df0['x_sig_var'] != np.inf]
+    print(df0.shape)
 
     # when intensity is super low, there is a black image
-    df0 = df0[df0['amp'] > 20]
+    df0 = df0[df0['amp'] > 10]
+    print(df0.shape)
 
     # when intensity is super high or saturated, there is likely a MLTI boost
     df0 = df0[df0['amp'] < 255]
@@ -229,12 +232,14 @@ mltiV_t1, mltiV_t2 = __get_mlti_intervals(mltiV.time_utc)
 ids = {}
 
 for _cam in config['cameras']:
-
-    ids[_cam] = __load_beam_wander_data(config['tbeg'].date,
-                                        config['tend'].date,
-                                        config['path_to_data'],
-                                        _cam
-                                       )
+    try:
+        ids[_cam] = __load_beam_wander_data(config['tbeg'].date,
+                                            config['tend'].date,
+                                            config['path_to_data'],
+                                            _cam
+                                           )
+    except Exception as e:
+        print(e)
 
 
 # ### Processing
@@ -244,19 +249,23 @@ for _cam in config['cameras']:
 
 for _cam in config['cameras']:
 
-    # adjust times
-    ids[_cam] = __adjust_times(ids[_cam], _cam)
+    try:
+        # adjust times
+        ids[_cam] = __adjust_times(ids[_cam], _cam)
 
-    # perfrom conversions
-    ids[_cam] = __convert_and_reduce(ids[_cam], config['conversion'][_cam])
+        # perfrom conversions
+        ids[_cam] = __convert_and_reduce(ids[_cam], config['conversion'][_cam])
 
-    # filter bad data
-    ids[_cam] = __filter(ids[_cam])
+        # filter bad data
+        ids[_cam] = __filter(ids[_cam])
+
+    except Exception as e:
+        print(e)
 
 
 # ### Load LXX Log
 
-# In[14]:
+# In[15]:
 
 
 # load maintenance log
@@ -268,7 +277,7 @@ lxx_t1, lxx_t2 = __get_lxx_intervals(lxx.datetime)
 
 # ### Plotting
 
-# In[15]:
+# In[16]:
 
 
 def __makeplot():
@@ -308,15 +317,22 @@ def __makeplot():
     _data = []
     for _cam in config['cameras']:
 
-        _df = ids[_cam]
+        try:
+            _df = ids[_cam]
 
-        ax0.scatter(_df.time_sec*tscale, _df.y_um_rel,
-                    s=1, color=config['colors'][_cam], label=f"IDS-{_cam}"
-                   )
+            ax0.scatter(_df.time_sec*tscale, _df.y_um_rel,
+                        s=1, color=config['colors'][_cam], label=f"IDS-{_cam}"
+                       )
 
-        _data.append(_df.y_um_rel.values)
+            _data.append(_df.y_um_rel.values)
 
-    ax0.set_ylim(__find_max_min(_data, pp=99))
+        except Exception as e:
+            print(e)
+
+    try:
+        ax0.set_ylim(__find_max_min(_data, pp=99))
+    except Exception as e:
+        print(e)
 
     ax0.grid(color="gray", alpha=0.4, ls="--")
     ax0.legend(ncol=4, markerscale=3)
@@ -330,15 +346,23 @@ def __makeplot():
     _data = []
     for _cam in config['cameras']:
 
-        _df = ids[_cam]
+        try:
+            _df = ids[_cam]
 
-        ax1.scatter(_df.time_sec*tscale, _df.x_um_rel,
-                    s=1, color=config['colors'][_cam], label=f"IDS-{_cam}"
-                   )
+            ax1.scatter(_df.time_sec*tscale, _df.x_um_rel,
+                        s=1, color=config['colors'][_cam], label=f"IDS-{_cam}"
+                       )
 
-        _data.append(_df.x_um_rel.values)
+            _data.append(_df.x_um_rel.values)
 
-    ax1.set_ylim(__find_max_min(_data, pp=99))
+
+        except Exception as e:
+            print(e)
+
+    try:
+        ax1.set_ylim(__find_max_min(_data, pp=99))
+    except Exception as e:
+        print(e)
 
     ax1.grid(color="gray", alpha=0.4, ls="--")
     ax1.legend(ncol=4, markerscale=3)
@@ -350,9 +374,14 @@ def __makeplot():
 
     for ax, _cam in zip(axes11, config['cameras']):
 
-        _df = ids[_cam]
+        try:
+            _df = ids[_cam]
 
-        ax.scatter(_df.x_um_rel, _df.y_um_rel, c=_df.time_sec, s=1)
+            ax.scatter(_df.x_um_rel, _df.y_um_rel, c=_df.time_sec, s=1)
+
+        except Exception as e:
+            print(e)
+
         ax.grid(color="gray", alpha=0.4, ls="--")
 
         ax.get_xaxis().set_visible(False)
@@ -365,7 +394,7 @@ def __makeplot():
         try:
             _imagedir = f"data{_cam}/outfigs/"
 
-            _image, _datetime = __get_latest_filename(config['path_to_images']+_imagedir)
+            _image, _datetime = __get_latest_filename(config['path_to_images'] + _imagedir)
 
             try:
                 ax.imshow(plt.imread(_image))
@@ -384,7 +413,7 @@ def __makeplot():
     return fig
 
 
-# In[16]:
+# In[17]:
 
 
 fig = __makeplot();
@@ -392,6 +421,12 @@ fig = __makeplot();
 fig.savefig(config['path_to_figs']+f"html_beamwalk.png", format="png", dpi=150, bbox_inches='tight')
 
 del fig
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

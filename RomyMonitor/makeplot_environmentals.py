@@ -94,7 +94,7 @@ config['seed'] = f"BW.DROMY..FJ{config['ring']}"
 # specify length of time interval to show
 config['time_interval'] = 14 # days
 
-config['last_reset'] = UTCDateTime("2024-10-01 14:00")
+config['last_reset'] = UTCDateTime("2024-10-09 13:00")
 
 # define time interval
 config['tend'] = UTCDateTime().now()
@@ -590,7 +590,7 @@ except:
 
 # ## Plotting
 
-# In[39]:
+# In[33]:
 
 
 def __makeplot():
@@ -862,7 +862,7 @@ def __makeplot():
     return fig
 
 
-# In[40]:
+# In[34]:
 
 
 fig = __makeplot();

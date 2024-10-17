@@ -245,28 +245,10 @@ def main(config):
 
         # load inventory
         try:
-            inv1 = read_inventory(config['path_to_inv1'])
+            inv1 = read_inventory(config['path_to_inv1'], level="response")
         except:
             print(f" -> failed to load inventory for {config['seed1']}...")
             continue
-
-#         try:
-#             st1, inv1 = __querrySeismoData(
-#                                         seed_id=config['seed1'],
-#                                         starttime=config['tbeg']-offset_sec,
-#                                         endtime=config['tend']+offset_sec,
-#                                         repository="online",
-#                                         path=None,
-#                                         restitute=False,
-#                                         detail=None,
-#                                         fill_value=None,
-#             )
-
-#             st1 = st1.remove_response(inv1, type="VEL")
-
-#         except:
-#             print(f" -> failed to load data for {config['seed1']}...")
-#             continue
 
 
         if len(st1) > 1:
@@ -275,7 +257,6 @@ def main(config):
         if len(st1) == 0:
             print(st1)
             continue
-
 
         # Pre-Processing
         try:
