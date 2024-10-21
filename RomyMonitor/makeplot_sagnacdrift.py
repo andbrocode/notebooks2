@@ -70,9 +70,9 @@ config['time_interval'] = 21 # days
 config['tend'] = UTCDateTime().now()
 config['tbeg'] = config['tend'] - config['time_interval'] * 86400
 
-Zlower, Zupper = 553.10, 553.60
-Ulower, Uupper = 302.30, 302.40
-Vlower, Vupper = 447.80, 447.70
+Zlower, Zupper = 553.20, 553.55
+Ulower, Uupper = 302.30, 302.60
+Vlower, Vupper = 447.60, 447.80
 
 # specify path to data
 config['path_to_sds'] = archive_path+"romy_archive/"
@@ -118,19 +118,19 @@ def __makeplot():
 
     try:
         ax[0].plot(beatZ.times_utc_sec*time_scaling, beatZ.fj)
-        ax[0].set_ylim(553.53, 553.60)
+        ax[0].set_ylim(Zlower, Zupper)
         ax[0].ticklabel_format(useOffset=False)
     except:
         pass
     try:
         ax[1].plot(beatU.times_utc_sec*time_scaling, beatU.fj)
-        ax[1].set_ylim(302.4, 302.5)
+        ax[1].set_ylim(Ulower, Uupper)
         ax[1].ticklabel_format(useOffset=False)
     except:
         pass
     try:
         ax[2].plot(beatV.times_utc_sec*time_scaling, beatV.fj)
-        ax[2].set_ylim(447.6, 447.8)
+        ax[2].set_ylim(Vlower, Vupper)
         ax[2].ticklabel_format(useOffset=False)
     except:
         pass
@@ -186,7 +186,7 @@ except:
 
 try:
     # load log file
-    lxx =__load_lxx(config['tbeg'], config['tend'], archive_path)
+    lxx = __load_lxx(config['tbeg'], config['tend'], archive_path)
 
     # get intervals of maintenance work as utc times
     lxx_t1, lxx_t2 = __get_lxx_intervals(lxx.datetime)
@@ -254,8 +254,9 @@ try:
     # interpolate NaN values
     beatV['fj_inter'] = __interpolate_nan(np.array(beatV.fj_nan))
 
-except:
+except Exception as e:
     print(f" -> failed to load mlti log for RV")
+    print(e)
 
 
 # ### Get MLTI statistics
@@ -338,7 +339,7 @@ except:
 
 # ## Plotting
 
-# In[17]:
+# In[15]:
 
 
 def __makeplot():
@@ -363,9 +364,13 @@ def __makeplot():
         # ax[0].plot(beatZ.times_utc_sec*time_scaling, beatZ.fj_smooth_masked, color="k", label=f"mov. avg. ({n_minutes} min)")
     except:
         pass
-    Z_min, Z_max = __find_max_min([beatZ.fj_nan], 99.9)
-    ax[0].set_ylim(Z_min, Z_max)
-    print(Z_min, Z_max)
+
+    try:
+        Z_min, Z_max = __find_max_min([beatZ.fj_nan], 99.9)
+        ax[0].set_ylim(Z_min, Z_max)
+    except:
+        pass
+
     ax[0].ticklabel_format(useOffset=False)
     ax[0].set_ylabel("Horizontal\nring (Hz)", fontsize=font)
 
@@ -375,8 +380,13 @@ def __makeplot():
         # ax[1].plot(beatU.times_utc_sec*time_scaling, beatU.fj_smooth_masked, color="k", label=f"mov. avg. ({n_minutes} min)")
     except:
         pass
-    U_min, U_max = __find_max_min([beatU.fj_nan], 99.9)
-    ax[1].set_ylim(U_min, U_max)
+
+    try:
+        U_min, U_max = __find_max_min([beatU.fj_nan], 99.9)
+        ax[1].set_ylim(U_min, U_max)
+    except:
+        pass
+
     ax[1].ticklabel_format(useOffset=False)
     ax[1].set_ylabel("Northern\nring (Hz)", fontsize=font)
 
@@ -384,10 +394,16 @@ def __makeplot():
         ax[2].plot(beatV.times_utc_sec*time_scaling, beatV.fj, color="tab:grey", alpha=0.3, label="RV (raw)")
         ax[2].plot(beatV.times_utc_sec*time_scaling, beatV.fj_nan, color="tab:red", label="RV (cleaned)")
         # ax[2].plot(beatV.times_utc_sec*time_scaling, beatV.fj_smooth_masked, color="k", label=f"mov. avg. ({n_minutes} min)")
-    except:
+    except Exception as e:
+        print(e)
         pass
-    V_min, V_max = __find_max_min([beatV.fj_nan], 99.9)
-    ax[2].set_ylim(V_min, V_max)
+
+    try:
+        V_min, V_max = __find_max_min([beatV.fj_nan], 99.9)
+        ax[2].set_ylim(V_min, V_max)
+    except:
+        ax[2].set_ylim(Vlower, Vupper)
+
     ax[2].set_ylim()
     ax[2].ticklabel_format(useOffset=False)
     ax[2].set_ylabel("Western\nring (Hz)", fontsize=font)
@@ -464,12 +480,14 @@ def __makeplot():
     return fig
 
 
-# In[18]:
+# In[16]:
 
 
 fig = __makeplot();
 
 fig.savefig(config['path_to_figs']+f"html_beatdrift.png", format="png", dpi=150, bbox_inches='tight')
+
+del fig
 
 
 # In[ ]:
