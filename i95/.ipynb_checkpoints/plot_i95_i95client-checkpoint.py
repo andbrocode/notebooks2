@@ -6,13 +6,15 @@ from i95_sds import I95SDSClient, I95NoDataError
 
 i95_client = I95SDSClient('/bay200/I95_1-20Hz/')
 i95_client_smooth = I95SDSClient(
-    '/bay200/I95_1-20Hz/', smoothing_window_length_hours=24 * 7,
-    smoothing_step_hours=12)
+                                 '/bay200/I95_1-20Hz/',
+                                 smoothing_window_length_hours=24 * 7,
+                                 smoothing_step_hours=12
+                                )
 
 #start = UTCDateTime(2021, 1, 1)
 #end = UTCDateTime(2021, 12, 31)
 
-start = UTCDateTime(2024, 1, 1)
+start = UTCDateTime(2024, 3, 25)
 end = UTCDateTime(2024, 3, 31)
 
 inv = read_inventory('/bay200/station-metadata/output/inventory.xml')
@@ -24,7 +26,7 @@ inv = inv.select(station='GRMB')
 #inv = inv.select(station='SYBAD')
 #inv = inv.select(station='MGSBH')
 
-
+print(inv)
 
 def plot_channel(network, station, location, channel):
     scale = 'mum/s'
@@ -74,24 +76,24 @@ for net in inv:
                 plt.close('all')
             done.add(seed_id)
 
-
+print("plotting")
 fig, ax = plt.subplots(figsize=(10, 4))
 scale = 'mum/s'
 percentiles = [68, 95, 99]
 # XXX set merging to true if channel changes in the time period
-merge_streams = False
-i95_client.plot_all_data(
-    start, end, ax=ax, type='violin', percentiles=percentiles, show=False,
-    scale=scale, color='lightskyblue', violin_kwargs={'width': 1.4},
-    merge_streams=merge_streams)
+# merge_streams = False
+# i95_client.plot_all_data(
+#     start, end, ax=ax, type='violin', percentiles=percentiles, show=False,
+#     scale=scale, color='lightskyblue', violin_kwargs={'width': 1.4},
+#     merge_streams=merge_streams)
 
-ax.grid()
-ax.set_ylim(0, 1.25)
-ax.axhline(1.0, color='blue', zorder=3)
-# fig.subplots_adjust(top=0.98, bottom=0.3)
-fig.subplots_adjust(top=0.98)
-plt.draw()
-#fig.savefig('/tmp/I95_ALL.pdf')
+# ax.grid()
+# ax.set_ylim(0, 1.25)
+# ax.axhline(1.0, color='blue', zorder=3)
+# # fig.subplots_adjust(top=0.98, bottom=0.3)
+# fig.subplots_adjust(top=0.98)
+# plt.show()
+# fig.savefig('/tmp/I95_ALL.pdf')
 # fig.savefig('/tmp/I95_ALL.png')
 
 
@@ -105,5 +107,4 @@ i95_client.plot_availability(start, end, ax=ax, show=False, fast=False,
 ax.images[0].colorbar.set_label(u'Tägliche Datenverfügbarkeit [%]')
 # fig.savefig('/tmp/I95_coverage.pdf')
 # fig.savefig('/tmp/I95_coverage.png')
-
 plt.show()

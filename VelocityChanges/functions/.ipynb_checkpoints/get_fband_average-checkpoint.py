@@ -118,8 +118,7 @@ def __get_fband_average(freq, psd, faction_of_octave=1, average="mean", plot=Fal
         plt.legend()
         plt.show();
 
-
-    ## output
+    # output
     out = {}
     out['psd_means'] = array(psd_average)
     out['fcenter'] = array(fc)

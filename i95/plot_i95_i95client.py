@@ -6,8 +6,10 @@ from i95_sds import I95SDSClient, I95NoDataError
 
 i95_client = I95SDSClient('/bay200/I95_1-20Hz/')
 i95_client_smooth = I95SDSClient(
-    '/bay200/I95_1-20Hz/', smoothing_window_length_hours=24 * 7,
-    smoothing_step_hours=12)
+                                 '/bay200/I95_1-20Hz/',
+                                 smoothing_window_length_hours=24 * 7,
+                                 smoothing_step_hours=12
+                                )
 
 #start = UTCDateTime(2021, 1, 1)
 #end = UTCDateTime(2021, 12, 31)
@@ -24,7 +26,7 @@ inv = inv.select(station='GRMB')
 #inv = inv.select(station='SYBAD')
 #inv = inv.select(station='MGSBH')
 
-
+print(inv)
 
 def plot_channel(network, station, location, channel):
     scale = 'mum/s'
