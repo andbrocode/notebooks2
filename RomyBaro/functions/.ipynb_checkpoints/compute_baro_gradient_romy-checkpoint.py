@@ -1,4 +1,4 @@
-def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[], verbose=False, freqs=None):
+def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[], verbose=False):
 
     ######################
     """
@@ -70,13 +70,8 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
     config['location'] = "00"
 
     # specify frequency range
-    if freqs is None:
-        config['freq2'] = 0.01
-        config['freq1'] = 0.0001
-    else:
-        config['freq2'] = freqs['fmax']
-        config['freq1'] = freqs['fmin']
-
+    config['freq2'] = 0.01
+    config['freq1'] = 0.0001
     config['apply_bandpass'] = True
 
     # decide if information is printed while running the code
@@ -116,67 +111,6 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
     config['sigmau'] = 1e-7 # 0.0001
 
     # _____________________________________________________
-
-    def __interpolate_nan(array_like):
-
-        from numpy import isnan, interp
-
-        array = array_like.copy()
-
-        nans = isnan(array)
-
-        def get_x(a):
-            return a.nonzero()[0]
-
-        array[nans] = interp(get_x(nans), get_x(~nans), array[~nans])
-
-        return array
-
-    def __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
-
-        '''
-        VARIABLES:
-         - path_to_archive
-         - seed
-         - tbeg, tend
-         - data_format
-
-        DEPENDENCIES:
-         - from obspy.core import UTCDateTime
-         - from obspy.clients.filesystem.sds import Client
-
-        OUTPUT:
-         - stream
-
-        EXAMPLE:
-        >>> st = __read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED")
-
-        '''
-
-        import os
-        from obspy.core import UTCDateTime, Stream
-        from obspy.clients.filesystem.sds import Client
-
-        tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
-
-        if not os.path.exists(path_to_archive):
-            print(f" -> {path_to_archive} does not exist!")
-            return
-
-        ## separate seed id
-        net, sta, loc, cha = seed.split(".")
-
-        ## define SDS client
-        client = Client(path_to_archive, sds_type='D', format=data_format)
-
-        ## read waveforms
-        try:
-            st = client.get_waveforms(net, sta, loc, cha, tbeg, tend, merge=-1)
-        except:
-            print(f" -> failed to obtain waveforms!")
-            st = Stream()
-
-        return st
 
     def __get_inventory_and_distances(config):
 
@@ -255,13 +189,6 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
             except Exception as E:
                 print(E) if config['verbose'] else None
                 print(f" -> getting waveforms failed for {net}.{sta}.{loc}.{cha} ...")
-                del config['coo'][sta]
-                continue
-
-            # # check if empty
-            if len(st00) == 0:
-                print(f" -> stream empty.")
-                del config['coo'][sta]
                 continue
 
             # merge if masked
@@ -292,10 +219,8 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
                 # ref_station = stats.copy().resample(40, no_filter=False)
                 ref_station = st00.copy()
 
-            # add to stream
             st += st00
 
-            print(st00)
             # create station list for obtained stations
             config['subarray'].append(f"{st00[0].stats.network}.{st00[0].stats.station}")
 
@@ -308,7 +233,6 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
         print(f" -> obtained: {len(st)} of {len(config['subarray_stations'])} stations!") if config['verbose'] else None
 
         if len(st) == 0:
-            del config['coo'][station]
             return st, Stream(), config
         else:
             return st, ref_station, config
@@ -411,12 +335,6 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
     # get inventory and coordinates/distances
     # inv, config['coo'] = __get_inventory_and_distances(config)
 
-    # update coordinates
-    for _sta in config['subarray_stations']:
-        if _sta not in config['subarray']:
-            print(_sta)
-            del config['coo'][_sta]
-
     for tr in st:
         tr.stats.channel = "LDZ"
 
@@ -462,6 +380,7 @@ def __compute_baro_gradient_romy(tbeg, tend, status=False, excluded_stations=[],
         dist.append([lon*1000, lat*1000, coo['height']-ref_height])
 
     config['dist'] = np.array(dist)
+
 
     # plot station coordinates for check up
     if verbose:
