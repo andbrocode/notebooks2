@@ -38,7 +38,7 @@ config['tend'] = UTCDateTime("2024-10-31")
 
 
 config['seeds'] = [
-                   'BW.PROMY.03.LDI',
+                   'BW.PROMY.04.LDI',
                    'BW.GELB..LDO',
                    'BW.GRMB..LDO',
                    'BW.ALFT..LDO',

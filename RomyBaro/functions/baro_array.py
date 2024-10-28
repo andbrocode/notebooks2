@@ -530,6 +530,149 @@ class baroArray:
         if output:
             return self.flower, self.fupper
 
+    def equalize_samples(self):
+
+        # equalize number of samples
+        npts_min = min([tr.stats.npts for tr in self.st])
+        for tr in self.st:
+            if tr.stats.npts < npts_min:
+                npts_min
+        for tr in self.st:
+            diff = abs(tr.stats.npts - npts_min)
+            if diff != 0:
+                tr.data = tr.data[:-diff]
+
+    def get_apparent_velocity(self, verbose=False):
+
+        from obspy.signal.cross_correlation import correlate, xcorr_max
+        from numpy import arange, roll, array, sqrt, nanmean, nanstd
+
+        # shift traces to compute mean of array
+        shifts = []
+        dists = []
+        pairs = []
+        velos = []
+
+        coords = self.coordinates
+
+        for ii, ki in enumerate(coords.keys()):
+
+            for jj, kj in enumerate(coords.keys()):
+
+                lon1, lat1, height1 = coords[ki]['lon'], coords[ki]['lat'], coords[ki]['height']
+                lon2, lat2, height2 = coords[kj]['lon'], coords[kj]['lat'], coords[kj]['height']
+
+                # compute distances
+                dist_x, dist_y = obspy.signal.util.util_geo_km(lon1, lat1, lon2, lat2)
+
+                # convert unit from km to m
+                dist = sqrt((dist_x*1000)**2+(dist_y*1000)**2)
+
+                # cross-correlate
+                arr0 = self.st.select(station=ki)[0].data
+                arr1 = self.st.select(station=kj)[0].data
+
+                dt = self.st.select(station=ki)[0].stats.delta
+                Nshift = len(arr0)
+                ccf = correlate(arr0, arr1, shift=Nshift, demean=False, normalize='naive', method='fft')
+
+                # get shifts
+                cclags = arange(-Nshift, Nshift+1) * dt
+
+                # find maximum
+                shift_max, value_max = xcorr_max(ccf)
+
+                # assign time shift
+                shifts.append(round(shift_max,1))
+
+                # assign station pair
+                pairs.append(f"{ki}_{kj}")
+
+                # assign velocity
+                velos.append(abs(round(dist/shift_max, 1)))
+
+                # assign distance
+                dists.append(round(dist, 1))
+
+        self.velocities = velos
+        self.distances = dists
+        self.timeshifts = shifts
+
+        self.mean_velocity = round(nanmean(velos), 0)
+        self.std_velocity = round(nanstd(velos), 0)
+
+        if self.verbose or verbose:
+            for i in range(len(pairs)):
+                print(pairs[i], f"shift: {shifts[i]}s", f"vel: {velos[i]}m/s")
+
+            print(f"\nmean velocity: {self.mean_velocity} +- {self.std_velocity} m/s")
+
+    def get_mean_pressure(self, plot=False):
+
+        import matplotlib.pyplot as plt
+        from obspy.signal.cross_correlation import correlate, xcorr_max
+        from numpy import arange, roll, array
+
+        # shift traces to compute mean of array
+        shifted = []
+
+        for i, seed in enumerate(self.seeds):
+
+            sta = seed.split(".")[1]
+
+            if i == 0:
+                arr0 = self.st.select(station=sta)[0].data
+                shifted.append(arr0)
+                continue
+            else:
+                arr1 = self.st.select(station=sta)[0].data
+
+            Nshift = len(arr0)
+
+            dt = self.st[0].stats.delta
+
+            ccf1 = correlate(arr0, arr1, shift=Nshift, demean=False, normalize='naive', method='fft')
+
+            cclags = arange(-Nshift, Nshift+1) * dt
+
+            shift1, value1 = xcorr_max(ccf1)
+
+            if self.verbose:
+                print(sta, f"shift: {round(shift1/60, 2)}min", f"CC: {round(value1, 2)}")
+
+            arr1_shifted = roll(arr1, shift1)
+
+            shifted.append(arr1_shifted)
+
+            # compute mean
+            _mean = array([])
+            for i, arr in enumerate(shifted):
+                if i == 0:
+                    _mean = arr
+                else:
+                    _mean = _mean + arr
+
+        mean = self.st[0].copy()
+        mean.stats.station = "RMY"
+        mean.stats.location = "00"
+        mean.stats.channel = "LDO"
+        mean.data = _mean/(i+1)
+
+        self.st_mean = mean
+
+        # checkup plot
+        if plot:
+            times = self.st[0].times()/3600
+            fig = plt.figure(figsize=(15, 5))
+            for i, x in enumerate(shifted):
+                plt.plot(times, x, label=self.seeds[i], zorder=2)
+            plt.plot(times, mean.data, "k", zorder=2)
+            plt.legend()
+            plt.grid(ls="--", color="grey", alpha=0.4)
+            plt.ylabel("Pressure (Pa)", fontsize=12)
+            plt.xlabel("Time (hour)", fontsize=12)
+            plt.show();
+
     @staticmethod
     def read_sds(path_to_archive, seed, tbeg, tend, data_format="MSEED"):
 

@@ -33,12 +33,12 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 config = {}
 
-config['tbeg'] = UTCDateTime("2024-07-01")
+config['tbeg'] = UTCDateTime("2024-10-24")
 config['tend'] = UTCDateTime("2024-10-31")
 
 
 config['seeds'] = [
-                   'BW.PROMY.03.LDI',
+                   'BW.PROMY.04.LDI',
                    'BW.GELB..LDO',
                    'BW.GRMB..LDO',
                    'BW.ALFT..LDO',
