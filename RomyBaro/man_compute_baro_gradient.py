@@ -33,8 +33,8 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 
 config = {}
 
-config['tbeg'] = UTCDateTime("2024-04-01")
-config['tend'] = UTCDateTime("2024-07-31")
+config['tbeg'] = UTCDateTime("2024-07-01")
+config['tend'] = UTCDateTime("2024-10-31")
 
 
 config['seeds'] = [
@@ -92,7 +92,7 @@ def main(config):
 
             brmy.fig.savefig(config['path_to_figs']+f"{date}_gradient.png", format="png", dpi=150, bbox_inches='tight')
         except:
-            print(f" -> failed for {ðate}")
+            print(f" -> failed for {date}")
 
 if __name__ == "__main__":
     main(config)

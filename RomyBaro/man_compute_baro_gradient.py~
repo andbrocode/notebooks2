@@ -34,7 +34,7 @@ elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
 config = {}
 
 config['tbeg'] = UTCDateTime("2024-04-01")
-config['tend'] = UTCDateTime("2024-07-31")
+config['tend'] = UTCDateTime("2024-10-31")
 
 
 config['seeds'] = [
@@ -51,7 +51,7 @@ config['fmax'] = 10e-3
 
 config['path_to_figs'] = data_path+"/romy_baro/figures/auto_gradient/"
 
-config['coos'] = { 
+config['coos'] = {
                    "ALFT":{"lon":11.2795 , "lat":48.142334, "height":593.0},
                    "GELB":{"lon":11.2514 , "lat":48.1629, "height":628.0},
                    "GRMB":{"lon":11.2635 , "lat":48.1406, "height":656.0},
@@ -67,14 +67,14 @@ def main(config):
 
     for date in tqdm(dates):
 
-        try;
+        try:
 
             brmy = baroArray(seeds=config['seeds'],
                             coords=config['coos'],
                             out_seed="BW.BRMY..BDX",
                             )
 
-            brmy.load_data(tbeg=UTCDateTime(date), 
+            brmy.load_data(tbeg=UTCDateTime(date),
                         tend=UTCDateTime(date)+86400,
                         path_to_sds=archive_path+"temp_archive/",
                         verbose=False
@@ -92,7 +92,7 @@ def main(config):
 
             brmy.fig.savefig(config['path_to_figs']+f"{date}_gradient.png", format="png", dpi=150, bbox_inches='tight')
         except:
-            print(f" -> failed for {ðate}")
+            print(f" -> failed for {date}")
 
 if __name__ == "__main__":
     main(config)
