@@ -1,5 +1,5 @@
-def __get_angle(N, E, out="deg"):
-    
+def __get_angle(N, E, out="deg", relative_to_north=True):
+
     import numpy as np
 
     ang = np.zeros(len(E))
@@ -16,6 +16,11 @@ def __get_angle(N, E, out="deg"):
         # Q1
         else:
             ang[i] = np.rad2deg(np.arctan(n/e))
+
+    if relative_to_north:
+        # angle relative to north
+        ang = ((ang + 90) % 360) - 180
+
     if out == "deg":
         return ang
     elif out == "rad":
