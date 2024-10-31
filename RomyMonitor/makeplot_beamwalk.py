@@ -278,7 +278,7 @@ lxx_t1, lxx_t2 = __get_lxx_intervals(lxx.datetime)
 
 # ### Plotting
 
-# In[15]:
+# In[21]:
 
 
 def __makeplot():
@@ -410,11 +410,21 @@ def __makeplot():
         except:
             print(f" -> failed image for {_cam}")
 
+    for ax in axes00:
+
+        _, _ , _ymin, _ymax = ax.axis()
+
+        # add maintenance times
+        for lx1, lx2 in zip(lxx_t1, lxx_t2):
+            lx1_sec = lx1-UTCDateTime(config['tbeg'])
+            lx2_sec = lx2-UTCDateTime(config['tbeg'])
+            ax.fill_betweenx([_ymin, _ymax], lx1_sec*tscale, lx2_sec*tscale, color="yellow", alpha=0.3)
+
     plt.show();
     return fig
 
 
-# In[16]:
+# In[22]:
 
 
 fig = __makeplot();

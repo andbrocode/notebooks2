@@ -51,29 +51,37 @@ def main():
     dt = datetime.utcnow()
 
     # initiate scope object
-    scope = DS1054Z(DS1054Z_IP)
-    # scope = DS1054Z(f'TCPIP::{DS1054Z_IP}::INSTR')
+    try:
+        scope = DS1054Z(DS1054Z_IP)
+        # scope = DS1054Z(f'TCPIP::{DS1054Z_IP}::INSTR')
+    except:
+        return
 
-    #stop scope
-    scope.stop()
+    try:
+        #stop scope
+        scope.stop()
 
-    scope.set_probe_ratio(1, 1) ## set screen ratio
+        scope.set_probe_ratio(1, 1) ## set screen ratio
 
-    # take a screenshot
-    # print(" -> taking screenshot...")
-    bmap_scope = scope.display_data
+        # take a screenshot
+        # print(" -> taking screenshot...")
+        bmap_scope = scope.display_data
 
-    # restart scope
-    scope.run()
+        # restart scope
+        scope.run()
+    except:
+        return
 
     # display the screentshot
     #display(Image(bmap_scope))
     #print(type(bmap_scope))
 
-    # save image to file
-    with open(path_to_images+f"tmp_html_oszi.bmp", "wb") as _img:
-        _img.write(bmap_scope)
-
+    try:
+        # save image to file
+        with open(path_to_images+f"tmp_html_oszi.bmp", "wb") as _img:
+            _img.write(bmap_scope)
+    except:
+        return
 
     try:
         # load image
