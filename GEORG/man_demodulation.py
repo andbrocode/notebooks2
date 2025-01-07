@@ -548,6 +548,7 @@ def main(config):
 
                 sagnac.get_stream(df=config.get('output_sps'))
             except:
+                print(sagnac.st0)
                 continue
     else:
 
