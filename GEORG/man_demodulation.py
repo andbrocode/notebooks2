@@ -43,7 +43,7 @@ config = {}
 # config['tend'] = config['tbeg'] + 86400
 
 config['tbeg'] = UTCDateTime("2024-10-01 00:00")
-config['tend'] = UTCDateTime("2024-10-04 00:00")
+config['tend'] = UTCDateTime("2024-10-01 04:00")
 
 # project name
 # config['project'] = ""
@@ -548,7 +548,7 @@ def main(config):
 
                 sagnac.get_stream(df=config.get('output_sps'))
             except:
-                print(sagnac.st0)
+                print(sagnac.adaptive_scalingst0)
                 continue
     else:
 
