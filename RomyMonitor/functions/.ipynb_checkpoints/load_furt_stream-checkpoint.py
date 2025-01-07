@@ -41,7 +41,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
 
     def __resample(df, freq='1S'):
 
-        ## check for NaN in dates
+        # check for NaN in dates
         if df.date.isna().any():
             print(" -> NaN values found and removed from column date")
             df = df.dropna(axis=0, subset=["date"])
@@ -49,28 +49,27 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                 df["date"] = df["date"].astype(int)
             except:
                 df["date"] = df["Date"].astype(int)
-        
-        ## make column with datetime
+
+        # make column with datetime
         df['datetime'] = df['date'].astype(str).str.rjust(6,"0")+" "+df['time'].astype(str).str.rjust(6,"0")
 
-        ## drop datetime duplicates
+        # drop datetime duplicates
         df = df[df.duplicated("datetime", keep="first") != True]
 
-        ## convert to pandas datetime object
+        # convert to pandas datetime object
         # df['datetime'] = to_datetime(df['datetime'], format="%d%m%y %H%M%S", errors="coerce")
         df['datetime'] = to_datetime(df['datetime'], format="%d%m%y %H%M%S", errors="ignore")
 
-        ## set datetime column as index
+        # set datetime column as index
         df.set_index('datetime', inplace=True)
 
-        ## remove duplicates
+        # remove duplicates
         df = df[~df.index.duplicated()]
 
-        ## resample
+        # resample
         df = df.asfreq(freq=freq)
 
         return df
-
 
     starttime = UTCDateTime(starttime)
     endtime = UTCDateTime(endtime)
@@ -83,9 +82,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
         output_text.append(f"  -> Path: {path_to_archive}, does not exist!")
         print(f"  -> Path: {path_to_archive}, does not exists!")
 
-
-
-    ## declare empyt dataframe
+    # declare empyt dataframe
     df = DataFrame()
 
     for i, date in enumerate(arange(starttime.date, (endtime+86400+10).date)):
@@ -106,12 +103,10 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
             except:
                 print(f" -> loading of {filename} failed!")
 
+            # substitute strings with floats
 
-
-            ## substitute strings with floats
-
-            ## __________________________________________
-            ## air temperature Ta in degree C
+            # __________________________________________
+            # air temperature Ta in degree C
             # try:
                 # df0['T']  = [float(str(str(t).split("=")[1]).split("C")[0]) for t in df0['T']]
             # except:
@@ -127,8 +122,8 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['T'] = TT
 
-            ## __________________________________________
-            ## air pressure Pa in hPa
+            # __________________________________________
+            # air pressure Pa in hPa
 
             PP = ones(len(df0['P']))*nan
             for _n, p in enumerate(df0['P']):
@@ -139,7 +134,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['P'] = PP
 
-            ## __________________________________________
+            # __________________________________________
             # ## relative humiditiy Ua in %RH
 
             HH = ones(len(df0['H']))*nan
@@ -151,7 +146,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['H'] = HH
 
-            ## __________________________________________
+            # __________________________________________
             # ## rain accumulation in mm
 
             Rc = ones(len(df0['Rc']))*nan
@@ -163,7 +158,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['Rc'] = Rc
 
-            ## __________________________________________
+            # __________________________________________
             # ## wind speed average in m/s
 
             Sm = ones(len(df0['Sm']))*nan
@@ -175,7 +170,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['Sm'] = Sm
 
-            ## __________________________________________
+            # __________________________________________
             # ## wind direction average in degrees
 
             Dm = ones(len(df0['Dm']))*nan
@@ -187,13 +182,11 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                     continue
             df0['Dm'] = Dm
 
+            # __________________________________________
 
-            ## __________________________________________
-
-            ## replace error indicating values (-9999, 999.9) with NaN values
+            # replace error indicating values (-9999, 999.9) with NaN values
 #             df0.replace(to_replace=-9999, value=nan, inplace=True)
 #             df0.replace(to_replace=999.9, value=nan, inplace=True)
-
 
             if df.empty:
                 df = df0
@@ -207,11 +200,10 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
             output_text.append(f"  -> {filename}, failed!")
 #             print(f"  -> File: {filename}, does not exists!")
 
-    ## reset the index for the joined frame
+    # reset the index for the joined frame
     df.reset_index(inplace=True, drop=True)
 
-
-    ## resample dataframe and avoid data gaps
+    # resample dataframe and avoid data gaps
     try:
         df = __resample(df, freq=f'{new_delta}S')
     except Exception as e:
@@ -222,7 +214,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
 
     df_starttime = UTCDateTime(df.index[0])
 
-    ## create stream and attach traces
+    # create stream and attach traces
     st0 = Stream()
     st0 += __add_trace("LAT", df_starttime, df['T'], dt=new_delta)
     st0 += __add_trace("LAP", df_starttime, df['P'], dt=new_delta)
@@ -231,22 +223,22 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
     st0 += __add_trace("LAW", df_starttime, df['Sm'], dt=new_delta)
     st0 += __add_trace("LAD", df_starttime, df['Dm'], dt=new_delta)
 
-    ## correct mseed naming
+    # correct mseed naming
     # st0 += __add_trace("LKO", df_starttime, df['T'], dt=new_delta)
     # st0 += __add_trace("LDO", df_starttime, df['P'], dt=new_delta)
     # st0 += __add_trace("LIO", df_starttime, df['H'], dt=new_delta)
     # st0 += __add_trace("LXR", df_starttime, df['Rc'], dt=new_delta)
 
-    ## trim to specfied time period
+    # trim to specfied time period
     st0.trim(starttime, endtime-new_delta/2)
 
-    t1 ,t2 = endtime-new_delta, st0.select(channel='*T')[0].stats.endtime
+    t1, t2 = endtime-new_delta, st0.select(channel='*T')[0].stats.endtime
     if t1 != t2:
         print(f"Specified end: {t1} \nTrace end:     {t2}")
 
     return st0
 
-## END OF FILE
+# END OF FILE
 
 
 
