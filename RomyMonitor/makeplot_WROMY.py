@@ -44,12 +44,12 @@ elif os.uname().nodename == 'kilauea':
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/ontap-ffb-bay200/'
 elif os.uname().nodename in ['lin-ffb-01', 'ambrym', 'hochfelln']:
     root_path = '/home/brotzer/'
     data_path = '/import/kilauea-data/'
     archive_path = '/import/freenas-ffb-01-data/'
-    bay_path = '/bay200/'
+    bay_path = '/ontap-ffb-bay200/'
 
 
 # In[5]:
@@ -162,6 +162,57 @@ except Exception as e:
 # In[11]:
 
 
+def __read_wromy_data(t1, t2, cha, path_to_data):
+
+    from os import path
+    from pandas import DataFrame, read_csv, concat, date_range
+    from numpy import nan
+    from obspy import UTCDateTime
+
+    t1, t2 = UTCDateTime(t1), UTCDateTime(t2)
+
+    df = DataFrame()
+
+    for n, dat in enumerate(date_range(t1.date, t2.date)):
+
+
+        doy = str(UTCDateTime(dat).julday).rjust(3, "0")
+        year = UTCDateTime(dat).year
+
+        datapath = f"{path_to_data}{year}/BW/WROMY/{cha}.D/"
+
+        if not path.isdir(datapath):
+            print(f" -> Path: {datapath}, does not exists!")
+            return
+
+        try:
+            filename = f'BW.WROMY.{cha}.D.{year}.{doy}'
+            df0 = read_csv(datapath+filename)
+
+            # replace error indicating values (-9999, 999.9) with NaN values
+            df0.replace(to_replace=-9999, value=nan, inplace=True)
+            df0.replace(to_replace=999.9, value=nan, inplace=True)
+
+            if n == 0:
+                df = df0
+            else:
+                df = concat([df, df0])
+        except:
+            print(f" -> file: {filename}, does not exists!")
+
+    df.reset_index(inplace=True, drop=True)
+
+    # add columns with total seconds
+    if 'Seconds' in df.columns:
+        totalSeconds = df.Seconds + (df.Date - df.Date.iloc[0]) * 86400
+        df['totalSeconds'] = totalSeconds
+
+    return df
+
+
+# In[12]:
+
+
 ws = {}
 
 for _s in config['wromy_stations']:
@@ -182,7 +233,7 @@ for _s in config['wromy_stations']:
 
 # ### Load PROMY data
 
-# In[12]:
+# In[13]:
 
 
 ps = Stream()
@@ -201,7 +252,7 @@ ps
 
 # ### Load FURT data
 
-# In[13]:
+# In[ ]:
 
 
 try:
@@ -213,7 +264,7 @@ except Exception as e:
 
 # ### Load Radon Data
 
-# In[14]:
+# In[ ]:
 
 
 try:
@@ -229,7 +280,7 @@ except Exception as e:
 
 # ### Plotting
 
-# In[19]:
+# In[ ]:
 
 
 def __makeplot():
@@ -242,23 +293,35 @@ def __makeplot():
 
     plt.subplots_adjust(hspace=0.1)
 
-    axes0 = ax[0].twinx()
-    axes0.plot(furt.select(channel="LAT")[0].times(reftime=config['tbeg']),
-               furt.select(channel="LAT")[0].data, color="grey", label="FURT",
-               zorder=1, alpha=0.6, lw=1
-              )
+    try:
+        axes0 = ax[0].twinx()
+        axes0.plot(furt.select(channel="LAT")[0].times(reftime=config['tbeg']),
+                   furt.select(channel="LAT")[0].data, color="grey", label="FURT",
+                   zorder=1, alpha=0.6, lw=1
+                  )
+
+    except:
+        pass
+
     axes0.tick_params(axis='y', colors="grey")
     axes0.set_ylabel("FURT (°C)", color="grey")
 
-    ax[1].plot(furt.select(channel="LAP")[0].times(reftime=config['tbeg']),
-               furt.select(channel="LAP")[0].data, color="grey", label="FURT"
-              )
+    try:
+        ax[1].plot(furt.select(channel="LAP")[0].times(reftime=config['tbeg']),
+                   furt.select(channel="LAP")[0].data, color="grey", label="FURT"
+                  )
+    except:
+        pass
 
-    axes2 = ax[2].twinx()
-    axes2.plot(furt.select(channel="LAH")[0].times(reftime=config['tbeg']),
-               furt.select(channel="LAH")[0].data, color="grey", label="FURT",
-               zorder=1, alpha=0.6, lw=1
-              )
+    try:
+        axes2 = ax[2].twinx()
+        axes2.plot(furt.select(channel="LAH")[0].times(reftime=config['tbeg']),
+                   furt.select(channel="LAH")[0].data, color="grey", label="FURT",
+                   zorder=1, alpha=0.6, lw=1
+                  )
+    except:
+        pass
+
     axes2.tick_params(axis='y', colors="grey")
     axes2.set_ylabel("FURT (%)", color="grey")
 
@@ -324,7 +387,10 @@ def __makeplot():
     # ax[Nrow-1].set_xticklabels(tcklbls)
 
     df0 = DataFrame()
-    df0['times_utc'] = furt[0].times("utcdatetime")
+    try:
+        df0['times_utc'] = furt[0].times("utcdatetime")
+    except:
+        df0['times_utc'] = ps[0].times("utcdatetime")
 
     # add dates for x-axis
     lbl_times, lbl_index = __find_lables(df0, "times_utc", config['tbeg'], config['tend'], nth=4)

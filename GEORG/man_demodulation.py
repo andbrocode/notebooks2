@@ -346,7 +346,7 @@ class sagnacdemod:
 
             # adjust time interval
             tr = tr.trim(self.tbeg, self.tend, nearest_sample=False)
-    
+
             # remove last sample to avoid overlaps in stream
             tr.data = tr.data[:-1]
 
@@ -532,21 +532,23 @@ def main(config):
 
         for t1, t2 in tqdm(intervals):
 
-            sagnac.load_sagnac_data(config['seed'],
-                                    t1,
-                                    t2,
-                                    config.get('path_to_sds'),
-                                    verbose=config.get('verbose'),
-                                    )
+            try:
+                sagnac.load_sagnac_data(config['seed'],
+                                        t1,
+                                        t2,
+                                        config.get('path_to_sds'),
+                                        verbose=config.get('verbose'),
+                                        )
 
 
-            sagnac.hilbert_estimator(fband=config.get('fband'),
-                                    acorrect=config.get('correct_amplitudes'),
-                                    prewhiten=config.get('prewhitening'),
-                                    )
+                sagnac.hilbert_estimator(fband=config.get('fband'),
+                                        acorrect=config.get('correct_amplitudes'),
+                                        prewhiten=config.get('prewhitening'),
+                                        )
 
-            sagnac.get_stream(df=config.get('output_sps'))
-
+                sagnac.get_stream(df=config.get('output_sps'))
+            except:
+                continue
     else:
 
         for t1, t2 in intervals:
