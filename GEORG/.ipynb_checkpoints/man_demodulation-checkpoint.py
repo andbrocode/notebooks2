@@ -149,8 +149,8 @@ class sagnacdemod:
         # location code for dataset discrimiation
         self.oloc = loc
 
-        self.onet = "BW"
-        self.osta = "ROMY"
+        self.onet = "XX"
+        self.osta = "GEORG"
 
         # select which ring
         self.ring = ring
@@ -202,7 +202,7 @@ class sagnacdemod:
         st0 = st0.sort()
 
         for tr in st0:
-           tr.data = tr.data * self.conversion
+            tr.data = tr.data * self.conversion
 
         self.st0 = st0
 
