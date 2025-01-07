@@ -525,7 +525,7 @@ def main(config):
         sagnac.save_to_pickle(config, config['path_to_config'], f"{config['project']}_config.pkl")
 
     # get time intervals for data processing (memory limited)
-    intervals = sagnac.get_time_intervals(config.get('tbeg'),config.get('tend'), config.get('time_interval'))
+    intervals = sagnac.get_time_intervals(config.get('tbeg'), config.get('tend'), config.get('time_interval'))
 
     # loop over time intervals
     if config['show_progress']:
@@ -569,10 +569,14 @@ def main(config):
 
             sagnac.get_stream(df=config.get('output_sps'))
 
+    sagnac.fstream = sagnac.fstream.split()
+
     print(sagnac.fstream)
 
-    sagnac.fstream = sagnac.fstream.split()
-    
+    sagnac.fstream = sagnac.fstream.merge(fill_value="interpolate")
+
+    print(sagnac.fstream)
+
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
 
     #sagnac.fstream.plot()
