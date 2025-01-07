@@ -571,6 +571,8 @@ def main(config):
 
     print(sagnac.fstream)
 
+    sagnac.fstream = sagnac.fstream.split()
+    
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
 
     #sagnac.fstream.plot()
