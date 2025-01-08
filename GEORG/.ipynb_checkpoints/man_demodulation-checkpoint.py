@@ -93,7 +93,7 @@ config['prewhitening'] = 0.001
 config['ddt'] = 1800
 
 # frequency band (minus and plus)
-config['fband'] = 1 # 10
+config['fband'] = 10 # 10
 
 # specify cm filter value for backscatter correction
 # config['cm_value'] = 1.033
@@ -118,12 +118,15 @@ config['path_to_sds'] = data_path+"GEORG/data/"
 # or geodetic mode for averaging over the selected time period (e.g. 60s averages for sps = 1/60)
 config['mode'] = "seismic" # seismic | geodetic
 
+# set sensitivity volt/counts
+# config['sensitivity'] = 0.59604645e-6
+config['sensitivity'] = 1
 
 # ______________________________________
 
 class sagnacdemod:
 
-    def __init__(self, config=None, output_sampling_rate=1, ddt=100, mode="seismic", nominal_sagnacf=None, loc="", ring="Z", adaptive_scaling=False):
+    def __init__(self, config=None, sensitivity=1, output_sampling_rate=1, ddt=100, mode="seismic", nominal_sagnacf=None, loc="", ring="Z", adaptive_scaling=False):
 
         from obspy import Stream
 
@@ -135,7 +138,7 @@ class sagnacdemod:
         self.output_sampling_rate = output_sampling_rate
 
         # ROMY conversion for Obsidian
-        self.conversion = 0.59604645e-6 # V / count  [0.59604645ug  from obsidian]
+        self.conversion = sensitivity # V / count  [0.59604645ug  from obsidian]
 
         # specify nominal sagnac frequencies to expect
         self.nominal_sagnac = nominal_sagnacf
@@ -518,7 +521,8 @@ def main(config):
                          loc=config.get('loc'),
                          ring=config.get('ring'),
                          adaptive_scaling=config.get('adaptive_scaling'),
-                         mode=config.get('mode')
+                         mode=config.get('mode'),
+                         sensitivity=config.get('sensitivity')
                          )
 
     if config['store_config']:
