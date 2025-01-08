@@ -540,13 +540,13 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
-
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
                                         prewhiten=config.get('prewhitening'),
                                         )
 
                 sagnac.get_stream(df=config.get('output_sps'))
+
             except:
                 print(sagnac.adaptive_scalingst0)
                 continue
