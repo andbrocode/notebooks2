@@ -21,15 +21,17 @@ from functions.write_stream_to_sds import __write_stream_to_sds
 # In[10]:
 
 
-path_to_data = "/home/andbro/kilauea-data/sagnac_frequency/bonn/"
+# path_to_data = "/home/andbro/kilauea-data/sagnac_frequency/bonn/"
+path_to_data = "/import/kilauea-data/GEORG/"
 
-path_to_data_out = "/home/andbro/kilauea-data/GEORG/data/"
+path_to_data_out = "/import/kilauea-data/GEORG/data/"
 
-filename = "4h_GEORG_Data.csv"
+# filename = "4h_GEORG_Data.csv"
+filename = "newab"
 
 sps = 7000
 
-starttime = "2024-10-01 00:00"
+starttime = "2024-12-26 02:00"
 
 seed_code = "XX.GEORG..FJZ"
 
