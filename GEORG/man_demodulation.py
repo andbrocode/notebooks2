@@ -548,10 +548,11 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
-                for tr in sagnac.st0:
-                    print(tr.data)
-                    tr.data *= 1e-6
-                    print(tr.data)
+                # for tr in sagnac.st0:
+                #     print(tr.data)
+                #     tr.data *= 1e-6
+                #     print(tr.data)
+
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
                                         prewhiten=config.get('prewhitening'),
