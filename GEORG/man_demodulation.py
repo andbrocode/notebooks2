@@ -100,7 +100,7 @@ config['fband'] = 10 # 10
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"Z":315.0, "U":315.0}
+config['ring_sagnac'] = {"Z":315.0, "U":315.0, "V":315.0, "W":315.0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -436,13 +436,13 @@ class sagnacdemod:
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
         # angle in horizontal plane
-        h_rot = {"Z":0}
+        h_rot = {"Z":0, "U":0, "V":0, "W":0}
 
         # angle from vertical
-        v_rot = {"Z":0}
+        v_rot = {"Z":0, "U":0, "V":0, "W":0}
 
         # side length
-        L = {"Z":4}
+        L = {"Z":4, "U":0, "U":0, "U":0}
 
         # wavelength
         lamda = 632.8e-9
@@ -451,7 +451,7 @@ class sagnacdemod:
         # S = (sqrt(3)*L[ring])/(3*lamda)
 
         # Scale factor square ring
-        S = (4*L*L)/(4*L*lamda)
+        S = (4*L[ring]*L[ring])/(4*L[ring]*lamda)
 
         # GEORGE latitude
         lat = deg2rad(50.728310)
@@ -548,6 +548,10 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
+                for tr in sagnac.st0:
+                    print(tr.data)
+                    tr.data *= 1e-6
+                    print(tr.data)
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
                                         prewhiten=config.get('prewhitening'),
