@@ -6,6 +6,7 @@ Run backscatter quantity computation and correction automatically
 
 import os
 import sys
+import gc
 import numpy as np
 # import multiprocessing as mp
 # import matplotlib.pyplot as plt
@@ -99,7 +100,7 @@ config['fband'] = 10 # 10
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"U":0, "V":0, "W":0, "Z":315.0}
+config['ring_sagnac'] = {"Z":315.0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -434,24 +435,26 @@ class sagnacdemod:
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
         # angle in horizontal plane
-        h_rot = {"Z":0, "U":0, "V":60, "W":60}
+        h_rot = {"Z":0}
 
         # angle from vertical
-        v_rot = {"Z":0, "U":109.5, "V":70.5, "W":70.5}
-        # v_rot = {"Z":-90, "U":19.5, "V":-19.5, "W":-19.5}
+        v_rot = {"Z":0}
 
         # side length
-        L = {"Z":11.2, "U":12, "V":12, "W":12}
+        L = {"Z":4}
 
         # wavelength
         lamda = 632.8e-9
 
-        # Scale factor
-        S = (sqrt(3)*L[ring])/(3*lamda)
+        # Scale factor triangular ring
+        # S = (sqrt(3)*L[ring])/(3*lamda)
 
-        # ROMY latitude
-        lat = deg2rad(48.162941)
-        lon = deg2rad(11.275501)
+        # Scale factor square ring
+        S = (4*L*L)/(4*L*lamda)
+
+        # GEORGE latitude
+        lat = deg2rad(50.728310)
+        lon = deg2rad(7.089011)
 
         # nominal Earth rotation
         omegaE = 2*pi/86400 * array([0, 0, 1])
@@ -550,28 +553,36 @@ def main(config):
                                         )
 
                 sagnac.get_stream(df=config.get('output_sps'))
+                print(sagnac.st0)
 
-            except:
+            except Exception as e:
+                print(e)
                 print(sagnac.st0)
                 continue
     else:
 
         for t1, t2 in intervals:
 
-            sagnac.load_sagnac_data(config['seed'],
-                                    t1,
-                                    t2,
-                                    config.get('path_to_sds'),
-                                    verbose=config.get('verbose'),
-                                    )
+            try:
+                sagnac.load_sagnac_data(config['seed'],
+                                        t1,
+                                        t2,
+                                        config.get('path_to_sds'),
+                                        verbose=config.get('verbose'),
+                                        )
 
 
-            sagnac.hilbert_estimator(fband=config.get('fband'),
-                                    acorrect=config.get('correct_amplitudes'),
-                                    prewhiten=config.get('prewhitening'),
-                                    )
+                sagnac.hilbert_estimator(fband=config.get('fband'),
+                                        acorrect=config.get('correct_amplitudes'),
+                                        prewhiten=config.get('prewhitening'),
+                                        )
 
-            sagnac.get_stream(df=config.get('output_sps'))
+                sagnac.get_stream(df=config.get('output_sps'))
+
+            except Exception as e:
+                print(e)
+                print(sagnac.st0)
+                continue
 
     sagnac.fstream = sagnac.fstream.split()
 
@@ -582,6 +593,8 @@ def main(config):
     print(sagnac.fstream)
 
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
+
+    gc.collect()
 
     #sagnac.fstream.plot()
 

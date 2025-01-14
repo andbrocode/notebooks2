@@ -42,7 +42,12 @@ def __write_stream_to_sds(st, path_to_sds):
 
             try:
                 stx = Stream(trx)
-                stx.write(path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}", format="MSEED")
+
+                file = path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}"
+
+                with open(file, "ab") as f:
+                    stx.write(f)
+
             except:
                 print(f" -> failed to write: {cc}")
             finally:

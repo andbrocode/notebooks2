@@ -6,6 +6,7 @@ Run backscatter quantity computation and correction automatically
 
 import os
 import sys
+import gc
 import numpy as np
 # import multiprocessing as mp
 # import matplotlib.pyplot as plt
@@ -42,8 +43,8 @@ config = {}
 # config['tbeg'] = UTCDateTime(sys.argv[1])
 # config['tend'] = config['tbeg'] + 86400
 
-config['tbeg'] = UTCDateTime("2024-10-01 00:00")
-config['tend'] = UTCDateTime("2024-10-01 04:00")
+config['tbeg'] = UTCDateTime("2024-12-26 00:00")
+config['tend'] = UTCDateTime("2024-12-27 00:00")
 
 # project name
 # config['project'] = ""
@@ -355,7 +356,7 @@ class sagnacdemod:
 
             print(tr)
 
-            # sampling time 
+            # sampling time
             dt = 1/df
 
             # total samples of trace
@@ -434,24 +435,26 @@ class sagnacdemod:
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
         # angle in horizontal plane
-        h_rot = {"Z":0, "U":0, "V":60, "W":60}
+        h_rot = {"Z":0}
 
         # angle from vertical
-        v_rot = {"Z":0, "U":109.5, "V":70.5, "W":70.5}
-        # v_rot = {"Z":-90, "U":19.5, "V":-19.5, "W":-19.5}
+        v_rot = {"Z":0}
 
         # side length
-        L = {"Z":11.2, "U":12, "V":12, "W":12}
+        L = {"Z":4}
 
         # wavelength
         lamda = 632.8e-9
 
-        # Scale factor
-        S = (sqrt(3)*L[ring])/(3*lamda)
+        # Scale factor triangular ring
+        # S = (sqrt(3)*L[ring])/(3*lamda)
 
-        # ROMY latitude
-        lat = deg2rad(48.162941)
-        lon = deg2rad(11.275501)
+        # Scale factor square ring
+        S = (4*L*L)/(4*L*lamda)
+
+        # GEORGE latitude
+        lat = deg2rad(50.728310)
+        lon = deg2rad(7.089011)
 
         # nominal Earth rotation
         omegaE = 2*pi/86400 * array([0, 0, 1])
@@ -550,9 +553,10 @@ def main(config):
                                         )
 
                 sagnac.get_stream(df=config.get('output_sps'))
+                print(sagnac.st0)
 
             except:
-                print(sagnac.adaptive_scalingst0)
+                print(sagnac.st0)
                 continue
     else:
 
@@ -582,6 +586,8 @@ def main(config):
     print(sagnac.fstream)
 
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
+
+    gc.collect()
 
     #sagnac.fstream.plot()
 
