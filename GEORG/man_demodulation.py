@@ -100,7 +100,7 @@ config['fband'] = 10 # 10
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"Z":315.0}
+config['ring_sagnac'] = {"Z":315.0, "U":315.0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -584,14 +584,17 @@ def main(config):
                 print(sagnac.st0)
                 continue
 
+    # split stream in case of gaps before merging with interpolation
     sagnac.fstream = sagnac.fstream.split()
 
     print(sagnac.fstream)
 
+    # merge stream in case of masked traces using interpolation
     sagnac.fstream = sagnac.fstream.merge(fill_value="interpolate")
 
     print(sagnac.fstream)
 
+    # write stream to sds archive as mseed files
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
 
     gc.collect()
