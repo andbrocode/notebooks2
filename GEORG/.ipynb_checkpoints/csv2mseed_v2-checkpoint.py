@@ -43,7 +43,7 @@ def split_csv(pathname, filename, num_rows, has_header=True):
             chunk.append(row)
             row_count += 1
             if row_count > num_rows:
-                print(f"writing {pathname}tmp/'f'{name}-{file_no}.{extension}...")
+                print(f"writing {pathname}tmp/{name}-{file_no}.{extension}...")
                 write_csv(f'{pathname}tmp/', f'{name}-{file_no}.{extension}', chunk, header)
                 chunk = []
                 file_no += 1
