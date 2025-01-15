@@ -94,13 +94,13 @@ config['prewhitening'] = 0.001
 config['ddt'] = 1800
 
 # frequency band (minus and plus)
-config['fband'] = 10 # 10
+config['fband'] = 10 # 10 | 1
 
 # specify cm filter value for backscatter correction
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"Z":315.0, "U":315.0, "V":315.0, "W":315.0}
+config['ring_sagnac'] = {"Z":312.0, "U":0, "V":0, "W":0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -435,16 +435,16 @@ class sagnacdemod:
 
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
-        # angle in horizontal plane
+        # angle in horizontal plane (degrees)
         h_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # angle from vertical
+        # angle from vertical (degrees)
         v_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # side length
+        # side length (meters)
         L = {"Z":4, "U":0, "U":0, "U":0}
 
-        # wavelength
+        # wavelength (meters)
         lamda = 632.8e-9
 
         # Scale factor triangular ring
@@ -548,10 +548,8 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
-                for tr in sagnac.st0:
-                    print(tr.data)
-                    tr.data = np.array([float(x)*1e-6 for x in tr.data])
-                    print(tr.data)
+                # for tr in sagnac.st0:
+                #     tr.data = np.array([float(x)*1e-6 for x in tr.data])
 
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
