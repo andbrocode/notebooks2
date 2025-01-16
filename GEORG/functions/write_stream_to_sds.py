@@ -46,9 +46,11 @@ def __write_stream_to_sds(st, path_to_sds):
                 file = path_to_sds+f"{yy}/{nn}/{ss}/{cc}.D/"+f"{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}"
 
                 with open(file, "ab") as f:
-                    stx.write(f)
+                    stx.write(f, "MSEED")
 
-            except:
+            except Exception as e:
                 print(f" -> failed to write: {cc}")
+                print(e)
             finally:
-                print(f" -> stored stream as: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")
+                if os.path.isfile(file):
+                    print(f" -> appended to: {yy}/{nn}/{ss}/{cc}.D/{nn}.{ss}.{ll}.{cc}.D.{yy}.{jj}")

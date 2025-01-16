@@ -6,6 +6,7 @@ Run backscatter quantity computation and correction automatically
 
 import os
 import sys
+import gc
 import numpy as np
 # import multiprocessing as mp
 # import matplotlib.pyplot as plt
@@ -42,8 +43,8 @@ config = {}
 # config['tbeg'] = UTCDateTime(sys.argv[1])
 # config['tend'] = config['tbeg'] + 86400
 
-config['tbeg'] = UTCDateTime("2024-12-20 00:00")
-config['tend'] = UTCDateTime("2024-12-21 00:00")
+config['tbeg'] = UTCDateTime("2024-12-27 00:00")
+config['tend'] = UTCDateTime("2024-12-28 00:00")
 
 # project name
 # config['project'] = ""
@@ -93,13 +94,13 @@ config['prewhitening'] = 0.001
 config['ddt'] = 1800
 
 # frequency band (minus and plus)
-config['fband'] = 10 # 10
+config['fband'] = 10 # 10 | 1
 
 # specify cm filter value for backscatter correction
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"U":0, "V":0, "W":0, "Z":315.0}
+config['ring_sagnac'] = {"Z":312.0, "U":0, "V":0, "W":0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -198,7 +199,8 @@ class sagnacdemod:
                                        merge=-1
                                        )
 
-        except:
+        except Exception as e:
+            print(e)
             print(f" -> failed for {seed}")
             return
 
@@ -355,7 +357,7 @@ class sagnacdemod:
 
             print(tr)
 
-            # sampling time 
+            # sampling time
             dt = 1/df
 
             # total samples of trace
@@ -433,25 +435,27 @@ class sagnacdemod:
 
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
-        # angle in horizontal plane
-        h_rot = {"Z":0, "U":0, "V":60, "W":60}
+        # angle in horizontal plane (degrees)
+        h_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # angle from vertical
-        v_rot = {"Z":0, "U":109.5, "V":70.5, "W":70.5}
-        # v_rot = {"Z":-90, "U":19.5, "V":-19.5, "W":-19.5}
+        # angle from vertical (degrees)
+        v_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # side length
-        L = {"Z":11.2, "U":12, "V":12, "W":12}
+        # side length (meters)
+        L = {"Z":4, "U":0, "U":0, "U":0}
 
-        # wavelength
+        # wavelength (meters)
         lamda = 632.8e-9
 
-        # Scale factor
-        S = (sqrt(3)*L[ring])/(3*lamda)
+        # Scale factor triangular ring
+        # S = (sqrt(3)*L[ring])/(3*lamda)
 
-        # ROMY latitude
-        lat = deg2rad(48.162941)
-        lon = deg2rad(11.275501)
+        # Scale factor square ring
+        S = (4*L[ring]*L[ring])/(4*L[ring]*lamda)
+
+        # GEORGE latitude
+        lat = deg2rad(50.728310)
+        lon = deg2rad(7.089011)
 
         # nominal Earth rotation
         omegaE = 2*pi/86400 * array([0, 0, 1])
@@ -544,6 +548,9 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
+                # for tr in sagnac.st0:
+                #     tr.data = np.array([float(x)*1e-6 for x in tr.data])
+
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
                                         prewhiten=config.get('prewhitening'),
@@ -551,37 +558,49 @@ def main(config):
 
                 sagnac.get_stream(df=config.get('output_sps'))
 
-            except:
-                print(sagnac.adaptive_scalingst0)
+            except Exception as e:
+                print(e)
+                print(sagnac.st0)
                 continue
     else:
 
         for t1, t2 in intervals:
 
-            sagnac.load_sagnac_data(config['seed'],
-                                    t1,
-                                    t2,
-                                    config.get('path_to_sds'),
-                                    verbose=config.get('verbose'),
-                                    )
+            try:
+                sagnac.load_sagnac_data(config['seed'],
+                                        t1,
+                                        t2,
+                                        config.get('path_to_sds'),
+                                        verbose=config.get('verbose'),
+                                        )
 
 
-            sagnac.hilbert_estimator(fband=config.get('fband'),
-                                    acorrect=config.get('correct_amplitudes'),
-                                    prewhiten=config.get('prewhitening'),
-                                    )
+                sagnac.hilbert_estimator(fband=config.get('fband'),
+                                        acorrect=config.get('correct_amplitudes'),
+                                        prewhiten=config.get('prewhitening'),
+                                        )
 
-            sagnac.get_stream(df=config.get('output_sps'))
+                sagnac.get_stream(df=config.get('output_sps'))
 
+            except Exception as e:
+                print(e)
+                print(sagnac.st0)
+                continue
+
+    # split stream in case of gaps before merging with interpolation
     sagnac.fstream = sagnac.fstream.split()
 
     print(sagnac.fstream)
 
+    # merge stream in case of masked traces using interpolation
     sagnac.fstream = sagnac.fstream.merge(fill_value="interpolate")
 
     print(sagnac.fstream)
 
+    # write stream to sds archive as mseed files
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
+
+    gc.collect()
 
     #sagnac.fstream.plot()
 
