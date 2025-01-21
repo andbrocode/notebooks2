@@ -481,7 +481,7 @@ class sagnacdemod:
 
         one = array([0, 0, 1])
 
-        out = S * ( one @ ( D @ (R @ nx) ) )[0] )
+        out = S * (one @ (D @ (R @ nx)))[0]
 
         return out
 
