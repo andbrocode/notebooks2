@@ -43,8 +43,8 @@ config = {}
 # config['tbeg'] = UTCDateTime(sys.argv[1])
 # config['tend'] = config['tbeg'] + 86400
 
-config['tbeg'] = UTCDateTime("2024-12-27 00:00")
-config['tend'] = UTCDateTime("2024-12-28 00:00")
+config['tbeg'] = UTCDateTime("2024-12-26 00:00")
+config['tend'] = UTCDateTime("2024-12-27 00:00")
 
 # project name
 # config['project'] = ""
