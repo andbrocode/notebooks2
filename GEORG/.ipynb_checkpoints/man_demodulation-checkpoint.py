@@ -43,8 +43,8 @@ config = {}
 # config['tbeg'] = UTCDateTime(sys.argv[1])
 # config['tend'] = config['tbeg'] + 86400
 
-config['tbeg'] = UTCDateTime("2024-12-26 00:00")
-config['tend'] = UTCDateTime("2024-12-27 00:00")
+config['tbeg'] = UTCDateTime("2024-12-27 00:00")
+config['tend'] = UTCDateTime("2024-12-28 00:00")
 
 # project name
 # config['project'] = ""
@@ -66,7 +66,7 @@ config['path_to_config'] = "./"
 config['ring'] = "Z"
 
 # set location code (to discrimiate datasets)
-config['loc'] = "10"
+config['loc'] = "20"
 
 # select frequency estimation mode
 config['mode'] = "hilbert" # "hilbert" | "sine"
@@ -94,13 +94,13 @@ config['prewhitening'] = 0.001
 config['ddt'] = 1800
 
 # frequency band (minus and plus)
-config['fband'] = 10 # 10
+config['fband'] = 2 # 10 | 1
 
 # specify cm filter value for backscatter correction
 # config['cm_value'] = 1.033
 
 # define nominal sagnac frequency of rings
-config['ring_sagnac'] = {"U":0, "V":0, "W":0, "Z":315.0}
+config['ring_sagnac'] = {"Z":312.0, "U":0, "V":0, "W":0}
 config['nominal_sagnac'] = config['ring_sagnac'][config['ring']]
 
 # specify path to Sagnac data
@@ -117,7 +117,7 @@ config['path_to_sds'] = data_path+"GEORG/data/"
 
 # set seismic mode for high-frequency data demodulation
 # or geodetic mode for averaging over the selected time period (e.g. 60s averages for sps = 1/60)
-config['mode'] = "seismic" # seismic | geodetic
+config['mode'] = "geodetic" # seismic | geodetic
 
 # set sensitivity volt/counts
 # config['sensitivity'] = 0.59604645e-6
@@ -199,7 +199,8 @@ class sagnacdemod:
                                        merge=-1
                                        )
 
-        except:
+        except Exception as e:
+            print(e)
             print(f" -> failed for {seed}")
             return
 
@@ -434,23 +435,23 @@ class sagnacdemod:
 
         from numpy import pi, sqrt, arccos, deg2rad, arcsin, cos, sin, array, zeros
 
-        # angle in horizontal plane
-        h_rot = {"Z":0}
+        # angle in horizontal plane (degrees)
+        h_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # angle from vertical
-        v_rot = {"Z":0}
+        # angle from vertical (degrees)
+        v_rot = {"Z":0, "U":0, "V":0, "W":0}
 
-        # side length
-        L = {"Z":4}
+        # side length (meters)
+        L = {"Z":3.49925, "U":0, "U":0, "U":0}
 
-        # wavelength
+        # wavelength (meters)
         lamda = 632.8e-9
 
         # Scale factor triangular ring
         # S = (sqrt(3)*L[ring])/(3*lamda)
 
         # Scale factor square ring
-        S = (4*L*L)/(4*L*lamda)
+        S = (4*L[ring]*L[ring])/(4*L[ring]*lamda)
 
         # GEORGE latitude
         lat = deg2rad(50.728310)
@@ -480,7 +481,7 @@ class sagnacdemod:
 
         one = array([0, 0, 1])
 
-        out = S * ( one @ ( D @ (R @ nx) ) )[0]
+        out = S * ( one @ ( D @ (R @ nx) ) )[0] )
 
         return out
 
@@ -547,44 +548,56 @@ def main(config):
                                         verbose=config.get('verbose'),
                                         )
 
+                # for tr in sagnac.st0:
+                #     tr.data = np.array([float(x)*1e-6 for x in tr.data])
+
                 sagnac.hilbert_estimator(fband=config.get('fband'),
                                         acorrect=config.get('correct_amplitudes'),
                                         prewhiten=config.get('prewhitening'),
                                         )
 
                 sagnac.get_stream(df=config.get('output_sps'))
-                print(sagnac.st0)
 
-            except:
+            except Exception as e:
+                print(e)
                 print(sagnac.st0)
                 continue
     else:
 
         for t1, t2 in intervals:
 
-            sagnac.load_sagnac_data(config['seed'],
-                                    t1,
-                                    t2,
-                                    config.get('path_to_sds'),
-                                    verbose=config.get('verbose'),
-                                    )
+            try:
+                sagnac.load_sagnac_data(config['seed'],
+                                        t1,
+                                        t2,
+                                        config.get('path_to_sds'),
+                                        verbose=config.get('verbose'),
+                                        )
 
 
-            sagnac.hilbert_estimator(fband=config.get('fband'),
-                                    acorrect=config.get('correct_amplitudes'),
-                                    prewhiten=config.get('prewhitening'),
-                                    )
+                sagnac.hilbert_estimator(fband=config.get('fband'),
+                                        acorrect=config.get('correct_amplitudes'),
+                                        prewhiten=config.get('prewhitening'),
+                                        )
 
-            sagnac.get_stream(df=config.get('output_sps'))
+                sagnac.get_stream(df=config.get('output_sps'))
 
+            except Exception as e:
+                print(e)
+                print(sagnac.st0)
+                continue
+
+    # split stream in case of gaps before merging with interpolation
     sagnac.fstream = sagnac.fstream.split()
 
     print(sagnac.fstream)
 
+    # merge stream in case of masked traces using interpolation
     sagnac.fstream = sagnac.fstream.merge(fill_value="interpolate")
 
     print(sagnac.fstream)
 
+    # write stream to sds archive as mseed files
     sagnac.write_stream_to_sds(config.get('path_to_out_data'))
 
     gc.collect()

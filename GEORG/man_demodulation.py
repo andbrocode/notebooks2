@@ -442,7 +442,7 @@ class sagnacdemod:
         v_rot = {"Z":0, "U":0, "V":0, "W":0}
 
         # side length (meters)
-        L = {"Z":4, "U":0, "U":0, "U":0}
+        L = {"Z":3.49925, "U":0, "U":0, "U":0}
 
         # wavelength (meters)
         lamda = 632.8e-9
@@ -481,7 +481,7 @@ class sagnacdemod:
 
         one = array([0, 0, 1])
 
-        out = S * ( one @ ( D @ (R @ nx) ) )[0]
+        out = S * ( one @ ( D @ (R @ nx) ) )[0] )
 
         return out
 
