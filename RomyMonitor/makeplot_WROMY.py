@@ -319,6 +319,7 @@ def __makeplot():
                    furt.select(channel="LAH")[0].data, color="grey", label="FURT",
                    zorder=1, alpha=0.6, lw=1
                   )
+        axes2.set_ylim(top=100)
     except:
         pass
 
@@ -341,6 +342,8 @@ def __makeplot():
         try:
             ax[2].plot(ws[_s]['time'] - config['tbeg'], ws[_s]['LII'],
                        color=config['colors'][_s], lw=1, label=f"WS{_s}")
+            ax[2].set_ylim(top=100)
+
         except:
             pass
 
@@ -408,7 +411,7 @@ def __makeplot():
     return fig
 
 
-# In[17]:
+# In[1]:
 
 
 fig = __makeplot();
