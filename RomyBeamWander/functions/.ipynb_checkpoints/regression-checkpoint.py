@@ -26,7 +26,7 @@ def __regression(ddf, _features, target="fj_fs", reg="theilsen", verbose=True):
 
     # using OLS
     if reg.lower() == "ols":
-        ols = linear_model.LinearRegression()
+        ols = linear_model.LinearRegression(fit_intercept=True)
         model = ols.fit(X, y)
         if verbose:
             print("R2:", model.score(X, y))
@@ -73,8 +73,13 @@ def __regression(ddf, _features, target="fj_fs", reg="theilsen", verbose=True):
 
     out['model'] = model
     out['r2'] = model.score(X, y)
-    out['tp'] = _df.time
     out['dp'] = model_predict
+
+    # try to append time data
+    try:
+        out['tp'] = _df.time
+    except:
+        pass
 
     if reg.lower() == "ransac":
         out['slope'] = model.estimator_.coef_

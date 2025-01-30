@@ -1,4 +1,4 @@
-def __compute_orthogonal_distance_regression(x_array, y_array, xerr=None, yerr=None, bx=None, by=None):
+def __compute_orthogonal_distance_regression(x_array, y_array, intercept_zero=False, xerr=None, yerr=None, bx=None, by=None):
 
     from scipy import odr
     from numpy import power, mean, std
@@ -9,13 +9,20 @@ def __compute_orthogonal_distance_regression(x_array, y_array, xerr=None, yerr=N
     if xerr is None and yerr is None:
         xerr, yerr = std(x_array), std(y_array)
 
+    def modelx(B, x):
+        return B*x + 0
+
     # data = odr.RealData(x_array, y_array)
     data = odr.Data(x_array, y_array, wd=1./xerr, we=1./yerr)
 
-    odr = odr.ODR(data, model=odr.unilinear)
+    # prepare output dictionary
+    out = {}
 
-    output = odr.run()
+    if intercept_zero:
+        output = odr.ODR(data, model=odr.Model(modelx), beta0=[1.]).run()
+        out['slope'] = output.beta
+    else:
+        output = odr.ODR(data, model=odr.unilinear).run()
+        out['slope'], out['intercept'] = output.beta
 
-    slope, intercept = output.beta
-
-    return slope, intercept
+    return out
