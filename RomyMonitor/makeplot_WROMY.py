@@ -79,7 +79,7 @@ def __find_min_max_stream(_st, _cha):
 
 def __find_min_max(_df, _cha):
 
-    from numpy import nanmin, nanmax, nanpercentile, array, append
+    from numpy import nanpercentile, array, append
 
     arr = array([])
     for _k in _df.keys():
@@ -97,7 +97,7 @@ config = {}
 config['path_to_sds'] = archive_path+"romy_archive/"
 
 # path to figure output
-config['path_to_figs'] = data_path+f"HTML_Monitor/figures/"
+config['path_to_figs'] = data_path+"HTML_Monitor/figures/"
 
 # specify length of time interval to show
 config['time_interval'] = 21 # days
@@ -113,15 +113,16 @@ config['wromy_stations'] = [1, 4, 5, 6, 7, 8, 9]
 config['promy_stations'] = [1, 4, 5, 7, 9]
 
 # specify colors for stations
-config['colors'] = {  1:'darkgreen',
-                      3:'lightgreen',
-                      4:'purple',
-                      5:'darkred',
-                      6:'darkblue',
-                      7:'darkorange',
-                      8:'darkcyan',
-                      9:'cyan',
-                     }
+config['colors'] = {
+                    1: 'darkgreen',
+                    3: 'lightgreen',
+                    4: 'purple',
+                    5: 'darkred',
+                    6: 'darkblue',
+                    7: 'darkorange',
+                    8: 'darkcyan',
+                    9: 'cyan',
+                    }
 
 
 # ### Load Maintenance Log
@@ -162,6 +163,29 @@ except Exception as e:
 # In[11]:
 
 
+def __get_dummy(xdate, dt=1):
+
+    from pandas import DataFrame, read_csv, concat, date_range
+    from numpy import nan
+    from obspy import UTCDateTime
+
+    df_dummy = DataFrame()
+
+    xdate_utc = UTCDateTime(xdate)
+
+    df_dummy['Seconds'] = np.arange(0, 86400, dt).astype(int)
+    df_dummy['Date'] = int(xdate)
+    df_dummy['Time (UTC)'] = [int(str((xdate_utc + _t).time()).replace(':', '')) for _t in df_dummy.Seconds]
+    df_dummy['Temperature (°C)'] = nan
+    df_dummy['Pressure (hPa)'] = nan
+    df_dummy['rel. Humidity (%)'] = nan
+
+    return df_dummy
+
+
+# In[12]:
+
+
 def __read_wromy_data(t1, t2, cha, path_to_data):
 
     from os import path
@@ -175,7 +199,6 @@ def __read_wromy_data(t1, t2, cha, path_to_data):
 
     for n, dat in enumerate(date_range(t1.date, t2.date)):
 
-
         doy = str(UTCDateTime(dat).julday).rjust(3, "0")
         year = UTCDateTime(dat).year
 
@@ -187,16 +210,24 @@ def __read_wromy_data(t1, t2, cha, path_to_data):
 
         try:
             filename = f'BW.WROMY.{cha}.D.{year}.{doy}'
-            df0 = read_csv(datapath+filename)
 
-            # replace error indicating values (-9999, 999.9) with NaN values
-            df0.replace(to_replace=-9999, value=nan, inplace=True)
-            df0.replace(to_replace=999.9, value=nan, inplace=True)
+            try:
+                df0 = read_csv(datapath+filename)
+                # replace error indicating values (-9999, 999.9) with NaN values
+                df0.replace(to_replace=-9999, value=nan, inplace=True)
+                df0.replace(to_replace=999.9, value=nan, inplace=True)
+
+            except:
+                df0 = __get_dummy(UTCDateTime(dat).replace('-', ''), dt=1)
 
             if n == 0:
                 df = df0
             else:
-                df = concat([df, df0])
+                try:
+                    df = concat([df, df0])
+                except:
+                    df = concat([df, __get_dummy(UTCDateTime(dat).replace('-', ''), dt=1)])
+
         except:
             print(f" -> file: {filename}, does not exists!")
 
@@ -210,22 +241,42 @@ def __read_wromy_data(t1, t2, cha, path_to_data):
     return df
 
 
-# In[12]:
+# In[13]:
 
 
 ws = {}
 
 for _s in config['wromy_stations']:
+
     try:
         _ws = __read_wromy_data(config['tbeg'], config['tend'], f"WS{_s}", archive_path+"romy_archive/")
 
-        _ws_times_utc = [UTCDateTime(f"{d}T{str(t).rjust(6, '0')}") for d, t in zip(_ws['Date'], _ws['Time (UTC)'])]
+        last_value_t = 0
+        last_value_d = str(config['tbeg'].date).replace("-", "")
+        _datetime_str = []
+        for _d, _t in zip(_ws['Date'], _ws['Time (UTC)']):
+            try:
+                t = int(_t)
+                d = str(_d)
+            except:
+                t = int(last_value_t + 1)
+                d = str(last_value_d)
+            finally:
+                last_value_t = t
+                last_value_d = d
+            try:
+                _datetime_str.append(f"{d[0:4]}-{d[4:6]}-{d[6:8]}T{str(t).rjust(6, '0')}")
+            except:
+                pass
+
+        _ws_times_utc = [UTCDateTime(_dt) for _dt in _datetime_str]
 
         ws[_s] = {"time": np.array(_ws_times_utc),
                   "LKI": np.array(_ws['Temperature (°C)']),
                   "LDI": np.array(_ws['Pressure (hPa)']),
                   "LII": np.array(_ws['rel. Humidity (%)']),
                  }
+
     except Exception as e:
         print(e)
         print(f" -> failed to load WS: {_s}")
@@ -233,7 +284,7 @@ for _s in config['wromy_stations']:
 
 # ### Load PROMY data
 
-# In[13]:
+# In[14]:
 
 
 ps = Stream()
@@ -252,7 +303,7 @@ ps
 
 # ### Load FURT data
 
-# In[14]:
+# In[15]:
 
 
 try:
@@ -264,7 +315,7 @@ except Exception as e:
 
 # ### Load Radon Data
 
-# In[15]:
+# In[16]:
 
 
 try:
@@ -280,7 +331,7 @@ except Exception as e:
 
 # ### Plotting
 
-# In[16]:
+# In[17]:
 
 
 def __makeplot():
@@ -319,7 +370,7 @@ def __makeplot():
                    furt.select(channel="LAH")[0].data, color="grey", label="FURT",
                    zorder=1, alpha=0.6, lw=1
                   )
-        axes2.set_ylim(top=100)
+        axes2.set_ylim(0, 100)
     except:
         pass
 
@@ -342,7 +393,7 @@ def __makeplot():
         try:
             ax[2].plot(ws[_s]['time'] - config['tbeg'], ws[_s]['LII'],
                        color=config['colors'][_s], lw=1, label=f"WS{_s}")
-            ax[2].set_ylim(top=100)
+            ax[2].set_ylim(40, 100)
 
         except:
             pass
@@ -360,14 +411,21 @@ def __makeplot():
     ax[3].axhspan(150, np.nanmax(rdn['Radon ST avg (Bq/m3)'])+100, color='red', alpha=0.2, zorder=0)
     ax[3].set_ylim(0, np.nanmax(rdn['Radon ST avg (Bq/m3)'])+100)
 
-    Tmin, Tmax = __find_min_max(ws, "LKI")
-    ax[0].set_ylim(Tmin-1, Tmax+1)
-
-    Pmin, Pmax = __find_min_max(ws, "LDI")
-    ax[1].set_ylim(Pmin-2, Pmax+2)
-
-    Hmin, Hmax = __find_min_max(ws, "LII")
-    ax[2].set_ylim(Hmin-5, Hmax+5)
+    try:
+        Tmin, Tmax = __find_min_max(ws, "LKI")
+        ax[0].set_ylim(Tmin-1, Tmax+1)
+    except:
+        pass
+    try:
+        Pmin, Pmax = __find_min_max(ws, "LDI")
+        ax[1].set_ylim(Pmin-2, Pmax+2)
+    except:
+        pass
+    try:
+        Hmin, Hmax = __find_min_max(ws, "LII")
+        ax[2].set_ylim(Hmin-5, Hmax+5)
+    except:
+        pass
 
     ax[0].set_ylabel("Temperature (°C)")
     ax[1].set_ylabel("Pressure (hPa)")
@@ -395,6 +453,9 @@ def __makeplot():
     # ax[Nrow-1].set_xticks(tcks)
     # ax[Nrow-1].set_xticklabels(tcklbls)
 
+    for a in ax:
+        a.minorticks_on()
+
     df0 = DataFrame()
     try:
         df0['times_utc'] = furt[0].times("utcdatetime")
@@ -411,19 +472,19 @@ def __makeplot():
     return fig
 
 
-# In[1]:
+# In[18]:
 
 
 fig = __makeplot();
 
 
-# In[18]:
+# In[19]:
 
 
 fig.savefig(config['path_to_figs']+f"html_wromy.png", format="png", dpi=150, bbox_inches='tight')
 
 
-# In[19]:
+# In[20]:
 
 
 del fig
