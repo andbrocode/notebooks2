@@ -73,7 +73,8 @@ config['network'] = 'PY'
 config['array_stations'] = ['BPH01','BPH02','BPH03','BPH04','BPH05','BPH06','BPH07',
                             'BPH08','BPH09','BPH10','BPH11','BPH12','BPH13']
 
-config['misorientations'] = [0. ,-1.375 ,0.25 ,0.125 ,-0.6875 ,-0.625 ,-1.9375 ,0.375 ,-6.5625 ,0.3125 ,-1.125 ,-2.5625 ,0.1875]
+config['misorientations'] =  [0. ,-1.375 ,0.25 ,0.125 ,-0.6875 ,-0.625 ,-1.9375 ,0.375 
+                              ,-6.5625 ,0.3125 ,-1.125 ,-2.5625 ,0.1875]
 
 
 config['subarray_misorientation'] = [config['misorientations'][i] for i in config['subarray_mask']]
@@ -162,6 +163,7 @@ def __get_data(config):
             print(f" -> geting waveforms failed ofr {station}...")
             continue
 
+            
         ## try to get inventory
 #         try:
 #             inv = config['fdsn_client'].get_stations(  
@@ -173,16 +175,18 @@ def __get_data(config):
 #                                                     endtime=config['tend'],
 #                                                     level='response'
 #                                                     )
-
+            
 #         except Exception as E:
 #             print(E)
 #             print(f" -> geting inventory failed ofr {station}...")
 #             continue
             
-        ## merge if masked
+            
+        ## merge if masked 
         if len(stats) > 3:
             print(f" -> merging stream. Length: {len(stats)} -> 3")
             stats.merge(method=1, fill_value="interpolate")
+
 
         ## sorting
         stats.sort()
