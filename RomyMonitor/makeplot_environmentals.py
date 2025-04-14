@@ -98,7 +98,7 @@ config['ring'] = "Z"
 config['seed'] = f"BW.DROMY..FJ{config['ring']}"
 
 # specify length of time interval to show
-config['time_interval'] = 14 # days
+config['time_interval'] = 3 # days
 
 config['last_reset'] = UTCDateTime("2024-10-23 12:00")
 
@@ -113,11 +113,13 @@ else:
 config['path_to_sds'] = archive_path+"romy_archive/"
 
 # path to Sagnac data
-config['path_to_autodata'] = archive_path+f"romy_autodata/"
+# config['path_to_autodata'] = archive_path+f"romy_autodata/"
+config['path_to_autodata'] = archive_path+"romy_autodata/backscatter/"
 
-config['path_to_data'] = data_path+"sagnac_frequency/data/backscatter/"
+# config['path_to_data'] = data_path+"sagnac_frequency/data/backscatter/"
+config['path_to_data'] = archive_path+"romy_autodata/backscatter/"
 
-config['path_to_out_data'] = data_path+"sagnac_frequency/data/"
+# config['path_to_out_data'] = data_path+"sagnac_frequency/data/"
 
 # path to figure output
 config['path_to_figs'] = archive_path+f"romy_html_monitor/figures/"
@@ -163,6 +165,8 @@ try:
     bs['time_sec'] = bs.time2 - bs.time1 + (bs.time1 - bs.time1.loc[0])
 
 except:
+    print(f" -> failed to load bs")
+    bs = DataFrame()
     pass
 
 
@@ -189,6 +193,8 @@ try:
     # compute backscatter corrected signal
     bs['fj_bs'] = __backscatter_correction(m01, m02, phase0, bs.fj_fs, np.median(bs.fj_fs), cm_filter_factor=1.033)
 except:
+    print(f" -> failed to apply backscatter correction")
+    bs = DataFrame()
     pass
 
 
@@ -464,7 +470,7 @@ except:
 
 # ### Load Beam Wander Data
 
-# In[23]:
+# In[31]:
 
 
 try:
@@ -474,10 +480,12 @@ try:
 
 except:
     print(f" -> Error: beam walk 03")
+    bw1 = DataFrame()
+
     pass
 
 
-# In[24]:
+# In[32]:
 
 
 try:
@@ -487,10 +495,12 @@ try:
 
 except:
     print(f" -> Error: beam walk 03")
+    bw3 = DataFrame()
+
     pass
 
 
-# In[25]:
+# In[33]:
 
 
 try:
@@ -500,10 +510,11 @@ try:
 
 except:
     print(f" -> Error: beam walk 03")
+    bw5 = DataFrame()
     pass
 
 
-# In[26]:
+# In[34]:
 
 
 def processing(_bw):
@@ -532,7 +543,7 @@ def processing(_bw):
     return _bw
 
 
-# In[27]:
+# In[35]:
 
 
 try:
@@ -542,7 +553,7 @@ except:
     pass
 
 
-# In[28]:
+# In[36]:
 
 
 try:
@@ -552,7 +563,7 @@ except:
     pass
 
 
-# In[29]:
+# In[37]:
 
 
 try:
@@ -562,13 +573,13 @@ except:
     pass
 
 
-# In[30]:
+# In[38]:
 
 
 bws = [bw1, bw3, bw5]
 
 
-# In[31]:
+# In[39]:
 
 
 gc.collect()
@@ -576,7 +587,7 @@ gc.collect()
 
 # ### Load Infrasound FFBI
 
-# In[32]:
+# In[40]:
 
 
 ffbi = obs.Stream()
@@ -596,7 +607,7 @@ except:
 
 # ## Plotting
 
-# In[37]:
+# In[41]:
 
 
 def __makeplot():
@@ -605,7 +616,10 @@ def __makeplot():
 
     font = 10
 
-    ref_date = str(bs.time1.iloc[0])[:10]
+    try:
+        ref_date = str(bs.time1.iloc[0])[:10]
+    except:
+        ref_date = config['tbeg']
 
     fig, ax = plt.subplots(Nrow, Ncol, figsize=(9, 11), sharex=True)
 
@@ -616,7 +630,10 @@ def __makeplot():
     # ref_date = UTCDateTime(bs.time1.iloc[0])
     ref_date = UTCDateTime(config['tbeg'])
 
-    bs_time_sec = [_t - config['tbeg'] for _t in bs.time1]
+    try:
+        bs_time_sec = [_t - config['tbeg'] for _t in bs.time1]
+    except:
+        bs_time_sec = 0
 
     # _____________________________________________________________________________________
 
@@ -628,10 +645,10 @@ def __makeplot():
         # ax[0].plot(bs_time_sec*time_scaling, bs.fj_bs_dejump, color="gold", lw=1, label=f"BS dejump")
 
         f_min, f_max = __find_max_min([bs.fj_fs_nan], 99)
-        if f_min < 553.40:
-            f_min = 553.50
-        if f_max > 553.6:
-            f_max = 553.6
+        # if f_min < 553.40:
+        #     f_min = 553.50
+        # if f_max > 553.6:
+        #     f_max = 553.6
         ax[0].set_ylim(f_min-0.001, f_max+0.001)
 
         ax[0].ticklabel_format(useOffset=False)
@@ -855,23 +872,23 @@ def __makeplot():
     ax[4].legend(loc='best', ncol=1, fontsize=font-1)
     ax[5].legend(loc='best', ncol=3, fontsize=font-1)
 
-    # add dates to x-axis
-    # tcks = ax[Nrow-1].get_xticks()
-    # tcklbls = [f"{UTCDateTime(UTCDateTime(ref_date)+t).date} \n {str(UTCDateTime(UTCDateTime(ref_date)+t).time).split('.')[0]}" for t in tcks]
-    # ax[Nrow-1].set_xticklabels(tcklbls)
-
     # add dates for x-axis
-    lbl_times, lbl_index = __find_lables(bs, "time1", config['tbeg'], config['tend'], nth=3)
-    tcklbls = [str(_lbl).split('.')[0].replace('T', '\n') for _lbl in lbl_times]
-    ax[Nrow-1].set_xticks([_lt - config['tbeg'] for _lt in lbl_times]*time_scaling)
-    ax[Nrow-1].set_xticklabels(tcklbls)
+    try:
+        lbl_times, lbl_index = __find_lables(bs, "time1", config['tbeg'], config['tend'], nth=3)
+        tcklbls = [str(_lbl).split('.')[0].replace('T', '\n') for _lbl in lbl_times]
+        ax[Nrow-1].set_xticks([_lt - config['tbeg'] for _lt in lbl_times]*time_scaling)
+        ax[Nrow-1].set_xticklabels(tcklbls)
+    except:
+        tcks = ax[Nrow-1].get_xticks()
+        tcklbls = [f"{UTCDateTime(UTCDateTime(ref_date)+t).date} \n {str(UTCDateTime(UTCDateTime(ref_date)+t).time).split('.')[0]}" for t in tcks]
+        ax[Nrow-1].set_xticklabels(tcklbls)
 
     gc.collect()
 
     return fig
 
 
-# In[38]:
+# In[42]:
 
 
 fig = __makeplot();
@@ -879,6 +896,12 @@ fig = __makeplot();
 fig.savefig(config['path_to_figs']+f"html_environmentals.png", format="png", dpi=150, bbox_inches='tight')
 
 del fig
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
