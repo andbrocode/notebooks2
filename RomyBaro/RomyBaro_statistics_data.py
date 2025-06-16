@@ -136,6 +136,9 @@ def main(config):
     arr_ccmax_PP_Z, arr_ccmax_PP_N, arr_ccmax_PP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_ccmax_HP_Z, arr_ccmax_HP_N, arr_ccmax_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
 
+    arr_cc_zero_PP_Z, arr_cc_zero_PP_N, arr_cc_zero_PP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+    arr_cc_zero_HP_Z, arr_cc_zero_HP_N, arr_cc_zero_HP_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
+
     arr_a_Z, arr_a_N, arr_a_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_b_Z, arr_b_N, arr_b_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
     arr_R_Z, arr_R_N, arr_R_E = np.zeros(NN), np.zeros(NN), np.zeros(NN)
@@ -174,8 +177,12 @@ def main(config):
                 st0 += __read_sds(config['path_to_sds_romy'], f"BW.ROMY.{config['loc']}.BJN", t1-config['tbuffer'], t2+config['tbuffer'])
                 st0 += __read_sds(config['path_to_sds_romy'], f"BW.ROMY.{config['loc']}.BJE", t1-config['tbuffer'], t2+config['tbuffer'])
 
-                st0 = st0.decimate(2, no_filter=False)
-                st0 = st0.decimate(10, no_filter=False)
+                st0 = st0.detrend("demean").detrend("linear")
+                st0 = st0.taper(0.05)
+                st0 = st0.filter("lowpass", freq=0.1, corners=2, zerophase=True)
+
+                st0 = st0.decimate(2, no_filter=True)
+                st0 = st0.decimate(10, no_filter=True)
 
             # !! not in ADR frequency range...
 #             elif config['rot'].upper() == "ADR":
@@ -194,9 +201,13 @@ def main(config):
 
                 st0 = st0.remove_response(inv_fur, output="ACC")
 
+                st0 = st0.detrend("demean").detrend("linear")
+                st0 = st0.taper(0.05)
+                st0 = st0.filter("lowpass", freq=0.1, corners=2, zerophase=True)
+
                 # resample from 20 Hz to 1 Hz to match FFBI
-                st0 = st0.decimate(4, no_filter=False)
-                st0 = st0.decimate(5, no_filter=False)
+                st0 = st0.decimate(4, no_filter=True)
+                st0 = st0.decimate(5, no_filter=True)
 
                 # acc to tilt
                 for tr in st0:
@@ -240,8 +251,12 @@ def main(config):
 
             ffbi0 = ffbi0.merge();
 
+            ffbi0 = ffbi0.detrend("demean").detrend("linear")
+            ffbi0 = ffbi0.taper(0.05)
+            ffbi0 = ffbi0.filter("lowpass", freq=0.1, corners=2, zerophase=True)
+
             # downsample to 1 Hz
-            ffbi0 = ffbi0.decimate(2, no_filter=False)
+            ffbi0 = ffbi0.decimate(2, no_filter=True)
 
             # ___________________________________________________________
             # load promy pressure data
@@ -353,6 +368,14 @@ def main(config):
             shift_PP_Z, ccmax_PP_Z = xcorr_max(ccf_PP_Z)
             shift_HP_Z, ccmax_HP_Z = xcorr_max(ccf_HP_Z)
 
+            # get zero lag cc
+            cc_zero_PP_N = correlate(arrPP, arrN, shift=0, demean=False, normalize='naive', method='fft')
+            cc_zero_HP_N = correlate(arrHP, arrN, shift=0, demean=False, normalize='naive', method='fft')
+            cc_zero_PP_E = correlate(arrPP, arrE, shift=0, demean=False, normalize='naive', method='fft')
+            cc_zero_HP_E = correlate(arrHP, arrE, shift=0, demean=False, normalize='naive', method='fft')
+            cc_zero_PP_Z = correlate(arrPP, arrZ, shift=0, demean=False, normalize='naive', method='fft')
+            cc_zero_HP_Z = correlate(arrHP, arrZ, shift=0, demean=False, normalize='naive', method='fft')
+
             # ___________________________________________________________
             # estimation of pressure model
             c2 = "*DO" # pressure
@@ -397,6 +420,9 @@ def main(config):
 
             arr_ccmax_PP_N[_n], arr_ccmax_PP_E[_n], arr_ccmax_PP_Z[_n] = ccmax_PP_N, ccmax_PP_E, ccmax_PP_Z
             arr_ccmax_HP_N[_n], arr_ccmax_HP_E[_n], arr_ccmax_HP_Z[_n] = ccmax_HP_N, ccmax_HP_E, ccmax_HP_Z
+
+            arr_cc_zero_PP_N[_n], arr_cc_zero_PP_E[_n], arr_cc_zero_PP_Z[_n] = cc_zero_PP_N, cc_zero_PP_E, cc_zero_PP_Z
+            arr_cc_zero_HP_N[_n], arr_cc_zero_HP_E[_n], arr_cc_zero_HP_Z[_n] = cc_zero_HP_N, cc_zero_HP_E, cc_zero_HP_Z
 
             arr_a_Z[_n], arr_a_N[_n], arr_a_E[_n] = a_Z, a_N, a_E
             arr_b_Z[_n], arr_b_N[_n], arr_b_E[_n] = b_Z, b_N, b_E
@@ -603,6 +629,14 @@ def main(config):
     df['cmax_HP_N'] = arr_ccmax_HP_N
     df['cmax_HP_E'] = arr_ccmax_HP_E
     df['cmax_HP_Z'] = arr_ccmax_HP_Z
+
+    df['czero_PP_N'] = arr_cc_zero_PP_N
+    df['czero_PP_E'] = arr_cc_zero_PP_E
+    df['czero_PP_Z'] = arr_cc_zero_PP_Z
+
+    df['czero_HP_N'] = arr_cc_zero_HP_N
+    df['czero_HP_E'] = arr_cc_zero_HP_E
+    df['czero_HP_Z'] = arr_cc_zero_HP_Z
 
     df['r_z'] = arr_R_Z
     df['r_n'] = arr_R_N
