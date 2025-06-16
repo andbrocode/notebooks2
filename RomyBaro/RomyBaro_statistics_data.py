@@ -59,6 +59,8 @@ def __store_as_pickle(obj, filename):
 
 config = {}
 
+config['plot'] = True
+
 # set what rotation to use:  ROMY | ADR | FUR
 if len(sys.argv) > 2:
     config['rot'] = sys.argv[2]
@@ -78,7 +80,7 @@ config['path_to_sds_romy'] = archive_path+"temp_archive/"
 config['path_to_sds_fur'] = bay_path+"mseed_online/archive/"
 
 # path to output data
-config['path_to_out_data'] = data_path+f"romy_baro/data/{config['rot'].upper()}/"
+config['path_to_out_data'] = data_path+f"romy_baro/data2/{config['rot'].upper()}/"
 
 # data
 if len(sys.argv) > 1:
@@ -238,6 +240,9 @@ def main(config):
 
             ffbi0 = ffbi0.merge();
 
+            # downsample to 1 Hz
+            ffbi0 = ffbi0.decimate(2, no_filter=False)
+
             # ___________________________________________________________
             # load promy pressure data
             # promy = __get_mean_promy_pressure(["03", "04", "05", "07", "09"],
@@ -306,7 +311,7 @@ def main(config):
                 Nreal = len(tr.data)
                 if Nreal != Nexpected:
                     tr.data = tr.data[:Nexpected]
-                    # print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
+                    print(f" -> adjust length: {tr.stats.station}.{tr.stats.channel}:  {Nreal} -> {Nexpected}")
 
             print(stt)
 
@@ -387,8 +392,8 @@ def main(config):
             # add values to arrays
             arr_a_Z[_n], arr_a_N[_n], arr_a_E[_n] = a_Z, a_N, a_E
 
-            arr_shift_PP_N[_n], arr_shift_PP_E[_n], arr_shift_PP_Z[_n] = shift_PP_N, shift_PP_E, shift_PP_Z
-            arr_shift_HP_N[_n], arr_shift_HP_E[_n], arr_shift_HP_Z[_n] = shift_HP_N, shift_HP_E, shift_HP_Z
+            arr_shift_PP_N[_n], arr_shift_PP_E[_n], arr_shift_PP_Z[_n] = shift_PP_N*dt, shift_PP_E*dt, shift_PP_Z*dt
+            arr_shift_HP_N[_n], arr_shift_HP_E[_n], arr_shift_HP_Z[_n] = shift_HP_N*dt, shift_HP_E*dt, shift_HP_Z*dt
 
             arr_ccmax_PP_N[_n], arr_ccmax_PP_E[_n], arr_ccmax_PP_Z[_n] = ccmax_PP_N, ccmax_PP_E, ccmax_PP_Z
             arr_ccmax_HP_N[_n], arr_ccmax_HP_E[_n], arr_ccmax_HP_Z[_n] = ccmax_HP_N, ccmax_HP_E, ccmax_HP_Z
@@ -498,14 +503,14 @@ def main(config):
             print(e)
 
         # check if stop is required
-        if stop:
-            continue
+        # if stop:
+        #     continue
 
         # ___________________________________________________________
         # plotting
 
         # if _n == 1:
-        if True:
+        if config['plot'] and not stop:
             try:
 
                 Nrow, Ncol = 6, 1
