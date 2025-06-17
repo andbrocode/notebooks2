@@ -555,8 +555,8 @@ def main(config):
 
                 y_max = max([max(abs(dd_N*yscale)), max(abs(hh_N*yscale))])
 
-                ax[0].plot(tt_N*tscale, dd_N*yscale, label=f"{config['rot']}-N")
-                ax[0].plot(tt_N*tscale, hh_N*yscale, label=f"P = {round(a_N, 1)} * H[P] + {round(b_N, 1)}")
+                ax[0].plot(tt_N*tscale, dd_N*yscale, color="k", label=f"{config['rot']}-N")
+                ax[0].plot(tt_N*tscale, hh_N*yscale, color="tab:red", linestyle="--", label=f"P = {round(a_N, 1)*1e11} * H[P] + {round(b_N, 1)*1e11}")
                 # ax[0].plot(tt_N*tscale, hh_N*yscale, label=f"{round(a_N*1e12, 2)}e12 * P+{round(b_N*1e12, 2)}e12 * H[P]")
                 ax[0].set_ylim(-y_max, y_max)
                 ax[0].set_ylabel(f"Tilt ({yunit})", fontsize=font)
@@ -568,8 +568,8 @@ def main(config):
 
                 y_max = max([max(abs(dd_E*yscale)), max(abs(hh_E*yscale))])
 
-                ax[2].plot(tt_E*tscale, dd_E*yscale, label=f"{config['rot']}-E")
-                ax[2].plot(tt_E*tscale, hh_E*yscale, label=f"P = {round(a_E, 1)} * H[P] + {round(b_E, 1)}")
+                ax[2].plot(tt_E*tscale, dd_E*yscale, color="k", label=f"{config['rot']}-E")
+                ax[2].plot(tt_E*tscale, hh_E*yscale, color="tab:red", linestyle="--", label=f"P = {round(a_E, 1)*1e11} * H[P] + {round(b_E, 1)*1e11}")
                 ax[2].set_ylim(-y_max, y_max)
                 ax[2].set_ylabel(f"Tilt ({yunit})", fontsize=font)
 
@@ -580,8 +580,8 @@ def main(config):
 
                 y_max = max([max(abs(dd_Z*yscale)), max(abs(hh_Z*yscale))])
 
-                ax[4].plot(tt_Z*tscale, dd_Z*yscale, label=f"{config['rot']}-Z")
-                ax[4].plot(tt_Z*tscale, hh_Z*yscale, label=f"P = {round(a_Z, 1)} * H[P] + {round(b_Z, 1)}")
+                ax[4].plot(tt_Z*tscale, dd_Z*yscale, color="k", label=f"{config['rot']}-Z")
+                ax[4].plot(tt_Z*tscale, hh_Z*yscale, color="tab:red", linestyle="--", label=f"P = {round(a_Z, 1)*1e11} * H[P] + {round(b_Z, 1)*1e11}")
                 ax[4].set_ylim(-y_max, y_max)
                 ax[4].set_ylabel(f"Tilt ({yunit})", fontsize=font)
 
