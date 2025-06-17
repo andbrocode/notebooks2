@@ -539,7 +539,7 @@ def main(config):
         if config['plot'] and not stop:
             try:
 
-                Nrow, Ncol = 6, 1
+                Nrow, Ncol = 7, 1
 
                 fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 10), sharex=True)
 
@@ -587,6 +587,10 @@ def main(config):
                 ax[5].set_ylim(-y_max, y_max)
                 ax[5].set_ylabel(f"Residual ({yunit})", fontsize=font)
 
+                ax[6].plot(tt_Z*tscale, arrPP, label=f"P", color="k")
+                ax[6].plot(tt_Z*tscale, arrHP, label=f"H[P]", color="grey")
+                ax[6].set_ylim(-10, 10)
+                ax[6].set_ylabel(f"Pressure (Pa)", fontsize=font)
 
                 ax[Nrow-1].set_xlabel(f"Time ({tunit})", fontsize=font)
 
