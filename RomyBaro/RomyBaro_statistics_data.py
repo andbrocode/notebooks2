@@ -541,7 +541,7 @@ def main(config):
 
                 Nrow, Ncol = 7, 1
 
-                fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 10), sharex=True)
+                fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 12), sharex=True)
 
                 font = 12
 
@@ -587,10 +587,10 @@ def main(config):
                 ax[5].set_ylim(-y_max, y_max)
                 ax[5].set_ylabel(f"Residual ({yunit})", fontsize=font)
 
-                ax[6].plot(tt_Z*tscale, arrPP, label=f"P", color="k")
-                ax[6].plot(tt_Z*tscale, arrHP, label=f"H[P]", color="grey")
+                ax[6].plot(tt_Z*tscale, arrPP*100, label=f"P", color="k")
+                ax[6].plot(tt_Z*tscale, arrHP*100, label=f"H[P]", color="k", linestyle="--")
                 # ax[6].set_ylim(-10, 10)
-                ax[6].set_ylabel(f"Pressure (Pa)", fontsize=font)
+                ax[6].set_ylabel(f"Pressure\n(Pa)", fontsize=font)
 
                 ax[Nrow-1].set_xlabel(f"Time ({tunit})", fontsize=font)
 
@@ -599,7 +599,7 @@ def main(config):
                 for i in range(Nrow):
                     ax[i].legend(loc=1, ncol=2)
 
-                for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)']):
+                for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)', '(g)']):
                     ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
 
                 dir_name = f"{config['tbeg'].date.year}_{str(config['tbeg'].date.month).rjust(2, '0')}"
