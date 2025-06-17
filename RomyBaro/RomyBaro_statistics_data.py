@@ -606,10 +606,10 @@ def main(config):
                     ax[_k].tick_params(axis='both', labelsize=font-2)
                     ax[_k].minorticks_on()
                     # set right top and bottom off
-                    ax[_k].right_ax.set_visible(False)
-                    ax[_k].top_ax.set_visible(False)
+                    ax[_k].spines['right'].set_visible(False)
+                    ax[_k].spines['top'].set_visible(False)
                     if _k < Nrow-1:
-                        ax[_k].bottom_ax.set_visible(False)
+                        ax[_k].spines['bottom'].set_visible(False)
 
                 dir_name = f"{config['tbeg'].date.year}_{str(config['tbeg'].date.month).rjust(2, '0')}"
                 if not os.path.isdir(config['path_to_figs']+dir_name):
