@@ -543,6 +543,8 @@ def main(config):
 
                 fig, ax = plt.subplots(Nrow, Ncol, figsize=(15, 12), sharex=True)
 
+                plt.subplots_adjust(hspace=0.1)
+
                 font = 12
 
                 yscale, yunit = 1e9, "nrad"
@@ -554,7 +556,7 @@ def main(config):
                 y_max = max([max(abs(dd_N*yscale)), max(abs(hh_N*yscale))])
 
                 ax[0].plot(tt_N*tscale, dd_N*yscale, label=f"{config['rot']}-N")
-                ax[0].plot(tt_N*tscale, hh_N*yscale, label=f"P/H[P] = {round(a_N/b_N, 3)}")
+                ax[0].plot(tt_N*tscale, hh_N*yscale, label=f"P = {round(a_N, 1)} * H[P] + {round(b_N, 1)}")
                 # ax[0].plot(tt_N*tscale, hh_N*yscale, label=f"{round(a_N*1e12, 2)}e12 * P+{round(b_N*1e12, 2)}e12 * H[P]")
                 ax[0].set_ylim(-y_max, y_max)
                 ax[0].set_ylabel(f"Tilt ({yunit})", fontsize=font)
@@ -567,7 +569,7 @@ def main(config):
                 y_max = max([max(abs(dd_E*yscale)), max(abs(hh_E*yscale))])
 
                 ax[2].plot(tt_E*tscale, dd_E*yscale, label=f"{config['rot']}-E")
-                ax[2].plot(tt_E*tscale, hh_E*yscale, label=f"P/H[P] = {round(a_E/b_E, 3)}")
+                ax[2].plot(tt_E*tscale, hh_E*yscale, label=f"P = {round(a_E, 1)} * H[P] + {round(b_E, 1)}")
                 ax[2].set_ylim(-y_max, y_max)
                 ax[2].set_ylabel(f"Tilt ({yunit})", fontsize=font)
 
@@ -579,7 +581,7 @@ def main(config):
                 y_max = max([max(abs(dd_Z*yscale)), max(abs(hh_Z*yscale))])
 
                 ax[4].plot(tt_Z*tscale, dd_Z*yscale, label=f"{config['rot']}-Z")
-                ax[4].plot(tt_Z*tscale, hh_Z*yscale, label=f"P/H[P] = {round(a_Z/b_Z, 3)}")
+                ax[4].plot(tt_Z*tscale, hh_Z*yscale, label=f"P = {round(a_Z, 1)} * H[P] + {round(b_Z, 1)}")
                 ax[4].set_ylim(-y_max, y_max)
                 ax[4].set_ylabel(f"Tilt ({yunit})", fontsize=font)
 
@@ -597,10 +599,17 @@ def main(config):
                 ax[0].set_title(f" {t1.date} {str(t1.time).split('.')[0]} - {str(t2.time).split('.')[0]} UTC  |  f = {config['fmin']*1e3} - {config['fmax']*1e3} mHz", fontsize=font)
 
                 for i in range(Nrow):
-                    ax[i].legend(loc=1, ncol=2)
+                    ax[i].legend(loc=1, ncol=2, fontsize=font-2)
 
                 for _k, ll in enumerate(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)', '(g)']):
                     ax[_k].text(.005, .97, ll, ha='left', va='top', transform=ax[_k].transAxes, fontsize=font+2)
+                    ax[_k].tick_params(axis='both', labelsize=font-2)
+                    ax[_k].minorticks_on()
+                    # set right top and bottom off
+                    ax[_k].right_ax.set_visible(False)
+                    ax[_k].top_ax.set_visible(False)
+                    if _k < Nrow-1:
+                        ax[_k].bottom_ax.set_visible(False)
 
                 dir_name = f"{config['tbeg'].date.year}_{str(config['tbeg'].date.month).rjust(2, '0')}"
                 if not os.path.isdir(config['path_to_figs']+dir_name):
