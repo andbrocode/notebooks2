@@ -589,7 +589,7 @@ def main(config):
 
                 ax[6].plot(tt_Z*tscale, arrPP, label=f"P", color="k")
                 ax[6].plot(tt_Z*tscale, arrHP, label=f"H[P]", color="grey")
-                ax[6].set_ylim(-10, 10)
+                # ax[6].set_ylim(-10, 10)
                 ax[6].set_ylabel(f"Pressure (Pa)", fontsize=font)
 
                 ax[Nrow-1].set_xlabel(f"Time ({tunit})", fontsize=font)
