@@ -78,7 +78,7 @@ config['project'] = "2" #"2"
 config['year'] = 2024
 
 # define time period to analyze
-config['date1'] = UTCDateTime(f"{config['year']}-01-01")
+config['date1'] = UTCDateTime(f"{config['year']}-07-15") # 01-01")
 config['date2'] = UTCDateTime(f"{config['year']}-09-30")
 
 # config['path_to_data1'] = bay_path+f"mseed_online/archive/"
@@ -373,6 +373,26 @@ def main(config):
         config['tbeg'] = UTCDateTime(date)
         config['tend'] = UTCDateTime(date) + 86400
 
+        try:
+            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
+        except:
+            print(f" -> failed to load data for {config['seed1']}...")
+            continue
+            # error = True
+        try:
+            st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
+        except:
+            print(f" -> failed to load data for {config['seed2']} ...")
+            continue
+            # error = True
+
+        if len(st1) == 0:
+            print(f" -> st1 empty!")
+            continue
+        if len(st2) == 0:
+            print(f" -> st2 empty!")
+            continue
+
         ## read inventories
         try:
             inv1 = read_inventory(config['path_to_inv1'])
@@ -384,34 +404,6 @@ def main(config):
             inv2 = read_inventory(config['path_to_inv2'])
         except:
             print(f" -> failed to load inventory {config['path_to_inv2']}...")
-            continue
-
-        # read waveform data
-        try:
-            st1 = __read_sds(config['path_to_data1'], config['seed1'], config['tbeg']-offset_sec, config['tend']+offset_sec)
-        except:
-            print(f" -> failed to load data for {config['seed1']}...")
-            continue
-        
-        try:
-            if "FFB1" in config['seed2'] and "N" in config['seed2'] or "E" in config['seed2']:
-                st2 = Stream()
-                st2 += __read_sds(config['path_to_data2'], config['seed2'][:-1]+"Z", config['tbeg']-offset_sec, config['tend']+offset_sec)
-                st2 += __read_sds(config['path_to_data2'], config['seed2'][:-1]+"1", config['tbeg']-offset_sec, config['tend']+offset_sec)
-                st2 += __read_sds(config['path_to_data2'], config['seed2'][:-1]+"2", config['tbeg']-offset_sec, config['tend']+offset_sec)
-            else:
-                st2 = __read_sds(config['path_to_data2'], config['seed2'], config['tbeg']-offset_sec, config['tend']+offset_sec)
-        except Exception as e:
-            print(e)
-            print(f" -> failed to load data for {config['seed2']} ...")
-            continue
-            # error = True
-
-        if len(st1) == 0:
-            print(f" -> st1 empty!")
-            continue
-        if len(st2) == 0:
-            print(f" -> st2 empty!")
             continue
 
         if len(st1) > 1:
@@ -455,12 +447,6 @@ def main(config):
             print(e)
             print(f" -> failed to convert")
             continue
-
-        # If FFB1 then select only one channel as up to here two were processed
-        if "FFB1" in config['seed2']:
-            st2 = st2.merge().rotate(method="->ZNE", inventory=inv2)
-            st2 = st2.select(channel=f"*{config['seed2'][-1]}")
-
 
         # Pre-Processing
         try:

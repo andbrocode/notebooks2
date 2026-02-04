@@ -1,0 +1,609 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+"""
+Time Spectra for Station Component, FFBI BDO, and Coherence
+
+This script creates a 3-panel plot showing:
+1. PSD of one station component (e.g., GR.FUR..BHZ)
+2. PSD of FFBI BDO
+3. Coherence between the two
+
+Usage:
+    python LNM2_TimeSpectra_Station_FFBI_Coherence.py
+
+Configuration:
+    Modify the config dictionary to set:
+    - station component (e.g., "FUR_BHZ")
+    - date range
+    - frequency limits
+    - thresholds for filtering
+    - downsample_time: Set to 2 or higher to reduce memory usage if script is killed
+
+Memory Optimizations:
+    - Uses non-interactive matplotlib backend (Agg)
+    - Rasterized plotting for large arrays
+    - Aggressive garbage collection
+    - Optional time downsampling
+    - Optimized figure saving
+"""
+
+import gc
+import os
+import sys
+
+# Set matplotlib to use non-interactive backend BEFORE importing pyplot
+# This reduces memory usage significantly
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from pandas import date_range, read_pickle
+
+import warnings
+warnings.filterwarnings('ignore')
+
+# Import functions
+from functions.get_median_psd import __get_median_psd
+from functions.get_percentiles import __get_percentiles
+from functions.replace_noise_psd_with_nan import __replace_noisy_psds_with_nan
+from functions.cut_frequencies_array import __cut_frequencies_array
+from functions.get_fband_averages import __get_fband_averages
+
+# Set paths based on hostname
+if os.uname().nodename == 'lighthouse':
+    root_path = '/home/andbro/'
+    data_path = '/home/andbro/kilauea-data/'
+    archive_path = '/home/andbro/freenas/'
+    bay_path = '/home/andbro/bay200/'
+elif os.uname().nodename == 'kilauea':
+    root_path = '/home/brotzer/'
+    data_path = '/import/kilauea-data/'
+    archive_path = '/import/freenas-ffb-01-data/'
+    bay_path = '/bay200/'
+elif os.uname().nodename in ['ambrym', 'lin-ffb-01', 'hochfelln']:
+    root_path = '/home/brotzer/'
+    data_path = '/import/kilauea-data/'
+    archive_path = '/import/freenas-ffb-01-data/'
+    bay_path = '/bay200/'
+
+
+def __load_data_files(path, name, d1, d2):
+    """
+    Load PSD data files for a given station/channel name.
+    
+    Parameters:
+    -----------
+    path : str
+        Path to data directory
+    name : str
+        Station and channel name in format "STATION_CHANNEL" (e.g., "FUR_BHZ")
+    d1 : str
+        Start date in format "YYYY-MM-DD"
+    d2 : str
+        End date in format "YYYY-MM-DD"
+    
+    Returns:
+    --------
+    ff : array
+        Frequency array
+    tt : array
+        Time array (hours since start)
+    psds_all_array : array
+        Array of PSDs (time x frequency)
+    """
+    from numpy import array, ones, nan
+    from pandas import date_range
+
+    sta, cha = name.split("_")
+
+    # specify size
+    Nhours = 24
+    NN = 0
+    tcount = 0
+    tt, psds_all = [], []
+
+    dates = date_range(d1, d2)
+
+    for _i, day in enumerate(dates):
+
+        day = str(day).split(" ")[0].replace("-", "")
+
+        year = day[:4]
+
+        filename = f"{sta}/{year}_{sta}_{cha}_3600_{day}_hourly.pkl"
+
+        # check if file is available, otherwise replace with nan array
+        if os.path.isfile(path+filename):
+
+            # read file
+            out = read_pickle(path+filename)
+
+            # extract frequencies
+            ff = out['frequencies']
+
+            # extract psds
+            psds_hourly = out['psd']
+
+            # set length of psds at first possible time
+            if NN == 0:
+                NN = psds_hourly[0, :].size
+        else:
+            print(f" -> no such file: {filename}")
+            psds_hourly = ones((Nhours, NN)) * nan
+
+        # form one array
+        dummy_psd = ones(NN) * nan
+        count_size_error = 0
+        for n, psd in enumerate(psds_hourly):
+
+            # add psd
+            if psd.size == NN:
+                psds_all.append(psd)
+            else:
+                count_size_error += 1
+                psds_all.append(dummy_psd)
+
+            # add time (as hour)
+            tt.append(tcount)
+
+            # increase time counter
+            tcount += 1
+
+    if count_size_error > 0:
+        print(f" -> {count_size_error} set to NaN")
+
+    psds_all_array = array(psds_all, dtype=float)
+
+    tt = array(tt)
+
+    return ff, tt, psds_all_array
+
+
+def __load_coherence_files(path, sta1, cha1, sta2, cha2, d1, d2):
+    """
+    Load coherence data files between two stations/channels.
+    
+    Parameters:
+    -----------
+    path : str
+        Path to coherence data directory
+    sta1 : str
+        First station name (e.g., "FFBI")
+    cha1 : str
+        First channel name (e.g., "BDO")
+    sta2 : str
+        Second station name (e.g., "FUR")
+    cha2 : str
+        Second channel name (e.g., "BHZ")
+    d1 : str
+        Start date in format "YYYY-MM-DD"
+    d2 : str
+        End date in format "YYYY-MM-DD"
+    
+    Returns:
+    --------
+    ff : array
+        Frequency array
+    tt : array
+        Time array (hours since start)
+    cohs_all_array : array
+        Array of coherence values (time x frequency)
+    """
+    from numpy import array, ones, nan
+    from pandas import date_range
+
+    Nhours = 24
+    NN = 0
+    tcount = 0
+    tt, cohs_all = [], []
+
+    dates = date_range(d1, d2)
+
+    # First pass: find first existing file to determine NN
+    for _i, day in enumerate(dates):
+        day = str(day).split(" ")[0].replace("-", "")
+        year = day[:4]
+        filename = f"{sta2}_coherence/{year}_{sta1}_{cha1}_{sta2}_{cha2}_3600_{day}_hourly.pkl"
+        
+        if os.path.isfile(path+filename):
+            out = read_pickle(path+filename)
+            ff = out['frequencies']
+            NN = out['coherence'][0, :].size
+            break
+
+    # If no files found, return empty arrays
+    if NN == 0:
+        print(" -> Warning: No coherence files found!")
+        return array([]), array([]), array([])
+
+    # Second pass: load all files
+    for _i, day in enumerate(dates):
+
+        day = str(day).split(" ")[0].replace("-", "")
+        year = day[:4]
+
+        # Coherence files are stored as: {sta2}_coherence/{year}_{sta1}_{cha1}_{sta2}_{cha2}_3600_{day}_hourly.pkl
+        filename = f"{sta2}_coherence/{year}_{sta1}_{cha1}_{sta2}_{cha2}_3600_{day}_hourly.pkl"
+
+        # check if file is available, otherwise replace with nan array
+        if os.path.isfile(path+filename):
+
+            # read file
+            out = read_pickle(path+filename)
+
+            # extract frequencies
+            ff = out['frequencies']
+
+            # extract coherence
+            cohs_hourly = out['coherence']
+        else:
+            print(f" -> no such file: {filename}")
+            cohs_hourly = ones((Nhours, NN)) * nan
+
+        # form one array
+        dummy_coh = ones(NN) * nan
+        count_size_error = 0
+        for n, coh in enumerate(cohs_hourly):
+
+            # add coherence
+            if coh.size == NN:
+                cohs_all.append(coh)
+            else:
+                count_size_error += 1
+                cohs_all.append(dummy_coh)
+
+            # add time (as hour)
+            tt.append(tcount)
+
+            # increase time counter
+            tcount += 1
+
+    if count_size_error > 0:
+        print(f" -> {count_size_error} set to NaN")
+
+    cohs_all_array = array(cohs_all, dtype=float)
+
+    tt = array(tt)
+
+    return ff, tt, cohs_all_array
+
+
+def __makeplot_image_overview(ff, psds, coh_data, times, names, config):
+    """
+    Create a 3-panel plot showing station PSD, FFBI BDO PSD, and coherence.
+    
+    Parameters:
+    -----------
+    ff : list
+        List of frequency arrays [station_ff, ffbi_ff, coh_ff]
+    psds : list
+        List of PSD arrays [station_psd, ffbi_psd]
+    coh_data : array
+        Coherence array
+    times : list
+        List of time arrays [station_tt, ffbi_tt, coh_tt]
+    names : list
+        List of names for labels [station_name, ffbi_name]
+    config : dict
+        Configuration dictionary
+    """
+    import gc
+    from numpy import nanpercentile
+    from matplotlib import colors
+    from matplotlib.ticker import MultipleLocator, AutoMinorLocator
+
+    # define colormap
+    cmap = plt.colormaps.get_cmap('viridis')
+    cmap.set_bad(color='lightgrey')
+
+    # Coherence colormap (typically 0-1 range)
+    cmap_coh = plt.colormaps.get_cmap('plasma')
+    cmap_coh.set_bad(color='lightgrey')
+
+    N = int(24*365)
+    font = 12
+
+    fig = plt.figure(constrained_layout=False, figsize=(15, 9))
+    widths = [8, 1]
+    heights = [1, 1, 1]
+
+    spec = fig.add_gridspec(ncols=2, nrows=3, width_ratios=widths, height_ratios=heights)
+
+    plt.subplots_adjust(hspace=0.15, wspace=0.02)
+
+    # Create subplots
+    ax1_1 = fig.add_subplot(spec[0, 0])
+    ax1_2 = fig.add_subplot(spec[0, 1], sharey=ax1_1)
+    ax2_1 = fig.add_subplot(spec[1, 0], sharex=ax1_1)
+    ax2_2 = fig.add_subplot(spec[1, 1])
+    ax3_1 = fig.add_subplot(spec[2, 0], sharex=ax1_1)
+    ax3_2 = fig.add_subplot(spec[2, 1])
+
+    # Panel 1: Station PSD
+    # Use shading='nearest' or 'auto' to reduce memory (auto is default in newer matplotlib)
+    im1 = ax1_1.pcolormesh(times[0]/24, ff[0], psds[0].T,
+                           cmap=cmap,
+                           norm=colors.LogNorm(config['plot_psd_min'], config['plot_psd_max']),
+                           rasterized=True,
+                           shading='auto',  # Use auto shading for better memory efficiency
+                           )
+
+    # Panel 2: FFBI BDO PSD
+    im2 = ax2_1.pcolormesh(times[1]/24, ff[1], psds[1].T,
+                           cmap=cmap,
+                           norm=colors.LogNorm(1e-5, 1e4),
+                           rasterized=True,
+                           shading='auto',
+                           )
+
+    # Panel 3: Coherence
+    im3 = ax3_1.pcolormesh(times[2]/24, ff[2], coh_data.T,
+                           cmap=cmap_coh,
+                           norm=colors.Normalize(0, 1),
+                           rasterized=True,
+                           shading='auto',
+                           )
+
+    set_color = "seagreen"
+
+    # Percentiles for station PSD
+    perc_lower, perc_upper = __get_percentiles(psds[0], p_low=2.5, p_high=97.5)
+    ax1_2.fill_betweenx(ff[0], perc_lower, perc_upper, color=set_color, zorder=3, alpha=0.4, label="")
+    ax1_2.plot(__get_median_psd(psds[0]), ff[0], color=set_color, zorder=3, alpha=0.9, label="Median")
+
+    # Percentiles for FFBI BDO PSD
+    perc_lower, perc_upper = __get_percentiles(psds[1], p_low=2.5, p_high=97.5)
+    ax2_2.fill_betweenx(ff[1], perc_lower, perc_upper, color=set_color, zorder=3, alpha=0.4, label="")
+    ax2_2.plot(__get_median_psd(psds[1]), ff[1], color=set_color, zorder=3, alpha=0.9, label="Median")
+
+    # Percentiles for coherence
+    perc_lower, perc_upper = __get_percentiles(coh_data, p_low=2.5, p_high=97.5)
+    ax3_2.fill_betweenx(ff[2], perc_lower, perc_upper, color="tab:orange", zorder=3, alpha=0.4, label="")
+    ax3_2.plot(__get_median_psd(coh_data), ff[2], color="tab:orange", zorder=3, alpha=0.9, label="Median")
+
+    # Set axis limits
+    ax1_2.set_xlim(config['plot_psd_xlim_min'], config['plot_psd_xlim_max'])
+    ax2_2.set_xlim(1e-5, 1e4)
+    ax3_2.set_xlim(0, 1)
+
+    ax1_2.set_xscale(config['plot_psd_xscale'])
+    ax2_2.set_xscale("log")
+
+    plt.setp(ax1_1.get_xticklabels(), visible=False)
+    plt.setp(ax2_1.get_xticklabels(), visible=False)
+
+    plt.setp(ax1_2.get_yticklabels(), visible=False)
+    plt.setp(ax2_2.get_yticklabels(), visible=False)
+    plt.setp(ax3_2.get_yticklabels(), visible=False)
+
+    for ax in [ax1_1, ax1_2, ax2_1, ax2_2, ax3_1, ax3_2]:
+        ax.tick_params(labelsize=font-2)
+        ax.set_ylim(config['fmin'], config['fmax'])
+        ax.set_yscale("log")
+
+    ax3_1.set_xlabel(f"Time (days) since {config['d1']}", fontsize=font, labelpad=1)
+
+    # Panel labels
+    ax1_1.text(-.07, 1.02, '(a)', ha='left', va='top', transform=ax1_1.transAxes, fontsize=font+2)
+    ax2_1.text(-.07, 1.02, '(b)', ha='left', va='top', transform=ax2_1.transAxes, fontsize=font+2)
+    ax3_1.text(-.07, 1.02, '(c)', ha='left', va='top', transform=ax3_1.transAxes, fontsize=font+2)
+
+    # Data labels
+    ax1_1.text(.99, .9, f'{names[0]}', ha='right', va='top', transform=ax1_1.transAxes, fontsize=font)
+    ax2_1.text(.99, .97, f'{names[1]}', ha='right', va='top', transform=ax2_1.transAxes, fontsize=font)
+    ax3_1.text(.99, .97, 'Coherence', ha='right', va='top', transform=ax3_1.transAxes, fontsize=font)
+
+    ax1_1.set_ylabel(r"Frequency (Hz)", fontsize=font)
+    ax2_1.set_ylabel(r"Frequency (Hz)", fontsize=font)
+    ax3_1.set_ylabel(r"Frequency (Hz)", fontsize=font)
+
+    # Set colorbars
+    cbar = fig.colorbar(im1, orientation='vertical', ax=ax1_2, pad=0.05, extend="both")
+    cbar.set_label(config['psd_unit'], fontsize=font-2, labelpad=1)
+
+    cbar = fig.colorbar(im2, orientation='vertical', ax=ax2_2, pad=0.05, extend="both")
+    cbar.set_label(r"PSD (Pa$^2$/Hz)", fontsize=font-2, labelpad=1)
+
+    cbar = fig.colorbar(im3, orientation='vertical', ax=ax3_2, pad=0.05)
+    cbar.set_label(r"Coherence", fontsize=font-2, labelpad=1)
+
+    for ax in [ax1_1, ax2_1, ax3_1]:
+        ax.xaxis.set_major_locator(MultipleLocator(30))
+        ax.xaxis.set_minor_locator(MultipleLocator(5))
+
+    # Force garbage collection before returning
+    gc.collect()
+
+    return fig
+
+
+def main():
+    """Main function to load data and create plot."""
+    
+    # Configuration
+    config = {}
+    
+    config['project'] = "2"
+    
+    config['path_to_figures'] = f"{data_path}LNM2/figures{config['project']}/"
+    config['rlnm_model_path'] = f"{root_path}LNM/data/MODELS/"
+    
+    # Date range
+    config['d1'], config['d2'] = "2024-01-01", "2024-09-30"
+    
+    # Path to data
+    config['path_to_data'] = data_path+f"LNM2/PSDS{config['project']}/"
+    
+    # Station component (e.g., "FUR_BHZ", "FUR_BHN", "FUR_BHE")
+    # Modify this to change the station/component
+    # config['station_name'] = "FUR_BHN"
+    config['station_name'] = sys.argv[1]
+  
+    # FFBI BDO name
+    config['ffbi_name'] = "FFBI_BDO"
+    
+    # Frequency limits
+    config['fmin'], config['fmax'] = 1e-3, 1e0
+    
+    # Extract station and channel from station_name
+    sta, cha = config['station_name'].split("_")
+    ffbi_sta, ffbi_cha = config['ffbi_name'].split("_")
+    
+    # Detect station type and set appropriate thresholds
+    is_romy = "ROMY" in config['station_name'].upper()
+    
+    if is_romy:
+        # ROMY thresholds (rotation data)
+        config['limits_avg'] = {"station": 5e-19, "ffbi": None}
+        config['limits_min'] = {"station": 1e-23, "ffbi": 1e-7}
+        config['limits_max'] = {"station": 1e-16, "ffbi": 1e7}
+        config['flim'] = {"station": [0.5, 0.9], "ffbi": [None, None]}
+        # ROMY plotting limits
+        config['plot_psd_min'] = 5e-23
+        config['plot_psd_max'] = 5e-18
+        config['plot_psd_xlim_min'] = 5e-23
+        config['plot_psd_xlim_max'] = 5e-18
+        config['plot_psd_xscale'] = "logit"  # ROMY uses logit scale
+        config['psd_unit'] = r"PSD (rad$^2$/s$^2$/Hz)"
+    else:
+        # FUR/other station thresholds (translation data)
+        config['limits_avg'] = {"station": 1e-12, "ffbi": None}
+        config['limits_min'] = {"station": 1e-20, "ffbi": 1e-7}
+        config['limits_max'] = {"station": 1e-8, "ffbi": 1e7}
+        config['flim'] = {"station": [None, None], "ffbi": [None, None]}
+        # FUR plotting limits
+        config['plot_psd_min'] = 2e-20
+        config['plot_psd_max'] = 2e-10
+        config['plot_psd_xlim_min'] = 2e-20
+        config['plot_psd_xlim_max'] = 2e-10
+        config['plot_psd_xscale'] = "log"
+        config['psd_unit'] = r"PSD (m$^2$/$s^4$/Hz)"
+    
+    # Optional: Downsample data to reduce memory usage
+    # Set to 1 to keep all data, 2 to keep every 2nd point, etc.
+    config['downsample_time'] = 3  # Set to 2 or higher if memory issues persist
+    
+    print(f"\nLoading data for {config['station_name']} and {config['ffbi_name']}")
+    print(f"Date range: {config['d1']} to {config['d2']}")
+    
+    # Load station PSD data
+    print("\nLoading station PSD data...")
+    ff_sta, tt_sta, psd_sta = __load_data_files(
+        config['path_to_data'],
+        config['station_name'], 
+        config['d1'],
+        config['d2']
+    )
+    
+    # Cut to specified frequency range
+    psd_sta, ff_sta = __cut_frequencies_array(psd_sta, ff_sta, config['fmin'], config['fmax'])
+    
+    # Filter corrupt psds
+    psd_sta, rejected_sta = __replace_noisy_psds_with_nan(
+        psd_sta, ff_sta,
+        threshold_mean=config['limits_avg']['station'],
+        threshold_min=config['limits_min']['station'],
+        threshold_max=config['limits_max']['station'],
+        flim=config['flim']['station'],
+    )
+    
+    # Median for octave bands (only for non-ROMY stations)
+    if not is_romy:
+        ff_sta, psd_sta = __get_fband_averages(ff_sta, psd_sta)
+    
+    gc.collect()
+    
+    # Load FFBI BDO PSD data
+    print("\nLoading FFBI BDO PSD data...")
+    ff_ffbi, tt_ffbi, psd_ffbi = __load_data_files(
+        config['path_to_data'],
+        config['ffbi_name'], 
+        config['d1'],
+        config['d2']
+    )
+    
+    # Cut to specified frequency range
+    psd_ffbi, ff_ffbi = __cut_frequencies_array(psd_ffbi, ff_ffbi, config['fmin'], config['fmax'])
+    
+    # Filter corrupt psds
+    psd_ffbi, rejected_ffbi = __replace_noisy_psds_with_nan(
+        psd_ffbi,
+        ff_ffbi,
+        threshold_mean=config['limits_avg']['ffbi'],
+        threshold_min=config['limits_min']['ffbi'],
+        threshold_max=config['limits_max']['ffbi'],
+        flim=config['flim']['ffbi'],
+    )
+    
+    gc.collect()
+    
+    # Load coherence data
+    print("\nLoading coherence data...")
+    ff_coh, tt_coh, coh_data = __load_coherence_files(
+        config['path_to_data'], 
+        ffbi_sta, ffbi_cha,
+        sta, cha,
+        config['d1'], config['d2']
+    )
+    
+    # Cut coherence to specified frequency range
+    coh_data, ff_coh = __cut_frequencies_array(coh_data, ff_coh, config['fmin'], config['fmax'])
+    
+    gc.collect()
+    
+    # Optional downsampling to reduce memory usage
+    if config.get('downsample_time', 1) > 1:
+        downsample = config['downsample_time']
+        print(f"\nDownsampling data by factor of {downsample} to reduce memory usage...")
+        psd_sta = psd_sta[::downsample, :]
+        tt_sta = tt_sta[::downsample]
+        psd_ffbi = psd_ffbi[::downsample, :]
+        tt_ffbi = tt_ffbi[::downsample]
+        coh_data = coh_data[::downsample, :]
+        tt_coh = tt_coh[::downsample]
+        gc.collect()
+    
+    # Create plot
+    print("\nCreating plot...")
+    labels = [config['station_name'].split('_')[1], config['ffbi_name'].split('_')[1]]
+    
+    # Force garbage collection before plotting
+    gc.collect()
+    
+    fig = __makeplot_image_overview(
+        [ff_sta, ff_ffbi, ff_coh],
+        [psd_sta, psd_ffbi],
+        coh_data,
+        [tt_sta, tt_ffbi, tt_coh],
+        labels,
+        config,
+    )
+    
+    # Force garbage collection after creating figure
+    gc.collect()
+    
+    # Save figure with optimized settings
+    output_filename = f"TimeSpectra_{config['station_name']}_FFBI_Coherence_{config['d1']}_{config['d2']}.png"
+    output_path = config['path_to_figures'] + output_filename
+    print(f"\nSaving figure to: {output_path}")
+    
+    # Use facecolor='white' to avoid transparency issues
+    # Reduce DPI slightly to help with memory usage
+    fig.savefig(output_path, format="png", dpi=120, bbox_inches='tight', 
+               facecolor='white', pad_inches=0.1)
+    
+    # Explicitly close figure to free memory
+    plt.close(fig)
+    del fig
+    gc.collect()
+    
+    print("\nDone!")
+
+
+if __name__ == "__main__":
+    main()
+
+## End of File

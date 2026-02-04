@@ -71,7 +71,7 @@ else:
 config['loc'] = "40" # 30 | 40
 
 # output path for figures
-config['path_to_figs'] = data_path+f"romy_baro/outfigs3/{config['rot'].upper()}/"
+config['path_to_figs'] = data_path+f"romy_baro/outfigs/{config['rot'].upper()}/"
 
 # path to data sds for ROMY
 config['path_to_sds_romy'] = archive_path+"temp_archive/"
@@ -80,7 +80,7 @@ config['path_to_sds_romy'] = archive_path+"temp_archive/"
 config['path_to_sds_fur'] = bay_path+"mseed_online/archive/"
 
 # path to output data
-config['path_to_out_data'] = data_path+f"romy_baro/data3/{config['rot'].upper()}/"
+config['path_to_out_data'] = data_path+f"romy_baro/data2/{config['rot'].upper()}/"
 
 # data
 if len(sys.argv) > 1:
@@ -337,8 +337,7 @@ def main(config):
 
         try:
             # prepare arrays
-            # arrHP = np.imag(hilbert(stt.select(component="O")[0].data)) # old wrong
-            arrHP = hilbert(stt.select(component="O")[0].data)
+            arrHP = np.imag(hilbert(stt.select(component="O")[0].data))
             arrPP = stt.select(component="O")[0].data
             arrN = stt.select(component="N")[0].data
             arrE = stt.select(component="E")[0].data
